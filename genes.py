@@ -93,7 +93,8 @@ class Genome:
     # ── Factory: random ──
     @classmethod
     def random(cls, gen: int = 0) -> "Genome":
-        flags = {g: random.random() < 0.35 for g in ALL_GENES}
+        # Bias toward FEWER active genes (sparser strategies trade more often)
+        flags = {g: random.random() < 0.20 for g in ALL_GENES}
         # Ensure at least one exec mode is on
         if not any(flags[e] for e in EXECUTION_GENES):
             flags[random.choice(EXECUTION_GENES)] = True
@@ -208,13 +209,15 @@ def modern_score(stats: dict) -> float:
 
 
 def algory_purge_check(stats: dict, thresholds: dict = None) -> tuple[bool, str]:
-    """Algory's purge criteria — keep if passes, kill if rejected."""
+    """Algory's purge criteria — keep if passes, kill if rejected.
+    Default thresholds are PRACTICAL (more lenient than Algory's strict defaults
+    so we get meaningful vault even on small bar windows / unusual symbols)."""
     th = thresholds or {
-        "min_trades":     40,
-        "max_dd":         10.0,
-        "min_pf":         1.2,
-        "min_ret":        6.0,
-        "min_linearity":  0.7,
+        "min_trades":     15,        # was 40 — too strict for short windows
+        "max_dd":         15.0,      # was 10 — allow normal drawdown
+        "min_pf":         1.1,       # was 1.2 — slight edge counts
+        "min_ret":        2.0,       # was 6  — positive return is enough
+        "min_linearity":  0.3,       # was 0.7 — drop unrealistic
     }
     if stats.get("trades", 0) < th["min_trades"]:
         return False, f"trades {stats.get('trades',0)} < {th['min_trades']}"

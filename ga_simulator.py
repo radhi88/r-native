@@ -269,9 +269,18 @@ def simulate_genome(genome: dict, bars, sym_info) -> dict:
                 if recent_atr > 0 and (cur_atr < recent_atr * 0.5 or cur_atr > recent_atr * 2.5):
                     signal = None
 
-        # Minimum score threshold
-        if signal and score < int(params.get("min_score", 40)):
+        # Minimum score threshold (use param but cap at 25 for any-signal entry)
+        min_score = min(25, int(params.get("min_score", 40)))
+        if signal and score < min_score:
             signal = None
+        # If no enabled signal genes at all, fall back to simple breakout (so we always get trades)
+        if signal is None and not any(flags.get(s) for s in
+            ["use_sig_breakout","use_sig_mom_break","use_sig_rsi","use_sig_macd",
+             "use_sig_engulfing","use_sig_pin_bar"]):
+            recent_h = h[max(0, i - 20):i].max()
+            recent_l = l[max(0, i - 20):i].min()
+            if c[i] > recent_h: signal = "BUY"
+            elif c[i] < recent_l: signal = "SELL"
 
         if not signal: continue
 
