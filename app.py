@@ -127,7 +127,7 @@ def apply_dark_theme(app):
 
 # ─── Background scan thread ───
 class ScanWorker(QThread):
-    progress = Signal(str, int, int)   # message, done, total
+    progress = Signal(str, int, int)
     finished_with_result = Signal(dict)
 
     def __init__(self, symbols, n_bars):
@@ -144,6 +144,68 @@ class ScanWorker(QThread):
             self.progress.emit(msg, done[0], total)
         summary = full_scan(self.symbols, self.n_bars, progress_cb=cb)
         update_symbol_configs_from_scan(summary)
+        self.finished_with_result.emit(summary)
+
+
+# ─── Background GA campaign thread ───
+class CampaignWorker(QThread):
+    progress = Signal(str, str, int, int)   # phase, msg, done, total
+    finished_with_result = Signal(dict)
+
+    def __init__(self, symbol, tf, bars, pg, gens, n_workers):
+        super().__init__()
+        self.symbol = symbol; self.tf = tf; self.bars = bars
+        self.pg = pg; self.gens = gens; self.n_workers = n_workers
+
+    def run(self):
+        from r_native.genetic_engine import GeneticEngine, CampaignConfig
+        from r_native.scanner import CONFIG_DIR as SYM_CFG
+        import json
+        cfg = CampaignConfig(
+            symbol=self.symbol, timeframe=self.tf, bars=self.bars,
+            pg_candidates=self.pg,
+            tribe_a_gens=self.gens, tribe_b_gens=self.gens,
+            war_gens=self.gens, revival_gens=max(1, self.gens // 2),
+            retrain_gens=max(1, self.gens // 2),
+            n_workers=self.n_workers,
+        )
+        def cb(phase, msg, done, total):
+            self.progress.emit(phase, msg, done, total)
+        engine = GeneticEngine(cfg, progress_cb=cb)
+        summary = engine.run_full_campaign()
+        # Auto-save top genome to per-symbol config
+        if summary.get("top_genome"):
+            tg = summary["top_genome"]; s = tg["stats"]
+            cfg_path = SYM_CFG / f"{self.symbol}.json"
+            existing = {}
+            if cfg_path.exists():
+                try: existing = json.loads(cfg_path.read_text(encoding="utf-8"))
+                except Exception: pass
+            existing.setdefault("ga_strategies", []).append({
+                "id": tg["genome"]["id"], "archetype": "GA_EVOLVED",
+                "timeframe": self.tf, "trades": s.get("trades", 0),
+                "win_rate": s.get("win_rate", 0), "profit_factor": s.get("profit_factor", 0),
+                "total_return_pct": s.get("total_return_pct", 0),
+                "max_drawdown_pct": s.get("max_drawdown_pct", 0),
+                "sharpe": s.get("sharpe", 0), "linearity": s.get("linearity", 0),
+                "confidence": "DEPLOY" if s.get("profit_factor", 0) >= 1.5 else "EVALUATE",
+                "active_genes": tg["genome"].get("active_genes", []),
+                "sl_atr_mult": tg["genome"]["params"].get("sl_atr_mult"),
+                "tp_atr_mult": tg["genome"]["params"].get("tp_atr_mult"),
+                "start_hour": tg["genome"]["params"].get("start_hour"),
+                "end_hour": tg["genome"]["params"].get("end_hour"),
+                "source": f"GA_campaign_{summary['campaign']}",
+                "created_at": summary["finished_at"],
+            })
+            existing["last_ga_campaign"] = summary["campaign"]
+            existing["symbol"] = self.symbol
+            if s.get("profit_factor", 0) >= 1.3 and s.get("trades", 0) >= 15:
+                existing["tradeable"] = True
+                existing["best_archetype"] = "GA_EVOLVED"
+                existing["best_tf"] = self.tf
+                existing["best_pf"] = s.get("profit_factor", 0)
+            SYM_CFG.mkdir(parents=True, exist_ok=True)
+            cfg_path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
         self.finished_with_result.emit(summary)
 
 
@@ -183,6 +245,11 @@ class RNativeMain(QMainWindow):
         # Tick timer
         self.tick = QTimer(); self.tick.timeout.connect(self._on_tick); self.tick.start(3000)
         self._on_tick()
+        # Auto-load vault from existing configs
+        self._populate_vault_from_campaign({})
+        # Auto-load gene fitness from algory_report
+        try: self._refresh_genes()
+        except Exception: pass
 
     # ─── Header ───
     def _build_header(self):
@@ -314,6 +381,31 @@ class RNativeMain(QMainWindow):
         self.scan_status_lbl = QLabel("Ready. Click ▶ RUN to start full-market scan.")
         self.scan_status_lbl.setStyleSheet(f"color: {MUTED};")
         v.addWidget(self.scan_status_lbl)
+
+        # GA campaign panel
+        ga_box = QGroupBox("🧬 GA CAMPAIGN — evolve strategies (Algory-class)")
+        ga_box.setStyleSheet(f"QGroupBox {{ color: {VIOLET}; }}")
+        gg = QGridLayout(ga_box)
+        gg.addWidget(QLabel("Symbol:"), 0, 0)
+        self.ga_symbol = QComboBox()
+        self.ga_symbol.addItems(["BTCUSDm", "ETHUSDm", "XAUUSDm", "EURUSDm", "GBPUSDm", "USDJPYm"])
+        gg.addWidget(self.ga_symbol, 0, 1)
+        gg.addWidget(QLabel("TF:"), 0, 2)
+        self.ga_tf = QComboBox(); self.ga_tf.addItems(["M5","M15","H1","H4"])
+        gg.addWidget(self.ga_tf, 0, 3)
+        gg.addWidget(QLabel("PG candidates:"), 1, 0)
+        self.ga_pg = QLineEdit("200"); gg.addWidget(self.ga_pg, 1, 1)
+        gg.addWidget(QLabel("Gens per phase:"), 1, 2)
+        self.ga_gens = QLineEdit("3"); gg.addWidget(self.ga_gens, 1, 3)
+        self.ga_run_btn = QPushButton("🧬 Run GA Campaign"); self.ga_run_btn.setProperty("role","primary")
+        self.ga_run_btn.clicked.connect(self._start_campaign)
+        gg.addWidget(self.ga_run_btn, 2, 0, 1, 4)
+        self.ga_progress = QProgressBar()
+        gg.addWidget(self.ga_progress, 3, 0, 1, 4)
+        self.ga_status = QLabel("Click button to run a genetic campaign on selected symbol/TF")
+        self.ga_status.setStyleSheet(f"color: {MUTED};")
+        gg.addWidget(self.ga_status, 4, 0, 1, 4)
+        v.addWidget(ga_box)
 
         v.addStretch()
         return w
@@ -464,6 +556,66 @@ class RNativeMain(QMainWindow):
         if hasattr(self, "worker") and self.worker.isRunning():
             self.worker.terminate()
             self._log("⏹ Scan stopped")
+
+    def _start_campaign(self):
+        sym = self.ga_symbol.currentText()
+        tf  = self.ga_tf.currentText()
+        pg  = int(self.ga_pg.text() or 200)
+        gens = int(self.ga_gens.text() or 3)
+        import multiprocessing
+        n_workers = max(2, multiprocessing.cpu_count() - 1)
+        self._log(f"🧬 GA campaign: {sym} {tf}  PG={pg}  gens={gens}  workers={n_workers}")
+        self.ga_status.setText(f"Starting... estimated ~{pg + gens*5*200} evaluations")
+        self.ga_run_btn.setEnabled(False)
+        self.campaign_worker = CampaignWorker(sym, tf, 2000, pg, gens, n_workers)
+        self.campaign_worker.progress.connect(self._on_campaign_progress)
+        self.campaign_worker.finished_with_result.connect(self._on_campaign_done)
+        self.campaign_worker.start()
+
+    def _on_campaign_progress(self, phase, msg, done, total):
+        if total > 0:
+            pct = int(done * 100 / total)
+            self.ga_progress.setValue(pct)
+        self.ga_status.setText(f"[{phase}] {msg}")
+
+    def _on_campaign_done(self, summary):
+        self.ga_run_btn.setEnabled(True)
+        self.ga_progress.setValue(100)
+        msg = (f"✅ Done in {summary.get('elapsed_seconds')}s — "
+               f"vault {summary.get('vault_size')} strats · top score {summary.get('top_score')}")
+        self.ga_status.setText(msg)
+        self._log(msg)
+        if summary.get("top_genome"):
+            g = summary["top_genome"]
+            s = g["stats"]
+            self._log(f"  🏆 best {g['genome']['id']}: PF={s.get('profit_factor')} WR={s.get('win_rate')}% trades={s.get('trades')}")
+        self._populate_vault_from_campaign(summary)
+
+    def _populate_vault_from_campaign(self, summary):
+        """Show GA vault in VAULT tab."""
+        import json
+        from pathlib import Path
+        # Load all per-symbol ga_strategies
+        rows = []
+        cfg_dir = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs")
+        if cfg_dir.exists():
+            for f in cfg_dir.glob("*.json"):
+                try:
+                    d = json.loads(f.read_text(encoding="utf-8"))
+                    for s in d.get("ga_strategies", []):
+                        rows.append({
+                            "symbol": d.get("symbol"), "timeframe": s.get("timeframe"),
+                            "id": s.get("id"), "archetype": s.get("archetype"),
+                            "trades": s.get("trades", 0), "win_rate": s.get("win_rate", 0),
+                            "profit_factor": s.get("profit_factor", 0),
+                            "total_return_pct": s.get("total_return_pct", 0),
+                            "max_drawdown_pct": s.get("max_drawdown_pct", 0),
+                            "sharpe": s.get("sharpe", 0),
+                            "confidence": s.get("confidence", "?"),
+                        })
+                except Exception: pass
+        rows.sort(key=lambda r: -r.get("profit_factor", 0))
+        self._populate_vault(rows)
 
     def _on_scan_progress(self, msg, done, total):
         self.scan_progress.setMaximum(total)
