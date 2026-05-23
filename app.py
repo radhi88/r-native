@@ -386,6 +386,15 @@ class RNativeMain(QMainWindow):
         title_lbl.setStyleSheet(f"color: {GOLD}; font-weight: 900; letter-spacing: 2px;")
         v.addWidget(title_lbl)
 
+        # Equity curve
+        try:
+            from r_native.equity_widget import EquityCurve
+            self.equity_widget = EquityCurve()
+            v.addWidget(self.equity_widget)
+        except Exception as e:
+            self.equity_widget = None
+            v.addWidget(QLabel(f"equity err: {e}"))
+
         # KPI grid
         kg = QGridLayout(); kg.setHorizontalSpacing(8); kg.setVerticalSpacing(6)
         self.kpi_labels = {}
@@ -493,21 +502,47 @@ class RNativeMain(QMainWindow):
         rpt = PROJECT_ROOT / "friday_v3" / "data" / "algory_report.json"
         if not rpt.exists():
             self._log("⚠ algory_report.json not found - start algory_watcher first")
+            self.win_genes_list.setPlainText("Algory watcher not running.\nRun: python -m friday_v3.algory.algory_watcher")
             return
-        d = json.loads(rpt.read_text(encoding="utf-8"))
-        win = d.get("friday_recommendations", {}).get("xau_h1_whitelist", [])
-        bad = d.get("friday_recommendations", {}).get("xau_h1_blacklist", [])
-        glb = d.get("gene_rankings_xauh1", {})
-        win_lines = []
-        for g in win:
-            s = glb.get(g, {})
-            win_lines.append(f"  ✓ {g:30}  pass {s.get('pass',0)}/{s.get('pass',0)+s.get('fail',0)}  rate {s.get('pass_rate',0)}%")
-        bad_lines = []
-        for g in bad:
-            s = glb.get(g, {})
-            bad_lines.append(f"  ✗ {g:30}  pass {s.get('pass',0)}/{s.get('pass',0)+s.get('fail',0)}  rate {s.get('pass_rate',0)}%")
-        self.win_genes_list.setPlainText("\n".join(win_lines) or "no winners yet")
-        self.bad_genes_list.setPlainText("\n".join(bad_lines) or "no losers yet")
+        try:
+            d = json.loads(rpt.read_text(encoding="utf-8"))
+        except Exception as e:
+            self._log(f"⚠ algory_report parse: {e}")
+            return
+        # Combined: global ranks + XAU-specific
+        glb = d.get("gene_rankings_global", {}) or {}
+        xau = d.get("gene_rankings_xauh1", {}) or {}
+
+        def format_genes(rank_dict, only_verdict=None):
+            rows = []
+            sorted_g = sorted(rank_dict.items(), key=lambda kv: -kv[1].get("pass_rate", 0))
+            for g, s in sorted_g:
+                if only_verdict and s.get("verdict") != only_verdict: continue
+                pass_c = s.get("pass", 0)
+                fail_c = s.get("fail", 0)
+                rate = s.get("pass_rate", 0)
+                # Visual bar
+                bar_len = int(rate / 5)
+                bar = "█" * bar_len + "░" * (20 - bar_len)
+                verdict = s.get("verdict", "")
+                rows.append(f"  {g:30s} [{bar}] {rate:>5.1f}%  ({pass_c:>3}/{pass_c+fail_c:<3})  {verdict}")
+            return "\n".join(rows) or "  no data"
+
+        # Winners (TRUSTED)
+        trusted_global = format_genes(glb, "TRUSTED")
+        trusted_xau    = format_genes(xau, "TRUSTED")
+        wins_text = (f"═══ GLOBAL TRUSTED ═══\n{trusted_global}\n\n"
+                     f"═══ XAU H1 TRUSTED ═══\n{trusted_xau}\n\n"
+                     f"═══ XAU H1 ALL GENES (sorted) ═══\n{format_genes(xau)}")
+        self.win_genes_list.setPlainText(wins_text)
+
+        # Losers (AVOID)
+        avoid_global = format_genes(glb, "AVOID")
+        avoid_xau    = format_genes(xau, "AVOID")
+        loss_text = (f"═══ GLOBAL AVOID ═══\n{avoid_global}\n\n"
+                     f"═══ XAU H1 AVOID ═══\n{avoid_xau}")
+        self.bad_genes_list.setPlainText(loss_text)
+        self._log(f"  Genes refreshed: {len(glb)} global, {len(xau)} XAU-specific")
 
     def _log(self, msg):
         ts = datetime.now().strftime("%H:%M:%S")
@@ -554,6 +589,26 @@ class RNativeMain(QMainWindow):
                         if j == 7:
                             item.setForeground(QColor(GREEN if p.profit >= 0 else RED))
                         self.live_table.setItem(i, j, item)
+            # ─── Equity curve from R deals (last 48h) ───
+            if self.equity_widget:
+                from datetime import timedelta
+                deals = mt5.history_deals_get(datetime.now() - timedelta(hours=48), datetime.now()) or []
+                r_closed = sorted([d for d in deals if d.magic == 20260605 and d.entry == 1],
+                                  key=lambda d: d.time)
+                # Reconstruct balance over time (start from current minus realized today)
+                if r_closed:
+                    start_bal = info.balance - sum(d.profit + d.swap + d.commission for d in r_closed)
+                    series = [(datetime.fromtimestamp(r_closed[0].time).strftime("%H:%M"),
+                                start_bal, 0)]
+                    bal = start_bal
+                    for d in r_closed:
+                        bal += d.profit + d.swap + d.commission
+                        series.append((datetime.fromtimestamp(d.time).strftime("%H:%M"),
+                                        round(bal, 2), d.profit))
+                    self.equity_widget.set_data(series)
+                else:
+                    self.equity_widget.set_data([(datetime.now().strftime("%H:%M"), info.balance, 0)])
+
             # IQ from R memory
             iq_file = PROJECT_ROOT / "friday_v3" / "data" / "r_memory" / "r_iq.json"
             if iq_file.exists():
