@@ -33,9 +33,12 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                                QGridLayout, QPushButton, QLabel, QFrame, QSplitter, QTableWidget,
                                QTableWidgetItem, QTabWidget, QCheckBox, QLineEdit, QComboBox,
                                QProgressBar, QPlainTextEdit, QHeaderView, QSizePolicy, QSpacerItem,
-                               QGroupBox, QScrollArea, QMessageBox, QStyle, QFileDialog, QSystemTrayIcon, QMenu)
-from PySide6.QtCore import Qt, QTimer, QThread, Signal, QSize
-from PySide6.QtGui import QPalette, QColor, QFont, QIcon, QAction, QPainter, QPen, QBrush
+                               QGroupBox, QScrollArea, QMessageBox, QStyle, QFileDialog, QSystemTrayIcon, QMenu,
+                               QStackedWidget, QInputDialog)
+from PySide6.QtCore import Qt, QTimer, QThread, Signal, QSize, QUrl
+from PySide6.QtGui import QPalette, QColor, QFont, QIcon, QAction, QPainter, QPen, QBrush, QDesktopServices
+
+from r_native import actions as ra
 
 
 # ─── Theme colors (matching Algory dark) ───
@@ -264,12 +267,42 @@ class RNativeMain(QMainWindow):
         h.addWidget(sub)
         h.addStretch()
 
-        # Tabs (NEW CAMPAIGN / ADVANCED / GENE POOL)
+        # Mode tabs — NEW CAMPAIGN/ADVANCED/GENE POOL switch the center top, STATS/SCORE/CLASS switch the inspector
+        self.mode_buttons = {}
+        self._current_mode = "NEW CAMPAIGN"
+        self._current_inspector = "STATS"
         for name in ["NEW CAMPAIGN", "ADVANCED", "GENE POOL", "STATS", "SCORE", "CLASS"]:
             b = QPushButton(name)
-            b.setStyleSheet(f"background: {BG_2}; color: {RED if name=='NEW CAMPAIGN' else MUTED}; padding: 6px 12px;")
+            b.setCheckable(True)
+            b.setChecked(name == self._current_mode or name == self._current_inspector)
+            self._style_mode_button(b, name in (self._current_mode, self._current_inspector))
+            b.clicked.connect(lambda _, n=name: self._on_mode_clicked(n))
+            self.mode_buttons[name] = b
             h.addWidget(b)
         return h
+
+    def _style_mode_button(self, b, active):
+        b.setStyleSheet(f"background: {BG_2}; color: {RED if active else MUTED}; padding: 6px 12px; "
+                        f"border: 1px solid {BORDER}; border-radius: 4px; font-weight: bold;")
+
+    def _on_mode_clicked(self, name):
+        if name in ("NEW CAMPAIGN", "ADVANCED", "GENE POOL"):
+            self._current_mode = name
+            for m in ("NEW CAMPAIGN", "ADVANCED", "GENE POOL"):
+                self._style_mode_button(self.mode_buttons[m], m == name)
+                self.mode_buttons[m].setChecked(m == name)
+            if hasattr(self, "center_stack"):
+                idx = {"NEW CAMPAIGN": 0, "ADVANCED": 1, "GENE POOL": 2}[name]
+                self.center_stack.setCurrentIndex(idx)
+            self._log(f"mode → {name}")
+        elif name in ("STATS", "SCORE", "CLASS"):
+            self._current_inspector = name
+            for m in ("STATS", "SCORE", "CLASS"):
+                self._style_mode_button(self.mode_buttons[m], m == name)
+                self.mode_buttons[m].setChecked(m == name)
+            if hasattr(self, "inspector_tabs"):
+                idx = {"STATS": 0, "SCORE": 1, "CLASS": 2}[name]
+                self.inspector_tabs.setCurrentIndex(idx)
 
     # ─── Left sidebar ───
     def _build_command_sidebar(self):
@@ -284,17 +317,27 @@ class RNativeMain(QMainWindow):
         v.addWidget(QLabel(" "))
 
         # Iconic buttons
-        for lbl in ["⚙ Settings", "📁 Vault", "🔋 Connection"]:
-            b = QPushButton(lbl); v.addWidget(b)
+        for lbl, handler in [("⚙ Settings", self._open_settings),
+                             ("📁 Vault", self._open_vault_folder),
+                             ("🔋 Connection", self._show_connection)]:
+            b = QPushButton(lbl)
+            b.clicked.connect(handler)
+            v.addWidget(b)
 
         v.addWidget(QLabel(" "))
 
-        for lbl, role in [("▶ RUN", "primary"), ("⏸ PAUSE", ""), ("⏹ STOP", "danger"),
-                          ("🔁 REPEAT", ""), ("📥 QUEUE", "")]:
+        self._paused = False
+        self._repeat = False
+        for lbl, role, handler in [("▶ RUN", "primary", self._start_scan),
+                                    ("⏸ PAUSE", "", self._toggle_pause),
+                                    ("⏹ STOP", "danger", self._stop_scan),
+                                    ("🔁 REPEAT", "", self._toggle_repeat),
+                                    ("📥 QUEUE", "", self._show_queue)]:
             b = QPushButton(lbl)
             if role: b.setProperty("role", role)
-            if lbl == "▶ RUN": b.clicked.connect(self._start_scan)
-            elif lbl == "⏹ STOP": b.clicked.connect(self._stop_scan)
+            b.clicked.connect(handler)
+            if lbl == "⏸ PAUSE": self._pause_btn = b
+            if lbl == "🔁 REPEAT": self._repeat_btn = b
             v.addWidget(b)
 
         v.addStretch()
@@ -311,22 +354,53 @@ class RNativeMain(QMainWindow):
         w = QFrame(); w.setProperty("role", "card")
         v = QVBoxLayout(w); v.setContentsMargins(8, 8, 8, 8); v.setSpacing(8)
 
+        # Mode stack: NEW CAMPAIGN | ADVANCED | GENE POOL — switched by header buttons
+        from r_native.panels import PropFirmPanel, ExecutionPanel, EvolutionPanel, GenePoolPanel
+        self.center_stack = QStackedWidget()
+
+        # mode 0: NEW CAMPAIGN — the existing 4-tab pane
         tabs = QTabWidget()
         tabs.addTab(self._build_campaign_tab(), "🧪 CAMPAIGN")
         tabs.addTab(self._build_vault_tab(),    "💎 VAULT")
         tabs.addTab(self._build_live_tab(),     "⚡ LIVE")
         tabs.addTab(self._build_genes_tab(),    "🧬 GENES")
-        v.addWidget(tabs, 1)
+        self.center_stack.addWidget(tabs)
 
-        # Bottom action bar
-        actions = QHBoxLayout()
-        for lbl, role in [("DEPLOY", "success"), ("OPTIMIZE", ""), ("RETRAIN", ""),
-                          ("DELETE", "danger"), ("PURGE", ""), ("DEDUPE", "")]:
+        # mode 1: ADVANCED — PROP FIRM + EXECUTION & SPREAD + EVOLUTION panels
+        adv = QScrollArea(); adv.setWidgetResizable(True)
+        adv_inner = QWidget(); adv_layout = QHBoxLayout(adv_inner)
+        adv_layout.setContentsMargins(4, 4, 4, 4); adv_layout.setSpacing(8)
+        self.prop_firm_panel = PropFirmPanel()
+        self.execution_panel = ExecutionPanel()
+        self.evolution_panel = EvolutionPanel()
+        for p in (self.prop_firm_panel, self.execution_panel, self.evolution_panel):
+            adv_layout.addWidget(p, 1)
+        adv.setWidget(adv_inner)
+        self.center_stack.addWidget(adv)
+
+        # mode 2: GENE POOL — 5-category gene matrix
+        gp_wrap = QScrollArea(); gp_wrap.setWidgetResizable(True)
+        self.gene_pool_panel = GenePoolPanel()
+        gp_wrap.setWidget(self.gene_pool_panel)
+        self.center_stack.addWidget(gp_wrap)
+
+        v.addWidget(self.center_stack, 1)
+
+        # Bottom action bar — wired to actions module
+        action_bar = QHBoxLayout()
+        for lbl, role, handler in [("DEPLOY", "success", self._action_deploy),
+                                    ("OPTIMIZE", "", self._action_optimize),
+                                    ("RETRAIN", "", self._action_retrain),
+                                    ("DELETE", "danger", self._action_delete),
+                                    ("PURGE", "", self._action_purge),
+                                    ("DEDUPE", "", self._action_dedupe),
+                                    ("CLOSE ALL", "danger", self._action_close_all)]:
             b = QPushButton(lbl)
             if role: b.setProperty("role", role)
-            actions.addWidget(b)
-        actions.addStretch()
-        v.addLayout(actions)
+            b.clicked.connect(handler)
+            action_bar.addWidget(b)
+        action_bar.addStretch()
+        v.addLayout(action_bar)
 
         # Live log (terminal-style)
         self.log_view = QPlainTextEdit()
@@ -417,8 +491,44 @@ class RNativeMain(QMainWindow):
             ["ID", "Symbol", "TF", "Archetype", "Trades", "WR%", "PF", "Return%", "Max DD%", "Sharpe", "Verdict"])
         self.vault_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.vault_table.setAlternatingRowColors(True)
+        self.vault_table.itemSelectionChanged.connect(self._on_vault_row_selected)
         v.addWidget(self.vault_table)
         return w
+
+    def _on_vault_row_selected(self):
+        row = self.vault_table.currentRow()
+        if row < 0: return
+        get = lambda c: (self.vault_table.item(row, c).text() if self.vault_table.item(row, c) else "")
+        try:
+            pf = float(get(6) or 0); wr = float((get(5) or "0").rstrip("%"))
+            ret = float(get(7) or 0); dd = float(get(8) or 0); sharpe = float(get(9) or 0)
+            trades = int(get(4) or 0)
+        except ValueError:
+            pf = wr = ret = dd = sharpe = 0; trades = 0
+        strategy = {
+            "net_profit": ret, "drawdown": dd, "total_trades": trades, "win_rate": wr,
+            "profit_factor": pf, "sharpe": sharpe, "linearity": 0.85, "persistence": 0.7,
+            "is_return": ret * 0.6, "is_trades": int(trades * 0.65),
+            "oos_return": ret * 0.4, "oos_trades": int(trades * 0.35),
+            "recovery_factor": (ret / max(0.01, abs(dd))) if dd else 0,
+            "avg_hold_time": 0.5, "avg_profit": ret / max(1, trades),
+            "avg_loss": -abs(dd) / max(1, trades * 0.4),
+            "biggest_win": ret * 0.08, "biggest_loss": -abs(dd) * 0.5,
+            "max_win_streak": 0, "max_loss_streak": 0,
+            "avg_win_streak": 0, "avg_loss_streak": 0,
+            "long_trades": trades // 2, "short_trades": trades - trades // 2,
+        }
+        purge_req = {"min_pf": 1.2, "min_trades": 40, "max_dd": 10.0, "min_ret": 6.0,
+                     "min_linearity": 0.7, "min_win_rate": 0.0, "min_sharpe": 0.0, "min_persistence": 0.0}
+        classification = {"archetype": get(3) or "—", "mechanism": "TP Hitter",
+                          "bias": "Trend", "filters": "Loose", "management": "Passive",
+                          "session": "Mixed", "market": get(1) or "—"}
+        if hasattr(self, "inspector_panel"):
+            self.inspector_panel.update_view(strategy=strategy, trades=[],
+                                              purge_req=purge_req, classification=classification)
+        # Update DNA helix with placeholder genes
+        if getattr(self, "dna_widget", None):
+            self.dna_widget.set_genes(["SL_LOCK", "WILLIAMS", "CONSEC", "use_sig_macd", "use_bias_ema"])
 
     def _build_live_tab(self):
         w = QWidget(); v = QVBoxLayout(w); v.setContentsMargins(10, 10, 10, 10)
@@ -471,42 +581,53 @@ class RNativeMain(QMainWindow):
     # ─── Right inspector ───
     def _build_inspector(self):
         w = QFrame(); w.setProperty("role", "card")
-        v = QVBoxLayout(w); v.setContentsMargins(10, 12, 10, 12); v.setSpacing(8)
+        v = QVBoxLayout(w); v.setContentsMargins(8, 8, 8, 8); v.setSpacing(6)
 
-        title_lbl = QLabel("INSPECTOR")
-        title_lbl.setProperty("role", "title")
-        title_lbl.setStyleSheet(f"color: {GOLD}; font-weight: 900; letter-spacing: 2px;")
-        v.addWidget(title_lbl)
-
-        # Equity curve
+        # Equity curve at top
         try:
             from r_native.equity_widget import EquityCurve
             self.equity_widget = EquityCurve()
+            self.equity_widget.setMinimumHeight(160)
             v.addWidget(self.equity_widget)
         except Exception as e:
             self.equity_widget = None
             v.addWidget(QLabel(f"equity err: {e}"))
 
-        # KPI grid
-        kg = QGridLayout(); kg.setHorizontalSpacing(8); kg.setVerticalSpacing(6)
+        # Quick KPI strip — the live MT5 KPIs the existing tick handler updates
+        kg = QGridLayout(); kg.setHorizontalSpacing(6); kg.setVerticalSpacing(2)
         self.kpi_labels = {}
-        kpis = [
-            ("BALANCE", "$—"),     ("EQUITY", "$—"),
-            ("OPEN P/L", "$—"),    ("TODAY P/L", "$—"),
-            ("WIN RATE", "—%"),    ("PROFIT FACTOR", "—"),
-            ("TOTAL TRADES", "—"), ("MAX DD", "$—"),
-            ("OPEN POSITIONS", "0"),("R-IQ", "—"),
-            ("VAULT SIZE", "—"),   ("BEST RETURN", "—%"),
+        kpi_pairs = [
+            ("BALANCE", "$—"), ("EQUITY", "$—"),
+            ("OPEN P/L", "$—"), ("TODAY P/L", "$—"),
+            ("WIN RATE", "—%"), ("OPEN POSITIONS", "0"),
+            ("TOTAL TRADES", "—"), ("R-IQ", "—"),
+            ("PROFIT FACTOR", "—"), ("MAX DD", "—"),
+            ("VAULT SIZE", "—"), ("BEST RETURN", "—%"),
         ]
-        for i, (k, default) in enumerate(kpis):
-            lbl = QLabel(k); lbl.setProperty("role", "kpi-label")
-            val = QLabel(default); val.setProperty("role", "kpi-value")
-            kg.addWidget(lbl, i*2,   0)
-            kg.addWidget(val, i*2+1, 0)
+        for i, (k, default) in enumerate(kpi_pairs):
+            lbl = QLabel(k); lbl.setProperty("role", "kpi-label"); lbl.setStyleSheet(f"color: {VIOLET}; font-size: 9px; letter-spacing: 1px;")
+            val = QLabel(default); val.setProperty("role", "kpi-value"); val.setStyleSheet(f"color: {TEXT}; font-size: 13px; font-weight: 900; font-family: Consolas;")
+            kg.addWidget(lbl, (i//2)*2, i%2)
+            kg.addWidget(val, (i//2)*2+1, i%2)
             self.kpi_labels[k] = val
         v.addLayout(kg)
 
-        v.addStretch()
+        # Rich Inspector (Stats / Score / Class tabs + Strategy / Trades sub-tabs)
+        from r_native.inspector import InspectorPanel
+        self.inspector_panel = InspectorPanel()
+        self.inspector_tabs = self.inspector_panel.findChild(QTabWidget)
+        v.addWidget(self.inspector_panel, 1)
+
+        # DNA helix at bottom
+        try:
+            from r_native.dna_widget import DNAHelix
+            self.dna_widget = DNAHelix()
+            self.dna_widget.setMinimumHeight(180)
+            v.addWidget(self.dna_widget)
+        except Exception as e:
+            self.dna_widget = None
+            v.addWidget(QLabel(f"dna err: {e}"))
+
         return w
 
     # ─── Status ticker ───
@@ -536,6 +657,180 @@ class RNativeMain(QMainWindow):
     def closeEvent(self, ev):
         ev.ignore(); self.hide()
         self.tray.showMessage("R Native", "Still running in tray", QSystemTrayIcon.Information, 2000)
+
+    # ─── Sidebar handlers ───
+    def _open_settings(self):
+        from pathlib import Path as _P
+        path = _P(r"C:\Users\Radhi\MT5\data\r_native\settings.json")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if not path.exists():
+            path.write_text(json.dumps({
+                "lot_size": 0.01, "max_positions": 3, "daily_cap_usd": 10.0,
+                "magic": 20260605, "bypass_session": True, "bypass_weekend": True,
+                "interval_s": 8, "live_mode": False,
+            }, indent=2), encoding="utf-8")
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
+        self._log(f"⚙ settings → {path}")
+
+    def _open_vault_folder(self):
+        vault = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs")
+        vault.mkdir(parents=True, exist_ok=True)
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(vault)))
+        self._log(f"📁 vault → {vault}")
+
+    def _show_connection(self):
+        snap = ra.get_account_snapshot()
+        if not snap.get("ok"):
+            QMessageBox.warning(self, "Connection", f"MT5 offline: {snap.get('error','?')}")
+            self._log(f"⚠ MT5 offline: {snap.get('error')}")
+            return
+        msg = (f"MT5: CONNECTED\nBalance: ${snap['balance']:.2f}\nEquity: ${snap['equity']:.2f}\n"
+               f"Free margin: ${snap['free_margin']:.2f}\nLeverage: 1:{snap['leverage']}\n"
+               f"Trade allowed: {'YES' if snap['trade_allowed'] else 'NO'}\n"
+               f"Open R positions: {snap['positions_count']}\nToday: {snap['today_trades']} trades, {snap['today_wins']} wins, ${snap['today_pl']:+.2f}")
+        QMessageBox.information(self, "🔋 Connection", msg)
+        self._log(f"🔋 balance ${snap['balance']:.2f} · open {snap['positions_count']}")
+
+    def _toggle_pause(self):
+        self._paused = not self._paused
+        if self._paused:
+            self.tick.stop()
+            self._pause_btn.setText("▶ RESUME")
+            self._log("⏸ paused (UI tick stopped)")
+        else:
+            self.tick.start(3000)
+            self._pause_btn.setText("⏸ PAUSE")
+            self._log("▶ resumed")
+
+    def _toggle_repeat(self):
+        self._repeat = not self._repeat
+        self._repeat_btn.setText("🔁 REPEAT ✓" if self._repeat else "🔁 REPEAT")
+        self._log(f"repeat={'ON' if self._repeat else 'OFF'}")
+
+    def _show_queue(self):
+        symbols = [s for s, cb in self.symbol_checks.items() if cb.isChecked()]
+        tfs = [tf for tf, cb in self.tf_checks.items() if cb.isChecked()]
+        combos = len(symbols) * len(tfs)
+        QMessageBox.information(self, "📥 QUEUE",
+                                f"Pending scan combos: {combos}\nSymbols: {', '.join(symbols) or '—'}\nTFs: {', '.join(tfs) or '—'}")
+
+    # ─── Bottom action bar handlers ───
+    def _selected_vault_row(self) -> dict | None:
+        row = self.vault_table.currentRow()
+        if row < 0:
+            QMessageBox.warning(self, "Select strategy", "Pick a row in the VAULT tab first.")
+            return None
+        get = lambda c: (self.vault_table.item(row, c).text() if self.vault_table.item(row, c) else "")
+        return {"id": get(0), "symbol": get(1), "tf": get(2), "archetype": get(3),
+                "trades": get(4), "wr": get(5), "pf": get(6), "ret": get(7),
+                "dd": get(8), "sharpe": get(9), "verdict": get(10)}
+
+    def _action_deploy(self):
+        sel = self._selected_vault_row()
+        if not sel: return
+        if QMessageBox.question(self, "Deploy", f"Deploy genome {sel['id']} on {sel['symbol']} {sel['tf']}?\nR Executor will pick it up on next cycle.") != QMessageBox.Yes:
+            return
+        res = ra.deploy_genome_to_live(sel["symbol"], sel["id"], sel["tf"])
+        if res.get("ok"):
+            self._log(f"🚀 DEPLOYED {sel['id']} → {sel['symbol']} {sel['tf']}")
+            QMessageBox.information(self, "Deployed", f"{sel['id']} now active on {sel['symbol']}.")
+        else:
+            self._log(f"⚠ deploy failed: {res.get('error')}")
+            QMessageBox.warning(self, "Deploy failed", res.get("error", "unknown"))
+
+    def _action_optimize(self):
+        sel = self._selected_vault_row()
+        if not sel: return
+        self.ga_symbol.setCurrentText(sel["symbol"])
+        self.ga_tf.setCurrentText(sel["tf"])
+        self.ga_pg.setText("400"); self.ga_gens.setText("5")
+        self._log(f"⚙ optimize set: {sel['symbol']} {sel['tf']} (PG 400, gens 5) — click GA Campaign to run")
+        QMessageBox.information(self, "Optimize", "Campaign tab pre-filled for re-evolution.\nClick 🧬 Run GA Campaign to start.")
+
+    def _action_retrain(self):
+        sel = self._selected_vault_row()
+        if not sel: return
+        self.ga_symbol.setCurrentText(sel["symbol"])
+        self.ga_tf.setCurrentText(sel["tf"])
+        self.ga_pg.setText("100"); self.ga_gens.setText("3")
+        self._log(f"🎓 retrain set: {sel['symbol']} {sel['tf']} (small PG, 3 gens)")
+        QMessageBox.information(self, "Retrain", "Use the 🧬 Run GA Campaign button for a quick retrain pass.")
+
+    def _action_delete(self):
+        sel = self._selected_vault_row()
+        if not sel: return
+        if QMessageBox.question(self, "Delete", f"Remove genome {sel['id']} from {sel['symbol']} vault?") != QMessageBox.Yes:
+            return
+        cfg_path = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{sel['symbol']}.json"
+        if not cfg_path.exists():
+            QMessageBox.warning(self, "Delete", "Vault file missing"); return
+        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+        before = len(cfg.get("ga_strategies", []))
+        cfg["ga_strategies"] = [g for g in cfg.get("ga_strategies", []) if g.get("id") != sel["id"]]
+        cfg_path.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+        removed = before - len(cfg["ga_strategies"])
+        self._log(f"🗑 deleted {removed} entry · {sel['id']}")
+        self._populate_vault_from_campaign({})
+
+    def _action_purge(self):
+        thresh = {"min_pf": 1.2, "min_trades": 40, "max_dd": 10.0, "min_ret": 6.0, "min_lin": 0.7}
+        if QMessageBox.question(self, "Purge",
+                                f"Purge all genomes failing:\nPF<{thresh['min_pf']} | trades<{thresh['min_trades']} | DD>{thresh['max_dd']}% | ret<{thresh['min_ret']}% | linearity<{thresh['min_lin']}\n\nProceed?") != QMessageBox.Yes:
+            return
+        cfg_dir = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs")
+        purged = 0
+        for f in cfg_dir.glob("*.json"):
+            try:
+                cfg = json.loads(f.read_text(encoding="utf-8"))
+                before = len(cfg.get("ga_strategies", []))
+                cfg["ga_strategies"] = [
+                    g for g in cfg.get("ga_strategies", [])
+                    if g.get("profit_factor", 0) >= thresh["min_pf"]
+                    and g.get("trades", 0) >= thresh["min_trades"]
+                    and abs(g.get("max_drawdown_pct", 0)) <= thresh["max_dd"]
+                    and g.get("total_return_pct", 0) >= thresh["min_ret"]
+                    and g.get("linearity", 1) >= thresh["min_lin"]
+                ]
+                purged += before - len(cfg["ga_strategies"])
+                f.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+            except Exception as e:
+                self._log(f"⚠ purge {f.name}: {e}")
+        self._log(f"🧹 purged {purged} genomes below thresholds")
+        QMessageBox.information(self, "Purged", f"Removed {purged} underperforming genomes.")
+        self._populate_vault_from_campaign({})
+
+    def _action_dedupe(self):
+        cfg_dir = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs")
+        removed = 0
+        for f in cfg_dir.glob("*.json"):
+            try:
+                cfg = json.loads(f.read_text(encoding="utf-8"))
+                seen = set(); unique = []
+                for g in cfg.get("ga_strategies", []):
+                    gid = g.get("id")
+                    if gid and gid not in seen:
+                        seen.add(gid); unique.append(g)
+                    else:
+                        removed += 1
+                cfg["ga_strategies"] = unique
+                f.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+            except Exception as e:
+                self._log(f"⚠ dedupe {f.name}: {e}")
+        self._log(f"🔍 dedupe removed {removed} duplicate genomes")
+        QMessageBox.information(self, "Dedupe", f"Removed {removed} duplicate genomes by ID.")
+        self._populate_vault_from_campaign({})
+
+    def _action_close_all(self):
+        snap = ra.get_account_snapshot()
+        n = snap.get("positions_count", 0)
+        if n == 0:
+            QMessageBox.information(self, "Close All", "No open R positions."); return
+        if QMessageBox.question(self, "Close All", f"Close ALL {n} open R positions at market?") != QMessageBox.Yes:
+            return
+        res = ra.close_all_r_positions()
+        closed = len(res.get("closed", [])); failed = len(res.get("failed", []))
+        self._log(f"❌ closed {closed} positions ({failed} failed)")
+        QMessageBox.information(self, "Closed", f"Closed: {closed}\nFailed: {failed}")
 
     # ─── Actions ───
     def _start_scan(self):
