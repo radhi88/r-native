@@ -615,7 +615,8 @@ class RNativeMain(QMainWindow):
         # Rich Inspector (Stats / Score / Class tabs + Strategy / Trades sub-tabs)
         from r_native.inspector import InspectorPanel
         self.inspector_panel = InspectorPanel()
-        self.inspector_tabs = self.inspector_panel.findChild(QTabWidget)
+        # Reference the *inner* STATS/SCORE/CLASS tabs (the outer is STRATEGY/TRADES)
+        self.inspector_tabs = self.inspector_panel.top_tabs
         v.addWidget(self.inspector_panel, 1)
 
         # DNA helix at bottom
