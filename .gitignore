@@ -1,0 +1,41 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Credentials / secrets — NEVER commit these
+.env
+.env.*
+*.key
+*.pem
+credentials.json
+*_credentials*
+
+# R Native runtime data (built/generated, not source)
+data/
+scans/
+logs/
+*.log
+*.tmp
+
+# Compiled artifacts
+build/
+dist/
+*.spec
+*.exe
+*.dll
+
+# Local config that varies per machine
+local_config.json
