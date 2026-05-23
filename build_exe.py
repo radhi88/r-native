@@ -54,9 +54,12 @@ args = [
     "--hidden-import", "PySide6.QtWidgets",
     "--collect-submodules", "PySide6",
 
-    # Include the friday_v3 package so existing helpers still work
-    "--add-data", "friday_v3;friday_v3",
+    # Bundle r_native source (panels, inspector, dna_widget, actions are imported dynamically)
     "--add-data", "r_native;r_native",
+    # friday_v3 is NOT bundled — actions.py uses absolute path to live MT5 directory.
+    # Just include the algory subfolder (logo + helpers) at ~400KB instead of the 7.5GB data dump.
+    "--add-data", "friday_v3/algory;friday_v3/algory",
+    "--add-data", "friday_v3/__init__.py;friday_v3",
 
     # Entry point
     "r_native/app.py",
