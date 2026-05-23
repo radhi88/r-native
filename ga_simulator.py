@@ -116,12 +116,37 @@ def simulate_genome(genome: dict, bars, sym_info) -> dict:
     spread_price = spread_pt * point
 
     # ─── Iterate bars ───
-    trades = []
-    equity_curve = [0.0]
-    cum_pl = 0.0
-    pos = None
+    trades       = []          # legacy: list of (pl, exit_reason) for backwards compat
+    trades_log   = []          # NEW: full per-trade dicts for the UI Inspector
+    equity_curve = [0.0]       # legacy: flat cum_pl floats (used by _linearity)
+    equity_pts   = [{"ts": int(times[max(50, len(c) - 4000)]), "eq": 0.0}]  # NEW: timestamped
+    cum_pl       = 0.0
+    pos          = None
     consec_losses = 0
-    cooldown = 0
+    cooldown      = 0
+
+    def _close(exit_px, exit_reason, pl_value):
+        """Centralized exit recording — append to all 4 tracking lists.
+        All numeric values cast to native Python types for clean JSON."""
+        nonlocal cum_pl
+        plv = float(pl_value)
+        cum_pl += plv
+        trades.append((plv, exit_reason))                # legacy stats use this
+        equity_curve.append(cum_pl)                       # legacy linearity calc
+        equity_pts.append({"ts": int(times[i]), "eq": round(float(cum_pl), 4)})
+        entry_px = float(pos["entry"])
+        trades_log.append({
+            "idx":         len(trades_log) + 1,
+            "type":        pos["side"],
+            "entry_time":  datetime.fromtimestamp(int(times[pos["open_i"]]), tz=timezone.utc).isoformat(),
+            "exit_time":   datetime.fromtimestamp(int(times[i]),             tz=timezone.utc).isoformat(),
+            "entry":       round(entry_px,     5),
+            "exit":        round(float(exit_px), 5),
+            "profit":      round(plv, 4),
+            "ret_pct":     round(plv / max(0.01, abs(entry_px)) * 100, 4),
+            "exit_reason": exit_reason,
+            "bars_held":   int(i - pos["open_i"]),
+        })
 
     start_idx = max(50, len(c) - 4000)   # only test last 4000 bars
     for i in range(start_idx, len(c) - 1):
@@ -152,10 +177,8 @@ def simulate_genome(genome: dict, bars, sym_info) -> dict:
             if fri_close_profit and is_friday and hour >= friday_close:
                 exit_p = c[i]
                 pl = ((exit_p - pos["entry"]) if pos["side"] == "BUY" else (pos["entry"] - exit_p)) * LOT * contract
-                trades.append((pl, "FRIDAY"))
+                _close(exit_p, "FRIDAY", pl)
                 pos = None; cooldown = 2
-                cum_pl += pl
-                equity_curve.append(cum_pl)
                 if pl < 0: consec_losses += 1
                 else: consec_losses = 0
                 continue
@@ -163,15 +186,13 @@ def simulate_genome(genome: dict, bars, sym_info) -> dict:
             if pos["side"] == "BUY":
                 if bar_l <= pos["sl"]:
                     pl = (pos["sl"] - pos["entry"]) * LOT * contract
-                    trades.append((pl, "SL"))
+                    _close(pos["sl"], "SL", pl)
                     pos = None; cooldown = 2; consec_losses += 1
-                    cum_pl += pl; equity_curve.append(cum_pl)
                     continue
                 if bar_h >= pos["tp"]:
                     pl = (pos["tp"] - pos["entry"]) * LOT * contract
-                    trades.append((pl, "TP"))
+                    _close(pos["tp"], "TP", pl)
                     pos = None; cooldown = 2; consec_losses = 0
-                    cum_pl += pl; equity_curve.append(cum_pl)
                     continue
                 # Break-even nudge
                 if use_be and (c[i] - pos["entry"]) > cur_atr * 1.5:
@@ -179,15 +200,13 @@ def simulate_genome(genome: dict, bars, sym_info) -> dict:
             else:    # SELL
                 if bar_h >= pos["sl"]:
                     pl = (pos["entry"] - pos["sl"]) * LOT * contract
-                    trades.append((pl, "SL"))
+                    _close(pos["sl"], "SL", pl)
                     pos = None; cooldown = 2; consec_losses += 1
-                    cum_pl += pl; equity_curve.append(cum_pl)
                     continue
                 if bar_l <= pos["tp"]:
                     pl = (pos["entry"] - pos["tp"]) * LOT * contract
-                    trades.append((pl, "TP"))
+                    _close(pos["tp"], "TP", pl)
                     pos = None; cooldown = 2; consec_losses = 0
-                    cum_pl += pl; equity_curve.append(cum_pl)
                     continue
                 if use_be and (pos["entry"] - c[i]) > cur_atr * 1.5:
                     pos["sl"] = min(pos["sl"], pos["entry"] - cur_atr * 0.1)
@@ -315,6 +334,30 @@ def simulate_genome(genome: dict, bars, sym_info) -> dict:
     total_ret = sum(profits)
     # Linearity (R² of equity curve)
     lin = _linearity(equity_curve)
+    # Sample equity curve down for storage — max 500 pts is plenty for charting
+    if len(equity_pts) > 500:
+        step = len(equity_pts) // 500
+        equity_pts_compact = equity_pts[::step]
+        if equity_pts_compact[-1] != equity_pts[-1]:
+            equity_pts_compact.append(equity_pts[-1])
+    else:
+        equity_pts_compact = equity_pts
+
+    # Mark IS/OOS split (67/33 train/test as per CampaignConfig.train_split default)
+    is_oos_split_idx = int(len(trades_log) * 0.67)
+    biggest_win  = max((p for p, _ in trades), default=0)
+    biggest_loss = min((p for p, _ in trades), default=0)
+    longs  = sum(1 for t in trades_log if t["type"] == "BUY")
+    shorts = sum(1 for t in trades_log if t["type"] == "SELL")
+
+    # Max consecutive streaks
+    max_cons_wins = max_cons_losses = cw = cl = 0
+    for p, _ in trades:
+        if p > 0:
+            cw += 1; cl = 0; max_cons_wins = max(max_cons_wins, cw)
+        else:
+            cl += 1; cw = 0; max_cons_losses = max(max_cons_losses, cl)
+
     return {
         "trades":         len(trades),
         "wins":           len(wins),
@@ -327,9 +370,19 @@ def simulate_genome(genome: dict, bars, sym_info) -> dict:
         "linearity":      round(lin, 3),
         "avg_win":        round(gw / max(1, len(wins)), 4),
         "avg_loss":       round(-gl / max(1, len(losses)), 4),
+        "biggest_win":    round(biggest_win, 4),
+        "biggest_loss":   round(biggest_loss, 4),
+        "longs":          longs,
+        "shorts":         shorts,
+        "max_cons_wins":  max_cons_wins,
+        "max_cons_losses": max_cons_losses,
+        "is_oos_split_idx": is_oos_split_idx,
         "exit_breakdown": {
             "TP":     sum(1 for _, r in trades if r == "TP"),
             "SL":     sum(1 for _, r in trades if r == "SL"),
             "FRIDAY": sum(1 for _, r in trades if r == "FRIDAY"),
         },
+        # NEW: full per-trade log + timestamped equity curve for Inspector
+        "trades_log":      trades_log,
+        "equity_curve":    equity_pts_compact,
     }

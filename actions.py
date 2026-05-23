@@ -157,3 +157,12 @@ def deploy_genome_to_live(symbol: str, genome_id: str, tf: str) -> dict:
     cfg["best_tf"]            = tf
     cfg["best_pf"]            = target.get("profit_factor", 0)
     cfg_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {
+        "ok":            True,
+        "symbol":        symbol,
+        "genome_id":     genome_id,
+        "tf":            tf,
+        "profit_factor": target.get("profit_factor", 0),
+        "deployed_at":   cfg["deployed_at"],
+        "cfg_path":      str(cfg_path),
+    }
