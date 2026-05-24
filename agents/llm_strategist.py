@@ -73,6 +73,18 @@ will REJECT recommendations violating these):
 
 When you see "low score 62.5" — that is NOT low, it is HIGH (top 10%).
 The system top is typically 70-75. Don't kill medium/high scorers.
+
+BREEDING DISCIPLINE:
+The snapshot includes a `breeding_history` field with `recent_5` past
+crosses + their outcomes (SUCCESS / MEDIOCRE / FAILED). Before
+recommending a new breed_pair:
+  • LOOK at recent_5 — if a specific parent has produced 2+ FAILED
+    children recently, DO NOT pick it again as a parent
+  • If the SAME pair has already been bred (check parents list), don't
+    repeat — variations of the same cross tend to fail similarly
+  • Prefer parents whose past breeds SUCCEEDED, or pairs never tried
+  • If success_rate_pct is below 30, propose KILL recommendations
+    instead of more breeds — the gene pool may need cleanup first
 """
 
 
@@ -192,6 +204,39 @@ class LLMStrategist(Agent):
                  "msg": a["message"]}
                 for a in acts
             ]
+        except Exception: pass
+
+        # Breeding history summary — let the LLM learn from past outcomes
+        # so it doesn't suggest the same losing crosses repeatedly
+        try:
+            from r_native.hall_of_fame import load_index
+            idx = load_index()
+            breeds = [g for g in idx.values()
+                      if (g.get("birth_method") or "").startswith("crossover")
+                      and g.get("parents")]
+            success = [b for b in breeds if b.get("score", 0) >= 30]
+            failed  = [b for b in breeds if b.get("score", 0) < 15]
+            snap["breeding_history"] = {
+                "total_attempts":   len(breeds),
+                "successful":       len(success),
+                "failed":           len(failed),
+                "success_rate_pct": round(len(success) / max(1, len(breeds)) * 100, 1),
+                "best_breed": ({
+                    "child":   max(success, key=lambda g: g.get("score", 0)).get("nickname"),
+                    "score":   max(success, key=lambda g: g.get("score", 0)).get("score"),
+                    "parents": max(success, key=lambda g: g.get("score", 0)).get("parents"),
+                } if success else None),
+                "recent_5": [
+                    {"child":   b.get("id"),
+                     "parents": b.get("parents"),
+                     "score":   round(b.get("score", 0), 1),
+                     "verdict": ("SUCCESS" if b.get("score", 0) >= 30
+                                  else ("FAILED" if b.get("score", 0) < 15
+                                        else "MEDIOCRE"))}
+                    for b in sorted(breeds, key=lambda g: g.get("born_at", ""),
+                                    reverse=True)[:5]
+                ],
+            }
         except Exception: pass
 
         # Agent health
