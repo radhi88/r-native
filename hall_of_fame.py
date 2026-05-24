@@ -239,7 +239,6 @@ def kill(genome_id: str, reason: str) -> bool:
     if genome_id in pinned: return False
     deployed_on = is_deployed_anywhere(genome_id)
     if deployed_on:
-        # Refuse to kill — write a record so callers can see why
         try:
             print(f"[hof.kill] refused: {genome_id} is currently deployed on {deployed_on}",
                   flush=True)
@@ -248,6 +247,9 @@ def kill(genome_id: str, reason: str) -> bool:
     index = load_index()
     entry = index.get(genome_id)
     if not entry: return False
+    # Idempotent: if already killed, return False so callers don't double-report
+    if entry.get("killed"):
+        return False
     entry["killed"]      = True
     entry["kill_reason"] = reason
     entry["last_updated"] = datetime.now(timezone.utc).isoformat()

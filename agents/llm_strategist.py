@@ -139,17 +139,21 @@ class LLMStrategist(Agent):
         except Exception as e:
             snap["account_error"] = str(e)
 
-        # Top HoF per symbol
+        # Top HoF per symbol — ALIVE ONLY (killed genomes aren't actionable
+        # for the LLM, but get_recent_insights shows kill history separately)
         try:
             from r_native.hall_of_fame import load_symbol, load_pinned, load_index
             pinned = load_pinned()
+            full_idx = load_index()
             snap["hof"] = {
-                "total":   len(load_index()),
+                "total":   len(full_idx),
+                "alive":   sum(1 for g in full_idx.values() if not g.get("killed")),
+                "killed":  sum(1 for g in full_idx.values() if g.get("killed")),
                 "pinned":  len(pinned),
                 "by_symbol": {},
             }
             for sym in ("BTCUSDm", "XAUUSDm"):
-                lst = load_symbol(sym)[:5]
+                lst = [e for e in load_symbol(sym) if not e.get("killed")][:5]
                 snap["hof"]["by_symbol"][sym] = [
                     {"id": e["id"], "nickname": e.get("nickname"),
                      "score": e.get("score"),
