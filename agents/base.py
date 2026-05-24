@@ -22,10 +22,34 @@ STATE_PATH    = AGENTS_DIR / "state.json"
 # Module-level insight ring buffer (last 500) shared across agents
 _insights_lock = threading.Lock()
 _insights_ring: deque = deque(maxlen=500)
+_ring_hydrated = False
 
 
 def _ensure():
     AGENTS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _hydrate_ring_from_disk():
+    """Load the last 500 lines from insights.jsonl into the ring buffer.
+    Called once on first emit (cheap, idempotent). Survives brain restarts
+    so the UI never shows an empty AI Advisors feed after a quick reboot."""
+    global _ring_hydrated
+    if _ring_hydrated: return
+    _ring_hydrated = True
+    if not INSIGHTS_PATH.exists(): return
+    try:
+        # Read all lines, take last 500
+        with INSIGHTS_PATH.open("r", encoding="utf-8") as f:
+            lines = f.readlines()
+        for line in lines[-500:]:
+            line = line.strip()
+            if not line: continue
+            try:
+                _insights_ring.append(json.loads(line))
+            except Exception:
+                continue
+    except Exception as e:
+        print(f"[insights] hydrate err: {e}", flush=True)
 
 
 def emit_insight(agent: str, level: str, message: str,
@@ -35,6 +59,9 @@ def emit_insight(agent: str, level: str, message: str,
     level: INFO | WARN | ACT  (ACT = the agent actually changed something)
     """
     _ensure()
+    with _insights_lock:
+        if not _ring_hydrated:
+            _hydrate_ring_from_disk()
     rec = {
         "ts":      datetime.now(timezone.utc).isoformat(),
         "agent":   agent,
@@ -53,8 +80,11 @@ def emit_insight(agent: str, level: str, message: str,
 
 
 def get_recent_insights(n: int = 100, agent: str = None, level: str = None) -> list[dict]:
-    """Most recent insights, newest first. Optionally filter by agent / level."""
+    """Most recent insights, newest first. Optionally filter by agent / level.
+    Hydrates from JSONL on first call so insights survive brain restarts."""
     with _insights_lock:
+        if not _ring_hydrated:
+            _hydrate_ring_from_disk()
         items = list(_insights_ring)
     items.reverse()
     if agent:
