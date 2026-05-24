@@ -152,8 +152,16 @@ class GeneticEngine:
 
     # ── Top-level phases ──
     def proving_grounds(self) -> list[Genome]:
-        self._emit("PG", f"Generating {self.cfg.pg_candidates} random genomes", 0, 1)
-        pop = [Genome.random(gen=0) for _ in range(self.cfg.pg_candidates)]
+        # Elite carry-forward: seed PG with top genomes from Hall of Fame
+        # so the GA continues from where prior cycles left off instead of
+        # restarting from random every time
+        seed_pop = self._load_elite_seeds(self.cfg.symbol)
+        n_seeds = len(seed_pop)
+        n_random = max(1, self.cfg.pg_candidates - n_seeds)
+
+        self._emit("PG", f"Generating {n_random} random + {n_seeds} elite-carry genomes",
+                   0, 1)
+        pop = seed_pop + [Genome.random(gen=0) for _ in range(n_random)]
         self._emit("PG", f"Evaluating {len(pop)} candidates with {self.cfg.n_workers} workers", 0, len(pop))
         results = self._evaluate_population(pop, "PG")
         self._purge(results)
@@ -161,6 +169,29 @@ class GeneticEngine:
         self.elites = results[:50]
         self._emit("PG", f"Done. Survivors: {len(elite)}  Vault: {len(self.vault)}", 1, 1)
         return elite
+
+    def _load_elite_seeds(self, symbol: str, n: int = 30) -> list:
+        """Pull top genomes from Hall of Fame to seed this GA cycle.
+        This is what makes the system actually accumulate wisdom across
+        cycles instead of starting from scratch each time."""
+        try:
+            from r_native.hall_of_fame import get_elites
+            elites = get_elites(symbol, n=n, include_pinned=True)
+        except Exception:
+            return []
+
+        seeds = []
+        for e in elites:
+            params = e.get("all_params") or {}
+            if not params:
+                continue
+            try:
+                # Try Genome.from_dict (handles full genome dicts)
+                g = Genome.from_dict(params)
+                seeds.append(g)
+            except Exception:
+                continue
+        return seeds
 
     def run_tribe(self, tribe_name: str, n_gens: int, seed: list[Genome]) -> list[Genome]:
         current = seed

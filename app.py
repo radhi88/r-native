@@ -947,6 +947,7 @@ class RNativeMain(QMainWindow):
         tabs.addTab(self._build_vault_tab(),    "💎 VAULT")
         tabs.addTab(self._build_live_tab(),     "⚡ LIVE")
         tabs.addTab(self._build_genes_tab(),    "🧬 GENES")
+        tabs.addTab(self._build_hof_tab(),      "🏆 HALL OF FAME")
         self.center_stack.addWidget(tabs)
 
         # mode 1: ADVANCED — PROP FIRM + EXECUTION & SPREAD + EVOLUTION panels
@@ -1463,6 +1464,204 @@ class RNativeMain(QMainWindow):
         self.config_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         v.addWidget(self.config_table, 1)
         return w
+
+    def _build_hof_tab(self):
+        """🏆 Hall of Fame — every genome ever produced, ranked, with pin/deploy."""
+        w = QWidget(); v = QVBoxLayout(w)
+        v.setContentsMargins(10, 10, 10, 10); v.setSpacing(8)
+
+        # Summary header
+        self.hof_summary_lbl = QLabel("Loading Hall of Fame…")
+        self.hof_summary_lbl.setStyleSheet(
+            "font-size: 14px; color: #ddd; padding: 6px; "
+            "background: #161826; border: 1px solid #2a2d40; border-radius: 6px;")
+        v.addWidget(self.hof_summary_lbl)
+
+        # Symbol filter + actions
+        hb = QHBoxLayout()
+        hb.addWidget(QLabel("Symbol:"))
+        self.hof_symbol_combo = QComboBox()
+        self.hof_symbol_combo.addItems(["BTCUSDm", "XAUUSDm", "EURUSDm",
+                                         "GBPUSDm", "USDJPYm"])
+        self.hof_symbol_combo.currentTextChanged.connect(
+            lambda _: self._refresh_hof_tab())
+        hb.addWidget(self.hof_symbol_combo)
+
+        refresh_btn = QPushButton("🔄 Refresh")
+        refresh_btn.clicked.connect(self._refresh_hof_tab)
+        hb.addWidget(refresh_btn)
+
+        pin_btn = QPushButton("📌 PIN")
+        pin_btn.setProperty("role", "success")
+        pin_btn.clicked.connect(lambda: self._hof_action("pin"))
+        pin_btn.setToolTip("Make this genome immortal (can't be killed)")
+        hb.addWidget(pin_btn)
+
+        unpin_btn = QPushButton("📍 UNPIN")
+        unpin_btn.clicked.connect(lambda: self._hof_action("unpin"))
+        hb.addWidget(unpin_btn)
+
+        deploy_btn = QPushButton("🚀 DEPLOY")
+        deploy_btn.setProperty("role", "primary")
+        deploy_btn.clicked.connect(lambda: self._hof_action("deploy"))
+        deploy_btn.setToolTip("Send this genome live as the active trader")
+        hb.addWidget(deploy_btn)
+
+        hb.addStretch()
+        v.addLayout(hb)
+
+        # Main HoF table
+        self.hof_table = QTableWidget(0, 9)
+        self.hof_table.setHorizontalHeaderLabels([
+            "📌", "Rank", "Nickname", "Score",
+            "Trades", "WR%", "PF", "Live $", "Last Deploy"])
+        self.hof_table.horizontalHeader().setStretchLastSection(True)
+        self.hof_table.setAlternatingRowColors(True)
+        self.hof_table.setSelectionBehavior(self.hof_table.SelectRows)
+        self.hof_table.setEditTriggers(self.hof_table.NoEditTriggers)
+        # Column widths
+        self.hof_table.setColumnWidth(0, 30)
+        self.hof_table.setColumnWidth(1, 50)
+        self.hof_table.setColumnWidth(2, 320)
+        self.hof_table.setColumnWidth(3, 70)
+        self.hof_table.setColumnWidth(4, 70)
+        self.hof_table.setColumnWidth(5, 70)
+        self.hof_table.setColumnWidth(6, 70)
+        self.hof_table.setColumnWidth(7, 90)
+        v.addWidget(self.hof_table, 1)
+
+        # Initial populate
+        QTimer.singleShot(500, self._refresh_hof_tab)
+        return w
+
+    def _refresh_hof_tab(self) -> None:
+        """Reload Hall of Fame data from brain API."""
+        import urllib.request as _u
+        import json as _json
+        if not hasattr(self, "hof_table"):
+            return
+        sym = self.hof_symbol_combo.currentText()
+
+        try:
+            with _u.urlopen("http://127.0.0.1:5055/api/r/hof/summary",
+                            timeout=3) as r:
+                summ = _json.loads(r.read().decode())
+        except Exception:
+            self.hof_summary_lbl.setText("⚠ brain server offline")
+            return
+
+        if not summ.get("ok"):
+            self.hof_summary_lbl.setText("⚠ HoF API error")
+            return
+
+        total = summ.get("total_genomes", 0)
+        pinned = summ.get("pinned_count", 0)
+        killed = summ.get("killed_count", 0)
+        by_sym = summ.get("by_symbol", {})
+
+        sym_lines = []
+        for s, info in by_sym.items():
+            sym_lines.append(
+                f"{s}: {info['alive']} genomes · best="
+                f"{info.get('top_nickname','—')} (score {info.get('top_score',0):.1f})")
+
+        self.hof_summary_lbl.setText(
+            f"🏆 <b>{total}</b> total genomes · 📌 {pinned} pinned · ❌ {killed} killed\n"
+            + "\n".join(sym_lines))
+
+        # Load this symbol's ranked list
+        try:
+            with _u.urlopen(f"http://127.0.0.1:5055/api/r/hof/symbol/{sym}?limit=100",
+                            timeout=3) as r:
+                data = _json.loads(r.read().decode())
+        except Exception:
+            return
+
+        genomes = data.get("genomes", []) if data.get("ok") else []
+        self.hof_table.setRowCount(len(genomes))
+        for i, g in enumerate(genomes):
+            s = g.get("stats", {})
+            pin_text = "📌" if g.get("pinned") else ""
+            depl = g.get("deployments") or []
+            last_dep = depl[-1].get("at", "")[:10] if depl else "—"
+            live_pl = g.get("live_pnl", 0)
+
+            cells = [
+                pin_text,
+                str(i + 1),
+                g.get("nickname", g.get("id", "?")),
+                f"{g.get('score', 0):.1f}",
+                str(s.get("trades", 0)),
+                f"{s.get('win_rate', 0):.1f}",
+                f"{s.get('profit_factor', 0):.2f}",
+                f"${live_pl:+.2f}" if live_pl else "—",
+                last_dep,
+            ]
+            for col, txt in enumerate(cells):
+                item = QTableWidgetItem(txt)
+                # Color score by quality
+                if col == 3:
+                    score = g.get("score", 0)
+                    if score >= 60: item.setForeground(QColor(GREEN))
+                    elif score >= 30: item.setForeground(QColor("#e0c44b"))
+                    else: item.setForeground(QColor(RED))
+                # Color live P/L
+                if col == 7 and live_pl:
+                    item.setForeground(QColor(GREEN if live_pl > 0 else RED))
+                # Store genome id in row data
+                if col == 0:
+                    item.setData(Qt.UserRole, g.get("id"))
+                self.hof_table.setItem(i, col, item)
+
+    def _hof_action(self, action: str) -> None:
+        """Pin / unpin / deploy the selected HoF row."""
+        import urllib.request as _u
+        import json as _json
+        if not hasattr(self, "hof_table"):
+            return
+        row = self.hof_table.currentRow()
+        if row < 0:
+            self._set_deploy_banner("Select a genome first", error=True)
+            return
+        item = self.hof_table.item(row, 0)
+        if not item: return
+        gid = item.data(Qt.UserRole)
+        if not gid: return
+
+        sym = self.hof_symbol_combo.currentText()
+
+        if action in ("pin", "unpin"):
+            payload = {"id": gid, "pinned": (action == "pin")}
+            url = "http://127.0.0.1:5055/api/r/hof/pin"
+        elif action == "deploy":
+            payload = {"id": gid, "symbol": sym}
+            url = "http://127.0.0.1:5055/api/r/hof/deploy"
+        else:
+            return
+
+        try:
+            data = _json.dumps(payload).encode("utf-8")
+            req = _u.Request(url, data=data, method="POST",
+                             headers={"Content-Type": "application/json"})
+            with _u.urlopen(req, timeout=4) as r:
+                result = _json.loads(r.read().decode())
+        except Exception as e:
+            self._set_deploy_banner(f"❌ HoF {action} failed: {e}", error=True)
+            return
+
+        if not result.get("ok"):
+            self._set_deploy_banner(f"❌ {result.get('error', 'failed')}", error=True)
+            return
+
+        nickname = self.hof_table.item(row, 2).text() if self.hof_table.item(row, 2) else gid
+        if action == "deploy":
+            self._set_deploy_banner(
+                f"🚀 DEPLOYED {nickname} → {sym} (live now)", error=False)
+            self._log(f"🏆 HoF deploy: {nickname} → {sym}")
+        else:
+            self._set_deploy_banner(
+                f"{'📌' if action=='pin' else '📍'} {action.upper()}: {nickname}", error=False)
+        self._refresh_hof_tab()
 
     def _build_genes_tab(self):
         w = QWidget(); v = QVBoxLayout(w); v.setContentsMargins(10, 10, 10, 10); v.setSpacing(10)
