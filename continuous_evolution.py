@@ -132,9 +132,32 @@ def _run_campaign(symbol: str, tf: str, pg: int, gens: int) -> dict | None:
         return None
 
 
+def _admit_to_hall_of_fame(symbol: str, tf: str, top: dict, new_score: float,
+                           new_trades: int):
+    """Save every campaign top genome to Hall of Fame, deployed or not.
+    This way nothing is ever 'dropped' — every genome that scored well
+    becomes a permanent breeding/seeding asset."""
+    try:
+        from r_native.hall_of_fame import admit
+        entry = admit(
+            genome={"id": top.get("id")},
+            symbol=symbol, tf=tf, score=new_score,
+            stats=top.get("stats") or {},
+            all_params=top.get("genome") or top.get("all_params") or top,
+            active_genes=top.get("active_genes") or top.get("genes") or [],
+            archetype=top.get("archetype"),
+            birth_method="ga_random",
+        )
+        _log(f"   🏆 admitted {entry['nickname']} to Hall of Fame")
+    except Exception as e:
+        _log(f"   ⚠ HoF admit failed: {e}")
+
+
 def _maybe_auto_deploy(symbol: str, summary: dict, threshold: float,
                        min_trades: int) -> dict:
-    """Compare new top vs deployed, auto-deploy if it wins by `threshold`."""
+    """Compare new top vs deployed, auto-deploy if it wins by `threshold`.
+    ALSO: every top genome is admitted to the Hall of Fame regardless of
+    whether it gets deployed — so it can seed future cycles."""
     if not summary:
         return {"deployed": False, "reason": "no campaign summary"}
 
@@ -154,6 +177,13 @@ def _maybe_auto_deploy(symbol: str, summary: dict, threshold: float,
 
     if not new_id:
         return {"deployed": False, "reason": "top genome has no id"}
+
+    # Hall of Fame admission happens BEFORE deploy gate — every viable
+    # candidate is preserved forever
+    if new_trades >= min_trades:
+        _admit_to_hall_of_fame(symbol, summary.get("timeframe", "M5"),
+                               top, new_score, new_trades)
+
     if new_trades < min_trades:
         return {"deployed": False,
                 "reason": f"sample too small ({new_trades} < {min_trades})"}
@@ -190,6 +220,11 @@ def _maybe_auto_deploy(symbol: str, summary: dict, threshold: float,
             return {"deployed": False,
                     "reason": f"deploy fn returned: {result.get('error')}",
                     "result": result}
+        # Record deployment in Hall of Fame
+        try:
+            from r_native.hall_of_fame import record_deployment
+            record_deployment(new_id, symbol)
+        except Exception: pass
         return {"deployed": True, "id": new_id, "new_score": new_score,
                 "old_score": cur_score, "old_id": cur_id, "delta": delta,
                 "trades": new_trades, "result": result}
