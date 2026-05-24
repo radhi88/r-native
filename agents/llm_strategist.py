@@ -302,6 +302,9 @@ class LLMStrategist(Agent):
                 if not gid: return "pin_no_id"
                 entry = load_index().get(gid)
                 if not entry: return f"pin_unknown_id_{gid}"
+                # Already-pinned check up front for clear feedback
+                if entry.get("pinned"):
+                    return f"already_pinned"
                 score = float(entry.get("score") or 0)
                 if score < self.PIN_SCORE_FLOOR:
                     emit_insight(self.name, "WARN",

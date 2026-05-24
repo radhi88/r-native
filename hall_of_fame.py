@@ -188,8 +188,11 @@ def record_live_trade(genome_id: str, pnl: float) -> None:
 
 
 def pin(genome_id: str) -> bool:
-    """Pin a genome — it survives kills and ages forever."""
+    """Pin a genome — it survives kills and ages forever.
+    Idempotent: returns False if already pinned (no-op)."""
     pinned = set(load_pinned())
+    if genome_id in pinned:
+        return False
     pinned.add(genome_id)
     _write_json(PINNED_PATH, sorted(pinned))
     index = load_index()
@@ -200,7 +203,10 @@ def pin(genome_id: str) -> bool:
 
 
 def unpin(genome_id: str) -> bool:
+    """Remove pin. Idempotent: returns False if not pinned (no-op)."""
     pinned = set(load_pinned())
+    if genome_id not in pinned:
+        return False
     pinned.discard(genome_id)
     _write_json(PINNED_PATH, sorted(pinned))
     index = load_index()
