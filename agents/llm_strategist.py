@@ -85,6 +85,18 @@ recommending a new breed_pair:
   • Prefer parents whose past breeds SUCCEEDED, or pairs never tried
   • If success_rate_pct is below 30, propose KILL recommendations
     instead of more breeds — the gene pool may need cleanup first
+
+LEARN FROM YOUR BLOCKED ATTEMPTS:
+The snapshot now includes `your_recent_blocked_attempts` — a list of
+your past recommendations that the system REFUSED to execute (with
+🛡 prefix). Examples:
+  • "blocked LLM kill of F1494D — currently deployed on XAUUSDm" →
+    means F1494D is the live trader for XAU, don't keep proposing its
+    kill until it's been swapped out
+  • "blocked breed: pipeline success 11%" → gene pool is too poor for
+    more breeding, focus on kills/investigate instead
+Do NOT propose the same recommendation that was just blocked. Read
+this list, understand WHY it was refused, and adapt.
 """
 
 
@@ -207,6 +219,19 @@ class LLMStrategist(Agent):
                 {"ts": a["ts"], "agent": a["agent"],
                  "msg": a["message"]}
                 for a in acts
+            ]
+        except Exception: pass
+
+        # Critical: feed the LLM its OWN past BLOCKED recommendations so it
+        # stops looping on the same refused actions. Without this it
+        # proposes kill_genome F1494D every cycle because it never learns
+        # the action was refused (the block is WARN, not ACT).
+        try:
+            warns = get_recent_insights(n=30, agent=self.name, level="WARN")
+            blocks = [w for w in warns if "🛡" in (w.get("message") or "")]
+            snap["your_recent_blocked_attempts"] = [
+                {"ts": w["ts"], "block": w["message"]}
+                for w in blocks[:8]
             ]
         except Exception: pass
 
