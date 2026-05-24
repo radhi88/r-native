@@ -137,32 +137,81 @@ def close_all_r_positions() -> dict:
     return {"ok": True, "closed": closed, "failed": failed}
 
 
-def deploy_genome_to_live(symbol: str, genome_id: str, tf: str) -> dict:
-    """Mark this genome as the active deployment for R Executor to use."""
+def deploy_genome_to_live(symbol: str, genome_id: str, tf: str,
+                           genome_dict: dict = None) -> dict:
+    """Mark this genome as the active deployment for R Executor to use.
+
+    Lookup order for the genome:
+      1. explicit genome_dict argument (used by continuous_evolution)
+      2. ga_strategies in the symbol config (used by manual DEPLOY button)
+      3. latest campaign summary.json that has this genome id
+    """
     cfg_path = CONFIG_DIR / f"{symbol}.json"
-    if not cfg_path.exists():
-        return {"ok": False, "error": "symbol config missing"}
-    cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
-    # Find the genome in ga_strategies
-    target = None
-    for s in cfg.get("ga_strategies", []):
-        if s.get("id") == genome_id:
-            target = s; break
+    if cfg_path.exists():
+        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+    else:
+        cfg = {"symbol": symbol}
+
+    # 1) explicit dict wins
+    target = genome_dict
+
+    # 2) look in ga_strategies (manual flow)
     if not target:
-        return {"ok": False, "error": f"genome {genome_id} not in vault"}
+        for s in cfg.get("ga_strategies", []):
+            if s.get("id") == genome_id:
+                target = s; break
+
+    # 3) fallback: search latest campaign summaries (auto-evo flow)
+    if not target:
+        try:
+            import os
+            from pathlib import Path
+            camp_root = Path(r"C:\Users\Radhi\MT5\data\r_native\campaigns")
+            if camp_root.exists():
+                # Newest campaign folders first; match symbol prefix
+                folders = sorted(
+                    [p for p in camp_root.iterdir() if p.is_dir()
+                     and p.name.startswith(f"{symbol}_")],
+                    key=lambda p: p.stat().st_mtime, reverse=True)
+                for folder in folders[:5]:  # check last 5 campaigns
+                    sumpath = folder / "summary.json"
+                    if not sumpath.exists(): continue
+                    try:
+                        summ = json.loads(sumpath.read_text(encoding="utf-8"))
+                    except Exception: continue
+                    tg = summ.get("top_genome") or {}
+                    if tg.get("id") == genome_id:
+                        target = tg; break
+                    # also scan elite_genomes — but they're just IDs;
+                    # the full dicts only live in top_genome, so we can't recover here
+        except Exception:
+            pass
+
+    if not target:
+        return {"ok": False, "error": f"genome {genome_id} not in vault or recent campaigns"}
+
+    # Preserve session window if existing deployment had one (so widened-to-24h sticks)
+    prev = cfg.get("deployed_genome") or {}
+    target = dict(target)  # don't mutate caller's dict
+    if "start_hour" not in target and "start_hour" in prev:
+        target["start_hour"] = prev["start_hour"]
+        target["end_hour"]   = prev.get("end_hour")
+
     cfg["deployed_genome"]    = target
     cfg["deployed_at"]        = datetime.now(timezone.utc).isoformat()
     cfg["tradeable"]          = True
     cfg["best_archetype"]     = "GA_EVOLVED"
     cfg["best_tf"]            = tf
-    cfg["best_pf"]            = target.get("profit_factor", 0)
+    cfg["best_pf"]            = (target.get("stats") or {}).get("profit_factor",
+                                                                 target.get("profit_factor", 0))
+    cfg_path.parent.mkdir(parents=True, exist_ok=True)
     cfg_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
     return {
         "ok":            True,
         "symbol":        symbol,
         "genome_id":     genome_id,
         "tf":            tf,
-        "profit_factor": target.get("profit_factor", 0),
+        "profit_factor": cfg["best_pf"],
         "deployed_at":   cfg["deployed_at"],
         "cfg_path":      str(cfg_path),
     }

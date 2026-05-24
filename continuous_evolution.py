@@ -177,11 +177,19 @@ def _maybe_auto_deploy(symbol: str, summary: dict, threshold: float,
                           f"current {cur_id}({cur_score:.1f}) + {threshold}",
                 "delta": delta}
 
-    # Deploy it
+    # Deploy it — pass the full genome dict so we don't need to scrape ga_strategies
     try:
         from r_native.actions import deploy_genome_to_live
+        # Tag the genome with its real score so future cycles can compare
+        top_with_score = dict(top)
+        top_with_score["score"] = new_score
         result = deploy_genome_to_live(symbol, new_id,
-                                       summary.get("timeframe", "M5"))
+                                       summary.get("timeframe", "M5"),
+                                       genome_dict=top_with_score)
+        if not result.get("ok"):
+            return {"deployed": False,
+                    "reason": f"deploy fn returned: {result.get('error')}",
+                    "result": result}
         return {"deployed": True, "id": new_id, "new_score": new_score,
                 "old_score": cur_score, "old_id": cur_id, "delta": delta,
                 "trades": new_trades, "result": result}
