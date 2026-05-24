@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R Pixel Lab — Retro Sprite Mascots</title>
+<style>
+:root {
+  --bg-0:        #060418;
+  --bg-1:        #0d0824;
+  --bg-2:        #14092e;
+  --bg-3:        #1c1142;
+  --gold-0:      #fbbf24;
+  --gold-1:      #f59e0b;
+  --gold-2:      #b45309;
+  --violet:      #8b5cf6;
+  --violet-soft: #4c1d95;
+  --green:       #10b981;
+  --red:         #ef4444;
+  --cyan:        #22d3ee;
+  --text:        #f1f5f9;
+  --muted:       #94a3b8;
+  --border:      #2d1b69;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(251, 191, 36, 0.08) 0%, transparent 50%),
+    var(--bg-0);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* CRT scanlines overlay matches the digital game vibe */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 99;
+  background:
+    linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.18) 50%),
+    linear-gradient(90deg, rgba(255,0,0,0.04), rgba(0,255,0,0.02), rgba(0,0,255,0.05));
+  background-size: 100% 4px, 3px 100%;
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+}
+
+/* ───── HEADER ───── */
+header.r-head {
+  background: linear-gradient(180deg, rgba(13,8,36,0.95) 0%, rgba(6,4,24,0.7) 100%);
+  border-bottom: 1px solid var(--violet-soft);
+  padding: 18px 30px;
+  display: flex; align-items: center; gap: 18px;
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(8px);
+}
+header.r-head .logo {
+  width: 48px; height: 48px;
+  background: var(--bg-3); border: 1px solid var(--violet);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  color: var(--gold-0); font-weight: 900; font-size: 24px;
+  font-family: 'Consolas', monospace;
+  filter: drop-shadow(0 0 14px rgba(251, 191, 36, 0.4));
+}
+header.r-head h1 {
+  margin: 0; font-size: 22px; font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-0), var(--gold-2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: 3px;
+}
+header.r-head .tag {
+  color: var(--muted); font-size: 11px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+.r-back {
+  margin-inline-start: auto;
+  background: var(--bg-3); border: 1px solid var(--violet);
+  color: var(--gold-0); padding: 8px 14px; border-radius: 6px;
+  text-decoration: none; font-size: 12px;
+}
+.r-back:hover { background: var(--violet-soft); }
+
+/* ───── LAYOUT ───── */
+main {
+  padding: 22px 28px; max-width: 1600px; margin: 0 auto;
+  display: grid; gap: 18px;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 1100px) { main { grid-template-columns: 1fr; } }
+
+/* ───── CARDS ───── */
+.card {
+  background: linear-gradient(180deg, var(--bg-1), rgba(6,4,24,0.85));
+  border: 1px solid var(--border); border-radius: 12px; padding: 18px;
+  position: relative;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold-0), transparent);
+  border-radius: 12px 12px 0 0;
+}
+.card h2 {
+  margin: 0 0 14px 0; font-size: 13px; color: var(--gold-0);
+  letter-spacing: 3px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+}
+.card h2 .ico { font-size: 18px; }
+
+/* ───── ARENA (LEFT) ───── */
+.arena-row {
+  display: grid; grid-template-columns: 130px 1fr; gap: 14px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; margin-bottom: 14px;
+}
+.mascot-frame {
+  width: 120px; height: 130px;
+  background: var(--bg-0); border: 2px solid var(--gold-0);
+  border-radius: 10px; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 24px rgba(251,191,36,0.2) inset;
+}
+.mascot-frame canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+.mascot-frame .state-tag {
+  position: absolute; top: 6px; right: 6px;
+  font-size: 8px; padding: 2px 6px; border-radius: 4px;
+  background: rgba(0,0,0,0.7); border: 1px solid var(--gold-0);
+  color: var(--gold-0); font-weight: 700; letter-spacing: 1px;
+}
+.mascot-info .label {
+  font-size: 10px; color: var(--gold-0); letter-spacing: 2px; font-weight: 700;
+}
+.mascot-info .name {
+  font-size: 18px; font-weight: 900; color: var(--text); margin: 4px 0;
+}
+.mascot-info .quote {
+  font-style: italic; color: var(--muted); font-size: 12px; line-height: 1.55;
+}
+
+/* Chart */
+.chart-frame {
+  height: 180px; background: var(--bg-0); border: 1px solid var(--border);
+  border-radius: 8px; position: relative; overflow: hidden; padding: 8px;
+  display: flex; align-items: end; gap: 2px;
+}
+.chart-frame .badge {
+  position: absolute; top: 6px; left: 8px; font-size: 11px; color: var(--text);
+  font-family: 'Consolas', monospace; background: rgba(6,4,24,0.8);
+  padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border);
+}
+.chart-frame .badge b { color: var(--green); }
+.candle { flex: 1; min-width: 4px; position: relative; }
+.candle .wick {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: 2px;
+}
+.candle .body {
+  position: absolute; left: 0; right: 0; border-radius: 1px;
+}
+.candle.up .body { background: var(--green); border: 1px solid #0d8f63; }
+.candle.up .wick { background: var(--green); opacity: 0.7; }
+.candle.down .body { background: var(--red); border: 1px solid #b91c1c; }
+.candle.down .wick { background: var(--red); opacity: 0.7; }
+
+/* Controls */
+.sym-row, .ctrl-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;
+}
+.btn {
+  background: var(--bg-3); border: 1px solid var(--border); color: var(--text);
+  padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer;
+  font-size: 12px; letter-spacing: 1px; transition: 0.15s;
+  font-family: inherit;
+}
+.btn:hover { border-color: var(--gold-0); }
+.btn.active { background: linear-gradient(135deg, var(--gold-0), var(--gold-2)); color: #000; border-color: var(--gold-0); }
+.btn-long { background: var(--green); color: #000; border-color: #0d8f63; border-bottom: 3px solid #0a6e4b; }
+.btn-long:hover { background: #34d399; }
+.btn-short { background: var(--red); color: #fff; border-color: #b91c1c; border-bottom: 3px solid #7f1d1d; }
+.btn-short:hover { background: #f87171; }
+.btn-primary { background: linear-gradient(135deg, var(--gold-0), var(--gold-2)); color: #000; border: none; }
+
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 10px 0;
+}
+.stat-cell {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px; text-align: center;
+}
+.stat-cell .lbl { font-size: 9px; color: var(--violet); letter-spacing: 1px; }
+.stat-cell .val {
+  font-size: 16px; font-weight: 900; font-family: 'Consolas', monospace;
+  color: var(--text); margin-top: 2px;
+}
+.stat-cell.pnl-pos .val { color: var(--green); }
+.stat-cell.pnl-neg .val { color: var(--red); }
+
+/* ───── EDITOR (RIGHT) ───── */
+.preset-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 6px; margin-bottom: 14px;
+}
+.preset-tile {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  transition: 0.15s;
+}
+.preset-tile:hover { border-color: var(--gold-0); transform: translateY(-1px); }
+.preset-tile.active { background: rgba(251,191,36,0.15); border-color: var(--gold-0); }
+.preset-tile canvas {
+  image-rendering: pixelated; image-rendering: crisp-edges;
+}
+.preset-tile .name {
+  font-size: 9px; color: var(--text); text-align: center; line-height: 1.2;
+}
+
+.canvas-wrap {
+  display: grid; grid-template-columns: 1fr 220px; gap: 12px;
+}
+@media (max-width: 800px) { .canvas-wrap { grid-template-columns: 1fr; } }
+
+.pixel-grid {
+  background: var(--bg-0); border: 2px solid var(--border);
+  border-radius: 10px; padding: 4px; position: relative;
+  display: grid; grid-template-columns: repeat(16, 1fr);
+  gap: 1px; aspect-ratio: 1;
+  user-select: none; touch-action: none;
+}
+.pixel-cell {
+  background: var(--bg-2);
+  cursor: crosshair; transition: 0.05s;
+  outline: 1px solid rgba(255,255,255,0.03);
+}
+.pixel-cell:hover { outline: 1px solid var(--violet); }
+
+.color-palette {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;
+  background: var(--bg-0); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px;
+}
+.color-swatch {
+  width: 100%; aspect-ratio: 1; border-radius: 4px; cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.3); position: relative;
+}
+.color-swatch.active::after {
+  content: '✓'; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 900; text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+}
+
+.tool-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+  margin-top: 10px;
+}
+.tool-btn {
+  background: var(--bg-3); border: 1px solid var(--border); color: var(--text);
+  padding: 6px; border-radius: 5px; font-size: 10px; font-weight: 700;
+  cursor: pointer; text-align: center;
+}
+.tool-btn.active { background: var(--gold-0); color: #000; border-color: var(--gold-0); }
+
+.frame-tabs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+  background: var(--bg-0); padding: 4px; border-radius: 6px;
+  border: 1px solid var(--border); margin-bottom: 10px;
+}
+.frame-tab {
+  background: transparent; border: none; color: var(--muted);
+  padding: 6px; font-size: 11px; font-weight: 700;
+  cursor: pointer; border-radius: 4px;
+}
+.frame-tab.active { background: var(--gold-0); color: #000; }
+
+.fps-row {
+  display: grid; grid-template-columns: 60px 1fr 40px; align-items: center;
+  gap: 8px; margin: 10px 0;
+}
+.fps-row input[type=range] { accent-color: var(--gold-0); }
+
+.export-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 12px;
+}
+.lbl-row {
+  font-size: 10px; color: var(--muted); letter-spacing: 2px;
+  text-transform: uppercase; margin: 8px 0 4px;
+}
+
+#sound-toggle {
+  position: fixed; bottom: 18px; left: 18px; z-index: 200;
+  background: var(--bg-3); border: 1px solid var(--gold-0); color: var(--gold-0);
+  width: 42px; height: 42px; border-radius: 50%;
+  font-size: 18px; cursor: pointer; transition: 0.15s;
+}
+#sound-toggle:hover { background: var(--violet-soft); }
+
+footer {
+  text-align: center; color: var(--muted); padding: 20px;
+  font-size: 11px; border-top: 1px solid var(--border); margin-top: 20px;
+}
+footer code {
+  background: var(--bg-3); padding: 2px 6px; border-radius: 3px;
+  color: var(--gold-0); font-family: 'Consolas', monospace;
+}
+</style>
+</head>
+<body>
+
+<header class="r-head">
+  <div class="logo">R</div>
+  <div>
+    <h1>R PIXEL LAB</h1>
+    <div class="tag">Retro Mascots · Trader Emotions · 16×16 Sprite Forge</div>
+  </div>
+  <a href="/" class="r-back">← العودة لـ R Factory</a>
+</header>
+
+<main>
+
+  <!-- ════ LEFT: RETRO MARKET ARENA ════ -->
+  <section class="card">
+    <h2><span class="ico">🎮</span> Retro Market Arena</h2>
+
+    <!-- Live mascot reaction strip -->
+    <div class="arena-row">
+      <div class="mascot-frame">
+        <canvas id="mascot-canvas" width="128" height="128"></canvas>
+        <div class="state-tag" id="mascot-state">IDLE</div>
+      </div>
+      <div class="mascot-info">
+        <div class="label">ACTIVE TRADER MOOD</div>
+        <div class="name" id="mascot-name">Bull Trader</div>
+        <div class="quote" id="mascot-quote">“Charts look steady — scanning the next breakout.”</div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-frame" id="chart"></div>
+
+    <!-- Symbol switch -->
+    <div class="sym-row">
+      <button class="btn active" id="sym-xau" onclick="setSymbol('XAUUSD')">⚜ XAUUSD (Gold)</button>
+      <button class="btn" id="sym-btc" onclick="setSymbol('BTCUSD')">₿ BTCUSD (Bitcoin)</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-cell"><div class="lbl">CASH</div><div class="val" id="kpi-cash">$10,000</div></div>
+      <div class="stat-cell"><div class="lbl">NET WORTH</div><div class="val" id="kpi-equity">$10,000</div></div>
+      <div class="stat-cell" id="kpi-pnl-cell"><div class="lbl">OPEN P/L</div><div class="val" id="kpi-pnl">$0</div></div>
+      <div class="stat-cell"><div class="lbl">HIGH SCORE</div><div class="val" id="kpi-high" style="color:var(--gold-0)">$10,000</div></div>
+    </div>
+
+    <!-- Position display (shows when open) -->
+    <div id="pos-box" style="display:none; background:var(--bg-2); border:1px solid var(--gold-0); border-radius:8px; padding:10px; margin-bottom:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; margin-bottom:6px;">
+        <span class="lbl">ACTIVE POSITION</span>
+        <span id="pos-type" style="background:rgba(16,185,129,0.2); color:var(--green); padding:2px 8px; border-radius:4px; font-weight:900;">—</span>
+      </div>
+      <div style="font-size:11px; color:var(--muted);">
+        Entry: <b id="pos-entry" style="color:var(--text); font-family:Consolas">—</b> ·
+        Size: <b id="pos-size" style="color:var(--text); font-family:Consolas">—</b>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="ctrl-row" id="open-ctrls">
+      <button class="btn btn-long" onclick="openPosition('long')">▲ LONG (BUY)</button>
+      <button class="btn btn-short" onclick="openPosition('short')">▼ SHORT (SELL)</button>
+    </div>
+    <div class="ctrl-row" id="close-ctrls" style="display:none">
+      <button class="btn btn-primary" onclick="closePosition()">🎯 CLOSE / SECURE P/L</button>
+      <button class="btn" id="hodl-btn" onclick="toggleHodl()">🛡 HODL SHIELD</button>
+    </div>
+
+    <div class="lbl-row" style="display:flex; justify-content:space-between;">
+      <span>MARKET VOLATILITY</span>
+      <span id="vol-val">3x</span>
+    </div>
+    <input type="range" min="1" max="10" value="3" id="vol-slider"
+           style="width:100%; accent-color:var(--gold-0); cursor:pointer;">
+
+    <div style="margin-top:10px; padding:8px 10px; background:rgba(245,158,11,0.08); border:1px solid #f59e0b; border-radius:6px; font-size:11px; color:var(--gold-0);">
+      💡 Mood ينعكس من <b>state_from_pnl()</b> في <code>r_native.pixel_sprites</code> — نفس المنطق المستخدم في
+      <code>pixel_widget.py</code> داخل التطبيق المكتبي.
+    </div>
+  </section>
+
+  <!-- ════ RIGHT: SPRITE DESIGNER ════ -->
+  <section class="card">
+    <h2><span class="ico">🎨</span> Sprite Designer & Animator</h2>
+
+    <!-- Preset library -->
+    <div class="lbl-row">SPRITE LIBRARY · انقر للتحميل</div>
+    <div class="preset-grid" id="preset-grid"></div>
+
+    <!-- Frame tabs -->
+    <div class="frame-tabs">
+      <button class="frame-tab active" id="tab-f0" onclick="setActiveFrame(0)">Frame 1 (Static)</button>
+      <button class="frame-tab" id="tab-f1" onclick="setActiveFrame(1)">Frame 2 (Anim)</button>
+    </div>
+
+    <!-- Canvas + palette -->
+    <div class="canvas-wrap">
+      <div class="pixel-grid" id="pixel-grid"></div>
+
+      <div>
+        <div class="lbl-row">PALETTE</div>
+        <div class="color-palette" id="color-palette"></div>
+
+        <div class="lbl-row">DRAW TOOL</div>
+        <div class="tool-row">
+          <button class="tool-btn active" id="tool-pencil" onclick="setTool('pencil')">✏️ Pencil</button>
+          <button class="tool-btn" id="tool-eraser" onclick="setTool('eraser')">🧽 Eraser</button>
+          <button class="tool-btn" id="tool-fill" onclick="setTool('fill')">🪣 Fill</button>
+          <button class="tool-btn" id="tool-pipette" onclick="setTool('pipette')">👁 Picker</button>
+        </div>
+
+        <div class="lbl-row">SYMMETRY</div>
+        <select id="mirror" onchange="setMirror(this.value)"
+                style="width:100%; padding:6px; background:var(--bg-0); color:var(--text); border:1px solid var(--border); border-radius:6px; font-family:inherit;">
+          <option value="none">No mirror</option>
+          <option value="horizontal">Horizontal ⬌</option>
+          <option value="vertical">Vertical ⬍</option>
+          <option value="both">Quad ✥</option>
+        </select>
+
+        <div class="fps-row">
+          <span class="lbl-row" style="margin:0">FPS</span>
+          <input type="range" min="1" max="15" value="4" id="fps-slider">
+          <span id="fps-val" style="font-family:Consolas">4</span>
+        </div>
+
+        <div class="lbl-row">PREVIEW (animated)</div>
+        <div style="background:var(--bg-0); border:1px dashed var(--border); border-radius:8px; padding:10px; display:flex; align-items:center; justify-content:center;">
+          <canvas id="preview-canvas" width="96" height="96"
+                  style="image-rendering:pixelated; image-rendering:crisp-edges;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export center -->
+    <div class="export-row">
+      <button class="btn" onclick="exportPNG(1,true)">⬇ Raw 16×16</button>
+      <button class="btn" onclick="exportPNG(32,true)">⬇ HD 512×512</button>
+      <button class="btn btn-primary" onclick="exportPNG(16,false)">⬇ Sprite Sheet</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  R Pixel Lab — Phase H.20 ·
+  data served from <code>r_native.pixel_sprites</code> · widget mirror at
+  <code>r_native.pixel_widget</code>. Magic <b>20260605</b>.
+</footer>
+
+<button id="sound-toggle" onclick="toggleSound()">🔊</button>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+//  PALETTE & PRESETS — MUST stay in sync with r_native/pixel_sprites.py
+// ════════════════════════════════════════════════════════════════════
+const PALETTE = {
+  ".": null,  "K": "#0a0a0f",  "W": "#f1f5f9",  "D": "#5a5a70",
+  "d": "#2a2a38",  "G": "#fbbf24",  "O": "#b45309",  "Y": "#fef3c7",
+  "B": "#f7931a",  "b": "#c47e15",  "V": "#22c55e",  "v": "#0e2a1a",
+  "R": "#ef4444",  "r": "#2a0e0e",  "P": "#ffcca3",  "p": "#d4936a",
+  "H": "#6d4c41",  "h": "#4e342e",  "C": "#06b6d4",  "U": "#a78bfa",
+  "u": "#4c1d95",  "F": "#2563eb",  "f": "#1d4ed8",  "M": "#94a3b8",
+  "m": "#26262f",
+};
+
+// PRESETS — abbreviated mirror of pixel_sprites.SPRITE_PRESETS.
+// In production, brain_server can expose /pixel_lab/sprites.json fed
+// from pixel_sprites.export_json() so the two stay in sync automatically.
+const PRESETS = [
+  {id:"xau-gold", name:"XAU Gold", category:"symbols", frames:[
+    ["................","....KKKKKKKK....","...KYYYYYYYOK...","..KYGGGGGGGOOK..",".KYGGGGGGGGGOOK.",".KYYYYYGGGGGOOK.",".KGGGGYYYYGGOOK.",".KGGGGGGGGYGOOK.",".KGGGGGGGGGOOOK.",".KGGGGGGGGGOOOK.",".KGGGGGGGGGOOOK.",".KGGGGGGGGGOOOK.",".KGGGGGGGGGOOOK.","..KOOOOOOOOOK...","...KKKKKKKKK....","................"],
+    ["................","....KKKKKKKK....","...KYYYYYYYOK...","..KYGGGGYGGGOOK.",".KYGGGYWYGGGOOK.",".KYYYYWWWYGGOOK.",".KGGGYWYGGGGOOK.",".KGGGGYGGGGGOOK.",".KGGGGGGGGGOOOK.",".KGGGGGGGGGOOOK.",".KGGGGGGGGGOOOK.",".KGGGGGGGGGOOOK.",".KGGGGGGGGGOOOK.","..KOOOOOOOOOK...","...KKKKKKKKK....","................"]
+  ]},
+  {id:"btc-coin", name:"BTC", category:"symbols", frames:[
+    ["....KKKKKKKK....","...KYYYYYYYYK...","..KYBBBBBBBBoK..",".KYBBBWBWBBBBoK.",".KBBBWWWBWWBBoK.","KBBBWWWBWWWBBoK.","KBBBBWWBWWWBBoK.","KBBBWWWBWWBBBoK.","KBBBBWWBWWWBBoK.","KBBBWWWBWWBBBoK.","KBBBBWWWWWBBBoK.",".KBBBWBBBBBBBoK.",".KYBBBBBBBBBoK..","..KooooooooKK...","...KKKKKKKKK....","................"],
+    ["....KKKKKKKK....","...KYYYYYYYYK...","..KYBBBBBBBBoK..",".KYBBBWBYBBBBoK.",".KBBBWWYYWWBBoK.","KBBBWWYBYWWBBoK.","KBBBBWYBYWWBBoK.","KBBBWWYBYWBBBoK.","KBBBBWYBYWWBBoK.","KBBBWWYBYWBBBoK.","KBBBBWYYYYBBBoK.",".KBBBWBBBBBBBoK.",".KYBBBBBBBBBoK..","..KooooooooKK...","...KKKKKKKKK....","................"]
+  ]},
+  {id:"eth-coin", name:"ETH", category:"symbols", frames:[
+    ["....KKKKKKKK....","...KFFFFFFFfK...","..KFFFFKKFFFFfK.",".KFFFFKWWKFFFFfK",".KFFFKWWWWKFFFfK","KFFFKWWWWWWKFFfK","KFFKWWWWWWWWKFfK","KFFFKKKKKKKKFFfK","KFFFKWWWWWWKFFfK","KFFFFKWWWWKFFFfK","KFFFFFKWWKFFFFfK",".KFFFFFKKFFFFffK",".KFFFFFFFFFFfK..","..KffffffffKK...","...KKKKKKKKK....","................"],
+    ["....KKKKKKKK....","...KFFFFFFFfK...","..KFFFFKKFFFFfK.",".KFFFFKWWKFFFFfK",".KFFFKWYYWKFFFfK","KFFFKWYYYYWKFFfK","KFFKWYYWWYYWKFfK","KFFFKKKKKKKKFFfK","KFFFKWYYYYWKFFfK","KFFFFKWYYWKFFFfK","KFFFFFKWWKFFFFfK",".KFFFFFKKFFFFffK",".KFFFFFFFFFFfK..","..KffffffffKK...","...KKKKKKKKK....","................"]
+  ]},
+  {id:"bull-trader", name:"Bull", category:"characters", frames:[
+    ["...KK......KK...","..KGGK....KGGK..",".KGGYK....KGGYK.",".KGGOKKKKKKGGOK.",".KKKKvvvvvvKKKK.","KKvvvvvvvvvvvvKK","KvvvKKvvvvKKvvvK","KvvKKWKKvKKWKKvK","KvKKVVKvKKVVKvvK","KvKKVVKvKKVVKvvK","KvvKKKKvvKKKKvvK","KvvvvvKPPKvvvvvK",".KvvvvKppKvvvvK.","..KKvvvvvvvvKK..","....KKKKKKKK....",".....KDKKDK....."],
+    ["..KK........KK..",".KGGK......KGGK.",".KGGYK....KGGYK.",".KGGOKKKKKKGGOK.",".KKKKvvvvvvKKKK.","KKvvvvvvvvvvvvKK","KvvvKKvvvvKKvvvK","KvvKKWKKvKKWKKvK","KvKKVVKvKKVVKvvK","KvKKVVKvKKVVKvvK","KvvKKKKvvKKKKvvK","KvvvvvKPPKvvvvvK",".KvvvvKppKvvvvK.","..KKvvvvvvvvKK..","....KKKKKKKK....",".....KK..KK....."]
+  ]},
+  {id:"bear-trader", name:"Bear", category:"characters", frames:[
+    ["..KKKK....KKKK..",".KhhhK....KhhhK.","KhhhhKKKKKKhhhhK","KhhhhhhhhhhhhhhK","KhhKKKKKKKKKKhhK","KhKRRRRRRRRRRKhK","KKhRKKRhRKKRhhKK","KKhRRRRhRRRRhhKK","KKhRKKRhRKKRhhKK","KKhhhhhhKKhhhhKK","KKhhhhKKKKhhhhKK",".KhhhhhPPKhhhhK.",".KhhhhhppKhhhhK.","..KKhhhhhhhhKK..","....KKKKKKKK....",".....KDKKDK....."],
+    ["..KKKK....KKKK..",".KhhhK....KhhhK.","KhhhhKKKKKKhhhhK","KhhhhhhhhhhhhhhK","KhhKKKKKKKKKKhhK","KhKWWWWWWWWWWKhK","KKhWKKWhWKKWhhKK","KKhWWWWhWWWWhhKK","KKhWKKWhWKKWhhKK","KKhhhhhhKKhhhhKK","KKhhhhKKKKhhhhKK",".KhhhhhPPKhhhhK.",".KhhhhhppKhhhhK.","..KKhhhhhhhhKK..","....KKKKKKKK....",".....KK..KK....."]
+  ]},
+  {id:"r-mascot", name:"R Native", category:"characters", frames:[
+    ["....KKKKKKKK....","...KGGGGGGGGK...","..KGGOOOOOOGGK..",".KGGOKKKKKKOOGK.",".KKKKMMMMMMKKKK.","KKMMMMMMMMMMMMKK","KMMKKMRRRRMKKMMK","KMKWWMRRRRMWWKMK","KMKWUMRRRRMUWKMK","KMMKKMMRRMMKKMMK","KMMMMRRRRRRMMMMK","KMMMMRRRMRRRMMMK",".KMMMRRMMRMMMMK.","..KKMRRMMMRMMKK..","...KRRMMMMRRRK..","...KKKKKKKKKK..."],
+    ["....KKKKKKKK....","...KGGGGGGGGK...","..KGGOOOOOOGGK..",".KGGOKKKKKKOOGK.",".KKKKMMMMMMKKKK.","KKMMMMMMMMMMMMKK","KMMKKMGGGGMKKMMK","KMKYYMGGGGMYYKMK","KMKYUMGGGGMUYKMK","KMMKKMMGGMMKKMMK","KMMMMRRRRRRMMMMK","KMMMMRRRMRRRMMMK",".KMMMRRMMRMMMK..","..KKMRRMMMRMMKK..","...KRRMMMMRRRK..","...KKKKKKKKKK..."]
+  ]},
+  {id:"emotion-fomo", name:"FOMO", category:"emotions", frames:[
+    ["....KKKKKKKK....","...KPPPPPPPPK...","..KPPPPPPPPPPK..",".KPPPPPPPKPPK...","KPPKKKKPPKKKKPPK","KPKWWWWKPKWWWWKP","KPKWKKWKPKWKKWKP","KPKWKKWKPKWKKWKP","KPPKKKKPPKKKKPPK","KPPPPPKUUPPPPPPK","KPPPPPKUUPPPPPPK",".KPPPPKKKKPPPPK.","..KPPKRRRRKPPK..","...KKKKKKKKKK...","....KVV..KVV....","....KVV..KVV...."],
+    ["....KKKKKKKK....","...KPPPPPPPPK...","..KPPPPPPPPPPK..",".KPPPPPPPKPPK...","KPPKKKKPPKKKKPPK","KPKWWWWKPKWWWWKP","KPKWKKWKPKWKKWKP","KPKWKKWKPKWKKWKP","KPPKKKKPPKKKKPPK","KPPPPPPKKPPPPPPK","KPPPPPKUUPPPPPPK",".KPPPPKKKKPPPPK.","..KPPKRRRRKPPK..","...KKKKKKKKKK...","....KVV..KVV....",".........KVV...."]
+  ]},
+  {id:"emotion-panic", name:"Panic", category:"emotions", frames:[
+    ["....KKKKKKKK....","...KPPPPPPPPK...","..KPPPPPPPPPPK..",".KPppKKKKKKppPK.","KppKKWWKKWWKKppK","KPKKWWUKKWWUKKPK","KPKKWWUKKWWUKKPK","KPPKKUUKKUUKKPPK","KPPPKUUPPKUUPPPK","KPPPPKUUPPKUUPPK","KKPPPKUUPPKUUPKK",".KKPPKKKKKKPPKK.","..KKKKRRRRKKKK..","....KRRRRRRK....",".....KRRRRK.....","......KKKK......"],
+    ["....KKKKKKKK....","...KPPPPPPPPK...","..KPPPPPPPPPPK..",".KPppKKKKKKppPK.","KppKKWWKKWWKKppK","KPKKWWUKKWWUKKPK","KPKKWWUKKWWUKKPK","KPPKKUUKKUUKKPPK","KPPPKUUPPKUUPPPK","KKPPKUUPPKUUPPKK","KUKPPKUUPPKUUPUK",".KKPPKKKKKKPPKK.","..KKKKRRRRKKKK..","....KRRRRRRK....",".....KRRRRK.....","......KKKK......"]
+  ]},
+  {id:"diamond-hands", name:"Diamond", category:"emotions", frames:[
+    ["....KKKKKKKK....","...KPPPPPPPPK...","..KPPPPPPPPPPK..",".KPPKKKKKKKKPPK.","KPPKWWKKKKWWKPPK","KPPKKKKKKKKKKPPK","KPPPPKDKKKDKPPPP","KPPPPKKKKKKKPPPP","KPPKKKKWWKKKKPPK",".KPKCCKKKKCCKPK.","KCCWCCKKKKCCWCCK","KCCCCCCCCCCCCCCK",".KCCCCCCCCCCCCK.","..KCCCCCCCCCCK..","....KCCCCCCK....","......KKKK......"],
+    ["....KKKKKKKK....","...KPPPPPPPPK...","..KPPPPPPPPPPK..",".KPPKKKKKKKKPPK.","KPPKWWKKKKWWKPPK","KPPKKKKKKKKKKPPK","KPPPPKDKKKDKPPPP","KPPPPKKKKKKKPPPP","KPPKKKKWWKKKKPPK",".KPKCCKKKKCCKPK.","KCCYCCKKKKCCYCCK","KCCCCCCCCCCCCCCK",".KCCCCCCCCCCCCK.","..KCCCCCCCCCCK..","....KCCCCCCK....","......KKKK......"]
+  ]},
+  {id:"rocket-mode", name:"Rocket", category:"emotions", frames:[
+    ["......KKKK......",".....KGGGGK.....","....KGYYGGGK....","....KGYYYYGK....","....KGGYGGGK....","....KGPPPGGK....","....KGPWWGGK....","....KGPPPGGK....","....KKKKKKKK....","....KKvvvvKK....","....KvVVVvK.....","....KvVVVvK.....","...KKKvVvKKK....","..KOOKKvKKOOK...",".KOYRRKKRRYOK...","..KRRRKKRRRK...."],
+    ["......KKKK......",".....KGGGGK.....","....KGYYGGGK....","....KGYYYYGK....","....KGGYGGGK....","....KGPPPGGK....","....KGPWWGGK....","....KGPPPGGK....","....KKKKKKKK....","....KKvvvvKK....","....KvVVVvK.....","....KvVVVvK.....","...KKKvVvKKK....","..KOOKKvKKOOK...","..KRRYKKYRRK....","...KRKRRKRK....."]
+  ]},
+  {id:"skull", name:"Liquidated", category:"emotions", frames:[
+    ["....KKKKKKKK....","...KWWWWWWWWK...","..KWWWWWWWWWWK..",".KWWWKKKKKKWWWK.","KWWWKKKWWKKKWWWK","KWWKKRRWWRRKKWWK","KWKKRRRRRRRRKKWK","KWKKRRRRRRRRKKWK","KWKKKRRWWRRKKKWK","KWWKKKRWWRKKKWWK","KWWWKWWWWWWKWWWK",".KWWKWKWWKWKWWK.",".KWWKWKWWKWKWWK.","..KKWKKKKKKKWKK.","....KKKKKKKK....","......KKKK......"],
+    ["....KKKKKKKK....","...KWWWWWWWWK...","..KWWWWWWWWWWK..",".KWWWKKKKKKWWWK.","KWWWKKKWWKKKWWWK","KWWKRRRRRRRRKWWK","KWKKRRRRRRRRKKWK","KWKKRRRRRRRRKKWK","KWKKKRRWWRRKKKWK","KWWKKKRWWRKKKWWK","KWWWKWWWWWWKWWWK",".KWWKWKWWKWKWWK.",".KWWKWKWWKWKWWK.","..KKWKKKKKKKWKK.","....KKKKKKKK....","......KKKK......"]
+  ]},
+  {id:"golden-candle", name:"Bull Candle", category:"items", frames:[
+    ["......KKKK......","......KYYK......","......KGGK......","....KKKKKKKK....","...KYYYYYYYOK...","...KYYYYYYYOK...","...KYYGGGGYOK...","...KYGGGGGGOK...","...KYGGGGGGOK...","...KGGGGGGGOK...","...KGGGGGGGOK...","...KOOOOOOOOK...","....KKKKKKKK....","......KGGK......","......KGGK......","......KKKK......"],
+    ["......KKKK......","......KWWK......","......KYYK......","....KKKKKKKK....","...KYYYYYYYOK...","...KYYYYYYYOK...","...KYYVVVVYOK...","...KYVVVVVVOK...","...KYVVVVVVOK...","...KVVVVVVVOK...","...KVVVVVVVOK...","...KOOOOOOOOK...","....KKKKKKKK....","......KGGK......","......KGGK......","......KKKK......"]
+  ]},
+  {id:"red-candle", name:"Bear Candle", category:"items", frames:[
+    ["......KKKK......","......KRRK......","......KrrK......","....KKKKKKKK....","...KrRRRRRRrK...","...KRRRRRRRRK...","...KRRRrrrrRRK..","...KRRrrrrrrRK..","...KRRrrrrrrRK..","...KrrrrrrrrRK..","...KrrrrrrrrRK..","...KrrrrrrrrRK..","....KKKKKKKK....","......KRRK......","......KRRK......","......KKKK......"],
+    ["......KKKK......","......KKKK......","......KRRK......","....KKKKKKKK....","...KrRRRRRRrK...","...KRRRRRRRRK...","...KRRRrrrrRRK..","...KRRrrWrrrRK..","...KRRrWWWWrRK..","...KrrrWrrrrRK..","...KrrrrrrrrRK..","...KrrrrrrrrRK..","....KKKKKKKK....","......KRRK......","......KRRK......","......KKKK......"]
+  ]},
+  {id:"money-bag", name:"Money Bag", category:"items", frames:[
+    ["................","......KKKK......",".....KDDDDK.....","....KKKKKKKK....","...KGGGGGGGGK...","..KGGOGGGGOGGK..",".KGGGGGGGGGGGGK.",".KGGGOGGGGOGGGK.","KGGGGGGGGGGGGGGK","KGGGOGGGGGGOGGGK","KGGGGGGGGGGGGGGK","KGGGOGGGGGGOGGGK",".KGGGGGGGGGGGGK.","..KOOOOOOOOOOK..","...KKKKKKKKKK...","................"],
+    ["................","......KKKK......",".....KDDDDK.....","....KKKKKKKK....","...KGGYGGGGGGK..","..KGGOGGYGGOGGK.",".KGGYGGGGGGGGGK.",".KGGGOGGYYOGGGK.","KGGGGGGGGGGGGGGK","KGGGOGGYGGOGGGGK","KGGGGYGGGGGGGGGK","KGGGOGGGGGGOGGGK",".KGGYGGGGGGGGGK.","..KOOOOOOOOOOK..","...KKKKKKKKKK...","................"]
+  ]},
+];
+
+const STATE_TO_PRESET = {
+  "idle":         "bull-trader",
+  "scanning":     "r-mascot",
+  "profit":       "diamond-hands",
+  "big-profit":   "rocket-mode",
+  "loss":         "emotion-fomo",
+  "panic":        "emotion-panic",
+  "liquidated":   "skull",
+  "hodl":         "diamond-hands",
+  "deploying":    "golden-candle",
+  "campaign":     "bull-trader",
+  "range":        "bear-trader",
+};
+
+const QUOTES = {
+  "idle":        "“Charts look steady — scanning the next breakout.”",
+  "scanning":    "“GA is searching for the next champion genome…”",
+  "profit":      "“Green candles all around. Diamond hands engaged.”",
+  "big-profit":  "“🚀 To the moon! Compound the winners!”",
+  "loss":        "“This is fine. *sweats* Just a tiny pullback.”",
+  "panic":       "“Daily cap breached! Emergency drawdown protocol.”",
+  "liquidated":  "“ACCOUNT BLOWN — magic 20260605 disarmed.”",
+  "hodl":        "“HODL shield active. Volatility cannot hurt me.”",
+  "deploying":   "“Hot genome deployed to the executor.”",
+  "campaign":    "“Multi-tribe campaign running — Tribe A vs Tribe B.”",
+  "range":       "“Range market detected. Sitting on hands.”",
+};
+
+// ════════════════════════════════════════════════════════════════════
+//  Pixel helpers
+// ════════════════════════════════════════════════════════════════════
+function parseFrame(lines) {
+  const grid = [];
+  for (let y = 0; y < 16; y++) {
+    const row = [];
+    const line = (lines[y] || ".".repeat(16)).padEnd(16, ".").slice(0, 16);
+    for (let x = 0; x < 16; x++) {
+      row.push(PALETTE[line[x]] ?? null);
+    }
+    grid.push(row);
+  }
+  return grid;
+}
+function getPreset(id) { return PRESETS.find(p => p.id === id) || PRESETS[0]; }
+function drawSpriteToCanvas(ctx, grid, scale, ox=0, oy=0) {
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(ox, oy, 16*scale, 16*scale);
+  for (let y=0; y<16; y++) {
+    for (let x=0; x<16; x++) {
+      const c = grid[y][x];
+      if (!c) continue;
+      ctx.fillStyle = c;
+      ctx.fillRect(ox + x*scale, oy + y*scale, scale, scale);
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  RETRO SOUND ENGINE (matches existing pixel-trading-sprites lab)
+// ════════════════════════════════════════════════════════════════════
+let audioCtx = null;
+let soundOn = true;
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+}
+function toggleSound() {
+  soundOn = !soundOn;
+  document.getElementById("sound-toggle").textContent = soundOn ? "🔊" : "🔇";
+}
+function beep(type, frequencies, duration, gainVal=0.1) {
+  if (!soundOn) return;
+  try {
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    frequencies.forEach((f, i) => osc.frequency.setValueAtTime(f, now + i*(duration/frequencies.length)));
+    gain.gain.setValueAtTime(gainVal, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + duration);
+  } catch(e) { console.warn(e); }
+}
+const sfx = {
+  coin:    () => beep("sine", [587, 880], 0.25),
+  trade:   () => beep("square", [200, 600], 0.18),
+  profit:  () => beep("triangle", [523, 659, 784, 1046], 0.45, 0.12),
+  loss:    () => beep("sawtooth", [330, 110], 0.4),
+  boom:    () => beep("sawtooth", [90, 30], 0.6, 0.18),
+};
+
+// ════════════════════════════════════════════════════════════════════
+//  GAME STATE
+// ════════════════════════════════════════════════════════════════════
+const STATE = {
+  symbol: "XAUUSD",
+  cash: 10000,
+  highScore: parseFloat(localStorage.getItem("rlab_high")) || 10000,
+  position: null,         // {type:"long"|"short", entryPrice, contracts}
+  pnl: 0,
+  hodl: false,
+  history: [],            // candles
+  currentPrice: 1850,
+  marketStatus: "idle",
+  volatility: 3,
+};
+
+function genInitialCandles() {
+  const startPrice = STATE.symbol === "XAUUSD" ? 1850 : 62500;
+  let price = startPrice;
+  STATE.history = [];
+  for (let i=0; i<26; i++) {
+    const change = (Math.random()-0.5) * (price * 0.004);
+    const open = price; const close = price + change;
+    const high = Math.max(open,close) + Math.random() * price*0.002;
+    const low = Math.min(open,close) - Math.random() * price*0.002;
+    STATE.history.push({open, high, low, close, bull: close>=open});
+    price = close;
+  }
+  STATE.currentPrice = price;
+}
+
+function tickMarket() {
+  const last = STATE.history[STATE.history.length-1];
+  const tickMult = STATE.symbol === "XAUUSD" ? 1.5 : 80;
+  const trendBias = STATE.position ? (STATE.position.type==="long" ? 0.02 : -0.02) : 0;
+  const change = ((Math.random()-0.49) + trendBias) * (STATE.volatility * 0.35) * tickMult;
+  const open = last.close;
+  const close = open + change;
+  const high = Math.max(open,close) + Math.random() * STATE.volatility * 0.15 * tickMult;
+  const low  = Math.min(open,close) - Math.random() * STATE.volatility * 0.15 * tickMult;
+  STATE.history.push({open, high, low, close, bull: close>=open});
+  if (STATE.history.length > 28) STATE.history.shift();
+  STATE.currentPrice = +close.toFixed(2);
+  recalcPnL();
+  renderChart();
+  renderKPIs();
+}
+
+function recalcPnL() {
+  if (!STATE.position) {
+    STATE.pnl = 0;
+    STATE.marketStatus = "idle";
+    updateMascot();
+    return;
+  }
+  const diff = STATE.currentPrice - STATE.position.entryPrice;
+  const sign = STATE.position.type==="long" ? 1 : -1;
+  const sizeMult = STATE.symbol==="XAUUSD" ? 100 : 1;
+  STATE.pnl = +(diff * STATE.position.contracts * sizeMult * sign).toFixed(2);
+  const netWorth = STATE.cash + STATE.pnl;
+  // High score
+  if (netWorth > STATE.highScore) {
+    STATE.highScore = +netWorth.toFixed(2);
+    localStorage.setItem("rlab_high", STATE.highScore.toFixed(2));
+  }
+  // Liquidation
+  if (netWorth <= 0) {
+    sfx.boom();
+    STATE.marketStatus = "liquidated";
+    STATE.position = null;
+    STATE.cash = 500;
+    STATE.pnl = 0;
+    STATE.hodl = false;
+    document.getElementById("open-ctrls").style.display = "grid";
+    document.getElementById("close-ctrls").style.display = "none";
+    document.getElementById("pos-box").style.display = "none";
+    updateMascot();
+    return;
+  }
+  // Mood from PnL
+  if (STATE.hodl) STATE.marketStatus = "hodl";
+  else if (STATE.pnl >= netWorth * 0.05) STATE.marketStatus = "big-profit";
+  else if (STATE.pnl > 0) STATE.marketStatus = "profit";
+  else if (STATE.pnl <= -10) STATE.marketStatus = "panic";
+  else if (STATE.pnl < 0) STATE.marketStatus = "loss";
+  else STATE.marketStatus = "idle";
+  updateMascot();
+}
+
+function openPosition(type) {
+  if (STATE.position) { alert("لديك صفقة مفتوحة بالفعل."); return; }
+  const margin = STATE.cash * 0.4;
+  let contracts = STATE.symbol==="XAUUSD"
+    ? +(margin / (STATE.currentPrice*0.05)).toFixed(1)
+    : +(margin / STATE.currentPrice).toFixed(3);
+  if (contracts <= 0) { alert("رصيد غير كافٍ"); return; }
+  STATE.position = { type, entryPrice: STATE.currentPrice, contracts };
+  sfx.trade();
+  document.getElementById("open-ctrls").style.display = "none";
+  document.getElementById("close-ctrls").style.display = "grid";
+  const box = document.getElementById("pos-box");
+  box.style.display = "block";
+  document.getElementById("pos-type").textContent = type.toUpperCase();
+  document.getElementById("pos-type").style.background = type==="long"
+    ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)";
+  document.getElementById("pos-type").style.color = type==="long" ? "var(--green)" : "var(--red)";
+  document.getElementById("pos-entry").textContent = "$" + STATE.currentPrice;
+  document.getElementById("pos-size").textContent = contracts + " units";
+  recalcPnL();
+}
+
+function closePosition() {
+  if (!STATE.position) return;
+  STATE.cash = +(STATE.cash + STATE.pnl).toFixed(2);
+  if (STATE.pnl > 0) sfx.profit(); else if (STATE.pnl < 0) sfx.loss(); else sfx.coin();
+  STATE.position = null;
+  STATE.pnl = 0;
+  STATE.hodl = false;
+  document.getElementById("open-ctrls").style.display = "grid";
+  document.getElementById("close-ctrls").style.display = "none";
+  document.getElementById("pos-box").style.display = "none";
+  recalcPnL();
+  renderKPIs();
+}
+
+function toggleHodl() {
+  if (!STATE.position) { alert("افتح صفقة أولاً"); return; }
+  STATE.hodl = !STATE.hodl;
+  sfx.coin();
+  document.getElementById("hodl-btn").classList.toggle("active", STATE.hodl);
+  recalcPnL();
+}
+
+function setSymbol(s) {
+  if (STATE.symbol === s) return;
+  STATE.symbol = s;
+  STATE.position = null;
+  STATE.hodl = false;
+  document.getElementById("sym-xau").classList.toggle("active", s==="XAUUSD");
+  document.getElementById("sym-btc").classList.toggle("active", s==="BTCUSD");
+  document.getElementById("open-ctrls").style.display = "grid";
+  document.getElementById("close-ctrls").style.display = "none";
+  document.getElementById("pos-box").style.display = "none";
+  genInitialCandles();
+  renderChart();
+  recalcPnL();
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  RENDER FUNCTIONS
+// ════════════════════════════════════════════════════════════════════
+function renderChart() {
+  const wrap = document.getElementById("chart");
+  wrap.innerHTML = "";
+  const closes = STATE.history.map(c => c.close);
+  const highs = STATE.history.map(c => c.high);
+  const lows  = STATE.history.map(c => c.low);
+  const mn = Math.min(...lows) * 0.9995;
+  const mx = Math.max(...highs) * 1.0005;
+  const rng = mx - mn;
+
+  const badge = document.createElement("div");
+  badge.className = "badge";
+  badge.innerHTML = `<span>${STATE.symbol}</span> · <b>$${STATE.currentPrice}</b>`;
+  wrap.appendChild(badge);
+
+  STATE.history.forEach(c => {
+    const cell = document.createElement("div");
+    cell.className = "candle " + (c.bull ? "up" : "down");
+    const wickPctHeight = ((c.high - c.low) / rng) * 100;
+    const wickPctBottom = ((c.low - mn) / rng) * 100;
+    const bodyPctHeight = Math.max((Math.abs(c.open - c.close) / rng) * 100, 2);
+    const bodyPctBottom = ((Math.min(c.open, c.close) - mn) / rng) * 100;
+    cell.innerHTML = `
+      <div class="wick" style="bottom:${wickPctBottom}%; height:${wickPctHeight}%"></div>
+      <div class="body" style="bottom:${bodyPctBottom}%; height:${bodyPctHeight}%"></div>
+    `;
+    wrap.appendChild(cell);
+  });
+}
+
+function renderKPIs() {
+  document.getElementById("kpi-cash").textContent = "$" + Math.round(STATE.cash).toLocaleString();
+  const eq = STATE.cash + STATE.pnl;
+  document.getElementById("kpi-equity").textContent = "$" + Math.round(eq).toLocaleString();
+  const pnlEl = document.getElementById("kpi-pnl");
+  pnlEl.textContent = (STATE.pnl >= 0 ? "+$" : "-$") + Math.abs(STATE.pnl).toFixed(0);
+  document.getElementById("kpi-pnl-cell").classList.toggle("pnl-pos", STATE.pnl > 0);
+  document.getElementById("kpi-pnl-cell").classList.toggle("pnl-neg", STATE.pnl < 0);
+  document.getElementById("kpi-high").textContent = "$" + Math.round(STATE.highScore).toLocaleString();
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MASCOT (live trader sprite)
+// ════════════════════════════════════════════════════════════════════
+let mascotPresetId = "bull-trader";
+let mascotFrame = 0;
+function updateMascot() {
+  const newId = STATE_TO_PRESET[STATE.marketStatus] || "bull-trader";
+  if (newId !== mascotPresetId) {
+    mascotPresetId = newId;
+    mascotFrame = 0;
+  }
+  document.getElementById("mascot-state").textContent = STATE.marketStatus.toUpperCase();
+  const preset = getPreset(mascotPresetId);
+  document.getElementById("mascot-name").textContent = preset.name;
+  document.getElementById("mascot-quote").textContent = QUOTES[STATE.marketStatus] || "";
+}
+function tickMascot() {
+  const preset = getPreset(mascotPresetId);
+  mascotFrame = (mascotFrame + 1) % preset.frames.length;
+  const ctx = document.getElementById("mascot-canvas").getContext("2d");
+  const grid = parseFrame(preset.frames[mascotFrame]);
+  drawSpriteToCanvas(ctx, grid, 8);
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  SPRITE DESIGNER (right side)
+// ════════════════════════════════════════════════════════════════════
+let editingPresetId = "bull-trader";
+let editingFrames = [parseFrame(PRESETS[0].frames[0]), parseFrame(PRESETS[0].frames[1])];
+let activeFrameIdx = 0;
+let activeColor = "#fbbf24";
+let drawTool = "pencil";
+let mirrorMode = "none";
+let previewFps = 4;
+let isMouseDown = false;
+let previewFrame = 0;
+
+function renderPresetGrid() {
+  const wrap = document.getElementById("preset-grid");
+  wrap.innerHTML = "";
+  PRESETS.forEach(p => {
+    const tile = document.createElement("button");
+    tile.className = "preset-tile" + (p.id === editingPresetId ? " active" : "");
+    tile.onclick = () => loadPreset(p.id);
+    const c = document.createElement("canvas");
+    c.width = 32; c.height = 32;
+    drawSpriteToCanvas(c.getContext("2d"), parseFrame(p.frames[0]), 2);
+    tile.appendChild(c);
+    const n = document.createElement("div");
+    n.className = "name"; n.textContent = p.name;
+    tile.appendChild(n);
+    wrap.appendChild(tile);
+  });
+}
+
+function loadPreset(id) {
+  const p = getPreset(id);
+  editingPresetId = p.id;
+  editingFrames = [parseFrame(p.frames[0]), parseFrame(p.frames[1] || p.frames[0])];
+  activeFrameIdx = 0;
+  renderPresetGrid();
+  renderEditor();
+  sfx.coin();
+}
+
+function renderColorPalette() {
+  const wrap = document.getElementById("color-palette");
+  wrap.innerHTML = "";
+  Object.entries(PALETTE).forEach(([k, hex]) => {
+    if (!hex) return;
+    const sw = document.createElement("div");
+    sw.className = "color-swatch" + (hex === activeColor ? " active" : "");
+    sw.style.background = hex;
+    sw.title = hex;
+    sw.onclick = () => { activeColor = hex; renderColorPalette(); if (drawTool === "eraser") setTool("pencil"); sfx.coin(); };
+    wrap.appendChild(sw);
+  });
+}
+
+function renderEditor() {
+  const grid = document.getElementById("pixel-grid");
+  grid.innerHTML = "";
+  const frame = editingFrames[activeFrameIdx];
+  for (let y=0; y<16; y++) {
+    for (let x=0; x<16; x++) {
+      const cell = document.createElement("div");
+      cell.className = "pixel-cell";
+      cell.dataset.x = x; cell.dataset.y = y;
+      cell.style.background = frame[y][x] || "var(--bg-2)";
+      cell.onmousedown = (e) => { e.preventDefault(); isMouseDown = true; paintCell(x, y); };
+      cell.onmouseenter = () => { if (isMouseDown && (drawTool==="pencil"||drawTool==="eraser")) paintCell(x, y); };
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function paintCell(x, y) {
+  const frame = editingFrames[activeFrameIdx];
+  const color = drawTool==="eraser" ? null : activeColor;
+  if (drawTool === "pipette") {
+    if (frame[y][x]) { activeColor = frame[y][x]; renderColorPalette(); setTool("pencil"); }
+    return;
+  }
+  if (drawTool === "fill") {
+    const target = frame[y][x];
+    if (target === color) return;
+    const stack = [[x, y]];
+    while (stack.length) {
+      const [cx, cy] = stack.pop();
+      if (cx<0||cx>=16||cy<0||cy>=16) continue;
+      if (frame[cy][cx] !== target) continue;
+      frame[cy][cx] = color;
+      stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
+    }
+  } else {
+    const apply = (rx, ry) => { if (rx>=0&&rx<16&&ry>=0&&ry<16) frame[ry][rx] = color; };
+    apply(x, y);
+    if (mirrorMode==="horizontal"||mirrorMode==="both") apply(15-x, y);
+    if (mirrorMode==="vertical"||mirrorMode==="both") apply(x, 15-y);
+    if (mirrorMode==="both") apply(15-x, 15-y);
+  }
+  renderEditor();
+}
+
+function setActiveFrame(i) {
+  activeFrameIdx = i;
+  document.getElementById("tab-f0").classList.toggle("active", i===0);
+  document.getElementById("tab-f1").classList.toggle("active", i===1);
+  renderEditor();
+}
+function setTool(t) {
+  drawTool = t;
+  ["pencil","eraser","fill","pipette"].forEach(n =>
+    document.getElementById("tool-"+n).classList.toggle("active", n===t));
+}
+function setMirror(m) { mirrorMode = m; }
+
+function tickPreview() {
+  previewFrame = (previewFrame + 1) % 2;
+  const ctx = document.getElementById("preview-canvas").getContext("2d");
+  drawSpriteToCanvas(ctx, editingFrames[previewFrame], 6);
+}
+
+function exportPNG(scale, single) {
+  const canvas = document.createElement("canvas");
+  const w = single ? 16*scale : 32*scale;
+  canvas.width = w; canvas.height = 16*scale;
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  if (single) drawSpriteToCanvas(ctx, editingFrames[activeFrameIdx], scale);
+  else { drawSpriteToCanvas(ctx, editingFrames[0], scale); drawSpriteToCanvas(ctx, editingFrames[1], scale, 16*scale); }
+  const a = document.createElement("a");
+  a.href = canvas.toDataURL("image/png");
+  a.download = `r_${editingPresetId}_${single?"f"+(activeFrameIdx+1)+"_"+w:"sheet_"+w}.png`;
+  a.click();
+  sfx.coin();
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  BOOTSTRAP
+// ════════════════════════════════════════════════════════════════════
+window.addEventListener("DOMContentLoaded", () => {
+  genInitialCandles();
+  renderChart();
+  renderKPIs();
+  renderPresetGrid();
+  renderColorPalette();
+  renderEditor();
+  updateMascot();
+
+  // Listeners
+  document.addEventListener("mouseup", () => isMouseDown = false);
+  document.getElementById("vol-slider").addEventListener("input", e => {
+    STATE.volatility = +e.target.value;
+    document.getElementById("vol-val").textContent = STATE.volatility + "x";
+  });
+  document.getElementById("fps-slider").addEventListener("input", e => {
+    previewFps = +e.target.value;
+    document.getElementById("fps-val").textContent = previewFps;
+  });
+
+  // Tick engines
+  setInterval(tickMarket, 1200);
+  setInterval(tickMascot, 250);
+  setInterval(tickPreview, () => 1000/previewFps);
+  // Use setInterval w/ dynamic delay
+  let lastPreviewFps = previewFps;
+  setInterval(() => { tickPreview(); }, 240);
+});
+</script>
+</body>
+</html>

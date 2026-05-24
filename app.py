@@ -553,11 +553,12 @@ class RNativeMain(QMainWindow):
             col.addWidget(lbl); col.addWidget(val)
             return col, val
 
-        # ── Pixel Mascot — bull/bear reacts to live P/L ──
+        # ── Pixel Mascot (H.20) — 16x16 sprite reacts to live P/L ──
         try:
-            from r_native.pixel_mascot import PixelMascot
-            self.hero_mascot = PixelMascot(size_px=44)
-            self.hero_mascot.set_emotion("IDLE")
+            from r_native.pixel_widget import PixelMascot
+            self.hero_mascot = PixelMascot(parent=self, fps=4, scale=3,
+                                            show_caption=False)
+            self.hero_mascot.setFixedSize(48, 48)
             h.addWidget(self.hero_mascot)
             h.addWidget(self._vsep())
         except Exception as e:
@@ -693,20 +694,19 @@ class RNativeMain(QMainWindow):
         self.hero_gate.setText(gate_text)
         self.hero_gate.setStyleSheet(f"color: {TEXT_MUTED}; {VAL_STYLE}")
 
-        # ── Pixel mascot — bull/bear emotional state ──
+        # ── Pixel mascot (H.20) — sprite reacts to live P/L ──
         if hasattr(self, "hero_mascot") and self.hero_mascot:
             try:
-                # Heuristic: convert today_pl (USD) → percent of balance for emotion buckets
                 bal = 100  # safe default
                 try:
                     import MetaTrader5 as _mt5_
                     info = _mt5_.account_info()
                     if info: bal = max(1, info.balance)
                 except Exception: pass
-                pl_pct = (today_pl / bal) * 100
-                has_open = (today_trades > 0 and exec_state.get("paper_open"))
-                self.hero_mascot.set_from_pl(pl_pct, today_trades, has_open)
-            except Exception: pass
+                self.hero_mascot.set_pnl(pnl=today_pl, net_worth=bal,
+                                          hodl=bool(exec_state.get("paper_open")))
+            except Exception as e:
+                print(f"[mascot] update err: {e}", flush=True)
 
     def _build_header(self):
         h = QHBoxLayout(); h.setSpacing(10); h.setContentsMargins(2, 2, 2, 6)
