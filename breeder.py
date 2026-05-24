@@ -55,16 +55,37 @@ def breed_and_admit(symbol: str, parent_a_id: str, parent_b_id: str,
         child.parent_a = ga.id
         child.parent_b = gb.id
 
-    # Backtest the child on recent bars (single-process eval, reuse worker fn)
-    try:
-        payload = (child.to_dict(), symbol, tf, bars)
-        result = _evaluate_genome_worker(payload)
-    except Exception as e:
-        return {"ok": False, "reason": f"backtest err: {e}",
-                "child_id": child.id}
+    # Backtest the child on recent bars (single-process eval, reuse worker fn).
+    # MT5 init occasionally races when brain_server already has a connection
+    # open — retry up to 3 times with a short shutdown+reconnect in between.
+    payload = (child.to_dict(), symbol, tf, bars)
+    result = None
+    last_err = None
+    for attempt in range(3):
+        try:
+            result = _evaluate_genome_worker(payload)
+        except Exception as e:
+            last_err = f"backtest err: {e}"
+            result = None
+
+        if result and result.get("ok"):
+            break  # success
+
+        # If MT5 init was the failure, recycle the connection and retry
+        last_err = (result or {}).get("error") or last_err or "unknown"
+        if "mt5" in (last_err or "").lower():
+            try:
+                import MetaTrader5 as _mt5
+                _mt5.shutdown()
+                import time; time.sleep(1)
+                _mt5.initialize()
+            except Exception: pass
+        else:
+            break  # non-MT5 error — no point retrying
 
     if not result or not result.get("ok"):
-        return {"ok": False, "reason": f"backtest failed: {result.get('error') if result else 'no result'}",
+        return {"ok": False,
+                "reason": f"backtest failed after retries: {last_err}",
                 "child_id": child.id}
 
     stats = result.get("stats") or {}
