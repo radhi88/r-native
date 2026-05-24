@@ -225,7 +225,7 @@ class LLMStrategist(Agent):
         action = rec.get("action")
         try:
             if action == "kill_genome":
-                from r_native.hall_of_fame import kill, load_index
+                from r_native.hall_of_fame import kill, load_index, is_deployed_anywhere
                 gid = rec.get("id")
                 if not gid: return "kill_no_id"
                 entry = load_index().get(gid)
@@ -238,6 +238,12 @@ class LLMStrategist(Agent):
                     return f"blocked_score_{score:.1f}"
                 if entry.get("pinned"):
                     return "blocked_pinned"
+                deployed_on = is_deployed_anywhere(gid)
+                if deployed_on:
+                    emit_insight(self.name, "WARN",
+                        f"🛡 blocked LLM kill of {gid} — currently deployed "
+                        f"on {deployed_on}")
+                    return f"blocked_deployed_{deployed_on}"
                 if kill(gid, rec.get("reason", "LLM strategist")):
                     return f"killed_score{score:.1f}"
                 return "kill_failed"

@@ -210,11 +210,41 @@ def unpin(genome_id: str) -> bool:
     return True
 
 
+def is_deployed_anywhere(genome_id: str) -> str | None:
+    """Return the symbol where this genome is currently deployed, or None.
+    Used to refuse killing live-trading genomes."""
+    try:
+        from pathlib import Path as _P
+        cfg_dir = _P(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs")
+        if not cfg_dir.exists(): return None
+        for p in cfg_dir.glob("*.json"):
+            try:
+                cfg = json.loads(p.read_text(encoding="utf-8"))
+                if (cfg.get("deployed_genome") or {}).get("id") == genome_id:
+                    return p.stem
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return None
+
+
 def kill(genome_id: str, reason: str) -> bool:
-    """Mark a genome as killed (won't be carried forward). Pinned genomes
-    cannot be killed."""
+    """Mark a genome as killed (won't be carried forward). Protected:
+      • pinned genomes cannot be killed
+      • currently-deployed genomes cannot be killed (would orphan the
+        symbol's trading config)
+    """
     pinned = set(load_pinned())
     if genome_id in pinned: return False
+    deployed_on = is_deployed_anywhere(genome_id)
+    if deployed_on:
+        # Refuse to kill — write a record so callers can see why
+        try:
+            print(f"[hof.kill] refused: {genome_id} is currently deployed on {deployed_on}",
+                  flush=True)
+        except Exception: pass
+        return False
     index = load_index()
     entry = index.get(genome_id)
     if not entry: return False
