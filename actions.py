@@ -223,6 +223,30 @@ def deploy_genome_to_live(symbol: str, genome_id: str, tf: str,
                                                                  target.get("profit_factor", 0))
     cfg_path.parent.mkdir(parents=True, exist_ok=True)
     cfg_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Belt-and-braces: every deployed genome MUST exist in Hall of Fame so we
+    # can trace it later. Previous bug: market_reader+auto-evo deployed F91FD8
+    # without admitting it, leaving an orphaned genome in symbol_configs that
+    # nothing could explain.
+    try:
+        from r_native.hall_of_fame import admit, record_deployment, load_index
+        if genome_id not in load_index():
+            stats = target.get("stats") or {}
+            admit(
+                genome={"id": genome_id},
+                symbol=symbol, tf=tf,
+                score=float(target.get("score") or 0),
+                stats=stats,
+                all_params=target,
+                active_genes=target.get("active_genes") or [],
+                archetype=target.get("archetype") or "MIXED",
+                birth_method=target.get("method") or "deployed",
+                generation=int(target.get("generation") or 0),
+            )
+        record_deployment(genome_id, symbol)
+    except Exception as _e:
+        print(f"[deploy] HoF sync warning: {_e}", flush=True)
+
     return {
         "ok":            True,
         "symbol":        symbol,
