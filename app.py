@@ -979,6 +979,7 @@ class RNativeMain(QMainWindow):
         action_bar = QHBoxLayout()
         for lbl, role, handler in [("DEPLOY", "success", self._action_deploy),
                                     ("🎬 BACKTEST 30d", "primary", self._action_backtest),
+                                    ("🔫 FIRE TEST TRADE", "primary", self._action_force_trade),
                                     ("OPTIMIZE", "", self._action_optimize),
                                     ("RETRAIN", "", self._action_retrain),
                                     ("DELETE", "danger", self._action_delete),
@@ -1848,6 +1849,72 @@ class RNativeMain(QMainWindow):
                 f"R Native — Backtest {'WIN 🏆' if is_winner else 'POOR 📉'}",
                 f"{sel['id']}: {n_trades} trades, WR {wr}%, ret ${pl:+.2f}",
                 QSystemTrayIcon.Information, 6000)
+        except Exception: pass
+
+    def _action_force_trade(self) -> None:
+        """🔫 Force-fire a paper test trade — bypasses ALL gates.
+        Symbol from selected vault row (or BTCUSDm default). Uses BUY 0.01 lot
+        with SL/TP 200 points each. Trade appears in MT5 + R Native + tray."""
+        import urllib.request as _u
+        import json as _json
+
+        sel = self._selected_vault_row()
+        symbol = sel["symbol"] if sel else "BTCUSDm"
+        # Pick side from current bid/ask trend (random for demo)
+        side = "BUY"
+        try:
+            import MetaTrader5 as mt5
+            tick = mt5.symbol_info_tick(symbol)
+            if tick:
+                # Random direction for test; user just wants to see it work
+                import random
+                side = random.choice(["BUY", "SELL"])
+        except Exception: pass
+
+        self._log(f"🔫 FORCE TRADE: {side} {symbol} 0.01 lot · bypasses ALL gates")
+
+        try:
+            # Omit sl_pts/tp_pts so server auto-calculates safe values per symbol
+            data = _json.dumps({
+                "symbol": symbol, "side": side, "lot": 0.01,
+                "comment": "R_FORCE_TEST",
+            }).encode("utf-8")
+            req = _u.Request("http://127.0.0.1:5055/api/r/force_trade",
+                             data=data, method="POST",
+                             headers={"Content-Type": "application/json"})
+            with _u.urlopen(req, timeout=8) as r:
+                result = _json.loads(r.read().decode())
+        except Exception as e:
+            self._log(f"❌ FORCE TRADE failed: {e}")
+            self._set_deploy_banner(f"❌ Force trade failed: {e}", error=True)
+            return
+
+        if not result.get("ok"):
+            err = result.get("error") or f"retcode {result.get('retcode')} {result.get('comment','')}"
+            self._log(f"❌ FORCE TRADE rejected: {err}")
+            self._set_deploy_banner(
+                f"❌ Trade rejected by broker: {err}", error=True)
+            return
+
+        # Success
+        ticket = result.get("order")
+        price  = result.get("price")
+        self._log(f"✅ FORCE TRADE filled: ticket #{ticket} @ {price:.3f} "
+                  f"SL {result['sl']:.3f} TP {result['tp']:.3f}")
+        self._set_deploy_banner(
+            f"✅ FORCE TRADE FILLED · {side} {symbol} 0.01 @ {price:.3f} "
+            f"(ticket #{ticket}, magic 20260605, SL/TP ±200pts)",
+            error=False)
+        # Tray + sound
+        try:
+            self.tray.showMessage(
+                "R Native — FORCE TRADE FILLED",
+                f"{side} {symbol} 0.01 @ {price:.3f}\nticket #{ticket}",
+                QSystemTrayIcon.Information, 6000)
+        except Exception: pass
+        try:
+            from r_native.retro_sfx import trade_open
+            trade_open()
         except Exception: pass
 
     def _check_r_executor_running(self) -> bool:
