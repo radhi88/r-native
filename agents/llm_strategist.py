@@ -318,15 +318,33 @@ class LLMStrategist(Agent):
                 pa  = rec.get("parent_a")
                 pb  = rec.get("parent_b")
                 index = load_index()
+
+                # Pipeline-health gate: if recent breed success rate is poor,
+                # stop breeding and force focus on cleanup instead. Prevents
+                # the LLM from filling HoF with garbage when the gene pool is
+                # in a bad spot.
+                breeds = [g for g in index.values()
+                          if (g.get("birth_method") or "").startswith("crossover")]
+                if len(breeds) >= 5:  # enough sample to judge
+                    succ = sum(1 for b in breeds if float(b.get("score") or 0) >= 30)
+                    rate = succ / len(breeds) * 100
+                    if rate < 15:  # < 15% success → halt breeding
+                        emit_insight(self.name, "WARN",
+                            f"🛡 blocked breed: pipeline success {rate:.0f}% "
+                            f"({succ}/{len(breeds)}) — clean gene pool first")
+                        return f"blocked_pipeline_rate_{rate:.0f}"
+
                 # Default to top-2 if LLM didn't cite specific parents
                 if not (pa and pb):
-                    top = load_symbol(sym)[:2]
+                    top = [e for e in load_symbol(sym) if not e.get("killed")][:2]
                     if len(top) < 2: return "breed_no_parents"
                     pa, pb = top[0]["id"], top[1]["id"]
-                # Validate both parents exist + score above breeding floor
+                # Validate both parents exist + alive + score above breeding floor
                 for tag, gid in (("a", pa), ("b", pb)):
                     ent = index.get(gid)
                     if not ent: return f"breed_unknown_parent_{tag}_{gid}"
+                    if ent.get("killed"):
+                        return f"blocked_parent_{tag}_killed_{gid}"
                     s = float(ent.get("score") or 0)
                     if s < self.BREED_PARENT_MIN:
                         emit_insight(self.name, "WARN",
