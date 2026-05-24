@@ -991,6 +991,22 @@ class RNativeMain(QMainWindow):
             b.clicked.connect(handler)
             action_bar.addWidget(b)
         action_bar.addStretch()
+
+        # Auto-Evolution toggle + status pill (always-on self-evolving loop)
+        self._auto_evo_btn = QPushButton("🧬 AUTO-EVOLVE: OFF")
+        self._auto_evo_btn.setProperty("role", "primary")
+        self._auto_evo_btn.setCheckable(True)
+        self._auto_evo_btn.clicked.connect(self._action_toggle_auto_evo)
+        self._auto_evo_btn.setToolTip(
+            "Continuously runs GA campaigns every N hours and auto-deploys\n"
+            "the winning genome — your system evolves while you sleep.")
+        action_bar.addWidget(self._auto_evo_btn)
+
+        self._auto_evo_status_lbl = QLabel("")
+        self._auto_evo_status_lbl.setStyleSheet(
+            "color: #888; font-size: 11px; padding-left: 6px;")
+        action_bar.addWidget(self._auto_evo_status_lbl)
+
         v.addLayout(action_bar)
 
         # Live log (terminal-style)
@@ -1917,6 +1933,79 @@ class RNativeMain(QMainWindow):
             trade_open()
         except Exception: pass
 
+    def _action_toggle_auto_evo(self) -> None:
+        """Toggle the continuous-evolution loop on/off via brain API."""
+        import urllib.request as _u
+        import json as _json
+        try:
+            data = _json.dumps({}).encode("utf-8")  # let server flip current state
+            req = _u.Request("http://127.0.0.1:5055/api/r/auto_evo/toggle",
+                             data=data, method="POST",
+                             headers={"Content-Type": "application/json"})
+            with _u.urlopen(req, timeout=4) as r:
+                result = _json.loads(r.read().decode())
+        except Exception as e:
+            self._log(f"❌ auto-evo toggle failed: {e}")
+            return
+
+        enabled = bool(result.get("enabled"))
+        if enabled:
+            self._log("🧬 AUTO-EVOLUTION enabled — system will evolve continuously")
+            self._set_deploy_banner(
+                "🧬 AUTO-EVOLUTION ON · GA campaigns will run periodically and "
+                "auto-deploy winning genomes", error=False)
+        else:
+            self._log("🛑 AUTO-EVOLUTION disabled")
+            self._set_deploy_banner("🛑 AUTO-EVOLUTION OFF", error=False)
+        self._refresh_auto_evo_status()
+
+    def _refresh_auto_evo_status(self) -> None:
+        """Poll /api/r/auto_evo/status and update button + label."""
+        if not hasattr(self, "_auto_evo_btn"):
+            return
+        import urllib.request as _u
+        import json as _json
+        try:
+            with _u.urlopen("http://127.0.0.1:5055/api/r/auto_evo/status",
+                            timeout=2) as r:
+                st = _json.loads(r.read().decode())
+        except Exception:
+            self._auto_evo_btn.setText("🧬 AUTO-EVOLVE: ?")
+            self._auto_evo_status_lbl.setText("(brain offline)")
+            return
+
+        enabled = bool(st.get("enabled"))
+        self._auto_evo_btn.blockSignals(True)
+        self._auto_evo_btn.setChecked(enabled)
+        self._auto_evo_btn.blockSignals(False)
+
+        running = bool(st.get("is_running_cycle"))
+        phase   = st.get("current_phase", "idle")
+        cycles  = int(st.get("total_cycles", 0))
+        deploys = int(st.get("total_deploys", 0))
+
+        if enabled and running:
+            self._auto_evo_btn.setText(f"🧬 EVOLVING · {phase[:24]}")
+        elif enabled:
+            self._auto_evo_btn.setText("🧬 AUTO-EVOLVE: ON")
+        else:
+            self._auto_evo_btn.setText("🧬 AUTO-EVOLVE: OFF")
+
+        next_run = st.get("next_run") or "—"
+        if next_run != "—":
+            try:
+                from datetime import datetime, timezone
+                t = datetime.fromisoformat(next_run.replace("Z","+00:00"))
+                delta = (t - datetime.now(timezone.utc)).total_seconds()
+                if delta > 0:
+                    h = int(delta // 3600); m = int((delta % 3600) // 60)
+                    next_run = f"in {h}h{m:02d}m" if h else f"in {m}m"
+                else:
+                    next_run = "now"
+            except Exception: pass
+        self._auto_evo_status_lbl.setText(
+            f"cycles: {cycles} · deploys: {deploys} · next: {next_run}")
+
     def _check_r_executor_running(self) -> bool:
         """Cheap check: any python process with r_executor in command line."""
         try:
@@ -2249,6 +2338,13 @@ class RNativeMain(QMainWindow):
         # H.8.1: refresh the hero P/L card every tick (3s)
         try: self._refresh_hero_card()
         except Exception as e: print(f"[hero] refresh err: {e}", flush=True)
+        # Auto-Evolution status pill (only every other tick to keep it light)
+        if not hasattr(self, "_auto_evo_tick_counter"):
+            self._auto_evo_tick_counter = 0
+        self._auto_evo_tick_counter += 1
+        if self._auto_evo_tick_counter % 3 == 0:
+            try: self._refresh_auto_evo_status()
+            except Exception: pass
         # H.8.2/3/5: refresh live activity + gate status + tray notifications
         try: self._refresh_live_activity()
         except Exception as e: print(f"[activity] err: {e}", flush=True)
