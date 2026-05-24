@@ -85,32 +85,48 @@ def _claude_generate(prompt: str, system: str = "",
 
 
 def ask(prompt: str, system: str = "", preferred_backend: str = "auto",
-        model: str = None, temperature: float = 0.3) -> dict:
-    """Ask the LLM. Returns {ok, text, backend, model}.
+        model: str = None, temperature: float = 0.3,
+        ollama_fallback_models: list = None) -> dict:
+    """Ask the LLM. Returns {ok, text, backend, model, tried}.
 
     preferred_backend: 'auto' | 'ollama' | 'claude'
+    ollama_fallback_models: optional list of models to try in order if the
+      primary model times out or returns empty. e.g. ['llama3.1:8b',
+      'qwen2.5:7b', 'qwen2.5:3b']. The first one is the primary; later
+      ones are progressively smaller fallbacks.
     """
-    order = (["ollama", "claude"] if preferred_backend == "auto"
-             else [preferred_backend])
-    for backend in order:
-        if backend == "ollama":
-            txt = _ollama_generate(prompt, system,
-                                   model or DEFAULT_OLLAMA_MODEL,
-                                   temperature)
+    tried = []  # log each attempt for the caller's debug
+
+    # Resolve the ollama model chain
+    if preferred_backend in ("auto", "ollama"):
+        chain = (ollama_fallback_models if ollama_fallback_models
+                 else [model or DEFAULT_OLLAMA_MODEL])
+        for ollama_model in chain:
+            txt = _ollama_generate(prompt, system, ollama_model, temperature)
+            tried.append({"backend": "ollama", "model": ollama_model,
+                          "ok": bool(txt)})
             if txt:
                 return {"ok": True, "text": txt,
-                        "backend": "ollama",
-                        "model": model or DEFAULT_OLLAMA_MODEL}
-        elif backend == "claude":
-            txt = _claude_generate(prompt, system,
-                                   model or DEFAULT_CLAUDE_MODEL,
-                                   temperature)
-            if txt:
-                return {"ok": True, "text": txt,
-                        "backend": "claude",
-                        "model": model or DEFAULT_CLAUDE_MODEL}
+                        "backend": "ollama", "model": ollama_model,
+                        "tried": tried}
+
+    # Claude fallback if ollama chain exhausted (or claude preferred)
+    if preferred_backend in ("auto", "claude"):
+        txt = _claude_generate(prompt, system,
+                               model or DEFAULT_CLAUDE_MODEL,
+                               temperature)
+        tried.append({"backend": "claude",
+                      "model": model or DEFAULT_CLAUDE_MODEL,
+                      "ok": bool(txt)})
+        if txt:
+            return {"ok": True, "text": txt,
+                    "backend": "claude",
+                    "model": model or DEFAULT_CLAUDE_MODEL,
+                    "tried": tried}
+
     return {"ok": False, "text": "", "backend": None, "model": None,
-            "error": "no LLM backend available"}
+            "tried": tried,
+            "error": f"no LLM backend available (tried {len(tried)})"}
 
 
 def extract_json(text: str) -> Optional[dict]:

@@ -416,16 +416,25 @@ class LLMStrategist(Agent):
             f"from the data above."
         )
 
-        # Use llama3.1:8b — better at structured reasoning than qwen for this
+        # Multi-model fallback chain — llama3.1:8b is best but slow.
+        # If it times out (CPU under load from auto-evo/breeder), we drop
+        # to smaller models so the strategist always gets *some* response.
         result = ask(prompt, system=SYSTEM_PROMPT,
                      preferred_backend="ollama",
-                     model="llama3.1:8b",
+                     ollama_fallback_models=[
+                         "llama3.1:8b",   # primary — best reasoning
+                         "qwen2.5:7b",    # alt 7B if llama times out
+                         "qwen2.5:3b",    # 3B for last-resort speed
+                     ],
                      temperature=0.3)
         if not result.get("ok"):
             from r_native.agents.llm import last_error
+            tried = result.get("tried", [])
+            tried_str = ", ".join(f"{t['model']}:{'ok' if t['ok'] else 'fail'}"
+                                   for t in tried) or "none"
             emit_insight(self.name, "WARN",
-                         f"LLM unavailable: {result.get('error')} · "
-                         f"ollama_last_error: {last_error()}")
+                         f"LLM chain exhausted: tried [{tried_str}] · "
+                         f"last_error: {last_error()}")
             return
 
         text = result["text"]
