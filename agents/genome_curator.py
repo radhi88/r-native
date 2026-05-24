@@ -26,6 +26,10 @@ class GenomeCurator(Agent):
     AUTO_PIN_SCORE_THRESHOLD = 70.0
     PRUNE_SCORE_THRESHOLD    = 15.0
     PRUNE_AGE_DAYS           = 3
+    # Failed breeds: bred genome that scored <15 — already proven bad,
+    # no need to wait 3 days. Prune after 30 min so HoF stays clean.
+    BREED_FAILURE_AGE_HOURS  = 0.5
+    BREED_FAILURE_SCORE      = 15.0
     REGRESSION_THRESHOLD_PCT = 50.0   # live underperforms backtest by 50%+
 
     def tick(self):
@@ -82,6 +86,22 @@ class GenomeCurator(Agent):
                 and live_trades == 0):
                 if kill(gid, f"low score {score:.1f}, age {age_days:.1f}d, never deployed"):
                     pruned_now += 1
+
+            # ── 2b. Fast-prune failed breeds (already proven bad — no wait) ──
+            birth = entry.get("birth_method", "")
+            if (gid not in pinned
+                and birth.startswith("crossover")
+                and score < self.BREED_FAILURE_SCORE
+                and age_days * 24 >= self.BREED_FAILURE_AGE_HOURS
+                and not deployments
+                and live_trades == 0):
+                if kill(gid, f"failed breed: score {score:.1f} < {self.BREED_FAILURE_SCORE}"):
+                    pruned_now += 1
+                    emit_insight(self.name, "ACT",
+                        f"🪦 fast-pruned failed breed {entry.get('nickname', gid)} "
+                        f"(score {score:.1f})",
+                        data={"id": gid, "score": score, "birth": birth},
+                        action="genome_killed")
 
             # ── 3. Detect regressions (live underperforms backtest badly) ──
             if live_trades >= 5 and deployments:
