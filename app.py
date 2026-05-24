@@ -948,6 +948,7 @@ class RNativeMain(QMainWindow):
         tabs.addTab(self._build_live_tab(),     "⚡ LIVE")
         tabs.addTab(self._build_genes_tab(),    "🧬 GENES")
         tabs.addTab(self._build_hof_tab(),      "🏆 HALL OF FAME")
+        tabs.addTab(self._build_advisors_tab(), "🤖 AI ADVISORS")
         self.center_stack.addWidget(tabs)
 
         # mode 1: ADVANCED — PROP FIRM + EXECUTION & SPREAD + EVOLUTION panels
@@ -1464,6 +1465,177 @@ class RNativeMain(QMainWindow):
         self.config_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         v.addWidget(self.config_table, 1)
         return w
+
+    def _build_advisors_tab(self):
+        """🤖 AI Advisors — live insight stream + agent control panel."""
+        w = QWidget(); v = QVBoxLayout(w)
+        v.setContentsMargins(8, 8, 8, 8); v.setSpacing(6)
+
+        # Top: Agent control grid (per-agent enable + run-now + status)
+        ctrl_box = QGroupBox("Agent Control")
+        ctrl_layout = QVBoxLayout(ctrl_box)
+        ctrl_layout.setSpacing(2)
+        self.advisor_agent_rows = {}  # name -> {checkbox, status_lbl, runbtn}
+        v.addWidget(ctrl_box)
+        self._advisor_ctrl_layout = ctrl_layout  # populated lazily
+
+        # Filters
+        filter_bar = QHBoxLayout()
+        filter_bar.addWidget(QLabel("Filter:"))
+        self.advisor_filter_combo = QComboBox()
+        self.advisor_filter_combo.addItems(["All agents", "ACT only (decisions)",
+                                            "WARN only", "risk_sentinel",
+                                            "genome_curator", "market_reader",
+                                            "performance_auditor", "llm_strategist"])
+        self.advisor_filter_combo.currentTextChanged.connect(
+            lambda _: self._refresh_advisors_panel())
+        filter_bar.addWidget(self.advisor_filter_combo)
+
+        refresh_btn = QPushButton("🔄 Refresh")
+        refresh_btn.clicked.connect(self._refresh_advisors_panel)
+        filter_bar.addWidget(refresh_btn)
+
+        clear_btn = QPushButton("🧠 Run LLM Strategist Now")
+        clear_btn.setProperty("role", "primary")
+        clear_btn.clicked.connect(lambda: self._advisor_run_now("llm_strategist"))
+        filter_bar.addWidget(clear_btn)
+
+        filter_bar.addStretch()
+        v.addLayout(filter_bar)
+
+        # Live insight stream (read-only multi-line)
+        self.advisor_stream = QPlainTextEdit()
+        self.advisor_stream.setReadOnly(True)
+        self.advisor_stream.setStyleSheet(
+            "background: #0c0e18; color: #c8d0e0; "
+            "font-family: 'Cascadia Mono', 'Consolas', monospace; "
+            "font-size: 12px;")
+        v.addWidget(self.advisor_stream, 1)
+
+        # LLM Strategist last verdict (highlighted box)
+        self.advisor_llm_box = QPlainTextEdit()
+        self.advisor_llm_box.setReadOnly(True)
+        self.advisor_llm_box.setMaximumHeight(160)
+        self.advisor_llm_box.setStyleSheet(
+            "background: #15182a; color: #e0d670; "
+            "font-family: 'Cascadia Mono', 'Consolas', monospace; "
+            "border-left: 3px solid #e0a020; padding: 4px;")
+        self.advisor_llm_box.setPlainText("🧠 LLM Strategist not yet run …")
+        v.addWidget(self.advisor_llm_box)
+
+        QTimer.singleShot(800, self._refresh_advisors_panel)
+        return w
+
+    def _refresh_advisors_panel(self) -> None:
+        if not hasattr(self, "advisor_stream"): return
+        import urllib.request as _u
+        import json as _json
+
+        # Agent control rows (build once, refresh status each time)
+        try:
+            with _u.urlopen("http://127.0.0.1:5055/api/r/agents/list",
+                            timeout=3) as r:
+                agents = _json.loads(r.read().decode()).get("agents", [])
+        except Exception:
+            agents = []
+
+        for a in agents:
+            name = a["name"]
+            if name not in self.advisor_agent_rows:
+                row = QHBoxLayout()
+                cb = QCheckBox(name)
+                cb.setChecked(a["enabled"])
+                cb.toggled.connect(
+                    lambda checked, n=name: self._advisor_toggle(n, checked))
+                row.addWidget(cb)
+                status_lbl = QLabel("")
+                status_lbl.setStyleSheet("color: #889; font-size: 11px;")
+                row.addWidget(status_lbl, 1)
+                runbtn = QPushButton("▶ Run now")
+                runbtn.setFixedWidth(90)
+                runbtn.clicked.connect(lambda _, n=name: self._advisor_run_now(n))
+                row.addWidget(runbtn)
+                self._advisor_ctrl_layout.addLayout(row)
+                self.advisor_agent_rows[name] = {
+                    "cb": cb, "status": status_lbl, "btn": runbtn,
+                }
+            r_row = self.advisor_agent_rows[name]
+            alive = "🟢" if (a["enabled"] and a["thread_alive"]) else "🔴"
+            r_row["cb"].blockSignals(True)
+            r_row["cb"].setChecked(a["enabled"])
+            r_row["cb"].blockSignals(False)
+            err = f" · {a['last_error'][:40]}" if a.get("last_error") else ""
+            r_row["status"].setText(
+                f"{alive} ticks={a['tick_count']} errs={a['error_count']} "
+                f"every {a['interval_seconds']}s{err}")
+
+        # Insight stream — apply filter
+        selected = self.advisor_filter_combo.currentText()
+        url = "http://127.0.0.1:5055/api/r/agents/insights?n=80"
+        if selected == "ACT only (decisions)":  url += "&level=ACT"
+        elif selected == "WARN only":           url += "&level=WARN"
+        elif selected not in ("All agents",):   url += f"&agent={selected}"
+        try:
+            with _u.urlopen(url, timeout=3) as r:
+                items = _json.loads(r.read().decode()).get("insights", [])
+        except Exception:
+            return
+
+        lines = []
+        for r in items:
+            ts = r["ts"][11:19]
+            icon = {"INFO":"ℹ", "WARN":"⚠", "ACT":"⚡"}.get(r["level"], "·")
+            lines.append(f"{icon} [{ts}] {r['agent']:<22} {r['message']}")
+        self.advisor_stream.setPlainText("\n".join(lines))
+
+        # LLM Strategist verdict box
+        try:
+            from pathlib import Path as _P
+            sp = _P(r"C:\Users\Radhi\MT5\data\r_native\agents\strategist_state.json")
+            if sp.exists():
+                st = _json.loads(sp.read_text(encoding="utf-8"))
+                txt  = f"🧠 [{st.get('confidence','?')}] "
+                txt += st.get('assessment', '—')
+                txt += f"\n  Backend: {st.get('backend')}/{st.get('model')}\n"
+                if st.get("concerns"):
+                    txt += f"\n⚠ Concerns:\n" + "\n".join(
+                        f"  • {c}" for c in st["concerns"][:4])
+                if st.get("recommendations"):
+                    txt += f"\n💡 Recommendations:\n" + "\n".join(
+                        f"  • {r.get('action','?')}: {r.get('reason','')[:80]}"
+                        for r in st["recommendations"][:4])
+                self.advisor_llm_box.setPlainText(txt)
+        except Exception: pass
+
+    def _advisor_toggle(self, name: str, enabled: bool) -> None:
+        import urllib.request as _u
+        import json as _json
+        try:
+            data = _json.dumps({"name": name, "enabled": enabled}).encode()
+            req = _u.Request("http://127.0.0.1:5055/api/r/agents/toggle",
+                             data=data, method="POST",
+                             headers={"Content-Type": "application/json"})
+            with _u.urlopen(req, timeout=3):
+                pass
+            self._log(f"🤖 {name} → {'ON' if enabled else 'OFF'}")
+        except Exception as e:
+            self._log(f"❌ toggle {name} failed: {e}")
+        self._refresh_advisors_panel()
+
+    def _advisor_run_now(self, name: str) -> None:
+        import urllib.request as _u
+        import json as _json
+        try:
+            data = _json.dumps({"name": name}).encode()
+            req = _u.Request("http://127.0.0.1:5055/api/r/agents/run_now",
+                             data=data, method="POST",
+                             headers={"Content-Type": "application/json"})
+            with _u.urlopen(req, timeout=3):
+                pass
+            self._log(f"▶ {name} triggered")
+        except Exception as e:
+            self._log(f"❌ run_now {name} failed: {e}")
+        QTimer.singleShot(2000, self._refresh_advisors_panel)
 
     def _build_hof_tab(self):
         """🏆 Hall of Fame — every genome ever produced, ranked, with pin/deploy."""
@@ -2543,6 +2715,10 @@ class RNativeMain(QMainWindow):
         self._auto_evo_tick_counter += 1
         if self._auto_evo_tick_counter % 3 == 0:
             try: self._refresh_auto_evo_status()
+            except Exception: pass
+        # Refresh AI Advisors panel every 5 ticks (~15s)
+        if self._auto_evo_tick_counter % 5 == 0:
+            try: self._refresh_advisors_panel()
             except Exception: pass
         # H.8.2/3/5: refresh live activity + gate status + tray notifications
         try: self._refresh_live_activity()

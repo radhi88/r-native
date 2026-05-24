@@ -39,6 +39,11 @@ def _load_default_agents():
         register(PerformanceAuditor())
     except Exception as e:
         print(f"[orchestrator] PerformanceAuditor failed to load: {e}")
+    try:
+        from r_native.agents.llm_strategist import LLMStrategist
+        register(LLMStrategist())
+    except Exception as e:
+        print(f"[orchestrator] LLMStrategist failed to load: {e}")
 
 
 _started = False

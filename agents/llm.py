@@ -1,0 +1,121 @@
+"""agents/llm.py — minimal LLM client used by Strategist + future agents.
+
+Tries Ollama (local, free) first; falls back to Claude API if key present.
+Returns plain text. Designed for short-context strategic reasoning, not
+long-form generation.
+"""
+from __future__ import annotations
+
+import json
+import os
+import urllib.request
+from typing import Optional
+
+
+OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
+CLAUDE_URL = "https://api.anthropic.com/v1/messages"
+
+# Pick a balanced reasoning model — qwen2.5:7b is good for structured output
+DEFAULT_OLLAMA_MODEL = "qwen2.5:7b"
+DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001"
+
+
+def _ollama_generate(prompt: str, system: str = "",
+                     model: str = DEFAULT_OLLAMA_MODEL,
+                     temperature: float = 0.3,
+                     timeout: int = 60) -> Optional[str]:
+    try:
+        body = json.dumps({
+            "model": model,
+            "prompt": prompt,
+            "system": system,
+            "stream": False,
+            "options": {"temperature": temperature, "num_predict": 800},
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            OLLAMA_URL, data=body,
+            headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        return data.get("response") or None
+    except Exception as e:
+        print(f"[llm] ollama err: {e}", flush=True)
+        return None
+
+
+def _claude_generate(prompt: str, system: str = "",
+                     model: str = DEFAULT_CLAUDE_MODEL,
+                     temperature: float = 0.3,
+                     timeout: int = 30) -> Optional[str]:
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key: return None
+    try:
+        body = json.dumps({
+            "model": model,
+            "max_tokens": 800,
+            "temperature": temperature,
+            "system": system,
+            "messages": [{"role": "user", "content": prompt}],
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            CLAUDE_URL, data=body,
+            headers={
+                "x-api-key": key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            })
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        return data.get("content", [{}])[0].get("text") or None
+    except Exception as e:
+        print(f"[llm] claude err: {e}", flush=True)
+        return None
+
+
+def ask(prompt: str, system: str = "", preferred_backend: str = "auto",
+        model: str = None, temperature: float = 0.3) -> dict:
+    """Ask the LLM. Returns {ok, text, backend, model}.
+
+    preferred_backend: 'auto' | 'ollama' | 'claude'
+    """
+    order = (["ollama", "claude"] if preferred_backend == "auto"
+             else [preferred_backend])
+    for backend in order:
+        if backend == "ollama":
+            txt = _ollama_generate(prompt, system,
+                                   model or DEFAULT_OLLAMA_MODEL,
+                                   temperature)
+            if txt:
+                return {"ok": True, "text": txt,
+                        "backend": "ollama",
+                        "model": model or DEFAULT_OLLAMA_MODEL}
+        elif backend == "claude":
+            txt = _claude_generate(prompt, system,
+                                   model or DEFAULT_CLAUDE_MODEL,
+                                   temperature)
+            if txt:
+                return {"ok": True, "text": txt,
+                        "backend": "claude",
+                        "model": model or DEFAULT_CLAUDE_MODEL}
+    return {"ok": False, "text": "", "backend": None, "model": None,
+            "error": "no LLM backend available"}
+
+
+def extract_json(text: str) -> Optional[dict]:
+    """Extract first JSON object from LLM response. Forgiving."""
+    if not text: return None
+    # Find first { ... } or ```json ... ```
+    start = text.find("{")
+    if start < 0: return None
+    # Find matching closing brace by depth count
+    depth = 0
+    for i in range(start, len(text)):
+        if text[i] == "{": depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                try:
+                    return json.loads(text[start:i+1])
+                except Exception:
+                    return None
+    return None
