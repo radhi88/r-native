@@ -20,27 +20,39 @@ DEFAULT_OLLAMA_MODEL = "qwen2.5:7b"
 DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001"
 
 
+_LAST_OLLAMA_ERROR = None
+
+
 def _ollama_generate(prompt: str, system: str = "",
                      model: str = DEFAULT_OLLAMA_MODEL,
                      temperature: float = 0.3,
-                     timeout: int = 60) -> Optional[str]:
+                     timeout: int = 240) -> Optional[str]:
+    """Longer default timeout — qwen2.5:7b on CPU can take 90-180s for big prompts."""
+    global _LAST_OLLAMA_ERROR
     try:
         body = json.dumps({
             "model": model,
             "prompt": prompt,
             "system": system,
             "stream": False,
-            "options": {"temperature": temperature, "num_predict": 800},
+            "options": {"temperature": temperature, "num_predict": 800,
+                        "num_ctx": 8192},
         }).encode("utf-8")
         req = urllib.request.Request(
             OLLAMA_URL, data=body,
             headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=timeout) as r:
             data = json.loads(r.read().decode("utf-8"))
+        _LAST_OLLAMA_ERROR = None
         return data.get("response") or None
     except Exception as e:
-        print(f"[llm] ollama err: {e}", flush=True)
+        _LAST_OLLAMA_ERROR = f"{type(e).__name__}: {e}"
+        print(f"[llm] ollama err: {_LAST_OLLAMA_ERROR}", flush=True)
         return None
+
+
+def last_error() -> str:
+    return _LAST_OLLAMA_ERROR or ""
 
 
 def _claude_generate(prompt: str, system: str = "",

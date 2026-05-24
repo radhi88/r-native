@@ -221,11 +221,16 @@ class LLMStrategist(Agent):
             f"from the data above."
         )
 
+        # Use llama3.1:8b — better at structured reasoning than qwen for this
         result = ask(prompt, system=SYSTEM_PROMPT,
-                     preferred_backend="auto", temperature=0.3)
+                     preferred_backend="ollama",
+                     model="llama3.1:8b",
+                     temperature=0.3)
         if not result.get("ok"):
+            from r_native.agents.llm import last_error
             emit_insight(self.name, "WARN",
-                         f"LLM unavailable: {result.get('error')}")
+                         f"LLM unavailable: {result.get('error')} · "
+                         f"ollama_last_error: {last_error()}")
             return
 
         text = result["text"]
