@@ -60,6 +60,19 @@ Your output is a JSON object with this exact structure:
 Keep recommendations actionable and specific — cite genome IDs, agent
 names, numeric thresholds. NO empty fluff. If nothing needs attention,
 return empty arrays. Limit to 5 total recommendations max.
+
+CRITICAL SCORING SCALE (read carefully — system has guardrails that
+will REJECT recommendations violating these):
+  • Genome scores in this system range roughly 0-80
+  • score >= 60 = strong (auto-pin candidate)
+  • score 30-60 = average (keep, observe)
+  • score < 30  = weak (kill candidate)
+  • NEVER recommend killing a genome scoring above 30
+  • NEVER recommend pinning a genome scoring below 50
+  • For breed_pair, BOTH parents must score above 25
+
+When you see "low score 62.5" — that is NOT low, it is HIGH (top 10%).
+The system top is typically 70-75. Don't kill medium/high scorers.
 """
 
 
@@ -198,35 +211,73 @@ class LLMStrategist(Agent):
 
         return snap
 
+    # Safety guardrails — protect HoF from LLM mistakes in autonomous mode
+    KILL_SCORE_CEILING   = 30.0   # never kill anything scoring above this
+    PIN_SCORE_FLOOR      = 50.0   # never pin anything scoring below this
+    BREED_PARENT_MIN     = 25.0   # parents must each score above this to breed
+
     def _apply_recommendation(self, rec: dict) -> str:
-        """Apply a recommendation if in autonomous mode. Returns status."""
+        """Apply a recommendation if in autonomous mode. Returns status.
+        Guardrails block the LLM from destructive misreads (it once
+        called a 62.5 genome "low-scoring" and killed it — never again)."""
         if not self._autonomous:
             return "advisory_only"
         action = rec.get("action")
         try:
             if action == "kill_genome":
-                from r_native.hall_of_fame import kill
+                from r_native.hall_of_fame import kill, load_index
                 gid = rec.get("id")
-                if gid and kill(gid, rec.get("reason", "LLM strategist")):
-                    return "killed"
+                if not gid: return "kill_no_id"
+                entry = load_index().get(gid)
+                if not entry: return f"kill_unknown_id_{gid}"
+                score = float(entry.get("score") or 0)
+                if score > self.KILL_SCORE_CEILING:
+                    emit_insight(self.name, "WARN",
+                        f"🛡 blocked LLM kill of {gid} (score {score:.1f} > "
+                        f"safety ceiling {self.KILL_SCORE_CEILING})")
+                    return f"blocked_score_{score:.1f}"
+                if entry.get("pinned"):
+                    return "blocked_pinned"
+                if kill(gid, rec.get("reason", "LLM strategist")):
+                    return f"killed_score{score:.1f}"
                 return "kill_failed"
             elif action == "pin_genome":
-                from r_native.hall_of_fame import pin
+                from r_native.hall_of_fame import pin, load_index
                 gid = rec.get("id")
-                if gid and pin(gid):
-                    return "pinned"
+                if not gid: return "pin_no_id"
+                entry = load_index().get(gid)
+                if not entry: return f"pin_unknown_id_{gid}"
+                score = float(entry.get("score") or 0)
+                if score < self.PIN_SCORE_FLOOR:
+                    emit_insight(self.name, "WARN",
+                        f"🛡 blocked LLM pin of {gid} (score {score:.1f} < "
+                        f"safety floor {self.PIN_SCORE_FLOOR})")
+                    return f"blocked_score_{score:.1f}"
+                if pin(gid):
+                    return f"pinned_score{score:.1f}"
                 return "pin_failed"
             elif action == "breed_pair":
                 from r_native.breeder import breed_and_admit
+                from r_native.hall_of_fame import load_index, load_symbol
                 sym = rec.get("symbol", "BTCUSDm")
                 pa  = rec.get("parent_a")
                 pb  = rec.get("parent_b")
+                index = load_index()
+                # Default to top-2 if LLM didn't cite specific parents
                 if not (pa and pb):
-                    # If LLM didn't give specific parents, take top 2 from HoF
-                    from r_native.hall_of_fame import load_symbol
                     top = load_symbol(sym)[:2]
                     if len(top) < 2: return "breed_no_parents"
                     pa, pb = top[0]["id"], top[1]["id"]
+                # Validate both parents exist + score above breeding floor
+                for tag, gid in (("a", pa), ("b", pb)):
+                    ent = index.get(gid)
+                    if not ent: return f"breed_unknown_parent_{tag}_{gid}"
+                    s = float(ent.get("score") or 0)
+                    if s < self.BREED_PARENT_MIN:
+                        emit_insight(self.name, "WARN",
+                            f"🛡 blocked breed: parent_{tag} {gid} score "
+                            f"{s:.1f} < floor {self.BREED_PARENT_MIN}")
+                        return f"blocked_parent_{tag}_score_{s:.1f}"
                 result = breed_and_admit(sym, pa, pb)
                 if result.get("ok"):
                     return f"bred_{result['child_id']}_score{result['score']:.1f}"
