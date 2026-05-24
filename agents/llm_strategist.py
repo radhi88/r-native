@@ -97,6 +97,19 @@ your past recommendations that the system REFUSED to execute (with
     more breeding, focus on kills/investigate instead
 Do NOT propose the same recommendation that was just blocked. Read
 this list, understand WHY it was refused, and adapt.
+
+KILL DISCIPLINE (very strict):
+Before proposing kill_genome:
+  • Cross-check the `deployed` field in the snapshot — it lists which
+    genome IDs are currently live-trading per symbol. NEVER propose
+    killing an ID that appears as a `deployed.<symbol>.id`.
+  • Cross-check your_recent_blocked_attempts — if the kill of this id
+    has been blocked before with "currently deployed on X", that
+    genome is STILL DEPLOYED. Don't try again until snapshot.deployed
+    shows a different id.
+  • If the genome you wanted to kill IS deployed, instead propose a
+    breed_pair to produce a stronger replacement, then KILL the old
+    one only AFTER it's been swapped out by market_reader.
 """
 
 
