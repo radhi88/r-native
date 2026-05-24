@@ -190,12 +190,29 @@ def deploy_genome_to_live(symbol: str, genome_id: str, tf: str,
     if not target:
         return {"ok": False, "error": f"genome {genome_id} not in vault or recent campaigns"}
 
-    # Preserve session window if existing deployment had one (so widened-to-24h sticks)
+    # Session window policy:
+    # 1) Preserve any prior widened window (user/admin set 0-24)
+    # 2) For 24/7 markets (crypto, gold), FORCE 0-24 regardless of what
+    #    the backtest preferred — otherwise the executor sleeps most of
+    #    the day. Backtests pick narrow windows because they overfit to
+    #    quiet-hour quirks; live we want maximum opportunity surface.
     prev = cfg.get("deployed_genome") or {}
     target = dict(target)  # don't mutate caller's dict
     if "start_hour" not in target and "start_hour" in prev:
         target["start_hour"] = prev["start_hour"]
         target["end_hour"]   = prev.get("end_hour")
+
+    sym_upper = (symbol or "").upper()
+    is_24_7 = any(k in sym_upper for k in
+                   ("BTC", "ETH", "XRP", "LTC", "SOL", "DOGE", "ADA",
+                    "BNB", "DOT", "AVAX", "LINK", "XAU"))
+    if is_24_7:
+        target["start_hour"] = 0
+        target["end_hour"]   = 24
+        # Also flatten nested params dict if present (some genomes store both)
+        if isinstance(target.get("params"), dict):
+            target["params"]["start_hour"] = 0
+            target["params"]["end_hour"]   = 24
 
     cfg["deployed_genome"]    = target
     cfg["deployed_at"]        = datetime.now(timezone.utc).isoformat()
