@@ -1517,8 +1517,8 @@ class RNativeMain(QMainWindow):
             "Trades", "WR%", "PF", "Live $", "Last Deploy"])
         self.hof_table.horizontalHeader().setStretchLastSection(True)
         self.hof_table.setAlternatingRowColors(True)
-        self.hof_table.setSelectionBehavior(self.hof_table.SelectRows)
-        self.hof_table.setEditTriggers(self.hof_table.NoEditTriggers)
+        self.hof_table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.hof_table.setEditTriggers(QTableWidget.NoEditTriggers)
         # Column widths
         self.hof_table.setColumnWidth(0, 30)
         self.hof_table.setColumnWidth(1, 50)
