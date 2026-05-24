@@ -553,6 +553,17 @@ class RNativeMain(QMainWindow):
             col.addWidget(lbl); col.addWidget(val)
             return col, val
 
+        # ── Pixel Mascot — bull/bear reacts to live P/L ──
+        try:
+            from r_native.pixel_mascot import PixelMascot
+            self.hero_mascot = PixelMascot(size_px=44)
+            self.hero_mascot.set_emotion("IDLE")
+            h.addWidget(self.hero_mascot)
+            h.addWidget(self._vsep())
+        except Exception as e:
+            self.hero_mascot = None
+            print(f"[mascot] init err: {e}", flush=True)
+
         # TODAY P/L
         c1, self.hero_pl       = _stat("TODAY P/L",  "$0.00", TEXT)
         h.addLayout(c1); h.addWidget(self._vsep())
@@ -681,6 +692,21 @@ class RNativeMain(QMainWindow):
         gate_text = last_action[:20] if last_action and last_action != "—" else "—"
         self.hero_gate.setText(gate_text)
         self.hero_gate.setStyleSheet(f"color: {TEXT_MUTED}; {VAL_STYLE}")
+
+        # ── Pixel mascot — bull/bear emotional state ──
+        if hasattr(self, "hero_mascot") and self.hero_mascot:
+            try:
+                # Heuristic: convert today_pl (USD) → percent of balance for emotion buckets
+                bal = 100  # safe default
+                try:
+                    import MetaTrader5 as _mt5_
+                    info = _mt5_.account_info()
+                    if info: bal = max(1, info.balance)
+                except Exception: pass
+                pl_pct = (today_pl / bal) * 100
+                has_open = (today_trades > 0 and exec_state.get("paper_open"))
+                self.hero_mascot.set_from_pl(pl_pct, today_trades, has_open)
+            except Exception: pass
 
     def _build_header(self):
         h = QHBoxLayout(); h.setSpacing(10); h.setContentsMargins(2, 2, 2, 6)
@@ -861,6 +887,11 @@ class RNativeMain(QMainWindow):
                                 f"{d.symbol} closed P/L: ${pl:+.2f}",
                                 QSystemTrayIcon.Information, 5000)
                     except Exception: pass
+                # Retro 8-bit sound effects (easy-peasy.ai pixel-game vibes)
+                try:
+                    from r_native.retro_sfx import on_trade_event
+                    on_trade_event(kind, pl=pl)
+                except Exception: pass
         except Exception: pass
 
         # Append to activity panel (newest at top, keep last ~25 lines)
@@ -1655,6 +1686,12 @@ class RNativeMain(QMainWindow):
         # 4) H.8.6 auto-replay: instantly show what this genome would have done over 30d
         # The user sees concrete numbers + chart + trades, no waiting for live trading.
         QTimer.singleShot(300, self._action_backtest)
+
+        # 5) Retro 8-bit fanfare on deploy
+        try:
+            from r_native.retro_sfx import level_up
+            level_up()
+        except Exception: pass
 
     def _set_deploy_banner(self, text: str, error: bool = False, warning: bool = False):
         """Show or update the inline deploy status banner above the vault table."""
