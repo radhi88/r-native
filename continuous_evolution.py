@@ -143,8 +143,14 @@ def _maybe_auto_deploy(symbol: str, summary: dict, threshold: float,
         return {"deployed": False, "reason": "no top genome in summary"}
 
     new_score = float(summary.get("top_score") or 0)
-    new_id    = top.get("genome", {}).get("id") or top.get("id")
-    new_trades = int(top.get("trades") or top.get("genome", {}).get("trades") or 0)
+    new_id    = top.get("id") or top.get("genome", {}).get("id")
+    # trades count lives under top_genome.stats.trades (genetic_engine schema)
+    new_trades = int(
+        (top.get("stats") or {}).get("trades")
+        or top.get("trades")
+        or (top.get("genome") or {}).get("trades")
+        or 0
+    )
 
     if not new_id:
         return {"deployed": False, "reason": "top genome has no id"}
