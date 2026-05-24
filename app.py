@@ -1500,6 +1500,20 @@ class RNativeMain(QMainWindow):
         clear_btn.clicked.connect(lambda: self._advisor_run_now("llm_strategist"))
         filter_bar.addWidget(clear_btn)
 
+        self._strat_autonomous_btn = QPushButton("⚙ AUTONOMOUS: OFF")
+        self._strat_autonomous_btn.setCheckable(True)
+        self._strat_autonomous_btn.setToolTip(
+            "When ON, LLM Strategist auto-applies kill/pin/breed recommendations.\n"
+            "When OFF, recommendations are advisory only.")
+        self._strat_autonomous_btn.clicked.connect(self._toggle_strategist_autonomous)
+        filter_bar.addWidget(self._strat_autonomous_btn)
+
+        breed_btn = QPushButton("🧬 BREED top 2 BTC")
+        breed_btn.setProperty("role", "success")
+        breed_btn.setToolTip("Cross top 2 HoF BTC genomes, backtest, admit child to HoF")
+        breed_btn.clicked.connect(lambda: self._breed_top_two("BTCUSDm"))
+        filter_bar.addWidget(breed_btn)
+
         filter_bar.addStretch()
         v.addLayout(filter_bar)
 
@@ -1588,6 +1602,21 @@ class RNativeMain(QMainWindow):
             lines.append(f"{icon} [{ts}] {r['agent']:<22} {r['message']}")
         self.advisor_stream.setPlainText("\n".join(lines))
 
+        # Sync autonomous toggle state from server
+        try:
+            with _u.urlopen(
+                "http://127.0.0.1:5055/api/r/agents/strategist_autonomous",
+                timeout=2) as r:
+                a = _json.loads(r.read().decode())
+            if a.get("ok"):
+                is_on = bool(a.get("autonomous"))
+                self._strat_autonomous_btn.blockSignals(True)
+                self._strat_autonomous_btn.setChecked(is_on)
+                self._strat_autonomous_btn.setText(
+                    f"⚙ AUTONOMOUS: {'ON' if is_on else 'OFF'}")
+                self._strat_autonomous_btn.blockSignals(False)
+        except Exception: pass
+
         # LLM Strategist verdict box
         try:
             from pathlib import Path as _P
@@ -1621,6 +1650,89 @@ class RNativeMain(QMainWindow):
         except Exception as e:
             self._log(f"❌ toggle {name} failed: {e}")
         self._refresh_advisors_panel()
+
+    def _toggle_strategist_autonomous(self) -> None:
+        """Flip LLM Strategist between advisory and autonomous mode."""
+        import urllib.request as _u
+        import json as _json
+        new_state = self._strat_autonomous_btn.isChecked()
+        try:
+            data = _json.dumps({"enabled": new_state}).encode()
+            req = _u.Request("http://127.0.0.1:5055/api/r/agents/strategist_autonomous",
+                             data=data, method="POST",
+                             headers={"Content-Type": "application/json"})
+            with _u.urlopen(req, timeout=3) as r:
+                result = _json.loads(r.read().decode())
+            ok = result.get("ok") and result.get("autonomous") == new_state
+        except Exception as e:
+            self._log(f"❌ autonomous toggle failed: {e}")
+            self._strat_autonomous_btn.setChecked(not new_state)
+            return
+        if ok:
+            self._strat_autonomous_btn.setText(
+                f"⚙ AUTONOMOUS: {'ON' if new_state else 'OFF'}")
+            self._log(f"🧠 strategist autonomous {'ON' if new_state else 'OFF'}")
+            if new_state:
+                self._set_deploy_banner(
+                    "⚠ LLM Strategist will now auto-apply kill/pin/breed recommendations",
+                    error=False)
+
+    def _breed_top_two(self, symbol: str) -> None:
+        """Manually breed top 2 HoF genomes for this symbol — background."""
+        import urllib.request as _u
+        import json as _json
+        # Fetch top 2 ids
+        try:
+            with _u.urlopen(
+                f"http://127.0.0.1:5055/api/r/hof/symbol/{symbol}?limit=2",
+                timeout=3) as r:
+                data = _json.loads(r.read().decode())
+            genomes = data.get("genomes", [])
+            if len(genomes) < 2:
+                self._log(f"need ≥2 HoF entries for {symbol}, have {len(genomes)}")
+                return
+            pa, pb = genomes[0]["id"], genomes[1]["id"]
+            pa_nick = genomes[0].get("nickname", pa)
+            pb_nick = genomes[1].get("nickname", pb)
+        except Exception as e:
+            self._log(f"❌ breed lookup failed: {e}")
+            return
+
+        self._set_deploy_banner(
+            f"🧬 BREEDING: {pa_nick} × {pb_nick} — backtesting child …",
+            error=False)
+        self._log(f"🧬 breeding {pa} × {pb} on {symbol}")
+
+        # Fire breeder in a background thread (it takes 20-40s for backtest)
+        import threading
+        def _do_breed():
+            try:
+                payload = _json.dumps({"symbol": symbol,
+                                       "parent_a": pa, "parent_b": pb}).encode()
+                req = _u.Request("http://127.0.0.1:5055/api/r/breed",
+                                 data=payload, method="POST",
+                                 headers={"Content-Type": "application/json"})
+                with _u.urlopen(req, timeout=90) as r:
+                    result = _json.loads(r.read().decode())
+            except Exception as e:
+                # Marshal back to UI thread via QTimer.singleShot
+                QTimer.singleShot(0, lambda: self._set_deploy_banner(
+                    f"❌ breed failed: {e}", error=True))
+                return
+            if not result.get("ok"):
+                QTimer.singleShot(0, lambda: self._set_deploy_banner(
+                    f"❌ breed: {result.get('reason')}", error=True))
+                return
+            msg = (f"✅ BRED {result.get('nickname','?')} · "
+                   f"score {result.get('score',0):.1f} · "
+                   f"{result.get('trades',0)} trades · "
+                   f"WR {result.get('win_rate','?')}% · "
+                   f"PF {result.get('profit_factor','?')}")
+            QTimer.singleShot(0, lambda: self._set_deploy_banner(msg, error=False))
+            QTimer.singleShot(0, lambda: self._log(msg))
+            QTimer.singleShot(500, self._refresh_hof_tab)
+
+        threading.Thread(target=_do_breed, daemon=True, name="manual-breed").start()
 
     def _advisor_run_now(self, name: str) -> None:
         import urllib.request as _u

@@ -69,9 +69,25 @@ class LLMStrategist(Agent):
     interval_seconds = 900     # 15 minutes
     default_enabled = True
 
+    AUTONOMOUS_STATE = Path(r"C:\Users\Radhi\MT5\data\r_native\agents\strategist_autonomous.flag")
+
     def __init__(self):
         super().__init__()
-        self._autonomous = False  # advisory mode by default
+        # Read autonomous flag from disk so it survives restarts
+        self._autonomous = self.AUTONOMOUS_STATE.exists()
+
+    def set_autonomous(self, on: bool) -> bool:
+        self._autonomous = bool(on)
+        try:
+            self.AUTONOMOUS_STATE.parent.mkdir(parents=True, exist_ok=True)
+            if on:
+                self.AUTONOMOUS_STATE.write_text("autonomous", encoding="utf-8")
+            elif self.AUTONOMOUS_STATE.exists():
+                self.AUTONOMOUS_STATE.unlink()
+        except Exception: pass
+        emit_insight(self.name, "INFO",
+            f"autonomous mode {'ON — will apply pin/kill/breed' if on else 'OFF (advisory only)'}")
+        return self._autonomous
 
     def _gather_snapshot(self) -> dict:
         """Build a compact snapshot of the system for the LLM."""
@@ -200,8 +216,22 @@ class LLMStrategist(Agent):
                 if gid and pin(gid):
                     return "pinned"
                 return "pin_failed"
-            # tune_threshold + breed_pair require deeper integration —
-            # for now they remain advisory
+            elif action == "breed_pair":
+                from r_native.breeder import breed_and_admit
+                sym = rec.get("symbol", "BTCUSDm")
+                pa  = rec.get("parent_a")
+                pb  = rec.get("parent_b")
+                if not (pa and pb):
+                    # If LLM didn't give specific parents, take top 2 from HoF
+                    from r_native.hall_of_fame import load_symbol
+                    top = load_symbol(sym)[:2]
+                    if len(top) < 2: return "breed_no_parents"
+                    pa, pb = top[0]["id"], top[1]["id"]
+                result = breed_and_admit(sym, pa, pb)
+                if result.get("ok"):
+                    return f"bred_{result['child_id']}_score{result['score']:.1f}"
+                return f"breed_failed: {result.get('reason')}"
+            # tune_threshold still advisory — needs careful per-agent integration
             return "no_handler"
         except Exception as e:
             return f"error: {e}"
