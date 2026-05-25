@@ -64,10 +64,11 @@ def _run_brain():
 def start_brain() -> dict:
     """Start brain_server in a daemon thread if not already running.
 
-    Returns {started, external, port}.
+    NON-BLOCKING — returns immediately. The thread comes up asynchronously
+    over the next few seconds; UI should poll services_status() to detect
+    when the port is reachable.
     """
     global _brain_thread, _brain_external
-    # If another process already owns the port, use it
     if _port_open("127.0.0.1", 5055):
         _brain_external = True
         return {"started": False, "external": True, "port": 5055,
@@ -80,10 +81,6 @@ def start_brain() -> dict:
                                      name="embedded-brain",
                                      daemon=True)
     _brain_thread.start()
-    # Wait up to 5s for port to come up
-    for _ in range(20):
-        if _port_open("127.0.0.1", 5055): break
-        time.sleep(0.25)
     return {"started": True, "external": False, "port": 5055,
             "alive": _brain_thread.is_alive()}
 
@@ -99,10 +96,7 @@ def _run_executor(mode: str, interval: int):
 
 
 def start_executor(mode: str = "PAPER", interval: int = 30) -> dict:
-    """Start the autonomous trader in a daemon thread.
-
-    mode = "PAPER" (simulate trades) | "LIVE" (real MT5 orders)
-    """
+    """Start the autonomous trader in a daemon thread. NON-BLOCKING."""
     global _executor_thread, _executor_mode
     if _executor_thread and _executor_thread.is_alive():
         return {"started": False, "mode": _executor_mode,
@@ -114,7 +108,6 @@ def start_executor(mode: str = "PAPER", interval: int = 30) -> dict:
         args=(mode, interval),
         daemon=True)
     _executor_thread.start()
-    time.sleep(1)  # let it init MT5
     return {"started": True, "mode": mode,
             "alive": _executor_thread.is_alive()}
 
@@ -140,11 +133,25 @@ def services_status() -> dict:
     }
 
 
-def start_all(executor_mode: str = "PAPER") -> dict:
-    """Convenience: start brain + executor in one call. Called from app.py."""
+def start_all(executor_mode: str = "PAPER",
+              delay_executor_seconds: int = 4) -> dict:
+    """Convenience: start brain + executor in one call. NON-BLOCKING.
+
+    Brain starts immediately in its daemon thread. Executor starts after
+    `delay_executor_seconds` (also in a daemon thread that sleeps first),
+    so it can talk to a brain that's had a chance to bind. The main
+    thread is not blocked at any point — the Qt UI can render immediately.
+    """
     brain_r = start_brain()
-    # Give brain ~1s to bind so executor's first HTTP calls hit it
-    time.sleep(1.5)
-    exec_r = start_executor(executor_mode)
-    return {"brain": brain_r, "executor": exec_r,
+
+    # Schedule the executor start without blocking — use a tiny launcher thread
+    def _delayed_exec_start():
+        time.sleep(delay_executor_seconds)
+        start_executor(executor_mode)
+    threading.Thread(target=_delayed_exec_start,
+                     name="exec-deferred-start",
+                     daemon=True).start()
+
+    return {"brain": brain_r,
+            "executor_delayed_seconds": delay_executor_seconds,
             "status": services_status()}
