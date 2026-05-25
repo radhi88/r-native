@@ -240,6 +240,8 @@ def kill(genome_id: str, reason: str) -> bool:
       • pinned genomes cannot be killed
       • currently-deployed genomes cannot be killed (would orphan the
         symbol's trading config)
+      • directional specialists (e.g. BUY-only with WR ≥ 65% over ≥5 trades)
+        cannot be killed — they are kept as ensemble candidates
     """
     pinned = set(load_pinned())
     if genome_id in pinned: return False
@@ -250,6 +252,18 @@ def kill(genome_id: str, reason: str) -> bool:
                   flush=True)
         except Exception: pass
         return False
+    # Asymmetry-based protection: BUY/SELL specialists kept for ensemble pairing
+    try:
+        from r_native.genome_asymmetry import is_kill_protected
+        protected, why = is_kill_protected(genome_id)
+        if protected:
+            try:
+                print(f"[hof.kill] refused: {genome_id} kill-protected — {why}",
+                      flush=True)
+            except Exception: pass
+            return False
+    except Exception:
+        pass    # never block a kill on missing/broken asymmetry module
     index = load_index()
     entry = index.get(genome_id)
     if not entry: return False

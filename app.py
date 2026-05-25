@@ -498,6 +498,9 @@ class RNativeMain(QMainWindow):
         # Header
         main_v.addLayout(self._build_header())
 
+        # ── Champions bar: live genome roster + life-meter per symbol ──
+        main_v.addWidget(self._build_champions_bar())
+
         # ── H.8.1: Hero P/L Card — front and center, can't be missed ──
         main_v.addWidget(self._build_hero_pl_card())
 
@@ -777,7 +780,8 @@ class RNativeMain(QMainWindow):
         # Iconic buttons
         for lbl, handler in [("⚙ Settings", self._open_settings),
                              ("📁 Vault", self._open_vault_folder),
-                             ("🔋 Connection", self._show_connection)]:
+                             ("🔋 Connection", self._show_connection),
+                             ("🆘 Request Support", self._request_remote_support)]:
             b = QPushButton(lbl)
             b.clicked.connect(handler)
             v.addWidget(b)
@@ -933,6 +937,459 @@ class RNativeMain(QMainWindow):
             f"color: {color}; font-family: 'Consolas'; font-size: 9px;")
 
     # ─── Center ───
+    def _build_champions_bar(self):
+        """Compact horizontal strip listing every deployed-genome symbol with
+        a life-meter (% life remaining based on score + live PnL). Refreshes 5s."""
+        from PySide6.QtWidgets import QFrame, QHBoxLayout
+        w = QFrame()
+        w.setStyleSheet(
+            f"QFrame {{ background: {BG_1}; border: 1px solid {BORDER};"
+            f" border-radius: 6px; }}"
+            f"QLabel {{ color: {TEXT}; }}")
+        w.setMaximumHeight(70)
+        self._champions_layout = QHBoxLayout(w)
+        self._champions_layout.setContentsMargins(8, 6, 8, 6)
+        self._champions_layout.setSpacing(6)
+        # initial empty + lazy fill
+        self._champions_placeholder = QLabel("  loading champions…")
+        self._champions_placeholder.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+        self._champions_layout.addWidget(self._champions_placeholder)
+        # Refresh timer
+        self._champions_timer = QTimer(self)
+        self._champions_timer.timeout.connect(self._refresh_champions_bar)
+        self._champions_timer.start(5000)
+        QTimer.singleShot(1500, self._refresh_champions_bar)
+        return w
+
+    def _refresh_champions_bar(self):
+        import urllib.request, json
+        try:
+            with urllib.request.urlopen("http://localhost:5055/api/r/genomes/active",
+                                          timeout=3) as r:
+                d = json.loads(r.read().decode())
+        except Exception:
+            return
+        # Clear existing cards
+        while self._champions_layout.count():
+            it = self._champions_layout.takeAt(0)
+            wdg = it.widget()
+            if wdg: wdg.deleteLater()
+        # Build a small card per deployed-genome symbol
+        from PySide6.QtWidgets import QFrame, QVBoxLayout, QProgressBar
+        rows = []
+        for s in (d.get("symbols") or []):
+            dg = s.get("deployed_genome")
+            if not dg: continue
+            stats = dg.get("stats") or {}
+            life = self._compute_life_pct(dg, stats)
+            rows.append((s["symbol"], dg["id"], dg.get("profit_factor") or 0,
+                          stats.get("live_pnl") or 0,
+                          stats.get("live_trades") or 0,
+                          life))
+        if not rows:
+            placeholder = QLabel("  no champions yet")
+            placeholder.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+            self._champions_layout.addWidget(placeholder)
+            return
+        for sym, gid, pf, pnl, n, life in rows[:8]:
+            card = QFrame()
+            card.setStyleSheet(
+                f"QFrame {{ background: {BG_2}; border: 1px solid {BORDER};"
+                f" border-radius: 4px; }}")
+            cv = QVBoxLayout(card)
+            cv.setContentsMargins(8, 4, 8, 4)
+            cv.setSpacing(2)
+            top = QLabel(f"<b style='color:{GOLD}'>{sym}</b>  "
+                          f"<span style='color:{TEXT_MUTED};font-family:Consolas'>{gid}</span>")
+            top.setStyleSheet("font-size: 11px;")
+            cv.addWidget(top)
+            pnl_color = GREEN if pnl > 0 else (RED if pnl < 0 else TEXT_MUTED)
+            mid = QLabel(f"<span style='color:{pnl_color};font-family:Consolas'>"
+                          f"${pnl:+.2f}</span>  · {n}t · PF {pf:.1f}")
+            mid.setStyleSheet("font-size: 9px;")
+            cv.addWidget(mid)
+            bar = QProgressBar()
+            bar.setRange(0, 100); bar.setValue(int(life))
+            life_color = (GREEN if life >= 60 else
+                           GOLD  if life >= 30 else RED)
+            bar.setFormat(f"life {int(life)}%")
+            bar.setStyleSheet(
+                f"QProgressBar {{ background: {BG_3}; border: 1px solid {BORDER};"
+                f" border-radius: 2px; text-align: center; color: {TEXT};"
+                f" font-size: 9px; font-weight: 700; height: 12px; }}"
+                f"QProgressBar::chunk {{ background: {life_color};"
+                f" border-radius: 1px; }}")
+            cv.addWidget(bar)
+            self._champions_layout.addWidget(card)
+        self._champions_layout.addStretch(1)
+
+    def _compute_life_pct(self, dg: dict, stats: dict) -> float:
+        """Composite life score 0..100. High = champion, low = candidate-for-replacement.
+
+        Inputs:
+          • backtest PF (capped at 20)
+          • live PnL (rewards positive, punishes negative)
+          • live trades count (small reward — proves it's been used)
+          • monster status (bonus)
+          • kill_protected (bonus)
+        """
+        pf = float(dg.get("profit_factor") or 0)
+        live_pnl    = float(stats.get("live_pnl") or 0)
+        live_trades = int(stats.get("live_trades") or 0)
+        is_monster  = self._is_monster(dg.get("id", ""))
+        protected   = bool(stats.get("kill_protected"))
+        pinned      = bool(stats.get("pinned"))
+
+        score = 0
+        score += min(40, pf * 2)              # PF 0-20 → 0-40
+        score += max(-25, min(25, live_pnl * 5))   # live_pnl ±5 → ±25
+        score += min(15, live_trades * 1.5)         # 10 trades → 15
+        if is_monster:   score += 10
+        if protected:    score += 5
+        if pinned:       score += 5
+        return max(0, min(100, score))
+
+    def spotlight_activate_button(self):
+        """Called by the wizard after Approve — pulse the ARM/Activate control
+        for ~10 seconds so the user knows where to click next."""
+        # Try common attribute names; absorb if missing
+        candidates = ["arm_btn", "btn_arm", "activate_btn", "btn_activate",
+                       "armed_indicator", "_arm_pill"]
+        target = None
+        for attr in candidates:
+            if hasattr(self, attr):
+                target = getattr(self, attr); break
+        if not target: return
+        orig_style = target.styleSheet()
+        def pulse(step=[0]):
+            phase = step[0] % 2
+            target.setStyleSheet(orig_style + (
+                f"; border: 3px solid {GOLD}; "
+                if phase == 0
+                else f"; border: 3px solid {GREEN}; "))
+            step[0] += 1
+        timer = QTimer(self)
+        timer.timeout.connect(pulse)
+        timer.start(400)
+        def stop():
+            timer.stop()
+            target.setStyleSheet(orig_style)
+        QTimer.singleShot(10_000, stop)
+
+    def _show_onboarding_wizard(self):
+        """Force-replay the first-run wizard."""
+        try:
+            from r_native.onboarding import show_anyway
+            self._wizard_handle = show_anyway(parent=self)
+        except Exception as e:
+            from PySide6.QtWidgets import QMessageBox
+            QMessageBox.warning(self, "Wizard", f"Failed to open wizard: {e}")
+
+    def _build_mission_tab(self):
+        """🎯 MISSION CONTROL — the full HTML dashboard embedded via QtWebEngine.
+        Single source of truth: dashboard.html (also served at /dashboard).
+        Falls back to a launch-in-browser button if QtWebEngine isn't installed."""
+        w = QWidget()
+        v = QVBoxLayout(w)
+        v.setContentsMargins(0, 0, 0, 0); v.setSpacing(0)
+        try:
+            from PySide6.QtWebEngineWidgets import QWebEngineView
+            from PySide6.QtCore import QUrl
+            view = QWebEngineView()
+            view.setUrl(QUrl("http://localhost:5055/dashboard"))
+            v.addWidget(view, 1)
+            # Tiny header with reload + open-in-browser
+            from PySide6.QtWidgets import QFrame
+            bar = QFrame()
+            bar.setStyleSheet(
+                f"QFrame {{ background: {BG_2}; border-bottom: 1px solid {BORDER}; }}")
+            bar.setMaximumHeight(34)
+            bv = QHBoxLayout(bar); bv.setContentsMargins(8, 4, 8, 4); bv.setSpacing(6)
+            lbl = QLabel("🎯 MISSION CONTROL · embedded dashboard")
+            lbl.setStyleSheet(f"color: {GOLD}; font-size: 10px; font-weight: 800;"
+                              f" letter-spacing: 2px;")
+            bv.addWidget(lbl); bv.addStretch(1)
+            for txt, fn in [
+                ("⟳ Reload",         lambda: view.reload()),
+                ("🌐 Open in Browser",
+                    lambda: QDesktopServices.openUrl(
+                        QUrl("http://localhost:5055/dashboard"))),
+            ]:
+                b = QPushButton(txt)
+                b.setStyleSheet(
+                    f"QPushButton {{ background: transparent; color: {TEXT_MUTED};"
+                    f" border: 1px solid {BORDER}; border-radius: 3px;"
+                    f" padding: 3px 10px; font-size: 10px; font-weight: 700; }}"
+                    f"QPushButton:hover {{ color: {GOLD}; border-color: {GOLD}; }}")
+                b.clicked.connect(fn)
+                bv.addWidget(b)
+            v.insertWidget(0, bar)
+            return w
+        except Exception as e:
+            # Fallback — no QtWebEngine
+            msg = QLabel(
+                "🎯  MISSION CONTROL\n\n"
+                f"QtWebEngine not available: {e}\n\n"
+                "Install:  pip install PySide6-Addons\n\n"
+                "Or open in your browser:")
+            msg.setAlignment(Qt.AlignCenter)
+            msg.setStyleSheet(f"color: {TEXT}; font-size: 13px; padding: 40px;"
+                              f" font-family: 'JetBrains Mono','Consolas',monospace;")
+            v.addWidget(msg, 1)
+            from PySide6.QtCore import QUrl
+            btn = QPushButton("🌐  Open Dashboard in Browser")
+            btn.setStyleSheet(
+                f"QPushButton {{ background: {GOLD}; color: {BG_0};"
+                f" border: none; border-radius: 4px; padding: 12px 20px;"
+                f" font-weight: 900; letter-spacing: 1px; font-size: 12px; }}"
+                f"QPushButton:hover {{ background: #c47e15; }}")
+            btn.clicked.connect(lambda: QDesktopServices.openUrl(
+                QUrl("http://localhost:5055/dashboard")))
+            v.addWidget(btn, 0, Qt.AlignCenter)
+            v.addStretch(2)
+            return w
+
+    def _flags_str_for(self, st, gid: str = None):
+        """Compose a short flag string like '🔥 PIN PROTECT BUY-SPEC' from a stats dict."""
+        bits = []
+        if gid and self._is_monster(gid): bits.append("🔥")
+        if st.get("pinned"):              bits.append("PIN")
+        if st.get("kill_protected"):      bits.append("PROTECT")
+        d = st.get("directional")
+        if d == "BUY":  bits.append("BUY-SPEC")
+        elif d == "SELL": bits.append("SELL-SPEC")
+        return " ".join(bits) or "—"
+
+    def _is_monster(self, gid: str) -> bool:
+        """Cached lookup against data/r_native/monster_genomes.json (refreshed every 30s)."""
+        import time, json
+        from pathlib import Path
+        now = time.time()
+        if not hasattr(self, "_monster_cache"):
+            self._monster_cache = {"ts": 0, "ids": set()}
+        if (now - self._monster_cache["ts"]) > 30:
+            mp = Path(r"C:\Users\Radhi\MT5\data\r_native\monster_genomes.json")
+            ids = set()
+            if mp.exists():
+                try:
+                    d = json.loads(mp.read_text(encoding="utf-8"))
+                    ids = {m["id"] for m in (d.get("monsters") or [])}
+                except Exception: pass
+            self._monster_cache = {"ts": now, "ids": ids}
+        return gid in self._monster_cache["ids"]
+
+    def _build_active_tab(self):
+        """🎯 ACTIVE — live view of every deployed genome across symbols.
+        Refreshes every 5s from /api/r/genomes/active. Click any row to focus
+        the Inspector on that genome, or use action buttons per row."""
+        import urllib.request as _ur
+        import json as _j
+
+        w = QWidget()
+        v = QVBoxLayout(w)
+        v.setContentsMargins(6, 4, 6, 4)
+        v.setSpacing(3)
+
+        # Header strip: compact daemon status + tiny refresh
+        header = QHBoxLayout()
+        header.setContentsMargins(0, 0, 0, 0)
+        header.setSpacing(6)
+        self._active_daemon_pill = QLabel("…")
+        self._active_daemon_pill.setStyleSheet(
+            f"color: {TEXT_MUTED}; font-size: 9px; padding: 2px 6px;"
+            f" border: 1px solid {BORDER}; border-radius: 3px;")
+        header.addWidget(self._active_daemon_pill)
+        header.addStretch(1)
+        btn_refresh = QPushButton("⟳")
+        btn_refresh.setStyleSheet(
+            f"QPushButton {{ background: transparent; color: {TEXT_MUTED};"
+            f" border: 1px solid {BORDER}; border-radius: 3px;"
+            f" padding: 2px 8px; font-size: 11px; font-weight: 700; }}"
+            f"QPushButton:hover {{ color: {GOLD}; border-color: {GOLD}; }}")
+        btn_refresh.clicked.connect(lambda: self._refresh_active_table())
+        header.addWidget(btn_refresh)
+        v.addLayout(header)
+
+        # Table (decluttered: 6 cols, shorter labels)
+        self.active_table = QTableWidget(0, 6)
+        self.active_table.setHorizontalHeaderLabels([
+            "SYMBOL", "GENOME", "PF", "P/L", "TRD", "FLAGS"
+        ])
+        hh = self.active_table.horizontalHeader()
+        hh.setSectionResizeMode(QHeaderView.Stretch)
+        hh.setStyleSheet(
+            f"QHeaderView::section {{ background: {BG_2}; color: {TEXT_MUTED};"
+            f" border: none; border-bottom: 1px solid {BORDER};"
+            f" padding: 4px 6px; font-weight: 700; font-size: 9px;"
+            f" letter-spacing: 1px; }}")
+        self.active_table.setStyleSheet(
+            f"QTableWidget {{ background: {BG_1}; color: {TEXT};"
+            f" gridline-color: transparent; selection-background-color: {BG_3};"
+            f" selection-color: {GOLD}; border: none; }}"
+            f"QTableWidget::item {{ padding: 3px 6px;"
+            f" border-bottom: 1px solid {BG_2}; }}")
+        self.active_table.verticalHeader().setVisible(False)
+        from PySide6.QtWidgets import QAbstractItemView as _AIV
+        self.active_table.setEditTriggers(_AIV.NoEditTriggers)
+        self.active_table.setAlternatingRowColors(False)
+        self.active_table.itemDoubleClicked.connect(self._active_table_open_chart)
+        v.addWidget(self.active_table, 1)
+
+        # Footer with totals
+        self._active_footer = QLabel("loading…")
+        self._active_footer.setStyleSheet(
+            f"color: {TEXT_MUTED}; font-size: 10px;"
+            f" font-family: 'JetBrains Mono','Consolas',monospace;")
+        v.addWidget(self._active_footer)
+
+        # First render + start refresh timer
+        self._refresh_active_table()
+        self._active_timer = QTimer(self)
+        self._active_timer.timeout.connect(self._refresh_active_table)
+        self._active_timer.start(5000)
+        return w
+
+    def _refresh_active_table(self):
+        import urllib.request as _ur
+        import json as _j
+        try:
+            with _ur.urlopen("http://localhost:5055/api/r/genomes/active",
+                              timeout=3) as r:
+                d = _j.loads(r.read().decode())
+        except Exception as e:
+            self._active_footer.setText(f"err: {e}")
+            return
+        symbols = d.get("symbols") or []
+        rows = []
+        for s in symbols:
+            sym = s.get("symbol", "")
+            dg = s.get("deployed_genome") or {}
+            ens = s.get("ensemble") or []
+            if ens:
+                # Show one row per ensemble member
+                for m in ens:
+                    st = m.get("stats") or {}
+                    rows.append({
+                        "symbol": sym, "gid": m.get("id"),
+                        "type": f"ENS w={m.get('weight')}",
+                        "pf": "",
+                        "live_pnl": st.get("live_pnl", 0),
+                        "live_trades": st.get("live_trades", 0),
+                        "opens":  st.get("decision_log_opens", 0),
+                        "closes": st.get("decision_log_closes", 0),
+                        "flags":  self._flags_str_for(st, m.get("id")),
+                        "last":   (st.get("decision_log_last_ts") or "—")[:19],
+                    })
+            elif dg.get("id"):
+                st = (dg.get("stats") or {})
+                rows.append({
+                    "symbol": sym, "gid": dg["id"], "type": "SOLO",
+                    "pf": dg.get("profit_factor"),
+                    "live_pnl": st.get("live_pnl", 0),
+                    "live_trades": st.get("live_trades", 0),
+                    "opens":  st.get("decision_log_opens", 0),
+                    "closes": st.get("decision_log_closes", 0),
+                    "flags":  self._flags_str_for(st, dg["id"]),
+                    "last":   (st.get("decision_log_last_ts") or "—")[:19],
+                })
+            elif s.get("archetype_fallback") and s.get("live_position"):
+                lp = s["live_position"]
+                rows.append({
+                    "symbol": sym, "gid": f"⚠ {lp.get('archetype','ALGORY')}",
+                    "type": "ARCHETYPE",
+                    "pf": "—",
+                    "live_pnl":    float(lp.get("profit", 0)),
+                    "live_trades": 1,
+                    "opens": 0, "closes": 0,
+                    "flags": f"#{lp.get('ticket')} {lp.get('side')}",
+                    "last": "—",
+                })
+            else:
+                rows.append({
+                    "symbol": sym, "gid": "—", "type": "(no deploy)",
+                    "pf": "", "live_pnl": 0, "live_trades": 0,
+                    "opens": 0, "closes": 0, "flags": "", "last": "—",
+                })
+        self.active_table.setRowCount(len(rows))
+        from PySide6.QtGui import QColor as _QC
+        for ri, r in enumerate(rows):
+            def _cell(text, color=None, mono=False):
+                it = QTableWidgetItem(str(text))
+                if color: it.setForeground(_QC(color))
+                if mono:
+                    f = QFont("JetBrains Mono", 9)
+                    it.setFont(f)
+                return it
+            pnl = float(r["live_pnl"] or 0)
+            pnl_color = GREEN if pnl > 0 else (RED if pnl < 0 else TEXT_MUTED)
+            # symbol: show ensemble-weight inline if present (e.g. "XAUUSDm·ENS")
+            sym_text = r["symbol"]
+            if r["type"].startswith("ENS"):
+                sym_text = f"{r['symbol']} ENS"
+            self.active_table.setItem(ri, 0, _cell(sym_text, GOLD))
+            self.active_table.setItem(ri, 1, _cell(r["gid"], TEXT, mono=True))
+            self.active_table.setItem(ri, 2, _cell(
+                f"{r['pf']:.1f}" if isinstance(r['pf'], (int, float)) else (r['pf'] or "—"),
+                TEXT_MUTED))
+            self.active_table.setItem(ri, 3, _cell(f"${pnl:+.2f}", pnl_color, mono=True))
+            self.active_table.setItem(ri, 4, _cell(r["live_trades"], TEXT, mono=True))
+            self.active_table.setItem(ri, 5, _cell(r["flags"], VIOLET))
+        total_pnl = sum(float(r["live_pnl"] or 0) for r in rows)
+        total_trades = sum(int(r["live_trades"] or 0) for r in rows)
+        self._active_footer.setText(
+            f"{len(rows)} rows · P/L ${total_pnl:+.2f} · {total_trades} trades · 5s")
+        # Daemon status
+        self._refresh_daemon_pill()
+
+    def _refresh_daemon_pill(self):
+        """Probe daemons by scanning all running python.exe command lines via
+        tasklist /V /FO CSV (cross-version reliable on Windows). The previous
+        os.kill(pid, 0) trick is unreliable on Windows because access-denied
+        and not-found both raise OSError."""
+        try:
+            import subprocess
+            r = subprocess.run(
+                ["tasklist", "/V", "/FO", "CSV", "/FI",
+                 "IMAGENAME eq python.exe"],
+                capture_output=True, text=True, timeout=4,
+                creationflags=0x08000000)  # CREATE_NO_WINDOW
+            blob = r.stdout or ""
+            # Also tasklist's CSV doesn't have CommandLine — we need wmic OR
+            # we infer from launcher_pids.json + check if the PID is in
+            # tasklist's listed PIDs (just confirms process exists).
+            import json as _j
+            from pathlib import Path as _P
+            pids_file = _P(r"C:\Users\Radhi\MT5\data\launcher_pids.json")
+            pids = (_j.loads(pids_file.read_text(encoding="utf-8"))
+                    if pids_file.exists() else {})
+            def _alive(pid):
+                if not pid: return False
+                return f'"{int(pid)}"' in blob
+            lin = _alive(pids.get("lineage"))
+            asy = _alive(pids.get("asymmetry"))
+            mon = _alive(pids.get("monster"))
+            con = _alive(pids.get("contender"))
+            ico = lambda b: "●" if b else "○"
+            self._active_daemon_pill.setText(
+                f"{ico(lin)} lin  {ico(asy)} asym  {ico(mon)} mon  {ico(con)} con")
+            ok_all = lin and asy and mon and con
+            color = GREEN if ok_all else GOLD
+            self._active_daemon_pill.setStyleSheet(
+                f"color: {color}; font-size: 9px; padding: 2px 6px;"
+                f" border: 1px solid {BORDER}; border-radius: 3px;")
+        except Exception as _e:
+            self._active_daemon_pill.setText(f"○ daemons ({str(_e)[:30]})")
+
+    def _active_table_open_chart(self, item):
+        row = item.row()
+        gid_item = self.active_table.item(row, 1)
+        if not gid_item: return
+        gid = gid_item.text().strip()
+        if not gid or gid == "—": return
+        from PySide6.QtCore import QUrl as _QU
+        from PySide6.QtGui import QDesktopServices as _QD
+        _QD.openUrl(_QU(f"http://localhost:5055/r/genome/{gid}"))
+
     def _build_center(self):
         w = QFrame(); w.setProperty("role", "card")
         v = QVBoxLayout(w); v.setContentsMargins(8, 8, 8, 8); v.setSpacing(8)
@@ -943,6 +1400,8 @@ class RNativeMain(QMainWindow):
 
         # mode 0: NEW CAMPAIGN — the existing 4-tab pane
         tabs = QTabWidget()
+        tabs.addTab(self._build_mission_tab(),  "🎯 MISSION")
+        tabs.addTab(self._build_active_tab(),   "📊 ACTIVE")
         tabs.addTab(self._build_campaign_tab(), "🧪 CAMPAIGN")
         tabs.addTab(self._build_vault_tab(),    "💎 VAULT")
         tabs.addTab(self._build_live_tab(),     "⚡ LIVE")
@@ -1449,22 +1908,297 @@ class RNativeMain(QMainWindow):
 
     def _build_live_tab(self):
         w = QWidget(); v = QVBoxLayout(w); v.setContentsMargins(10, 10, 10, 10)
-        # Open R positions table
-        self.live_table = QTableWidget(0, 8)
+        # Open R positions table  (col 8 = "Why?" button → reasoning modal)
+        self.live_table = QTableWidget(0, 9)
         self.live_table.setHorizontalHeaderLabels(
-            ["Ticket", "Symbol", "Side", "Vol", "Entry", "Current", "SL/TP", "P/L"])
+            ["Ticket", "Symbol", "Side", "Vol", "Entry", "Current", "SL/TP", "P/L", "Why?"])
         self.live_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        v.addWidget(QLabel("📦 OPEN R POSITIONS (magic 20260605)"))
+        self.live_table.itemSelectionChanged.connect(self._on_live_position_selected)
+        # double-click anywhere on the row opens the reasoning modal
+        self.live_table.cellDoubleClicked.connect(
+            lambda r, _c: self._show_trade_reasoning_for_row(r))
+        v.addWidget(QLabel("📦 OPEN R POSITIONS — click row to inspect genome · "
+                            "double-click row OR click Why? button to see the full reasoning"))
         v.addWidget(self.live_table, 1)
 
         # Per-symbol config display
-        v.addWidget(QLabel("📋 PER-SYMBOL CONFIGS"))
+        v.addWidget(QLabel("📋 PER-SYMBOL CONFIGS — click a row to inspect"))
         self.config_table = QTableWidget(0, 7)
         self.config_table.setHorizontalHeaderLabels(
             ["Symbol", "Tradeable", "Best Archetype", "Best TF", "PF", "Strategies", "Last Scan"])
         self.config_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.config_table.itemSelectionChanged.connect(self._on_config_row_selected)
         v.addWidget(self.config_table, 1)
         return w
+
+    def _on_live_position_selected(self):
+        """Click a row in OPEN POSITIONS → fill Inspector with that symbol's deployed_genome."""
+        row = self.live_table.currentRow()
+        if row < 0 or row >= self.live_table.rowCount(): return
+        sym_item = self.live_table.item(row, 1)
+        if not sym_item: return
+        symbol = sym_item.text().strip()
+        self._inspect_symbol(symbol)
+
+    def _on_config_row_selected(self):
+        """Click a row in PER-SYMBOL CONFIGS → fill Inspector with that symbol's deployed_genome."""
+        row = self.config_table.currentRow()
+        if row < 0 or row >= self.config_table.rowCount(): return
+        sym_item = self.config_table.item(row, 0)
+        if not sym_item: return
+        symbol = sym_item.text().strip()
+        self._inspect_symbol(symbol)
+
+    def _inspect_symbol(self, symbol: str):
+        """Load symbol_configs/<sym>.json, build a strategy dict + classification,
+        feed everything to the Inspector. Also wires DNA helix and the genome
+        context pill on the Inspector toolbar."""
+        import json as _j
+        from pathlib import Path as _P
+        try:
+            cfg_path = _P(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{symbol}.json"
+            if not cfg_path.exists():
+                self._inspect_empty(symbol, "no config file")
+                return
+            cfg = _j.loads(cfg_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            self._inspect_empty(symbol, f"config read err: {e}")
+            return
+
+        dg = cfg.get("deployed_genome") or {}
+        gid = dg.get("id")
+        active_genes = dg.get("active_genes") or []
+
+        # Pull HoF stats for this genome (live PnL, live trades, kill protected, etc.)
+        hof_entry = {}
+        try:
+            hof_idx_path = _P(r"C:\Users\Radhi\MT5\data\r_native\hall_of_fame\index.json")
+            if hof_idx_path.exists():
+                hof_idx = _j.loads(hof_idx_path.read_text(encoding="utf-8"))
+                hof_entry = hof_idx.get(gid, {}) or {}
+        except Exception: pass
+
+        live_trades = int(hof_entry.get("live_trades") or 0)
+        live_pnl    = float(hof_entry.get("live_pnl") or 0)
+        avg_per_t   = (live_pnl / live_trades) if live_trades > 0 else 0
+
+        # Best signal we have on win rate: backtest WR from deployed_genome
+        wr = float(dg.get("win_rate") or 0)
+        pf = float(dg.get("profit_factor") or 0)
+
+        strategy = {
+            "id":             gid,
+            "symbol":         symbol,
+            "net_profit":     round(live_pnl, 2),
+            "drawdown":       0,
+            "total_trades":   live_trades or int(dg.get("trades") or 0),
+            "win_rate":       wr,
+            "is_return":      0, "is_trades": 0, "oos_return": 0, "oos_trades": 0,
+            "profit_factor":  pf,
+            "sharpe":         float(dg.get("sharpe") or 0),
+            "linearity":      0, "persistence": 0, "recovery_factor": 0,
+            "avg_hold_time":  "—",
+            "avg_profit":     round(avg_per_t, 3) if avg_per_t > 0 else 0,
+            "avg_loss":       round(avg_per_t, 3) if avg_per_t < 0 else 0,
+            "biggest_win":    0, "biggest_loss": 0,
+            "max_win_streak": 0, "max_loss_streak": 0,
+            "avg_win_streak": 0, "avg_loss_streak": 0,
+            "long_trades":    0, "short_trades":  0,
+        }
+        purge_req = {"min_pf": 1.2, "min_trades": 10, "max_dd": 20.0, "min_ret": 0.0,
+                     "min_linearity": 0, "min_win_rate": 0,
+                     "min_sharpe": 0, "min_persistence": 0}
+        classification = self._classify_from_genes(active_genes, {}, {}, {"symbol": symbol})
+
+        # Inject quick stats summary into classification for visibility
+        classification["mechanism"] = (
+            f"Live: {live_trades} trades · "
+            f"PnL ${live_pnl:+.2f} · "
+            f"backtest PF {pf:.1f} WR {wr:.0f}%"
+            + (f" · 🔥 monster" if self._is_monster(gid or "") else "")
+            + (f" · 📌 pinned" if hof_entry.get("pinned") else "")
+            + (f" · 🛡 protected" if hof_entry.get("kill_protected") else ""))
+
+        params = dict(dg)   # sl_mult, tp_mult, hours, etc.
+
+        if hasattr(self, "inspector_panel"):
+            self.inspector_panel.update_view(
+                strategy=strategy, trades=[], purge_req=purge_req,
+                classification=classification, params=params,
+                active_genes=active_genes, flags={}, exit_breakdown={},
+                equity_curve=[], oos_split_idx=0)
+            try:
+                self.inspector_panel.set_genome_context(gid, symbol)
+            except Exception: pass
+
+        if getattr(self, "dna_widget", None) and active_genes:
+            try:
+                display_genes = self._humanize_genes(active_genes)[:5]
+                self.dna_widget.set_genes(display_genes)
+            except Exception: pass
+
+    def _show_trade_reasoning_for_row(self, row: int):
+        """Double-click in OPEN POSITIONS → modal with full WHY-this-trade."""
+        if row < 0 or row >= self.live_table.rowCount(): return
+        ticket_item = self.live_table.item(row, 0)
+        if not ticket_item: return
+        try: ticket = int(ticket_item.text())
+        except Exception: return
+        self._show_trade_reasoning(ticket)
+
+    def _show_trade_reasoning(self, ticket: int):
+        """Open a modal showing the full reasoning behind one trade:
+        signals fired, biases aligned, filters blocking, indicators @ entry.
+        Reads from decision_log/<gid>.jsonl + falls back to MT5 metadata."""
+        import json as _j
+        from pathlib import Path as _P
+        from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel,
+                                         QPlainTextEdit, QPushButton)
+
+        # Find the genome_id from the open position's comment (R-<gid>-<side>)
+        gid = None
+        sym = None
+        side = None
+        try:
+            import MetaTrader5 as _mt5
+            for p in (_mt5.positions_get(ticket=ticket) or []):
+                cmt = p.comment or ""
+                sym = p.symbol
+                side = "BUY" if p.type == 0 else "SELL"
+                if cmt.startswith("R-"):
+                    gid = cmt.split("-")[1]
+        except Exception: pass
+
+        # Load the matching OPEN entry from decision_log
+        entry = None
+        if gid:
+            dl_path = _P(r"C:\Users\Radhi\MT5\data\r_native\decision_log") / f"{gid}.jsonl"
+            if dl_path.exists():
+                for line in dl_path.read_text(encoding="utf-8").splitlines():
+                    if not line.strip(): continue
+                    try: ev = _j.loads(line)
+                    except Exception: continue
+                    if ev.get("kind") == "OPEN" and int(ev.get("ticket", 0)) == ticket:
+                        entry = ev; break
+
+        # Build modal
+        dlg = QDialog(self)
+        dlg.setWindowTitle(f"WHY · #{ticket} · {sym or '?'} {side or ''}")
+        dlg.setMinimumSize(720, 580)
+        dlg.setStyleSheet(
+            f"QDialog {{ background: {BG_0}; color: {TEXT}; }}"
+            f"QLabel  {{ color: {TEXT}; }}"
+            f"QPlainTextEdit {{ background: {BG_1}; color: {TEXT};"
+            f" border: 1px solid {BORDER}; border-radius: 4px;"
+            f" font-family: 'JetBrains Mono','Consolas',monospace; font-size: 11px;"
+            f" padding: 10px; }}"
+            f"QPushButton {{ background: {BG_2}; color: {TEXT}; border: 1px solid {BORDER};"
+            f" border-radius: 4px; padding: 6px 16px; font-weight: 700; }}"
+            f"QPushButton:hover {{ color: {GOLD}; border-color: {GOLD}; }}")
+        v = QVBoxLayout(dlg)
+        v.setContentsMargins(16, 14, 16, 14); v.setSpacing(8)
+
+        title = QLabel(f"<span style='color:{GOLD};font-weight:900;font-size:16px;letter-spacing:2px'>"
+                        f"WHY THIS TRADE</span>")
+        v.addWidget(title)
+
+        if not entry:
+            v.addWidget(QLabel(
+                f"<span style='color:{TEXT_MUTED};font-size:12px'>"
+                f"No decision_log entry found for ticket {ticket}.<br>"
+                f"This trade was opened BEFORE the decision logger was wired, "
+                f"or it came from the Algory archetype path (no genome).<br><br>"
+                f"Genome: <b>{gid or '—'}</b>  ·  Symbol: <b>{sym or '?'}</b>  ·  Side: <b>{side or '?'}</b>"
+                f"</span>"))
+        else:
+            # Header summary
+            conf = int(entry.get("confidence") or 0)
+            conf_color = GREEN if conf >= 70 else GOLD if conf >= 40 else RED
+            ts_short = entry.get("ts", "")[:19].replace("T", " ")
+            header_html = (
+                f"<table style='font-family: Consolas; font-size: 12px'>"
+                f"<tr><td style='color:{TEXT_MUTED}'>opened:</td><td>{ts_short}</td></tr>"
+                f"<tr><td style='color:{TEXT_MUTED}'>genome:</td><td><b style='color:{GOLD}'>{entry.get('genome_id')}</b></td></tr>"
+                f"<tr><td style='color:{TEXT_MUTED}'>archetype:</td><td>{entry.get('archetype')}</td></tr>"
+                f"<tr><td style='color:{TEXT_MUTED}'>side:</td><td><b>{entry.get('side')}</b> @ {entry.get('entry')}</td></tr>"
+                f"<tr><td style='color:{TEXT_MUTED}'>SL / TP:</td><td>{entry.get('sl')} / {entry.get('tp')}</td></tr>"
+                f"<tr><td style='color:{TEXT_MUTED}'>confidence:</td>"
+                f"<td><b style='color:{conf_color};font-size:14px'>{conf}/100</b></td></tr>"
+                f"</table>")
+            hdr_lbl = QLabel(header_html); hdr_lbl.setTextFormat(Qt.RichText)
+            v.addWidget(hdr_lbl)
+
+            # Build the detail textbox
+            buf = []
+            buf.append("═" * 60)
+            buf.append("🚀  SIGNALS FIRED  (what made it pull the trigger)")
+            buf.append("═" * 60)
+            sigs = entry.get("signals_fired") or []
+            if sigs:
+                for s in sigs:
+                    vote = s.get("vote", 0)
+                    arrow = "↑ BUY" if vote == 1 else "↓ SELL" if vote == -1 else "~ HOLD"
+                    buf.append(f"  {arrow:8s}  {s.get('flag','?'):28s}  {s.get('reason','')}")
+            else:
+                buf.append("  (no signals — archetype-path entry, see indicators below)")
+
+            buf.append("")
+            buf.append("═" * 60)
+            buf.append("🧭  BIASES ALIGNED  (multi-TF confirmation)")
+            buf.append("═" * 60)
+            biases = entry.get("biases_aligned") or []
+            if biases:
+                for b in biases:
+                    buf.append(f"  ✓  {b.get('flag','?'):28s}  {b.get('reason','')}")
+            else:
+                buf.append("  (no bias data captured)")
+
+            buf.append("")
+            buf.append("═" * 60)
+            buf.append("🛡  FILTERS BLOCKING  (none → all clear)")
+            buf.append("═" * 60)
+            filts = entry.get("filters_blocking") or []
+            if filts:
+                for f in filts:
+                    buf.append(f"  ✗  {f.get('flag','?'):28s}  {f.get('reason','')}")
+            else:
+                buf.append("  ✓ no filters blocked — the genome had a clear path")
+
+            buf.append("")
+            buf.append("═" * 60)
+            buf.append("📊  INDICATORS @ ENTRY  (live market snapshot)")
+            buf.append("═" * 60)
+            ind = entry.get("indicators") or {}
+            for tf in ("h4", "h1", "m15"):
+                t = ind.get(tf) or {}
+                if not t: continue
+                buf.append(f"\n  [{tf.upper()}]")
+                buf.append(f"    current = {t.get('current','?')}    bias = {t.get('bias','?')}")
+                buf.append(f"    rsi     = {t.get('rsi','?'):>6}    slope_atr = {t.get('slope_atr','?')}")
+                buf.append(f"    atr     = {t.get('atr','?')}    range = {t.get('range_size','?')}")
+                if t.get('swing_high') or t.get('swing_low'):
+                    buf.append(f"    swings  = high {t.get('swing_high','?')}  ·  low {t.get('swing_low','?')}")
+            buf.append(f"\n  spread_pt = {ind.get('spread_pt','?')}    bid/ask = {ind.get('bid','?')} / {ind.get('ask','?')}")
+
+            txt = QPlainTextEdit(); txt.setReadOnly(True)
+            txt.setPlainText("\n".join(buf))
+            v.addWidget(txt, 1)
+
+        # Footer button
+        btn = QPushButton("Close"); btn.clicked.connect(dlg.accept)
+        v.addWidget(btn, 0, Qt.AlignRight)
+        dlg.exec()
+
+    def _inspect_empty(self, symbol: str, why: str):
+        """Show a clear empty state with the reason — better than blank."""
+        if not hasattr(self, "inspector_panel"): return
+        cls = {"mechanism": f"{symbol}: {why}",
+               "regime": "—", "style": "—", "edge_type": "—"}
+        self.inspector_panel.update_view(
+            strategy={"id": "—", "symbol": symbol},
+            trades=[], purge_req={}, classification=cls,
+            params={}, active_genes=[], flags={}, exit_breakdown={},
+            equity_curve=[], oos_split_idx=0)
 
     def _build_advisors_tab(self):
         """🤖 AI Advisors — live insight stream + agent control panel."""
@@ -1494,6 +2228,11 @@ class RNativeMain(QMainWindow):
         refresh_btn = QPushButton("🔄 Refresh")
         refresh_btn.clicked.connect(self._refresh_advisors_panel)
         filter_bar.addWidget(refresh_btn)
+
+        wiz_btn = QPushButton("🎬 First-Run Wizard")
+        wiz_btn.setToolTip("Replay the visual onboarding stages")
+        wiz_btn.clicked.connect(self._show_onboarding_wizard)
+        filter_bar.addWidget(wiz_btn)
 
         clear_btn = QPushButton("🧠 Run LLM Strategist Now")
         clear_btn.setProperty("role", "primary")
@@ -2069,6 +2808,21 @@ class RNativeMain(QMainWindow):
                f"Open R positions: {snap['positions_count']}\nToday: {snap['today_trades']} trades, {snap['today_wins']} wins, ${snap['today_pl']:+.2f}")
         QMessageBox.information(self, "🔋 Connection", msg)
         self._log(f"🔋 balance ${snap['balance']:.2f} · open {snap['positions_count']}")
+
+    def _request_remote_support(self):
+        """🆘 launches RustDesk after explicit user consent.
+        Routes through r_native.remote_support which handles the consent dialog,
+        binary detection, credential display, and session audit logging."""
+        try:
+            from r_native.remote_support import start_session, is_available
+            if not is_available():
+                self._log("🆘 RustDesk not installed — opening download page")
+            ok = start_session(parent_widget=self)
+            self._log("🆘 support session authorized" if ok else "🆘 support cancelled")
+        except Exception as e:
+            QMessageBox.warning(self, "Remote Support",
+                                f"Failed to start support flow:\n{e}")
+            self._log(f"🆘 support flow error: {e}")
 
     def _toggle_pause(self):
         self._paused = not self._paused
@@ -2863,7 +3617,7 @@ class RNativeMain(QMainWindow):
                     _k["TODAY P/L"].setStyleSheet(f"color: {GREEN if today_pl>=0 else RED}; font-size: 22px; font-weight: 900; font-family: Consolas;")
                 if _k.get("WIN RATE"):     _k["WIN RATE"].setText(f"{wr:.0f}%")
                 if _k.get("TOTAL TRADES"): _k["TOTAL TRADES"].setText(str(len(r_closed)))
-                # Live positions table
+                # Live positions table — col 8 is a clickable "❓ Why?" button
                 self.live_table.setRowCount(len(r_pos))
                 for i, p in enumerate(r_pos):
                     cells = [str(p.ticket), p.symbol,
@@ -2877,6 +3631,11 @@ class RNativeMain(QMainWindow):
                         if j == 7:
                             item.setForeground(QColor(GREEN if p.profit >= 0 else RED))
                         self.live_table.setItem(i, j, item)
+                    # col 8: "Why?" cell — clickable label
+                    why_item = QTableWidgetItem("❓ WHY")
+                    why_item.setForeground(QColor(GOLD))
+                    why_item.setData(Qt.UserRole, int(p.ticket))
+                    self.live_table.setItem(i, 8, why_item)
             # ─── Equity curve from R deals (last 48h) ───
             # H.9: equity_widget removed (covered by InspectorPanel's EQUITY CURVE tab)
             # H.9: R-IQ kpi grid removed — only sidebar iq_label updated below
@@ -2938,9 +3697,32 @@ def main():
     apply_dark_theme(app)
     app.setQuitOnLastWindowClosed(False)
     win = RNativeMain()
-    win.show()
+    win.showMaximized()    # open at full screen — no manual resize needed
     win.raise_()
     win.activateWindow()
+
+    # ── First-run onboarding wizard (visual stage-by-stage system intro) ──
+    try:
+        from r_native.onboarding import show_if_needed
+        show_if_needed(parent=win)
+    except Exception as _e:
+        print(f"[onboarding] skipped: {_e}", flush=True)
+
+    # ── Auto-inspect the first deployed-genome symbol after UI settles ──
+    # Inspector defaults to "—" placeholders if nothing is selected — pick
+    # the first symbol with a deployed genome so the panel comes up populated.
+    def _auto_inspect():
+        try:
+            import urllib.request as _ur, json as _j
+            with _ur.urlopen("http://localhost:5055/api/r/genomes/active",
+                              timeout=3) as r:
+                d = _j.loads(r.read().decode())
+            for s in (d.get("symbols") or []):
+                if (s.get("deployed_genome") or {}).get("id"):
+                    win._inspect_symbol(s["symbol"]); return
+        except Exception as _e:
+            print(f"[auto-inspect] skipped: {_e}", flush=True)
+    QTimer.singleShot(2500, _auto_inspect)
 
     # ── Heartbeat server (H.1) — lets RNativeLauncher supervise this worker ──
     # Non-fatal: if Flask is missing or port is taken, app keeps running.

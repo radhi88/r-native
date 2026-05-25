@@ -1,0 +1,28 @@
+# R Native runtime dependencies
+# Tested on Python 3.13 / Windows 11
+
+# Trading + market data
+MetaTrader5>=5.0.45
+numpy>=1.26
+pandas>=2.2
+
+# UI
+PySide6>=6.7
+
+# Web/API
+flask>=3.0
+requests>=2.31
+
+# Process + system monitoring
+psutil>=5.9
+
+# Voice alerts (J.12) — Windows TTS
+pyttsx3>=2.90
+
+# Optional: simpleaudio for cross-platform retro SFX (J.x)
+# Falls back gracefully if missing on Windows (uses winsound instead)
+# simpleaudio>=1.0.4
+
+# Optional: anthropic SDK for Claude API fallback in LLM Strategist
+# Only needed if you set ANTHROPIC_API_KEY env var
+# anthropic>=0.30

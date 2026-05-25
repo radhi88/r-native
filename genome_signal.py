@@ -145,6 +145,59 @@ SIGNAL_EVALUATORS = {
     "use_sig_pin_bar":         _sig_pin_bar,
 }
 
+# Volume-Profile signals — register lazily so missing module never breaks import
+try:
+    from r_native.volume_profile import (
+        vp_signal_poc_bounce, vp_signal_vah_resist, vp_signal_val_support,
+        vp_signal_lvn_breakout, vp_signal_npoc_magnet,
+    )
+    SIGNAL_EVALUATORS.update({
+        "use_sig_vp_poc":         vp_signal_poc_bounce,    # POC bounce/reject
+        "use_sig_vp_vah":         vp_signal_vah_resist,    # VAH resistance
+        "use_sig_vp_val":         vp_signal_val_support,   # VAL support
+        "use_sig_vp_lvn":         vp_signal_lvn_breakout,  # LVN fast-move break
+        "use_sig_vp_npoc":        vp_signal_npoc_magnet,   # naked POC magnet
+    })
+except Exception as _e:
+    print(f"[genome_signal] volume_profile signals not loaded: {_e}", flush=True)
+
+# Macro-context signals — DXY/VIX align with USD pair direction. Lazy import
+# so a network outage at startup never breaks the trade gate.
+try:
+    from r_native.macro_context import macro_signal_align, macro_signal_vix_calm
+    SIGNAL_EVALUATORS.update({
+        "use_sig_macro_align":   macro_signal_align,    # DXY-vs-pair alignment
+        "use_sig_vix_calm":      macro_signal_vix_calm, # VIX risk-on filter
+    })
+except Exception as _e:
+    print(f"[genome_signal] macro_context signals not loaded: {_e}", flush=True)
+
+# Retail-sentiment signal — ApeWisdom (free Reddit/WSB feed).
+try:
+    from r_native.sentiment_feed import sentiment_signal_align
+    SIGNAL_EVALUATORS.update({
+        "use_sig_sentiment_align": sentiment_signal_align,
+    })
+except Exception as _e:
+    print(f"[genome_signal] sentiment_feed signal not loaded: {_e}", flush=True)
+
+# Extra indicators (precise math from MT5 bars): CCI, Stoch, Fib, 3-soldiers,
+# Wick-rejection, no-friday-open. Lazy import so missing MT5 doesn't break us.
+try:
+    from r_native.extra_indicators import (
+        sig_cci, sig_stoch, sig_fib, sig_three_soldiers, sig_wick_rejection,
+        filt_no_fri_open,
+    )
+    SIGNAL_EVALUATORS.update({
+        "use_sig_cci":              sig_cci,
+        "use_sig_stoch":            sig_stoch,
+        "use_sig_fib":              sig_fib,
+        "use_sig_three_soldiers":   sig_three_soldiers,
+        "use_sig_wick_rejection":   sig_wick_rejection,
+    })
+except Exception as _e:
+    print(f"[genome_signal] extra_indicators signals not loaded: {_e}", flush=True)
+
 
 # ─── Bias evaluators ───
 def _bias_ema(snap):
@@ -354,6 +407,13 @@ FILTER_EVALUATORS = {
     "use_filt_receding":     _filt_receding,
     "use_filt_adr_exhaust":  _filt_adr_exhaust,
 }
+
+# Calendar / weekend-gap filter from extra_indicators
+try:
+    from r_native.extra_indicators import filt_no_fri_open as _filt_no_fri_open
+    FILTER_EVALUATORS["use_filt_no_fri_open"] = _filt_no_fri_open
+except Exception as _e:
+    print(f"[genome_signal] no_fri_open filter not loaded: {_e}", flush=True)
 
 
 # ─── Main entry point ───

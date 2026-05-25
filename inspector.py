@@ -4,22 +4,24 @@ from typing import Any
 
 from PySide6.QtWidgets import (QWidget, QFrame, QVBoxLayout, QHBoxLayout, QGridLayout,
                                 QLabel, QTabWidget, QTableWidget, QTableWidgetItem,
-                                QHeaderView, QScrollArea, QSizePolicy)
-from PySide6.QtCore import Qt, Signal, QRectF, QPointF
-from PySide6.QtGui import QColor, QFont, QPainter, QPen, QBrush, QLinearGradient, QPainterPath
+                                QHeaderView, QScrollArea, QSizePolicy, QPushButton,
+                                QMessageBox)
+from PySide6.QtCore import Qt, Signal, QRectF, QPointF, QUrl
+from PySide6.QtGui import (QColor, QFont, QPainter, QPen, QBrush, QLinearGradient,
+                            QPainterPath, QDesktopServices)
 
 
 GOLD = "#fbbf24"
-VIOLET = "#8b5cf6"
+VIOLET = "#f5a524"   # was purple #8b5cf6 — unified to gold to match main UI
 GREEN = "#10b981"
 RED = "#ef4444"
 TEXT = "#f1f5f9"
 MUTED = "#94a3b8"
-BG_0 = "#060418"
-BG_1 = "#0d0824"
-BG_2 = "#14092e"
-BG_3 = "#1c1142"
-BORDER = "#2d1b69"
+BG_0 = "#0a0a0f"     # was purple #060418 — unified with main UI
+BG_1 = "#13131a"     # was purple #0d0824
+BG_2 = "#1a1a23"     # was purple #14092e
+BG_3 = "#222230"     # was purple #1c1142
+BORDER = "#2d2d3a"   # was purple-blue #2d1b69 — unified with main UI palette
 
 
 STATS_KPIS: list[tuple[str, str, str]] = [
@@ -639,14 +641,66 @@ class InspectorPanel(QFrame):
             f"QTabBar::tab:selected {{ background: {BG_3}; color: {GOLD}; }}"
         )
         outer = QVBoxLayout(self)
-        outer.setContentsMargins(10, 12, 10, 12)
-        outer.setSpacing(8)
+        outer.setContentsMargins(6, 6, 6, 6)
+        outer.setSpacing(4)
 
         title = QLabel("INSPECTOR")
         title.setStyleSheet(
-            f"color: {GOLD}; font-weight: 900; letter-spacing: 2px; font-size: 13px;"
+            f"color: {GOLD}; font-weight: 800; letter-spacing: 2px; font-size: 10px;"
         )
         outer.addWidget(title)
+
+        # ── Compact action bar: small pill + single ⚙ menu (decluttered) ──
+        from PySide6.QtWidgets import QMenu, QToolButton
+        from PySide6.QtCore import QSize
+        self._current_genome_id: str | None = None
+        self._current_symbol:    str | None = None
+        toolbar = QHBoxLayout()
+        toolbar.setSpacing(4)
+        toolbar.setContentsMargins(0, 0, 0, 0)
+        self.gid_pill = QLabel("—")
+        self.gid_pill.setStyleSheet(
+            f"color: {MUTED}; font-family: 'JetBrains Mono','Consolas',monospace;"
+            f" font-size: 9px; padding: 2px 6px;"
+            f" border: 1px solid {BORDER}; border-radius: 3px;")
+        toolbar.addWidget(self.gid_pill)
+        toolbar.addStretch(1)
+        # Single chart button (most-used) + everything else in ⚙ menu
+        _btn_css = (f"QPushButton {{ background: transparent; color: {MUTED}; "
+                    f"border: 1px solid {BORDER}; border-radius: 3px; "
+                    f"padding: 2px 8px; font-size: 10px; font-weight: 700; }}"
+                    f"QPushButton:hover {{ color: {GOLD}; border-color: {GOLD}; }}"
+                    f"QPushButton:disabled {{ color: {MUTED}; opacity: 0.5; }}")
+        self.btn_chart = QPushButton("📊 CHART")
+        self.btn_chart.setStyleSheet(_btn_css)
+        self.btn_chart.clicked.connect(self._on_open_chart)
+        self.btn_chart.setEnabled(False)
+        toolbar.addWidget(self.btn_chart)
+
+        self.btn_more = QToolButton()
+        self.btn_more.setText("⋮")
+        self.btn_more.setStyleSheet(
+            f"QToolButton {{ background: transparent; color: {MUTED}; "
+            f"border: 1px solid {BORDER}; border-radius: 3px; padding: 2px 8px;"
+            f" font-size: 13px; font-weight: 900; }}"
+            f"QToolButton:hover {{ color: {GOLD}; border-color: {GOLD}; }}"
+            f"QToolButton::menu-indicator {{ image: none; }}")
+        self.btn_more.setPopupMode(QToolButton.InstantPopup)
+        more_menu = QMenu(self.btn_more)
+        more_menu.setStyleSheet(
+            f"QMenu {{ background: {BG_2}; color: {TEXT};"
+            f" border: 1px solid {BORDER}; padding: 4px; }}"
+            f"QMenu::item {{ padding: 6px 14px; font-size: 11px; }}"
+            f"QMenu::item:selected {{ background: {BG_3}; color: {GOLD}; }}")
+        self.act_complement = more_menu.addAction("🤝  Find complement for this genome")
+        self.act_complement.triggered.connect(self._on_find_complement)
+        self.act_complement.setEnabled(False)
+        more_menu.addSeparator()
+        more_menu.addAction("🧬  Run breed round").triggered.connect(self._on_breed_round)
+        more_menu.addAction("⚖  Scan asymmetry").triggered.connect(self._on_scan_asymmetry)
+        self.btn_more.setMenu(more_menu)
+        toolbar.addWidget(self.btn_more)
+        outer.addLayout(toolbar)
 
         self.stats_tab  = StatsTab()
         self.score_tab  = ScoreTab()
@@ -699,3 +753,120 @@ class InspectorPanel(QFrame):
             exit_breakdown = exit_breakdown or {},
         )
         self.equity_tab.set_curve(equity_curve or [], oos_split_idx)
+        # ── Refresh genome-aware action buttons ──
+        gid = (strategy or {}).get("id") or (strategy or {}).get("genome_id")
+        sym = (strategy or {}).get("symbol") or self._current_symbol
+        self.set_genome_context(gid, sym)
+
+    # ── Toolbar context + slots ──
+    def set_genome_context(self, genome_id: str | None, symbol: str | None) -> None:
+        self._current_genome_id = (genome_id or None)
+        self._current_symbol    = (symbol or None)
+        has = bool(self._current_genome_id)
+        self.btn_chart.setEnabled(has)
+        # complement action lives on the ⋮ menu (legacy btn_complement was removed)
+        if hasattr(self, "act_complement"):
+            self.act_complement.setEnabled(has)
+        if has:
+            self.gid_pill.setText(self._current_genome_id
+                                  + (f" · {symbol}" if symbol else ""))
+            self.gid_pill.setStyleSheet(
+                f"color: {GOLD}; font-family: 'JetBrains Mono','Consolas',monospace;"
+                f" font-size: 9px; padding: 2px 6px;"
+                f" border: 1px solid {GOLD}; border-radius: 3px;")
+        else:
+            self.gid_pill.setText("—")
+            self.gid_pill.setStyleSheet(
+                f"color: {MUTED}; font-family: 'JetBrains Mono','Consolas',monospace;"
+                f" font-size: 9px; padding: 2px 6px;"
+                f" border: 1px solid {BORDER}; border-radius: 3px;")
+
+    def _on_open_chart(self) -> None:
+        if not self._current_genome_id: return
+        url = QUrl(f"http://localhost:5055/r/genome/{self._current_genome_id}")
+        QDesktopServices.openUrl(url)
+
+    def _on_find_complement(self) -> None:
+        if not self._current_genome_id: return
+        gid = self._current_genome_id
+        import subprocess, json as _j
+        try:
+            r = subprocess.run(
+                ["python", "-m", "r_native.genome_asymmetry", "suggest", gid],
+                capture_output=True, text=True, timeout=30,
+                cwd=r"C:\Users\Radhi\MT5")
+            try: data = _j.loads(r.stdout)
+            except Exception: data = {"ok": False, "raw": r.stdout, "err": r.stderr}
+            if data.get("ok"):
+                p = data["primary"]; c = data["complement"]
+                msg = (f"PRIMARY  {p['id']}  ({p['specialty']}  WR {p.get('wr')})\n"
+                       f"COMPLEMENT  {c['id']}  ({c['specialty']}  WR {c.get('wr')})\n\n"
+                       f"Suggested deployed_genomes:\n"
+                       f"{_j.dumps(data['deployed_genomes_payload'], indent=2)}\n\n"
+                       f"Apply by editing symbol_configs/<sym>.json.")
+                QMessageBox.information(self, f"Complement for {gid}", msg)
+            else:
+                reason = data.get("reason") or data.get("classification", {}).get(
+                    "reasons", ["?"])[0]
+                QMessageBox.warning(self, f"Complement for {gid}",
+                                    f"No complement found.\n\nReason: {reason}")
+        except Exception as e:
+            QMessageBox.critical(self, "Find Complement failed", str(e))
+
+    def _on_breed_round(self) -> None:
+        sym = self._current_symbol
+        import subprocess, json as _j
+        args = ["python", "-m", "r_native.genome_lineage", "--run-once",
+                "--children-per-parent", "3", "--n-bars", "3000"]
+        if sym: args.extend(["--symbols", sym])
+        try:
+            r = subprocess.run(args, capture_output=True, text=True,
+                               timeout=300, cwd=r"C:\Users\Radhi\MT5")
+            try: data = _j.loads(r.stdout)
+            except Exception:
+                QMessageBox.warning(self, "Breed Round — raw output",
+                                    (r.stdout or r.stderr or "")[:1500])
+                return
+            lines = [f"Lineage Breeder — processed {data.get('symbols_processed')} symbol(s)",
+                     f"Deployed: {data.get('deployed_count')}   "
+                     f"HoF admitted: {data.get('hof_admitted')}",
+                     ""]
+            for res in data.get("results", []):
+                lines.append(f"  {res.get('symbol')}: top_pf={res.get('top_child_pf')} "
+                             f"top_wr={res.get('top_child_wr')} "
+                             f"children={res.get('children_born')} "
+                             f"survivors={res.get('survivors')} "
+                             f"deployed={res.get('deployed')}")
+            QMessageBox.information(self, "Breed Round complete",
+                                    "\n".join(lines))
+        except subprocess.TimeoutExpired:
+            QMessageBox.warning(self, "Breed Round",
+                                "Timed out after 5 min — check console")
+        except Exception as e:
+            QMessageBox.critical(self, "Breed Round failed", str(e))
+
+    def _on_scan_asymmetry(self) -> None:
+        import subprocess, json as _j
+        try:
+            r = subprocess.run(
+                ["python", "-m", "r_native.genome_asymmetry", "scan-all"],
+                capture_output=True, text=True, timeout=60,
+                cwd=r"C:\Users\Radhi\MT5")
+            try: data = _j.loads(r.stdout)
+            except Exception:
+                QMessageBox.warning(self, "Scan output",
+                                    (r.stdout or r.stderr or "")[:1500])
+                return
+            lines = [f"Scanned {data.get('scanned')} genomes",
+                     f"Protected (kept as ensemble candidates): {data.get('protected')}",
+                     f"Weak: {data.get('weak')}   Unknown (too few trades): {data.get('unknown')}",
+                     "",
+                     "By type:"]
+            for t, n in (data.get("by_type") or {}).items():
+                lines.append(f"  {t}: {n}")
+            if data.get("protected_ids"):
+                lines.append("")
+                lines.append("Protected IDs: " + ", ".join(data["protected_ids"][:20]))
+            QMessageBox.information(self, "Asymmetry scan", "\n".join(lines))
+        except Exception as e:
+            QMessageBox.critical(self, "Scan failed", str(e))
