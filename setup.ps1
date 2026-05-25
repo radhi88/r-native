@@ -149,16 +149,15 @@ Write-Host "══════════════════════�
 Write-Host " ✅ Setup complete!" -ForegroundColor Green
 Write-Host "═════════════════════════════════════════════════" -ForegroundColor Green
 Write-Host ""
-Write-Host " Open THREE PowerShell terminals in $expectedRoot and run:" -ForegroundColor Yellow
+Write-Host " ONE command launches everything (UI + brain + executor):" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "   Terminal 1 (brain_server):" -ForegroundColor Cyan
-Write-Host "     python brain_server.py" -ForegroundColor White
+Write-Host "   cd $expectedRoot" -ForegroundColor Cyan
+Write-Host "   python -m r_native.app" -ForegroundColor White
 Write-Host ""
-Write-Host "   Terminal 2 (R Native UI):" -ForegroundColor Cyan
-Write-Host "     python -m r_native.app" -ForegroundColor White
-Write-Host ""
-Write-Host "   Terminal 3 (autonomous trader):" -ForegroundColor Cyan
-Write-Host "     python -m friday_v3.algory.r_executor" -ForegroundColor White
+Write-Host " Status bar at the bottom shows live service health:" -ForegroundColor Yellow
+Write-Host "   🧠 ✓ (emb)  brain_server running embedded" -ForegroundColor White
+Write-Host "   🤖 ✓ (PAPER) executor in paper-mode" -ForegroundColor White
+Write-Host "   ⚙ 5/5  all 5 agents alive" -ForegroundColor White
 Write-Host ""
 Write-Host " First-run inside the UI:" -ForegroundColor Yellow
 Write-Host "   1. CAMPAIGN tab → pick a symbol → RUN CAMPAIGN (~2 min)" -ForegroundColor White

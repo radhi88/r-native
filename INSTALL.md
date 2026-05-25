@@ -92,41 +92,29 @@ Write-Output "✅ data directories created"
 
 ---
 
-## Step 5 — Run the launcher script
+## Step 5 — Run R Native (single command)
 
-Two terminals required (or use the launcher script):
+Just one terminal now:
 
-### Terminal 1 — brain_server (REST API + agents)
-```powershell
-cd "C:\Users\$env:USERNAME\MT5"
-python brain_server.py
-```
-
-You should see:
-```
-🧠 R Native Brain Server starting on http://127.0.0.1:5055
-🧬 continuous_evolution loop armed
-🤖 agent orchestrator started (5 agents: risk_sentinel, genome_curator,
-   market_reader, performance_auditor, llm_strategist)
-```
-
-### Terminal 2 — R Native UI
 ```powershell
 cd "C:\Users\$env:USERNAME\MT5"
 python -m r_native.app
 ```
 
+That's it. The UI window opens AND in the background:
+- `brain_server` starts on port 5055 (Flask API + 5 agents + auto-evo)
+- `r_executor` starts (autonomous trader in PAPER mode by default)
+- The status bar at the bottom of the window shows live health:
+  `🧠 ✓ (emb) · 🤖 ✓ (PAPER) · ⚙ 5/5`
+
 You should see the dark-themed window open with 6 tabs:
 🧪 CAMPAIGN · 💎 VAULT · ⚡ LIVE · 🧬 GENES · 🏆 HALL OF FAME · 🤖 AI ADVISORS
 
-### Optional Terminal 3 — R Executor (autonomous trader)
-```powershell
-cd "C:\Users\$env:USERNAME\MT5"
-python -m friday_v3.algory.r_executor
-```
-
-This is the process that ACTUALLY fires trades into MT5 when the deployed
-genome says BUY/SELL. Without it, the UI works but no trades execute.
+### Optional: split mode (legacy)
+If you'd rather run them as separate processes (e.g. for debugging or
+running brain on a server), start `python brain_server.py` BEFORE
+`python -m r_native.app`. The UI will detect the external brain on
+port 5055 and skip embedding (status bar will show `🧠 ✓ (ext)`).
 
 ---
 

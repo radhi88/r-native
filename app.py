@@ -2753,10 +2753,54 @@ class RNativeMain(QMainWindow):
         self.ticker_label.setStyleSheet(f"color: {MUTED}; font-size: 11px;")
         h.addWidget(self.ticker_label)
         h.addStretch()
+        # Embedded services status (brain · executor · agents)
+        self.services_status_lbl = QLabel("🧠 — · 🤖 — · ⚙ —")
+        self.services_status_lbl.setStyleSheet(
+            f"color: {MUTED}; font-size: 11px; "
+            f"font-family: Consolas; padding-right: 16px;")
+        self.services_status_lbl.setToolTip(
+            "Embedded brain_server + r_executor + agents\n"
+            "Format:  🧠 brain · 🤖 executor (mode) · ⚙ agents alive/total")
+        h.addWidget(self.services_status_lbl)
         self.clock = QLabel("")
         self.clock.setStyleSheet(f"color: {GOLD}; font-family: Consolas;")
         h.addWidget(self.clock)
         return f
+
+    def _refresh_services_status(self) -> None:
+        """Update the unified status bar with embedded service health."""
+        if not hasattr(self, "services_status_lbl"):
+            return
+        try:
+            from r_native.embedded_services import services_status
+            st = services_status()
+        except Exception:
+            self.services_status_lbl.setText("🧠 ✗ · 🤖 ✗ · ⚙ ✗")
+            return
+        brain_ok = st["brain"]["alive"] and st["endpoint_reachable"]
+        brain_tag = ("ext" if st["brain"]["external"] else "emb")
+        brain_str = f"🧠 {'✓' if brain_ok else '✗'} ({brain_tag})"
+        ex = st["executor"]
+        exec_str = f"🤖 {'✓' if ex['alive'] else '✗'} ({ex['mode']})"
+        # Query agents count
+        try:
+            import urllib.request as _u, json as _j
+            with _u.urlopen("http://127.0.0.1:5055/api/r/agents/list",
+                            timeout=1.5) as r:
+                ad = _j.loads(r.read().decode())
+            agents = ad.get("agents", [])
+            alive = sum(1 for a in agents
+                        if a.get("enabled") and a.get("thread_alive"))
+            agents_str = f"⚙ {alive}/{len(agents)}"
+        except Exception:
+            agents_str = "⚙ —"
+        color = GREEN if (brain_ok and ex["alive"]) else (
+                "#e0c44b" if brain_ok else RED)
+        self.services_status_lbl.setStyleSheet(
+            f"color: {color}; font-size: 11px; "
+            f"font-family: Consolas; padding-right: 16px;")
+        self.services_status_lbl.setText(
+            f"{brain_str} · {exec_str} · {agents_str}")
 
     def _setup_tray(self):
         ico = PROJECT_ROOT / "friday_v3" / "algory" / "r_logo.ico"
@@ -3586,6 +3630,10 @@ class RNativeMain(QMainWindow):
         if self._auto_evo_tick_counter % 5 == 0:
             try: self._refresh_advisors_panel()
             except Exception: pass
+        # Refresh services status bar every 2 ticks (~6s)
+        if self._auto_evo_tick_counter % 2 == 0:
+            try: self._refresh_services_status()
+            except Exception: pass
         # H.8.2/3/5: refresh live activity + gate status + tray notifications
         try: self._refresh_live_activity()
         except Exception as e: print(f"[activity] err: {e}", flush=True)
@@ -3696,6 +3744,18 @@ def main():
 
     apply_dark_theme(app)
     app.setQuitOnLastWindowClosed(False)
+
+    # ── EMBEDDED SERVICES: brain_server + r_executor in this process ──
+    # No more separate terminals. brain runs in a Flask daemon thread,
+    # executor in its own loop thread. External legacy brains on :5055
+    # are detected and reused so the user can still split if they want.
+    try:
+        from r_native.embedded_services import start_all as _start_services
+        _svc = _start_services(executor_mode="PAPER")
+        print(f"[unified] services: {_svc}", flush=True)
+    except Exception as _e:
+        print(f"[unified] failed to start embedded services: {_e}", flush=True)
+
     win = RNativeMain()
     win.showMaximized()    # open at full screen — no manual resize needed
     win.raise_()
