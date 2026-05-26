@@ -630,27 +630,54 @@ class RNativeMain(QMainWindow):
         return s
 
     def _refresh_hero_card(self) -> None:
-        """Refresh the hero P/L card from R Executor state + MT5 account.
-        Called from _on_tick every 3s."""
+        """Refresh hero strip — LIVE-only stats from MT5, NOT mixed with PAPER.
+        Pulls from BackgroundPoller's mt5_today_* (real history_deals) and
+        mt5_account (real balance/equity). The exec_state file is consulted
+        ONLY for mode/armed/last_action (which are LIVE-vs-PAPER agnostic).
+        """
         if not hasattr(self, "hero_pl"): return
         import json as _json
         from pathlib import Path as _P
 
-        # ─── R Executor state ───
+        # exec_state only for mode/armed/last_action (status fields)
         exec_state = {}
         try:
             sf = _P(r"C:\Users\Radhi\MT5\friday_v3\data\r_executor_state.json")
             if sf.exists(): exec_state = _json.loads(sf.read_text(encoding="utf-8"))
         except Exception: pass
 
-        today_pl     = float(exec_state.get("today_pl",     0) or 0)
-        today_trades = int(  exec_state.get("today_trades", 0) or 0)
-        today_wins   = int(  exec_state.get("today_wins",   0) or 0)
-        total_pl     = float(exec_state.get("total_pl",     0) or 0)
-        total_trades = int(  exec_state.get("total_trades", 0) or 0)
-        armed        = bool( exec_state.get("armed",   False))
-        mode         = str(  exec_state.get("mode",    "—"))
-        last_action  = str(  exec_state.get("last_action", "—"))
+        # ── LIVE stats: pull from poller's REAL MT5 history_deals ──
+        if getattr(self, "poller", None):
+            today_pl     = float(self.poller.get("mt5_today_pl", 0) or 0)
+            today_trades = int(self.poller.get("mt5_today_trades", 0) or 0)
+            today_wins   = int(self.poller.get("mt5_today_wins", 0) or 0)
+        else:
+            today_pl = 0; today_trades = 0; today_wins = 0
+
+        # TOTAL P/L = current real account growth (equity − a stored baseline).
+        # If no baseline saved, use balance as baseline (zero P/L on first run).
+        try:
+            from pathlib import Path as _PP
+            base_path = _PP(r"C:\Users\Radhi\MT5\data\r_native\baseline_balance.json")
+            acct = (self.poller.get("mt5_account", {}) if getattr(self,"poller",None) else {}) or {}
+            cur_equity = float(acct.get("equity") or 0)
+            if cur_equity > 0:
+                if base_path.exists():
+                    baseline = float(_json.loads(base_path.read_text(encoding="utf-8")).get("balance", cur_equity))
+                else:
+                    baseline = cur_equity
+                    base_path.parent.mkdir(parents=True, exist_ok=True)
+                    base_path.write_text(_json.dumps({"balance": baseline, "set_at": "first-launch"}), encoding="utf-8")
+                total_pl = round(cur_equity - baseline, 2)
+            else:
+                total_pl = 0
+        except Exception:
+            total_pl = 0
+        total_trades = today_trades  # session-level approximation
+
+        armed       = bool(exec_state.get("armed",   False))
+        mode        = str(exec_state.get("mode",    "—"))
+        last_action = str(exec_state.get("last_action", "—"))
 
         # H.10: compact strip — values only, color via stylesheet
         VAL_STYLE = ("font-size: 15px; font-weight: 700;"
