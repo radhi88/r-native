@@ -60,7 +60,9 @@ def place_pending(*, symbol: str, side: str, order_kind: str, price: float,
         # Comment is capped at 31 chars in MT5
         comment = f"R-P-{agent_name[:6]}-{reason[:8]}"[:31]
 
-        # Expiry — broker may not honor; we'll also do soft cleanup
+        # Server-side expiration: tell the broker to cancel the order at expiry_dt.
+        # Use TIME_SPECIFIED so the broker honors `expiration`; previous GTC version
+        # left orders hanging if the local cleanup loop wasn't running.
         expiry_dt = datetime.now() + timedelta(hours=expiry_hours)
         req = {
             "action":       mt5.TRADE_ACTION_PENDING,
@@ -73,7 +75,8 @@ def place_pending(*, symbol: str, side: str, order_kind: str, price: float,
             "magic":        R_MAGIC,
             "comment":      comment,
             "type_filling": mt5.ORDER_FILLING_IOC,
-            "type_time":    mt5.ORDER_TIME_GTC,
+            "type_time":    mt5.ORDER_TIME_SPECIFIED,
+            "expiration":   int(expiry_dt.timestamp()),
         }
         r = mt5.order_send(req)
         if r is None:
