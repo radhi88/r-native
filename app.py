@@ -520,8 +520,23 @@ class RNativeMain(QMainWindow):
         # Tray
         self._setup_tray()
 
-        # Tick timer
-        self.tick = QTimer(); self.tick.timeout.connect(self._on_tick); self.tick.start(3000)
+        # ── Background poller: keeps brain HTTP off the Qt main thread ──
+        # CRITICAL: without this the UI freezes when brain does anything
+        # slow (LLM call, GA campaign, MT5 reconnect). All endpoint calls
+        # run in this QThread; UI tick reads from its cache only.
+        try:
+            from r_native.background_poller import BackgroundPoller
+            self.poller = BackgroundPoller(self)
+            self.poller.start()
+            print("[ui] background poller started", flush=True)
+        except Exception as _pe:
+            self.poller = None
+            print(f"[ui] poller failed: {_pe}", flush=True)
+
+        # Tick timer — 5s instead of 3s, and a re-entry guard inside _on_tick
+        # so a slow tick can't cause queue pile-up that freezes Qt event loop
+        self.tick = QTimer(); self.tick.timeout.connect(self._on_tick); self.tick.start(5000)
+        self._tick_running = False
         self._on_tick()
         # Auto-load vault from existing configs
         self._populate_vault_from_campaign({})
@@ -659,13 +674,14 @@ class RNativeMain(QMainWindow):
         self.hero_total.setText(f"{sign_t}${total_pl:.2f}")
         self.hero_total.setStyleSheet(f"color: {col_t}; {VAL_STYLE}")
 
-        # Account
+        # Account — from poller cache (NOT direct mt5.* — that blocks Qt)
         try:
-            import MetaTrader5 as _mt5
-            info = _mt5.account_info()
-            if info:
-                self.hero_balance.setText(f"${info.balance:.0f} · ${info.equity:.0f}")
-                self.hero_balance.setStyleSheet(f"color: {TEXT}; {VAL_STYLE}")
+            if getattr(self, "poller", None):
+                acct = self.poller.get("mt5_account", {}) or {}
+                if acct:
+                    self.hero_balance.setText(
+                        f"${acct.get('balance',0):.0f} · ${acct.get('equity',0):.0f}")
+                    self.hero_balance.setStyleSheet(f"color: {TEXT}; {VAL_STYLE}")
         except Exception: pass
 
         # Executor indicator (compact)
@@ -700,12 +716,12 @@ class RNativeMain(QMainWindow):
         # ── Pixel mascot (H.20) — sprite reacts to live P/L ──
         if hasattr(self, "hero_mascot") and self.hero_mascot:
             try:
+                # Read balance from poller cache — no direct mt5.* on Qt thread
                 bal = 100  # safe default
-                try:
-                    import MetaTrader5 as _mt5_
-                    info = _mt5_.account_info()
-                    if info: bal = max(1, info.balance)
-                except Exception: pass
+                if getattr(self, "poller", None):
+                    acct = self.poller.get("mt5_account", {}) or {}
+                    if acct.get("balance"):
+                        bal = max(1, float(acct["balance"]))
                 self.hero_mascot.set_pnl(pnl=today_pl, net_worth=bal,
                                           hodl=bool(exec_state.get("paper_open")))
             except Exception as e:
@@ -859,31 +875,28 @@ class RNativeMain(QMainWindow):
                     new_lines.append(f"[{ts}] {armed} {s.get('mode','—')}: {s.get('last_action','')[:50]}")
         except Exception: pass
 
-        # 2) New trades — last 3 from MT5 history with R magic
+        # 2) New trades — read from poller cache (no direct mt5 call)
         try:
-            import MetaTrader5 as _mt5
-            from datetime import timedelta as _td
-            deals = _mt5.history_deals_get(datetime.now() - _td(hours=4), datetime.now()) or []
-            for d in sorted(deals, key=lambda x: x.time, reverse=True)[:5]:
-                if int(d.magic) != 20260605: continue   # only R
-                if d.entry not in (0, 1): continue
-                dk = f"deal::{d.ticket}::{d.entry}"
+            recent = (self.poller.get("mt5_recent_deals", [])
+                      if getattr(self, "poller", None) else [])
+            for d in recent[:5]:
+                dk = f"deal::{d['ticket']}::{d['entry']}"
                 if dk in self._activity_seen: continue
                 self._activity_seen.add(dk)
-                ts = datetime.fromtimestamp(int(d.time)).strftime("%H:%M:%S")
-                kind = "OPEN" if d.entry == 0 else "CLOSE"
-                side = "BUY" if d.type == 0 else "SELL"
-                pl = float(d.profit) + float(d.swap) + float(d.commission)
+                ts = datetime.fromtimestamp(int(d['time'])).strftime("%H:%M:%S")
+                kind = "OPEN" if d['entry'] == 0 else "CLOSE"
+                side = "BUY" if d['type'] == 0 else "SELL"
+                pl = float(d['profit']) + float(d['swap']) + float(d['commission'])
                 emoji = "🚀" if kind == "OPEN" else ("💰" if pl > 0 else "🛑" if pl < 0 else "⏹")
                 new_lines.append(
-                    f"[{ts}] {emoji} {kind} {side} {d.symbol} @ {float(d.price):.3f} "
-                    + (f"P/L ${pl:+.2f}" if kind == "CLOSE" else f"#{d.ticket}"))
+                    f"[{ts}] {emoji} {kind} {side} {d['symbol']} @ {float(d['price']):.3f} "
+                    + (f"P/L ${pl:+.2f}" if kind == "CLOSE" else f"#{d['ticket']}"))
                 # H.8.5: tray toast for new trade events
                 if hasattr(self, "tray"):
                     try:
                         if kind == "OPEN":
                             self.tray.showMessage("R Native — Trade Opened",
-                                f"{side} {d.symbol} @ {float(d.price):.3f}",
+                                f"{side} {d['symbol']} @ {float(d['price']):.3f}",
                                 QSystemTrayIcon.Information, 4000)
                         else:
                             self.tray.showMessage(
@@ -904,12 +917,11 @@ class RNativeMain(QMainWindow):
             updated = new_lines + current
             self.live_activity.setPlainText("\n".join(updated[:25]))
 
-        # ─── Gate Status: pull /api/r/trade_gate one-shot ───
+        # ─── Gate Status: read from poller cache (no HTTP) ───
         try:
-            import urllib.request as _u
-            url = "http://127.0.0.1:5055/api/r/trade_gate?symbol=BTCUSDm&bypass_session=1&bypass_weekend=1&bypass_friday=1"
-            with _u.urlopen(url, timeout=2) as r:
-                d = _json.loads(r.read().decode())
+            d = (self.poller.get("trade_gate_btc", {})
+                 if getattr(self, "poller", None) else {})
+            if not d: return
             checks = {c["name"]: c["passed"] for c in (d.get("checks") or [])}
             verdict = d.get("verdict", "—")
             dg_id  = d.get("deployed_genome_id")
@@ -2281,16 +2293,10 @@ class RNativeMain(QMainWindow):
 
     def _refresh_advisors_panel(self) -> None:
         if not hasattr(self, "advisor_stream"): return
-        import urllib.request as _u
-        import json as _json
-
-        # Agent control rows (build once, refresh status each time)
-        try:
-            with _u.urlopen("http://127.0.0.1:5055/api/r/agents/list",
-                            timeout=3) as r:
-                agents = _json.loads(r.read().decode()).get("agents", [])
-        except Exception:
-            agents = []
+        # Read from BackgroundPoller cache (no HTTP — never blocks UI)
+        if not getattr(self, "poller", None):
+            return
+        agents = self.poller.get("agents", []) or []
 
         for a in agents:
             name = a["name"]
@@ -2322,17 +2328,16 @@ class RNativeMain(QMainWindow):
                 f"{alive} ticks={a['tick_count']} errs={a['error_count']} "
                 f"every {a['interval_seconds']}s{err}")
 
-        # Insight stream — apply filter
+        # Insight stream — read cached then apply filter in-memory
         selected = self.advisor_filter_combo.currentText()
-        url = "http://127.0.0.1:5055/api/r/agents/insights?n=80"
-        if selected == "ACT only (decisions)":  url += "&level=ACT"
-        elif selected == "WARN only":           url += "&level=WARN"
-        elif selected not in ("All agents",):   url += f"&agent={selected}"
-        try:
-            with _u.urlopen(url, timeout=3) as r:
-                items = _json.loads(r.read().decode()).get("insights", [])
-        except Exception:
-            return
+        items = self.poller.get("advisor_insights", []) or []
+        if selected == "ACT only (decisions)":
+            items = [i for i in items if i.get("level") == "ACT"]
+        elif selected == "WARN only":
+            items = [i for i in items if i.get("level") == "WARN"]
+        elif selected not in ("All agents",):
+            items = [i for i in items if i.get("agent") == selected]
+        items = items[:80]
 
         lines = []
         for r in items:
@@ -2768,39 +2773,39 @@ class RNativeMain(QMainWindow):
         return f
 
     def _refresh_services_status(self) -> None:
-        """Update the unified status bar with embedded service health."""
+        """Update the unified status bar — reads from background poller
+        cache only, never blocks on HTTP."""
         if not hasattr(self, "services_status_lbl"):
             return
-        try:
-            from r_native.embedded_services import services_status
-            st = services_status()
-        except Exception:
-            self.services_status_lbl.setText("🧠 ✗ · 🤖 ✗ · ⚙ ✗")
+        # Pull cached data from BackgroundPoller (instant, no I/O)
+        if not getattr(self, "poller", None):
+            self.services_status_lbl.setText("🧠 ✗ · 🤖 ✗ · ⚙ ✗ (no poller)")
             return
-        brain_ok = st["brain"]["alive"] and st["endpoint_reachable"]
-        brain_tag = ("ext" if st["brain"]["external"] else "emb")
+        st = self.poller.get("services", {}) or {}
+        if not st:
+            self.services_status_lbl.setText("🧠 — · 🤖 — · ⚙ — (booting)")
+            return
+        brain_node = st.get("brain") or {}
+        brain_ok = bool(brain_node.get("alive") and st.get("endpoint_reachable"))
+        brain_tag = ("ext" if brain_node.get("external") else "emb")
         brain_str = f"🧠 {'✓' if brain_ok else '✗'} ({brain_tag})"
-        ex = st["executor"]
-        exec_str = f"🤖 {'✓' if ex['alive'] else '✗'} ({ex['mode']})"
-        # Query agents count
-        try:
-            import urllib.request as _u, json as _j
-            with _u.urlopen("http://127.0.0.1:5055/api/r/agents/list",
-                            timeout=1.5) as r:
-                ad = _j.loads(r.read().decode())
-            agents = ad.get("agents", [])
-            alive = sum(1 for a in agents
-                        if a.get("enabled") and a.get("thread_alive"))
-            agents_str = f"⚙ {alive}/{len(agents)}"
-        except Exception:
-            agents_str = "⚙ —"
-        color = GREEN if (brain_ok and ex["alive"]) else (
+        ex = st.get("executor") or {}
+        exec_str = f"🤖 {'✓' if ex.get('alive') else '✗'} ({ex.get('mode','?')})"
+        # Agents count comes from cache too
+        agents = self.poller.get("agents", []) or []
+        alive = sum(1 for a in agents
+                    if a.get("enabled") and a.get("thread_alive"))
+        agents_str = f"⚙ {alive}/{len(agents)}" if agents else "⚙ —"
+        # Show poll-health indicator (failing streak = brain stuck)
+        fails = self.poller.get("fail_streak", 0)
+        warn = f" · ⚠ poll fail x{fails}" if fails > 1 else ""
+        color = GREEN if (brain_ok and ex.get("alive")) else (
                 "#e0c44b" if brain_ok else RED)
         self.services_status_lbl.setStyleSheet(
             f"color: {color}; font-size: 11px; "
             f"font-family: Consolas; padding-right: 16px;")
         self.services_status_lbl.setText(
-            f"{brain_str} · {exec_str} · {agents_str}")
+            f"{brain_str} · {exec_str} · {agents_str}{warn}")
 
     def _setup_tray(self):
         ico = PROJECT_ROOT / "friday_v3" / "algory" / "r_logo.ico"
@@ -3241,18 +3246,17 @@ class RNativeMain(QMainWindow):
         self._refresh_auto_evo_status()
 
     def _refresh_auto_evo_status(self) -> None:
-        """Poll /api/r/auto_evo/status and update button + label."""
+        """Read auto-evo state from background poller (no HTTP)."""
         if not hasattr(self, "_auto_evo_btn"):
             return
-        import urllib.request as _u
-        import json as _json
-        try:
-            with _u.urlopen("http://127.0.0.1:5055/api/r/auto_evo/status",
-                            timeout=2) as r:
-                st = _json.loads(r.read().decode())
-        except Exception:
+        if not getattr(self, "poller", None):
             self._auto_evo_btn.setText("🧬 AUTO-EVOLVE: ?")
-            self._auto_evo_status_lbl.setText("(brain offline)")
+            self._auto_evo_status_lbl.setText("(no poller)")
+            return
+        st = self.poller.get("auto_evo", {}) or {}
+        if not st:
+            self._auto_evo_btn.setText("🧬 AUTO-EVOLVE: ?")
+            self._auto_evo_status_lbl.setText("(booting)")
             return
 
         enabled = bool(st.get("enabled"))
@@ -3615,6 +3619,18 @@ class RNativeMain(QMainWindow):
 
     # ─── Tick — update KPIs from MT5 + R state ───
     def _on_tick(self):
+        # Re-entry guard: if previous tick is still running (something slow
+        # in one of the refresh methods), skip this one. Prevents queued
+        # ticks from piling up and freezing the Qt event loop.
+        if getattr(self, "_tick_running", False):
+            return
+        self._tick_running = True
+        try:
+            self._on_tick_inner()
+        finally:
+            self._tick_running = False
+
+    def _on_tick_inner(self):
         self.clock.setText(datetime.now().strftime("%Y-%m-%d  %H:%M:%S"))
         # H.8.1: refresh the hero P/L card every tick (3s)
         try: self._refresh_hero_card()
@@ -3637,29 +3653,41 @@ class RNativeMain(QMainWindow):
         # H.8.2/3/5: refresh live activity + gate status + tray notifications
         try: self._refresh_live_activity()
         except Exception as e: print(f"[activity] err: {e}", flush=True)
+        # Read MT5 state from BackgroundPoller cache — formerly direct mt5.*
+        # calls here blocked the Qt main thread for 100-2000ms (history_deals
+        # was the worst). Now: instant dict lookup.
         try:
-            import MetaTrader5 as mt5
-            mt5.initialize()
-            info = mt5.account_info()
+            pcache = self.poller.all() if getattr(self, "poller", None) else {}
+            class _AccountShim:
+                balance = float((pcache.get("mt5_account") or {}).get("balance", 0))
+                equity  = float((pcache.get("mt5_account") or {}).get("equity", 0))
+            class _PosShim:
+                def __init__(self, d):
+                    self.ticket = d["ticket"]; self.symbol = d["symbol"]
+                    self.type = 0 if d["type"] == "BUY" else 1
+                    self.volume = d["volume"]
+                    self.price_open = d["price_open"]; self.price_current = d["price_current"]
+                    self.sl = d["sl"]; self.tp = d["tp"]; self.profit = d["profit"]
+                    self.magic = d["magic"]; self.comment = d["comment"]
+            info = _AccountShim() if pcache.get("mt5_account") else None
+            r_pos = [_PosShim(d) for d in (pcache.get("mt5_r_positions") or [])]
+            open_pl = sum(p.profit for p in r_pos)
+            today_pl     = float(pcache.get("mt5_today_pl") or 0)
+            today_trades = int(pcache.get("mt5_today_trades") or 0)
+            today_wins   = int(pcache.get("mt5_today_wins") or 0)
+            wr = (today_wins / today_trades * 100) if today_trades else 0
+            r_closed = list(range(today_trades))  # legacy len() compatibility
             if info:
                 # H.9: KPI grid removed (duplicated Hero card). Safe-no-op these writes.
                 _k = self.kpi_labels  # legacy: empty dict in modern build
                 if _k.get("BALANCE"):       _k["BALANCE"].setText(f"${info.balance:.2f}")
                 if _k.get("EQUITY"):        _k["EQUITY"].setText(f"${info.equity:.2f}")
-                # R positions
-                r_pos = [p for p in (mt5.positions_get() or []) if p.magic == 20260605]
-                open_pl = sum(p.profit for p in r_pos)
+                # r_pos, open_pl, today_pl, wr already set from cache above —
+                # no direct mt5.* calls here (would block Qt main thread)
                 if _k.get("OPEN P/L"):
                     _k["OPEN P/L"].setText(f"${open_pl:+.2f}")
                     _k["OPEN P/L"].setStyleSheet(f"color: {GREEN if open_pl>=0 else RED}; font-size: 22px; font-weight: 900; font-family: Consolas;")
                 if _k.get("OPEN POSITIONS"): _k["OPEN POSITIONS"].setText(str(len(r_pos)))
-                # Today P/L from deals
-                from datetime import timedelta
-                deals = mt5.history_deals_get(datetime.now() - timedelta(hours=24), datetime.now()) or []
-                r_closed = [d for d in deals if d.magic == 20260605 and d.entry == 1]
-                today_pl = sum(d.profit + d.swap + d.commission for d in r_closed)
-                wins = sum(1 for d in r_closed if d.profit > 0)
-                wr = (wins / len(r_closed) * 100) if r_closed else 0
                 if _k.get("TODAY P/L"):
                     _k["TODAY P/L"].setText(f"${today_pl:+.2f}")
                     _k["TODAY P/L"].setStyleSheet(f"color: {GREEN if today_pl>=0 else RED}; font-size: 22px; font-weight: 900; font-family: Consolas;")
@@ -3768,21 +3796,26 @@ def main():
     except Exception as _e:
         print(f"[onboarding] skipped: {_e}", flush=True)
 
-    # ── Auto-inspect the first deployed-genome symbol after UI settles ──
-    # Inspector defaults to "—" placeholders if nothing is selected — pick
-    # the first symbol with a deployed genome so the panel comes up populated.
+    # ── Auto-inspect deferred → wait for poller to have data, then dispatch
+    # off the main thread to avoid Qt event-loop freeze at boot.
     def _auto_inspect():
-        try:
-            import urllib.request as _ur, json as _j
-            with _ur.urlopen("http://localhost:5055/api/r/genomes/active",
-                              timeout=3) as r:
-                d = _j.loads(r.read().decode())
-            for s in (d.get("symbols") or []):
-                if (s.get("deployed_genome") or {}).get("id"):
-                    win._inspect_symbol(s["symbol"]); return
-        except Exception as _e:
-            print(f"[auto-inspect] skipped: {_e}", flush=True)
-    QTimer.singleShot(2500, _auto_inspect)
+        import threading as _t
+        def _bg():
+            try:
+                import urllib.request as _ur, json as _j
+                with _ur.urlopen("http://localhost:5055/api/r/genomes/active",
+                                  timeout=3) as r:
+                    d = _j.loads(r.read().decode())
+                for s in (d.get("symbols") or []):
+                    if (s.get("deployed_genome") or {}).get("id"):
+                        # Marshal back to Qt thread for the actual UI update
+                        QTimer.singleShot(0, lambda sym=s["symbol"]:
+                                          win._inspect_symbol(sym))
+                        return
+            except Exception as _e:
+                print(f"[auto-inspect] skipped: {_e}", flush=True)
+        _t.Thread(target=_bg, daemon=True, name="auto-inspect").start()
+    QTimer.singleShot(5000, _auto_inspect)
 
     # ── Heartbeat server (H.1) — lets RNativeLauncher supervise this worker ──
     # Non-fatal: if Flask is missing or port is taken, app keeps running.
