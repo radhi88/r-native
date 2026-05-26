@@ -27,6 +27,14 @@ class VolatilityHunter(Agent):
     BUFFER_ATR_MULT = 0.3    # entry placed 0.3 ATR beyond swing
     SL_ATR_MULT     = 1.5
     TP_ATR_MULT     = 3.0    # R:R = 1:2
+    # Reversion-side params (cycle 23 — added per user request "حاط لي
+    # بيع مكان الشراء"). On every spike we now ALSO place LIMIT orders
+    # at the OPPOSITE extreme — SELL_LIMIT at top (catch peak rejection),
+    # BUY_LIMIT at bottom (catch oversold bounce). Tighter SL because a
+    # failed reversion means a trend is forming → cut fast.
+    PLACE_REVERSION = True
+    REV_SL_ATR_MULT = 1.2
+    REV_TP_ATR_MULT = 2.0
     EXPIRY_HOURS    = 2
     MAX_STRADDLES   = 3      # don't flood
     # Cycle-21 fix: even if no pending exists right now (filled or
@@ -118,9 +126,31 @@ class VolatilityHunter(Agent):
                           price=sell_entry, sl=sell_sl, tp=sell_tp,
                           reason="vol_spike", expiry_hours=self.EXPIRY_HOURS,
                           agent_name="volhun")
+            # ── REVERSION SIDE (cycle 23 fix) ──
+            # SELL_LIMIT at swing_high+buf (sell into a peak — expect rejection)
+            # BUY_LIMIT  at swing_low-buf  (buy into a bottom — expect bounce)
+            rev_msg = ""
+            if self.PLACE_REVERSION:
+                rev_sell_entry = spike["swing_high"] + buf
+                rev_sell_sl    = rev_sell_entry + spike["current_atr"] * self.REV_SL_ATR_MULT
+                rev_sell_tp    = rev_sell_entry - spike["current_atr"] * self.REV_TP_ATR_MULT
+                place_pending(symbol=sym, side="SELL", order_kind="LIMIT",
+                              price=rev_sell_entry, sl=rev_sell_sl, tp=rev_sell_tp,
+                              reason="vol_rev",  expiry_hours=self.EXPIRY_HOURS,
+                              agent_name="volhun")
+                rev_buy_entry = spike["swing_low"] - buf
+                rev_buy_sl    = rev_buy_entry - spike["current_atr"] * self.REV_SL_ATR_MULT
+                rev_buy_tp    = rev_buy_entry + spike["current_atr"] * self.REV_TP_ATR_MULT
+                place_pending(symbol=sym, side="BUY",  order_kind="LIMIT",
+                              price=rev_buy_entry, sl=rev_buy_sl, tp=rev_buy_tp,
+                              reason="vol_rev",  expiry_hours=self.EXPIRY_HOURS,
+                              agent_name="volhun")
+                rev_msg = (f" + REV: SELL_LIMIT@{rev_sell_entry:.5f}/"
+                            f"BUY_LIMIT@{rev_buy_entry:.5f}")
             placed += 1
             self._last_placed_by_sym[sym] = now_s
             emit_insight(self.name, "ACT",
                 f"⚡ {sym} volatility spike {spike['spike_mult']:.2f}x — "
-                f"placed BUY_STOP@{buy_entry:.5f} + SELL_STOP@{sell_entry:.5f}",
+                f"BREAKOUT: BUY_STOP@{buy_entry:.5f}/SELL_STOP@{sell_entry:.5f}"
+                + rev_msg,
                 data=spike, action="vol_straddle_placed")
