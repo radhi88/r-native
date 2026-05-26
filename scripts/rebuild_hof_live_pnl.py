@@ -70,10 +70,31 @@ def main(lookback_hours: int = 48):
         print("\nERROR: HoF index missing"); return
     hof = json.load(open(HOF_INDEX))
     updated = 0
+    created = 0
     for gid, stats in gid_stats.items():
         if gid not in hof:
-            print(f"  ⚠ genome {gid} not in HoF, skipping")
-            continue
+            # Auto-create a stub HoF entry so this genome's live performance
+            # is tracked going forward. Previous behaviour silently dropped
+            # the P/L of any genome that had been rotated out — we lost the
+            # post-mortem data on retired competitors.
+            # Try to infer the symbol from the most-recent OPEN deal for this gid.
+            sym_hint = None
+            for d in r_deals:
+                if int(d.entry) != 0: continue
+                if not (d.comment or "").startswith(f"R-{gid}-"): continue
+                sym_hint = d.symbol; break
+            hof[gid] = {
+                "nickname":   f"AUTO-{sym_hint or '?'}-{gid}",
+                "symbol":     sym_hint or "?",
+                "stats":      {"score": 0, "win_rate": 0, "profit_factor": 0,
+                                "trades": 0, "net_pl": 0},
+                "auto_created": True,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "live_trades": 0, "live_pnl": 0,
+                "live_wins": 0, "live_wr_pct": 0,
+            }
+            created += 1
+            print(f"  + auto-created stub HoF entry for {gid} (sym={sym_hint})")
         hof[gid]["live_trades"] = stats["trades"]
         hof[gid]["live_pnl"]    = round(stats["pnl"], 2)
         hof[gid]["live_wins"]   = stats["wins"]
@@ -92,7 +113,10 @@ def main(lookback_hours: int = 48):
             g["live_wr_pct"] = 0
             g["last_synced"] = datetime.now(timezone.utc).isoformat()
     json.dump(hof, open(HOF_INDEX, "w"), ensure_ascii=False, indent=2)
-    print(f"\n✅ Updated {updated} genome entries in HoF · zeroed stale ones")
+    msg = f"\n✅ Updated {updated} genome entries in HoF"
+    if created: msg += f" ({created} auto-created from MT5 history)"
+    msg += " · zeroed stale ones"
+    print(msg)
 
     mt5.shutdown()
 

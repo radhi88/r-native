@@ -37,6 +37,9 @@ class WinnerBooster(Agent):
     interval_seconds = 120    # every 2 min
     default_enabled = True
 
+    # State for change-detection — only emit ACT when boost set actually shifts
+    _last_boost_signature: str = ""
+
     def _qualify_tier(self, n: int, wr_pct: float, pnl: float) -> tuple[int, float]:
         """Return (tier 0-3, lot_multiplier)."""
         if n >= 15 and wr_pct >= 70 and pnl >= 15:
@@ -80,10 +83,22 @@ class WinnerBooster(Agent):
             "updated_at":  datetime.now(timezone.utc).isoformat(),
         }, indent=2, ensure_ascii=False), encoding="utf-8")
 
-        if boosted:
+        # Build a signature of the boost state — only emit ACT when it changes.
+        # Otherwise the same "2 winners boosted" insight fires every 2 minutes
+        # and floods the AI Advisors feed with non-news.
+        sig = ",".join(sorted(f"{b['id']}:{b['tier']}" for b in boosted))
+        if boosted and sig != self._last_boost_signature:
             top = max(boosted, key=lambda b: b["mult"])
+            change_note = "" if not self._last_boost_signature else " [set changed]"
             emit_insight(self.name, "ACT",
-                f"🏋 {len(boosted)} winners boosted (top: {top['nickname']} "
+                f"🏋 {len(boosted)} winners boosted{change_note} (top: {top['nickname']} "
                 f"tier{top['tier']} x{top['mult']} | {top['n']}t \${top['pnl']:+.2f})",
-                data={"boosted": boosted},
+                data={"boosted": boosted, "previous_sig": self._last_boost_signature},
                 action="winners_boosted")
+            self._last_boost_signature = sig
+        elif not boosted and self._last_boost_signature:
+            # Cleared — all boosts dropped (winning streaks broke)
+            emit_insight(self.name, "INFO",
+                "🏋 boost cleared — no genomes currently qualifying",
+                action="boost_cleared")
+            self._last_boost_signature = ""

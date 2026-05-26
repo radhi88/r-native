@@ -174,14 +174,40 @@ def record_deployment(genome_id: str, symbol: str) -> None:
     _write_json(INDEX_PATH, index)
 
 
-def record_live_trade(genome_id: str, pnl: float) -> None:
-    """Update live P/L after a closed trade."""
+def record_live_trade(genome_id: str, pnl: float,
+                       symbol: Optional[str] = None) -> None:
+    """Update live P/L after a closed trade.
+
+    AUTO-CREATE stub: if the genome isn't in the HoF index, create one.
+    Previously we silently dropped the trade — meaning every genome that
+    got rotated out of the registry but kept trading (multi-genome
+    competition, retired competitors) lost its live-PnL signal. With
+    auto-create, every R-magic close is captured.
+
+    Tracks live_trades, live_pnl, live_wins, live_wr_pct.
+    """
     _ensure_dirs()
     index = load_index()
     entry = index.get(genome_id)
-    if not entry: return
+    if not entry:
+        entry = {
+            "id":         genome_id,
+            "nickname":   f"AUTO-{symbol or '?'}-{genome_id}",
+            "symbol":     symbol or "?",
+            "born_at":    datetime.now(timezone.utc).isoformat(),
+            "birth_method": "auto_observed",
+            "stats":      {"score": 0, "win_rate": 0, "profit_factor": 0,
+                            "trades": 0, "net_pl": 0},
+            "auto_created": True,
+            "live_trades": 0, "live_pnl": 0.0,
+            "live_wins":   0, "live_wr_pct": 0.0,
+        }
     entry["live_trades"] = int(entry.get("live_trades", 0)) + 1
-    entry["live_pnl"]    = float(entry.get("live_pnl", 0)) + float(pnl)
+    entry["live_pnl"]    = round(float(entry.get("live_pnl", 0)) + float(pnl), 2)
+    if float(pnl) > 0:
+        entry["live_wins"] = int(entry.get("live_wins", 0)) + 1
+    entry["live_wr_pct"] = round(
+        int(entry.get("live_wins", 0)) / max(1, int(entry["live_trades"])) * 100, 1)
     entry["last_updated"] = datetime.now(timezone.utc).isoformat()
     index[genome_id] = entry
     _write_json(INDEX_PATH, index)

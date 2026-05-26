@@ -56,6 +56,7 @@ def _load_default_agents():
         ("night_shift",         "NightShift"),
         ("winner_booster",      "WinnerBooster"),
         ("market_scanner",      "MarketScanner"),
+        ("regime_scaler",       "RegimeScaler"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
