@@ -34,6 +34,9 @@ SIGNAL_GENES = [
     "use_sig_macd",          "use_sig_mom_break",     "use_sig_pin_bar",
     "use_sig_rsi",           "use_sig_stoch",         "use_sig_three_soldiers",
     "use_sig_wick_rejection","use_sig_williams",
+    # ── SMC signals (Phase 2). Default-on probability lowered in Genome.random ──
+    "use_sig_smc_ob",        "use_sig_smc_fvg",       "use_sig_smc_bos",
+    "use_sig_smc_choch",     "use_sig_smc_liq_sweep", "use_sig_smc_idm",
 ]
 
 FILTER_GENES = [
@@ -41,6 +44,10 @@ FILTER_GENES = [
     "use_filt_cci",          "use_filt_consec",       "use_filt_doji",
     "use_filt_keltner",      "use_no_open_friday",    "use_filt_receding",
     "use_filt_rsi",          "use_filt_sma",          "use_filt_volatility",
+    # ── SMC filters (Phase 2) ──
+    "use_filter_smc_fresh_only",
+    "use_filter_smc_htf_alignment",
+    "use_filter_smc_idm_required",
 ]
 
 EXIT_GENES = [
@@ -48,8 +55,28 @@ EXIT_GENES = [
     "use_partial_tp",        "use_sl_lock",           "use_sl_reduce",
 ]
 
-ALL_GENES = EXECUTION_GENES + BIAS_GENES + SIGNAL_GENES + FILTER_GENES + EXIT_GENES
-# 4 + 12 + 14 + 12 + 6 = 48 genes
+# ── SMC SL/TP placement modifiers (Phase 2) ──────────────────────
+# These genes change WHERE the SL/TP is anchored (OB / swing / liquidity)
+# instead of the default ATR-based math. Each requires its matching SMC
+# signal to be on (enforced by the repair pass).
+SMC_PLACEMENT_GENES = [
+    "sl_anchor_smc_ob",      # SL just past the OB price reacted from
+    "sl_anchor_smc_swing",   # SL just past last swing low/high
+    "tp_target_smc_liq",     # near_tp = opposite liquidity pool
+    "tp_target_smc_ob",      # far_tp  = next opposite-side OB
+]
+
+ALL_GENES = (EXECUTION_GENES + BIAS_GENES + SIGNAL_GENES + FILTER_GENES
+             + EXIT_GENES + SMC_PLACEMENT_GENES)
+# 4 + 12 + 20 + 15 + 6 + 4 = 61 genes (was 48; +13 SMC: 6 signal + 3 filter + 4 placement)
+
+# Genes that should mutate / activate at lower base probability — these are
+# specialized SMC concepts; populating them densely would crowd out classics.
+SMC_GENES = (
+    [g for g in SIGNAL_GENES if "smc" in g]
+    + [g for g in FILTER_GENES if "smc" in g]
+    + SMC_PLACEMENT_GENES
+)
 
 
 # ─── Continuous parameters (always present, evolved separately) ───
@@ -70,6 +97,10 @@ CONT_PARAMS = {
     "min_score":     (40,  90),      # minimum entry score
     "max_drawdown_stop": (3.0, 15.0),
     "kelly_fraction": (0.05, 0.5),
+    # ── SMC tunables (Phase 2) ──────────────────────────────────
+    "smc_ob_buffer_atr":     (0.1, 1.5),    # SL buffer past OB in × ATR
+    "smc_ob_freshness_bars": (3,   80),     # max bar age for "fresh" OB
+    "smc_htf_lookback_bars": (10,  100),    # HTF BOS scan window
 }
 
 
@@ -92,9 +123,23 @@ class Genome:
 
     # ── Factory: random ──
     @classmethod
-    def random(cls, gen: int = 0) -> "Genome":
+    def random(cls, gen: int = 0, smc_lean: float = 0.0) -> "Genome":
+        """Build a random genome.
+
+        smc_lean ∈ [-1, +1] biases the SMC gene activation probability:
+            -1.0 → SMC genes mostly off (probability 0.0)
+             0.0 → SMC genes at base 0.10
+            +1.0 → SMC genes heavily favored (probability 0.40)
+        Used by the SMC lane in continuous_evolution to seed exploration.
+        """
         # Bias toward FEWER active genes (sparser strategies trade more often)
-        flags = {g: random.random() < 0.20 for g in ALL_GENES}
+        base_p     = 0.20
+        smc_base_p = 0.10
+        smc_p      = max(0.0, min(0.6, smc_base_p + smc_lean * 0.30))
+        flags = {}
+        for g in ALL_GENES:
+            p = smc_p if g in SMC_GENES else base_p
+            flags[g] = random.random() < p
         # Ensure at least one exec mode is on
         if not any(flags[e] for e in EXECUTION_GENES):
             flags[random.choice(EXECUTION_GENES)] = True
@@ -113,6 +158,7 @@ class Genome:
         # Ensure ema_slow > ema_fast
         if params["ema_slow"] <= params["ema_fast"]:
             params["ema_slow"] = params["ema_fast"] + 5
+        _repair_smc_coherence(flags)
         return cls(flags=flags, params=params, generation=gen, method="random")
 
     # ── Genetic operations ──
@@ -133,14 +179,27 @@ class Genome:
             params["end_hour"] = min(23, params["start_hour"] + 4)
         if params["ema_slow"] <= params["ema_fast"]:
             params["ema_slow"] = params["ema_fast"] + 5
+        _repair_smc_coherence(flags)
         return cls(flags=flags, params=params, generation=gen, method="crossover",
                    parent_a=a.id, parent_b=b.id)
 
-    def mutate(self, intensity: float = 0.10, gen: int = 0) -> "Genome":
-        """Bit-flip mutation + small param perturbation."""
+    def mutate(self, intensity: float = 0.10, gen: int = 0,
+               group_intensities: Optional[dict] = None) -> "Genome":
+        """Bit-flip mutation + small param perturbation.
+
+        group_intensities maps gene-name prefix → per-group flip rate. Used
+        by the SMC lane to boost SMC exploration during cold-start
+        (e.g. {'use_sig_smc_': 0.30, 'sl_anchor_smc_': 0.25}).
+        """
+        def rate_for(gene: str) -> float:
+            if group_intensities:
+                for prefix, r in group_intensities.items():
+                    if gene.startswith(prefix): return r
+            return intensity
+
         flags = dict(self.flags)
         for g in ALL_GENES:
-            if random.random() < intensity:
+            if random.random() < rate_for(g):
                 flags[g] = not flags[g]
         params = dict(self.params)
         for p, (lo, hi) in CONT_PARAMS.items():
@@ -161,6 +220,7 @@ class Genome:
             params["end_hour"] = min(23, params["start_hour"] + 4)
         if params["ema_slow"] <= params["ema_fast"]:
             params["ema_slow"] = params["ema_fast"] + 5
+        _repair_smc_coherence(flags)
         return Genome(flags=flags, params=params, generation=gen, method="mutation",
                       parent_a=self.id)
 
@@ -181,6 +241,24 @@ class Genome:
         return cls(flags=d.get("flags", {}), params=d.get("params", {}),
                    generation=d.get("generation", 0), method=d.get("method", "?"),
                    parent_a=d.get("parent_a"), parent_b=d.get("parent_b"))
+
+
+def _repair_smc_coherence(flags: dict) -> None:
+    """SL/TP modifiers that anchor to a particular SMC concept only make sense
+    when the matching SMC signal is also on — otherwise the GA wastes cycles
+    on incoherent DNA (e.g. an SL hugging an OB the genome never reads).
+
+    Pulls the needed signal flags ON when a placement gene is enabled.
+    """
+    if flags.get("sl_anchor_smc_ob") and not flags.get("use_sig_smc_ob"):
+        flags["use_sig_smc_ob"] = True
+    if flags.get("tp_target_smc_ob") and not flags.get("use_sig_smc_ob"):
+        flags["use_sig_smc_ob"] = True
+    if flags.get("tp_target_smc_liq") and not (
+        flags.get("use_sig_smc_liq_sweep") or flags.get("use_sig_smc_idm")
+    ):
+        # liq target only fires if the genome can detect liquidity events
+        flags["use_sig_smc_liq_sweep"] = True
 
 
 # ─── Scoring functions ───
@@ -234,16 +312,17 @@ def algory_purge_check(stats: dict, thresholds: dict = None) -> tuple[bool, str]
 
 if __name__ == "__main__":
     print(f"Total genes: {len(ALL_GENES)}")
-    print(f"  execution: {len(EXECUTION_GENES)}")
-    print(f"  bias:      {len(BIAS_GENES)}")
-    print(f"  signal:    {len(SIGNAL_GENES)}")
-    print(f"  filter:    {len(FILTER_GENES)}")
-    print(f"  exit:      {len(EXIT_GENES)}")
+    print(f"  execution:     {len(EXECUTION_GENES)}")
+    print(f"  bias:          {len(BIAS_GENES)}")
+    print(f"  signal:        {len(SIGNAL_GENES)} ({len([g for g in SIGNAL_GENES if 'smc' in g])} SMC)")
+    print(f"  filter:        {len(FILTER_GENES)} ({len([g for g in FILTER_GENES if 'smc' in g])} SMC)")
+    print(f"  exit:          {len(EXIT_GENES)}")
+    print(f"  smc_placement: {len(SMC_PLACEMENT_GENES)}")
     print(f"Continuous params: {len(CONT_PARAMS)}")
     print()
     g = Genome.random()
     print(f"Random genome {g.id}:")
-    print(f"  active genes: {sum(g.flags.values())} / 48")
+    print(f"  active genes: {sum(g.flags.values())} / {len(ALL_GENES)}")
     print(f"  active: {[k for k,v in g.flags.items() if v][:6]}...")
     print(f"  sl_mult={g.params['sl_atr_mult']}  tp_mult={g.params['tp_atr_mult']}  hours={g.params['start_hour']}-{g.params['end_hour']}")
     print()

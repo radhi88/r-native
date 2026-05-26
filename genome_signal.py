@@ -416,6 +416,127 @@ except Exception as _e:
     print(f"[genome_signal] no_fri_open filter not loaded: {_e}", flush=True)
 
 
+# ─── SMC signal evaluators ──────────────────────────────────────
+# Read the optional `smc` sub-dict that brain_server attaches to each TF
+# snapshot (populated by smc_engine.compute_smc_snapshot). If `smc` is
+# missing or empty, evaluators return (0, "no smc data") so old snapshots
+# from before Phase 4 wiring stay compatible.
+def _smc_h1(snap):   return (_h1(snap).get("smc") or {}) if _h1(snap) else {}
+def _smc_h4(snap):   return (_h4(snap).get("smc") or {}) if _h4(snap) else {}
+
+
+def _sig_smc_ob(snap):
+    """+1 BUY when bid sits inside a fresh bullish OB,
+       -1 SELL when inside a fresh bearish OB."""
+    smc = _smc_h1(snap); bid = _bid(snap)
+    if not smc or not bid: return 0, "no smc data"
+    ob_b = smc.get("fresh_ob_below")
+    if ob_b and ob_b["bottom"] <= bid <= ob_b["top"]:
+        return +1, f"in bullish OB [{ob_b['bottom']:.5f}-{ob_b['top']:.5f}] str={ob_b.get('strength',0):.2f}"
+    ob_a = smc.get("fresh_ob_above")
+    if ob_a and ob_a["bottom"] <= bid <= ob_a["top"]:
+        return -1, f"in bearish OB [{ob_a['bottom']:.5f}-{ob_a['top']:.5f}] str={ob_a.get('strength',0):.2f}"
+    return 0, "no OB touch"
+
+
+def _sig_smc_fvg(snap):
+    """+1 when bid is filling a fresh bullish FVG (mitigation entry)."""
+    smc = _smc_h1(snap); bid = _bid(snap)
+    if not smc or not bid: return 0, "no smc data"
+    for fvg in smc.get("fresh_fvg_bull", []):
+        if fvg["bottom"] <= bid <= fvg["top"] and fvg.get("filled_pct", 0) < 0.5:
+            return +1, f"in bull FVG [{fvg['bottom']:.5f}-{fvg['top']:.5f}]"
+    for fvg in smc.get("fresh_fvg_bear", []):
+        if fvg["bottom"] <= bid <= fvg["top"] and fvg.get("filled_pct", 0) < 0.5:
+            return -1, f"in bear FVG [{fvg['bottom']:.5f}-{fvg['top']:.5f}]"
+    return 0, "no FVG fill"
+
+
+def _sig_smc_bos(snap):
+    """Vote in the direction of the last confirmed BOS (continuation bias)."""
+    smc = _smc_h1(snap)
+    bos = smc.get("last_bos") if smc else None
+    if not bos or not bos.get("confirmed"): return 0, "no confirmed BOS"
+    age = bos.get("age_bars", 999)
+    if age > 40: return 0, f"BOS stale ({age}b)"
+    return (+1 if bos["direction"] == "UP" else -1), f"BOS {bos['direction']} age={age}b"
+
+
+def _sig_smc_choch(snap):
+    """Vote in the direction of the most recent CHoCH (reversal bias)."""
+    smc = _smc_h1(snap)
+    ch = smc.get("last_choch") if smc else None
+    if not ch: return 0, "no recent CHoCH"
+    age = ch.get("age_bars", 999)
+    if age > 15: return 0, f"CHoCH stale ({age}b)"
+    return (+1 if ch["direction"] == "UP" else -1), f"CHoCH {ch['direction']} age={age}b"
+
+
+def _sig_smc_liq_sweep(snap):
+    """Vote against the side whose stops were swept (stop-hunt reversal).
+    Sweep ABOVE (BUY-side stops taken) + reclaim → SELL signal."""
+    smc = _smc_h1(snap)
+    sw = smc.get("recent_liq_sweep") if smc else None
+    if not sw: return 0, "no sweep"
+    if sw.get("age_bars", 999) > 5: return 0, "sweep stale"
+    if not sw.get("reclaim"): return 0, "no reclaim"
+    return (-1 if sw["side"] == "BUY" else +1), f"sweep {sw['side']} reclaimed"
+
+
+def _sig_smc_idm(snap):
+    """Vote in IDM direction once inducement has been taken."""
+    smc = _smc_h1(snap)
+    idm = smc.get("idm_status") if smc else None
+    if not idm or not idm.get("swept"): return 0, "no idm swept"
+    age = idm.get("age_bars", 999)
+    if age > 20: return 0, "idm stale"
+    return (+1 if idm["side"] == "UP" else -1), f"IDM {idm['side']} swept"
+
+
+SIGNAL_EVALUATORS.update({
+    "use_sig_smc_ob":        _sig_smc_ob,
+    "use_sig_smc_fvg":       _sig_smc_fvg,
+    "use_sig_smc_bos":       _sig_smc_bos,
+    "use_sig_smc_choch":     _sig_smc_choch,
+    "use_sig_smc_liq_sweep": _sig_smc_liq_sweep,
+    "use_sig_smc_idm":       _sig_smc_idm,
+})
+
+
+def _filt_smc_fresh_only(snap):
+    """Block if the OB the genome is reacting to has already been tested."""
+    smc = _smc_h1(snap)
+    if not smc: return False, "no smc data"
+    ob = smc.get("fresh_ob_below") or smc.get("fresh_ob_above")
+    if ob and ob.get("tested_count", 0) > 0:
+        return True, f"OB tested {ob['tested_count']}× already"
+    return False, "fresh"
+
+
+def _filt_smc_htf_alignment(snap):
+    """Block if H4 BOS direction conflicts with H1 BOS direction."""
+    h1 = (_smc_h1(snap) or {}).get("last_bos")
+    h4 = (_smc_h4(snap) or {}).get("last_bos")
+    if h1 and h4 and h1.get("direction") != h4.get("direction"):
+        return True, f"h1={h1['direction']} vs h4={h4['direction']}"
+    return False, "htf aligned"
+
+
+def _filt_smc_idm_required(snap):
+    """Block unless inducement has been swept on this TF."""
+    idm = (_smc_h1(snap) or {}).get("idm_status")
+    if not idm or not idm.get("swept"):
+        return True, "idm not swept yet"
+    return False, "idm swept"
+
+
+FILTER_EVALUATORS.update({
+    "use_filter_smc_fresh_only":    _filt_smc_fresh_only,
+    "use_filter_smc_htf_alignment": _filt_smc_htf_alignment,
+    "use_filter_smc_idm_required":  _filt_smc_idm_required,
+})
+
+
 # ─── Main entry point ───
 def evaluate_council(snapshot: dict) -> dict:
     """ENSEMBLE COUNCIL — runs EVERY registered signal + bias on the live
