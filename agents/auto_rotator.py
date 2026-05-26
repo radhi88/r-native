@@ -55,6 +55,17 @@ class AutoRotator(Agent):
     MIN_COMPETITOR_TRADES = 3      # competitor needs some sample too
     COOLDOWN_HOURS        = 6      # don't rotate same symbol twice in 6h
 
+    # PUNT rule (cycle 16): when the primary is clearly bleeding but no
+    # competitor has fired enough live trades to qualify the normal way,
+    # take a calculated gamble and promote the top-scoring competitor.
+    # This unblocks the auto-rotation when the executor consistently picks
+    # the primary slot (starving competitors of trades).
+    PUNT_PRIMARY_PNL_FLOOR   = -1.00   # primary losing ≥$1
+    PUNT_PRIMARY_MIN_TRADES  = 3       # at least 3 trades to call it bleeding
+    PUNT_COMP_MAX_SCORE_GAP  = 10.0    # competitor's backtest score within 10
+                                        # of primary's (so we're not promoting
+                                        # a clearly weaker genome blindly)
+
     def _load_hof(self) -> dict:
         try:
             from r_native.hall_of_fame import load_index
@@ -130,7 +141,13 @@ class AutoRotator(Agent):
                 # primary was killed — definitely look for replacement
                 pass
             elif primary_stats["trades"] < self.MIN_PRIMARY_TRADES:
-                continue
+                # Normal rotation needs 5+ primary trades, but PUNT can
+                # fire with as few as PUNT_PRIMARY_MIN_TRADES (default 3)
+                # if the primary is clearly bleeding. Don't continue — let
+                # the PUNT logic decide below.
+                if not (primary_stats["trades"] >= self.PUNT_PRIMARY_MIN_TRADES
+                        and primary_stats["pnl"] <= self.PUNT_PRIMARY_PNL_FLOOR):
+                    continue
 
             # Find best competitor (qualifies + not killed + beats primary)
             best = None
@@ -146,6 +163,42 @@ class AutoRotator(Agent):
                 if best is None or cs["pnl"] > best["pnl"]:
                     best = cs
                     best["edge"] = edge
+
+            # PUNT fallback: bleeding primary, no qualified competitor by
+            # live-edge rule, but a high-score competitor exists with no
+            # live history. Take the gamble — give it the slot, demote
+            # the proven loser.
+            punt_reason = None
+            if (best is None
+                    and not primary_stats["killed"]
+                    and primary_stats["trades"] >= self.PUNT_PRIMARY_MIN_TRADES
+                    and primary_stats["pnl"] <= self.PUNT_PRIMARY_PNL_FLOOR):
+                # Find highest-score, untested competitor within score gap
+                punt_candidate = None
+                # Load HoF data freshly for score lookups
+                for comp in competitors:
+                    cid = comp.get("id") if isinstance(comp, dict) else comp
+                    if not cid or cid == primary_gid: continue
+                    centry = hof.get(cid) or {}
+                    if centry.get("killed") or centry.get("pinned"): continue
+                    cscore = float(centry.get("score") or 0)
+                    clive  = int(centry.get("live_trades") or 0)
+                    # Look for untested competitors (avoids re-punting same loser)
+                    if clive > 0: continue
+                    # Within score gap of primary's backtest score
+                    primary_score = float((hof.get(primary_gid) or {}).get("score") or 0)
+                    if cscore < primary_score - self.PUNT_COMP_MAX_SCORE_GAP:
+                        continue
+                    if punt_candidate is None or cscore > punt_candidate["score"]:
+                        punt_candidate = self._genome_stats(hof, cid)
+                        punt_candidate["score"] = cscore
+                if punt_candidate:
+                    best = punt_candidate
+                    best["edge"] = -primary_stats["pnl"]  # synthetic edge
+                    punt_reason = (f"PUNT — primary {primary_gid} bleeding "
+                                    f"${primary_stats['pnl']:+.2f}/{primary_stats['trades']}t, "
+                                    f"competitor {best['id']} untested but score "
+                                    f"{best['score']:.1f}")
 
             if not best: continue
 
@@ -201,12 +254,15 @@ class AutoRotator(Agent):
                     "promoted": best["id"],
                     "edge":     round(best["edge"], 2),
                 })
+                label = "🎲 PUNT" if punt_reason else "🔄 rotated"
+                detail = punt_reason or (
+                    f"(${best['edge']:+.2f} live edge, "
+                    f"{best['trades']}t WR {best['wr']:.0f}%)")
                 emit_insight(self.name, "ACT",
-                    f"🔄 rotated {symbol}: {primary_gid} → {best['id']} "
-                    f"(${best['edge']:+.2f} live edge, {best['trades']}t WR {best['wr']:.0f}%)",
+                    f"{label} {symbol}: {primary_gid} → {best['id']} {detail}",
                     data={"symbol": symbol, "old": primary_gid, "new": best["id"],
                            "edge": best["edge"], "old_pnl": primary_stats["pnl"],
-                           "new_pnl": best["pnl"]},
+                           "new_pnl": best["pnl"], "punt": bool(punt_reason)},
                     action="genome_rotated")
             except Exception as e:
                 emit_insight(self.name, "WARN",
