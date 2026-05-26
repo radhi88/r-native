@@ -722,9 +722,48 @@ def reconcile_closed_positions(state: dict, mode: str):
 
 def _pick_best_symbol(state: dict) -> str:
     """Multi-symbol scanner: returns the highest-quality TRADEABLE symbol now.
-       Skips symbols that are: held same-side, symbol_learning BLOCKED, or
-       exposure_guard cool-down/DD-paused. Falls through to next-best until
-       one passes. Returns R_SYMBOL if nothing is eligible."""
+
+    PRIORITY: symbols with a deployed_genome are checked FIRST — those are
+    the user's hand-picked strategies and shouldn't lose to a random
+    high-quality scan candidate that may not even have a genome.
+    """
+    # ── PRIORITY 0: symbols with deployed_genome get first look ──
+    # If any of them has a passing trade_gate, return immediately. This
+    # makes "DEPLOY a genome on BTCUSDm" actually mean what the user
+    # thinks it means: the executor focuses on that symbol.
+    try:
+        from pathlib import Path as _P
+        import json as _j
+        cfg_dir = _P(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs")
+        deployed_syms = []
+        if cfg_dir.exists():
+            for p in cfg_dir.glob("*.json"):
+                try:
+                    cfg = _j.loads(p.read_text(encoding="utf-8"))
+                    dg = cfg.get("deployed_genome") or {}
+                    if dg.get("id") and (dg.get("flags") or {}) \
+                       and cfg.get("tradeable", True):
+                        deployed_syms.append((p.stem, float(dg.get("score") or 0)))
+                except Exception: continue
+        # Rank deployed symbols by genome score (highest first)
+        deployed_syms.sort(key=lambda x: x[1], reverse=True)
+        held = { (p.symbol, "BUY" if p.type == 0 else "SELL")
+                  for p in (_r_positions() or []) }
+        held_syms = {sym for sym, _ in held}
+        for sym, score in deployed_syms:
+            if sym in held_syms: continue
+            # NOTE: we intentionally SKIP the symbol_learning trust check here.
+            # If the user explicitly deployed a genome on this symbol, they
+            # want it to trade. trust_score is a heuristic from auto-scan;
+            # a manual deploy is a stronger signal that overrides it.
+            state["best_symbol_now"]     = sym
+            state["best_symbol_quality"] = 100  # deployed always wins
+            state["scanner_mode"]        = "deployed_priority"
+            return sym
+    except Exception as _e:
+        pass
+
+    # ── PRIORITY 1: fallback to ranked scan of all tradeable symbols ──
     try:
         from friday_v3.algory.r_multi_symbol import rank_symbols
         ranking = rank_symbols(max_symbols=80)
