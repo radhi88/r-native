@@ -60,6 +60,10 @@ class DeployAssistant(Agent):
     EVICT_BIG_EDGE_MIN_AGE   = 0.5    # even BIG_EDGE waits 30min so new blood
                                        # gets a chance to fire its first trade
                                        # before being shuffled out by next-best
+    # Elite fast-track (cycle 20): a candidate scoring ≥ELITE_SCORE skips
+    # all age waits — the gene pool has earned that this is high-quality
+    # blood worth deploying immediately. Auto_rotator then races it live.
+    ELITE_SCORE              = 70.0   # auto-pin threshold = elite tier
 
     def _load_all_configs(self) -> dict:
         """Return {symbol: cfg_dict}."""
@@ -160,11 +164,14 @@ class DeployAssistant(Agent):
                 # Eviction triggers (either-or):
                 #   BIG_EDGE alone (score gap is huge — always evict)
                 #   OR (MIN_EDGE AND idle 2h+ with no live trades)
+                # ELITE: candidate score ≥70 — skip ALL age waits, deploy now
+                if score >= self.ELITE_SCORE and edge > 0:
+                    evict_target = weakest
                 # BIG_EDGE: clear upgrade, but still give the squatter at
                 # least EVICT_BIG_EDGE_MIN_AGE (default 30 min) to fire its
                 # first trade. Otherwise newly-deployed genomes never get
                 # to prove themselves before being shuffled out.
-                if (edge >= self.EVICT_BIG_SCORE_EDGE
+                elif (edge >= self.EVICT_BIG_SCORE_EDGE
                         and weakest["slot_age_h"] >= self.EVICT_BIG_EDGE_MIN_AGE):
                     evict_target = weakest
                 elif (edge >= self.EVICT_MIN_SCORE_EDGE
