@@ -57,12 +57,27 @@ class DeploymentStatus(Agent):
             "is_primary":  is_primary,
         }
 
+    def _load_regimes(self) -> dict:
+        """Pull current regime per symbol from market_scan.json (written
+        every 90s by market_scanner). Returns {symbol: 'TREND_UP'|'DEAD'|…}.
+        Missing file = empty dict, callers tolerate it."""
+        scan_path = Path(r"C:\Users\Radhi\MT5\data\r_native\market_scan.json")
+        if not scan_path.exists(): return {}
+        try:
+            import json as _j
+            scan = _j.loads(scan_path.read_text(encoding="utf-8"))
+            return {sym: data.get("regime", "?")
+                    for sym, data in (scan.get("symbols") or {}).items()}
+        except Exception:
+            return {}
+
     def tick(self):
         if not SYMBOL_CFG_DIR.exists(): return
         try:
             from r_native.hall_of_fame import load_index
             hof = load_index() or {}
         except Exception: return
+        regimes = self._load_regimes()
 
         by_symbol = {}
         for path in SYMBOL_CFG_DIR.glob("*.json"):
@@ -86,6 +101,7 @@ class DeploymentStatus(Agent):
                 "competitors": comp_briefs,
                 "comp_count":  len(comp_briefs),
                 "max_comps":   3,
+                "regime":      regimes.get(path.stem, "?"),
             }
 
         out = {
@@ -103,18 +119,20 @@ class DeploymentStatus(Agent):
         if (now_s - self._last_summary_ts) < self.SUMMARY_EVERY_SECONDS:
             return
 
-        # Build compact one-line summary, only for symbols with live data OR
-        # high-score primaries (visible signals worth surfacing)
+        # Build compact one-line summary with regime hint per symbol.
+        # Format: BTC[TRND]=4F5F59[72📌|7t+5.79] +3
         notable = []
+        regime_short = {"TREND_UP": "↑", "TREND_DOWN": "↓",
+                         "RANGE": "↔", "DEAD": "·"}
         for sym, data in by_symbol.items():
             p = data["primary"]
-            # Compact format: BTC=4F5F59[72📌|7t+5.79] +3
             tag = "📌" if p["pinned"] else ""
             pnl_str = (f"+{p['live_pnl']}" if p["live_pnl"] >= 0
                         else f"{p['live_pnl']}")
             short_sym = sym.replace("USDm", "").replace("m", "")[:4]
+            r_glyph = regime_short.get(data.get("regime"), "?")
             notable.append(
-                f"{short_sym}={p['short']}[{p['score']:.0f}{tag}"
+                f"{short_sym}{r_glyph}={p['short']}[{p['score']:.0f}{tag}"
                 f"|{p['live_trades']}t {pnl_str}] +{data['comp_count']}"
             )
 
