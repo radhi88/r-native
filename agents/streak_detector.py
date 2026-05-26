@@ -44,6 +44,8 @@ class StreakDetector(Agent):
 
     HOT_STREAK_MIN  = 3   # ≥3 wins in a row to fire
     COLD_STREAK_MIN = 3   # ≥3 losses in a row to fire
+    EVICT_ON_COLD_STREAK = 5  # ≥5 losses in a row: actively REMOVE from
+                               # symbol's competitor list (cycle 34)
     LOOKBACK_HOURS  = 48
 
     def _load_state(self) -> dict:
@@ -111,6 +113,43 @@ class StreakDetector(Agent):
             }
         return out
 
+    def _evict_from_competitors(self, gid: str, symbol: str,
+                                  streak_len: int, trailing_pnl: float):
+        """Remove cold-streak genome from the symbol's competitor list.
+        Doesn't touch primary slot (auto_rotator handles that). Skips
+        pinned genomes."""
+        try:
+            from r_native.hall_of_fame import load_index
+            hof_entry = (load_index() or {}).get(gid) or {}
+            if hof_entry.get("pinned"):
+                return   # never evict pinned
+            from pathlib import Path
+            import json as _j
+            cfg_path = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{symbol}.json"
+            if not cfg_path.exists(): return
+            cfg = _j.loads(cfg_path.read_text(encoding="utf-8"))
+            if (cfg.get("deployed_genome") or {}).get("id") == gid:
+                return   # primary slot — auto_rotator's responsibility
+            comps = cfg.get("competitors") or []
+            new_comps = [c for c in comps
+                          if (c.get("id") if isinstance(c, dict) else c) != gid]
+            if len(new_comps) == len(comps):
+                return   # not a competitor on this symbol
+            cfg["competitors"] = new_comps
+            tmp = cfg_path.with_suffix(".json.tmp")
+            tmp.write_text(_j.dumps(cfg, ensure_ascii=False, indent=2),
+                            encoding="utf-8")
+            tmp.replace(cfg_path)
+            emit_insight(self.name, "ACT",
+                f"⏏ EVICTED {gid} from {symbol} competitors "
+                f"({streak_len}-loss streak, ${trailing_pnl:+.2f} run)",
+                data={"gid": gid, "symbol": symbol, "streak": streak_len,
+                       "trailing_pnl": trailing_pnl},
+                action="cold_streak_evicted")
+        except Exception as _e:
+            emit_insight(self.name, "WARN",
+                f"evict failed for {gid} on {symbol}: {_e}")
+
     def tick(self):
         try:
             import MetaTrader5 as mt5
@@ -163,6 +202,13 @@ class StreakDetector(Agent):
                     f"🥶 cold streak: {nick} ({gid}) {length} losses in a row on "
                     f"{info['symbol']} (${info['trailing_pnl']:+.2f} run) — "
                     f"rotation candidate")
+                # Cycle 34: take action on persistent cold streaks. If
+                # genome has lost EVICT_ON_COLD_STREAK+ in a row, REMOVE it
+                # from any symbol's competitor list. Stops it firing more
+                # trades until it gets re-added via deploy_assistant later.
+                if length >= self.EVICT_ON_COLD_STREAK:
+                    self._evict_from_competitors(gid, info["symbol"], length,
+                                                  info["trailing_pnl"])
             notable_changes.append((gid, direction, length))
             new_state[gid] = info
 
