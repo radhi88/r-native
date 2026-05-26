@@ -46,6 +46,12 @@ class PositionAging(Agent):
     STAGNATION_PL_BAND    = 0.30    # |pl| < $0.30 = stagnant
     SLOW_BLEED_AGE_HOURS  = 3.0     # was 4.0 — bleed for 3h is enough
     SLOW_BLEED_PL_FLOOR   = -0.50   # < -$0.50 after 3h = cut
+    # Fast-bleed tier (cycle 15): catches volatility-hunter straddle fakeouts
+    # that lose $1.50+ within an hour. Without this, USDCHFm BUY-type fast
+    # losers grind down to SL (-$2.50+) before slow_bleed (3h) triggers.
+    # Active 24/7 — unlike night_shift's -$1 floor that only runs at night.
+    FAST_BLEED_AGE_HOURS  = 1.0
+    FAST_BLEED_PL_FLOOR   = -1.50
 
     # Protections
     WINNER_PROTECT_PL     = 1.00    # > $1 = always keep (let trail manage)
@@ -87,7 +93,11 @@ class PositionAging(Agent):
         if profit >= self.EARLY_PROTECT_PL and age_h < self.MAX_AGE_HOURS:
             return False, f"young winner ${profit:+.2f}"
 
-        # Close triggers
+        # Close triggers (in priority order — fast bleed first to catch
+        # straddle-fakeout situations before they reach SL)
+        if (age_h >= self.FAST_BLEED_AGE_HOURS
+                and profit <= self.FAST_BLEED_PL_FLOOR):
+            return True, f"fast bleed ({age_h:.1f}h, ${profit:+.2f})"
         if age_h >= self.MAX_AGE_HOURS:
             return True, f"max age {age_h:.1f}h ≥ {self.MAX_AGE_HOURS}h"
         if (age_h >= self.STAGNATION_AGE_HOURS
