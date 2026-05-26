@@ -104,11 +104,45 @@ def record_close(symbol: str, side: str, ticket: int, profit: float,
 # Gate: can_open
 # ───────────────────────────────────────────────────────────────────────
 
+def _reconcile_with_mt5(state: dict) -> bool:
+    """Stale ticket cleanup — remove tickets from open_tickets that no
+    longer exist as actual MT5 positions. The executor calls record_close
+    on trades it cuts, but SL/TP hits + agent-driven closes can bypass it,
+    leaving the state thinking there are positions that aren't really
+    open. Result: exposure_guard falsely blocks legitimate new entries
+    ("already 3 open" when 0 are actually open).
+
+    Returns True if any cleanup happened (caller should re-save state).
+    """
+    try:
+        import MetaTrader5 as _mt5
+        if not _mt5.initialize(): _mt5.initialize()
+        actual_tickets = {int(p.ticket) for p in (_mt5.positions_get() or [])
+                          if int(p.magic) == 20260605}
+    except Exception:
+        return False
+    changed = False
+    for sym, info in state.items():
+        if sym.startswith("_"): continue
+        if not isinstance(info, dict): continue
+        old_tickets = list(info.get("open_tickets", []) or [])
+        live_tickets = [t for t in old_tickets if int(t) in actual_tickets]
+        if len(live_tickets) != len(old_tickets):
+            info["open_tickets"] = live_tickets
+            changed = True
+    return changed
+
+
 def can_open(symbol: str, side: str) -> tuple[bool, str]:
     """Apply all four guards. Returns (allowed, reason).
 
     Note: side is "BUY"/"SELL"; reason is human-readable and goes to the log."""
     state = _load()
+    # Cycle 28 fix: reconcile state with actual MT5 positions before
+    # checking gates. Stops false-positive "already N open" blocks when
+    # those positions actually closed via SL/TP/aging.
+    if _reconcile_with_mt5(state):
+        _save(state)
     sym = state.get(symbol, {})
     now = time.time()
 
