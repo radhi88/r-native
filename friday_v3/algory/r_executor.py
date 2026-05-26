@@ -750,15 +750,19 @@ def _pick_best_symbol(state: dict) -> str:
         held = { (p.symbol, "BUY" if p.type == 0 else "SELL")
                   for p in (_r_positions() or []) }
         held_syms = {sym for sym, _ in held}
-        for sym, score in deployed_syms:
+        # Round-robin index per cycle so all deployed symbols get checked
+        # over time, not just the highest-scored one. The deployed_syms list
+        # is already sorted highest-score-first; we rotate through them.
+        rr_idx = int(state.get("_deployed_rr_idx", 0))
+        n = len(deployed_syms)
+        for offset in range(n):
+            sym, score = deployed_syms[(rr_idx + offset) % n]
             if sym in held_syms: continue
-            # NOTE: we intentionally SKIP the symbol_learning trust check here.
-            # If the user explicitly deployed a genome on this symbol, they
-            # want it to trade. trust_score is a heuristic from auto-scan;
-            # a manual deploy is a stronger signal that overrides it.
+            # NOTE: skip symbol_learning trust check — deploy is explicit user intent
             state["best_symbol_now"]     = sym
             state["best_symbol_quality"] = 100  # deployed always wins
             state["scanner_mode"]        = "deployed_priority"
+            state["_deployed_rr_idx"]    = (rr_idx + offset + 1) % n
             return sym
     except Exception as _e:
         pass

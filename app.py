@@ -3779,7 +3779,8 @@ def main():
     # are detected and reused so the user can still split if they want.
     try:
         from r_native.embedded_services import start_all as _start_services
-        _svc = _start_services(executor_mode="PAPER")
+        # LIVE = real MT5 orders. User explicitly approved.
+        _svc = _start_services(executor_mode="LIVE")
         print(f"[unified] services: {_svc}", flush=True)
     except Exception as _e:
         print(f"[unified] failed to start embedded services: {_e}", flush=True)
