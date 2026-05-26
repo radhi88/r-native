@@ -50,6 +50,14 @@ class DeployAssistant(Agent):
     DEPLOY_AGE_WINDOW_HOURS  = 24    # only deploy genomes < 24h old
     MAX_DEPLOYS_PER_TICK     = 1     # one at a time, evaluate before next
 
+    # Eviction thresholds (cycle 11 fix): when slots are full but a strictly
+    # better candidate appears, evict the weakest competitor instead of
+    # silently dropping the new genome. Without this, a single score-32
+    # competitor squatting an idle slot blocks a score-50 newcomer forever.
+    EVICT_MIN_SCORE_EDGE     = 10.0   # candidate must beat lowest by ≥10
+    EVICT_BIG_SCORE_EDGE     = 15.0   # ≥15 = evict regardless of age (clear upgrade)
+    EVICT_MIN_IDLE_HOURS     = 2.0    # standard evict: idle 2h+ AND 0 live trades
+
     def _load_all_configs(self) -> dict:
         """Return {symbol: cfg_dict}."""
         out = {}
@@ -114,10 +122,49 @@ class DeployAssistant(Agent):
             if self._genome_is_already_deployed(gid, all_configs):
                 continue
 
-            # Symbol must have room for another competitor
+            # Symbol slot check — if room, just add. If full, see if we can evict.
             _path, cfg = all_configs[sym]
             comps = cfg.get("competitors") or []
-            if len(comps) >= self.MAX_COMPETITORS_PER_SYM: continue
+            evict_target = None
+            if len(comps) >= self.MAX_COMPETITORS_PER_SYM:
+                # Find evictable competitor (lowest score with eviction edge)
+                ranked = []
+                for c in comps:
+                    cid = c.get("id") if isinstance(c, dict) else c
+                    centry = hof.get(cid) or {}
+                    cscore = float(centry.get("score") or 0)
+                    cpinned = bool(centry.get("pinned"))
+                    clive = int(centry.get("live_trades") or 0)
+                    # Age in this slot (from deploy_history or deployed_at)
+                    deployed_at = None
+                    if isinstance(c, dict):
+                        deployed_at = c.get("deployed_at")
+                    slot_age_h = 0.0
+                    if deployed_at:
+                        try:
+                            dt = datetime.fromisoformat(deployed_at.replace("Z","+00:00"))
+                            slot_age_h = (now - dt).total_seconds() / 3600
+                        except Exception: pass
+                    ranked.append({
+                        "id": cid, "score": cscore, "pinned": cpinned,
+                        "live": clive, "slot_age_h": slot_age_h,
+                    })
+                # Lowest score that ISN'T pinned
+                non_pinned = [r for r in ranked if not r["pinned"]]
+                if not non_pinned: continue
+                weakest = min(non_pinned, key=lambda r: r["score"])
+                edge = score - weakest["score"]
+                # Eviction triggers (either-or):
+                #   BIG_EDGE alone (score gap is huge — always evict)
+                #   OR (MIN_EDGE AND idle 2h+ with no live trades)
+                if edge >= self.EVICT_BIG_SCORE_EDGE:
+                    evict_target = weakest
+                elif (edge >= self.EVICT_MIN_SCORE_EDGE
+                      and weakest["live"] == 0
+                      and weakest["slot_age_h"] >= self.EVICT_MIN_IDLE_HOURS):
+                    evict_target = weakest
+                else:
+                    continue   # no room, can't evict — skip silently
 
             candidates.append({
                 "id":      gid,
@@ -127,6 +174,7 @@ class DeployAssistant(Agent):
                 "nickname": (entry.get("nickname") or gid)[:35],
                 "birth":   entry.get("birth_method", "?"),
                 "parents": entry.get("parents") or [],
+                "evict":   evict_target,
             })
 
         if not candidates:
@@ -139,13 +187,23 @@ class DeployAssistant(Agent):
             sym = cand["symbol"]
             path, cfg = all_configs[sym]
             comps = list(cfg.get("competitors") or [])
+            # If this candidate triggered an eviction, drop the evictee first
+            evict_note = ""
+            if cand.get("evict"):
+                evictee_id = cand["evict"]["id"]
+                comps = [c for c in comps
+                          if (c.get("id") if isinstance(c, dict) else c) != evictee_id]
+                evict_note = (f" (evicted {evictee_id} score "
+                              f"{cand['evict']['score']:.1f}, idle "
+                              f"{cand['evict']['slot_age_h']:.1f}h)")
             comps.append({
                 "id":            cand["id"],
                 "score":         cand["score"],
                 "deployed_at":   datetime.now(timezone.utc).isoformat(),
                 "deployed_by":   self.name,
                 "deploy_reason": f"score {cand['score']:.1f} "
-                                  f"({cand['birth']}, age {cand['age_h']}h)",
+                                  f"({cand['birth']}, age {cand['age_h']}h)"
+                                  + evict_note,
             })
             cfg["competitors"] = comps
 
@@ -163,10 +221,14 @@ class DeployAssistant(Agent):
 
             if self._save_config_atomically(path, cfg):
                 deployed.append(cand)
+                evict_str = ""
+                if cand.get("evict"):
+                    evict_str = f" · ⏏ evicted {cand['evict']['id']} (score {cand['evict']['score']:.1f})"
                 emit_insight(self.name, "ACT",
                     f"🆕 deployed {cand['nickname']} ({cand['id']}, "
                     f"score {cand['score']:.1f}) as competitor on {sym} — "
-                    f"now {len(comps)}/{self.MAX_COMPETITORS_PER_SYM} slots used",
+                    f"now {len(comps)}/{self.MAX_COMPETITORS_PER_SYM} slots used"
+                    + evict_str,
                     data={"deployed": cand, "comp_count": len(comps)},
                     action="genome_deployed")
             else:
