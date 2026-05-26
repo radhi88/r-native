@@ -58,6 +58,7 @@ def _load_default_agents():
         ("market_scanner",      "MarketScanner"),
         ("regime_scaler",       "RegimeScaler"),
         ("auto_rotator",        "AutoRotator"),
+        ("side_balance_monitor","SideBalanceMonitor"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",

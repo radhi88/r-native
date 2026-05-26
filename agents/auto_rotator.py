@@ -102,7 +102,24 @@ class AutoRotator(Agent):
             primary_gid = (cfg.get("deployed_genome") or {}).get("id")
             if not primary_gid: continue
             competitors = cfg.get("competitors") or []
-            if not isinstance(competitors, list) or len(competitors) < 2: continue
+            if not isinstance(competitors, list): continue
+
+            # ── Hygiene pass: primary shouldn't appear in its own competitors
+            # list. Some legacy configs and seeder scripts left this state.
+            # Quietly self-heal on every tick — no insight needed.
+            cleaned_comps = [c for c in competitors
+                              if (c.get("id") if isinstance(c, dict) else c) != primary_gid]
+            if len(cleaned_comps) != len(competitors):
+                cfg["competitors"] = cleaned_comps
+                competitors = cleaned_comps
+                try:
+                    _tmp = path.with_suffix(".json.tmp")
+                    _tmp.write_text(json.dumps(cfg, ensure_ascii=False, indent=2),
+                                     encoding="utf-8")
+                    _tmp.replace(path)
+                except Exception: pass
+
+            if len(competitors) < 1: continue
             scanned += 1
 
             if not self._can_rotate_symbol(cfg):

@@ -57,6 +57,8 @@ class RegimeScaler(Agent):
     default_enabled = True
 
     _last_signature: str = ""
+    _last_emit_ts:   float = 0.0
+    MIN_SECONDS_BETWEEN_EMITS = 600   # 10 min — don't ACT on noise flicker
 
     def _compute(self, tf: dict, regime: str) -> dict:
         """Compute alignment + per-side multiplier from one symbol's TF data."""
@@ -137,12 +139,22 @@ class RegimeScaler(Agent):
         OUT_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2),
                              encoding="utf-8")
 
-        # Build signature: only emit ACT when the regime picture shifts.
+        # Build signature: only emit ACT on MEANINGFUL change. The previous
+        # version emitted every time alignment_count for ANY symbol shifted —
+        # which happens every 2 min due to natural M15 RSI/slope drift.
+        # Two-layer guard:
+        #   1) signature must change
+        #   2) at least MIN_SECONDS_BETWEEN_EMITS since last emit
+        #      (regime classifications don't meaningfully change faster than
+        #       that — anything else is sensor noise we shouldn't broadcast)
+        import time as _t
         sig = "|".join(
             f"{s}:{d['mtf_alignment']}:{d['alignment_count']}:{d['regime']}"
             for s, d in sorted(symbols_out.items())
         )
-        if sig != self._last_signature:
+        now_s = _t.time()
+        if (sig != self._last_signature
+                and (now_s - self._last_emit_ts) >= self.MIN_SECONDS_BETWEEN_EMITS):
             aligned = [s for s, d in symbols_out.items()
                        if d["alignment_count"] >= 2 and d["mtf_alignment"] != "MIXED"]
             dead = [s for s, d in symbols_out.items() if d["regime"] == "DEAD"]
@@ -153,3 +165,4 @@ class RegimeScaler(Agent):
                       "boost_count": boost_count},
                 action="regime_map_updated")
             self._last_signature = sig
+            self._last_emit_ts   = now_s
