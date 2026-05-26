@@ -498,8 +498,12 @@ def evaluate_council(snapshot: dict) -> dict:
 
 
 def decide_entry_with_council(genome_flags: dict, snapshot: dict,
-                               council_required_agreement: float = 0.55
+                               council_required_agreement: float = 0.65
                                ) -> dict:
+    # User asked (2026-05-26): "خله يدخل صفقات بسرعة لا يوقف". Loosened
+    # council veto threshold from 0.55 → 0.65 so only STRONG disagreement
+    # (65%+ of council on opposite side) blocks the genome's decision.
+    # Result: many more entries pass through, system stays active.
     """Genome's decide_entry + council cross-check.
 
     Process:

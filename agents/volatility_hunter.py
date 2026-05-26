@@ -23,7 +23,8 @@ class VolatilityHunter(Agent):
     interval_seconds = 180   # every 3 min
     default_enabled = True
 
-    SPIKE_THRESHOLD = 1.8    # current ATR must be 1.8× the 24h mean
+    SPIKE_THRESHOLD = 1.4    # was 1.8 — lowered per user "خله يدخل بسرعة"
+                              # any 1.4× spike now triggers a 4-order grid
     BUFFER_ATR_MULT = 0.3    # entry placed 0.3 ATR beyond swing
     SL_ATR_MULT     = 1.5
     TP_ATR_MULT     = 3.0    # R:R = 1:2
@@ -41,7 +42,7 @@ class VolatilityHunter(Agent):
     # canceled), don't re-place a straddle on the same symbol within
     # this many minutes. Observed pattern: same symbol with identical
     # spike values fired 7 times in 15 min, polluting the insight feed.
-    SAME_SYMBOL_COOLDOWN_MIN = 30
+    SAME_SYMBOL_COOLDOWN_MIN = 10   # was 30 — let same symbol re-fire faster
 
     # State: {symbol -> last_placed_ts} survives within agent's process
     _last_placed_by_sym: dict[str, float] = {}

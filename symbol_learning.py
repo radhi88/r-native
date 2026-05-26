@@ -156,10 +156,14 @@ def _recompute_intel(symbol: str):
         elif pf < 1.0: adj["tp_mult"] = max(0.7, 1.0 * (1 - ADAPT_ALPHA))
 
     # ─── Final verdict ───
-    if trust >= 50:    verdict = "PREFERRED"
-    elif trust >= 0:   verdict = "OK"
-    elif trust >= -40: verdict = "CAUTION"
-    else:              verdict = "BLOCKED"
+    # User asked (2026-05-26): "خله يدخل صفقات بسرعة لا يوقف".
+    # Loosened BLOCKED threshold from -40 → -150 so symbols stay
+    # tradeable until consistently disastrous. Was over-blocking on a
+    # single bad trade (one -$1 → trust dropped to -65 → permanent block).
+    if trust >= 50:     verdict = "PREFERRED"
+    elif trust >= 0:    verdict = "OK"
+    elif trust >= -150: verdict = "CAUTION"
+    else:               verdict = "BLOCKED"
 
     intel = {
         "symbol": symbol,
