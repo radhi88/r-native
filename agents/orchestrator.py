@@ -67,6 +67,7 @@ def _load_default_agents():
         ("deployment_status",   "DeploymentStatus"),
         ("breakeven_lock",      "BreakevenLock"),
         ("margin_safety",       "MarginSafety"),
+        ("trade_journal",       "TradeJournal"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
