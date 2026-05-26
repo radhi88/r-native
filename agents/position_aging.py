@@ -37,7 +37,7 @@ R_MAGIC = 20260605
 class PositionAging(Agent):
     name = "position_aging"
     description = "Closes stagnant/zombie positions 24/7 (complements night_shift)"
-    interval_seconds = 300         # every 5 min
+    interval_seconds = 60          # every 60s — fast enough to catch emergency bleeds
     default_enabled = True
 
     # Thresholds — conservative, leave winners alone
@@ -52,6 +52,14 @@ class PositionAging(Agent):
     # Active 24/7 — unlike night_shift's -$1 floor that only runs at night.
     FAST_BLEED_AGE_HOURS  = 1.0
     FAST_BLEED_PL_FLOOR   = -1.50
+    # EMERGENCY tier (cycle 24): catastrophic-fast losses (≥$3 in any time
+    # frame, even brand new positions). On a $120 account that's 2.5% on a
+    # single trade — at this magnitude we cut now, no MIN_AGE grace period.
+    # Triggered by observation: XAUUSDm SELL and XAGUSDm SELL each hit
+    # -$3+ within 2 minutes of opening. The genomes set SL too wide for
+    # high-volatility metals (XAGUSDm SL was $10.30 max loss = 8% account).
+    EMERGENCY_PL_FLOOR    = -3.00
+    EMERGENCY_OVERRIDE_MIN_AGE = True   # bypasses MIN_AGE_HOURS=1.0
 
     # Protections
     WINNER_PROTECT_PL     = 1.00    # > $1 = always keep (let trail manage)
@@ -85,7 +93,10 @@ class PositionAging(Agent):
 
     def _classify(self, age_h: float, profit: float) -> tuple[bool, str]:
         """Decide if a position should be closed. Returns (should_close, reason)."""
-        # Protections first
+        # EMERGENCY first — bypass ALL grace periods on catastrophic loss
+        if profit <= self.EMERGENCY_PL_FLOOR and self.EMERGENCY_OVERRIDE_MIN_AGE:
+            return True, f"🚨 EMERGENCY {age_h:.2f}h, ${profit:+.2f} ≤ ${self.EMERGENCY_PL_FLOOR}"
+        # Protections (skipped only by emergency)
         if age_h < self.MIN_AGE_HOURS:
             return False, "fresh entry"
         if profit >= self.WINNER_PROTECT_PL:
