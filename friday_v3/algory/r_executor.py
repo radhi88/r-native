@@ -845,16 +845,75 @@ def _pick_best_symbol(state: dict) -> str:
     return R_SYMBOL
 
 
+def _list_deployed_symbols() -> list[str]:
+    """Return all symbols with REAL deployed genomes (flags populated).
+    Used by the aggressive cycle scanner so every cycle checks ALL
+    deployed symbols, not just one round-robin pick."""
+    try:
+        from pathlib import Path as _P
+        import json as _j
+        cfg_dir = _P(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs")
+        out = []
+        for p in cfg_dir.glob("*.json"):
+            try:
+                cfg = _j.loads(p.read_text(encoding="utf-8"))
+                dg = cfg.get("deployed_genome") or {}
+                if dg.get("id") and any((dg.get("flags") or {}).values()) \
+                   and cfg.get("tradeable", True):
+                    out.append((p.stem, float(dg.get("score") or 0)))
+            except Exception: continue
+        # Sort highest-score first so good genomes get first crack at margin
+        out.sort(key=lambda x: -x[1])
+        return [sym for sym, _ in out]
+    except Exception:
+        return []
+
+
 def try_enter_trade(state: dict, mode: str):
-    """Pull the gate, and enter if GO. Allows multiple concurrent positions up to R_MAX_POSITIONS."""
-    # Multi-symbol: pick best symbol globally
-    best_sym = _pick_best_symbol(state)
+    """Aggressive multi-symbol scan: check gate for EVERY deployed symbol
+    this cycle. Fire any that says GO until we hit R_MAX_POSITIONS.
+    Makes executor sensitive to ANY market moving (gold violent, BTC
+    breakout, etc.) — not one round-robin pick every 6 minutes."""
+    symbols = _list_deployed_symbols()
+    if not symbols:
+        return _try_enter_one_symbol(state, mode, None)  # fallback path
+    held = { p.symbol for p in (_r_positions() or []) }
+    fired = 0
+    scans = 0
+    for sym in symbols:
+        if len(held) >= R_MAX_POSITIONS: break
+        if sym in held: continue
+        scans += 1
+        # Set the symbol for downstream gate / entry logic
+        state["_force_symbol_override"] = sym
+        before_count = len([p for p in (_r_positions() or []) if p.symbol == sym])
+        _try_enter_one_symbol(state, mode, sym)
+        after_count = len([p for p in (_r_positions() or []) if p.symbol == sym])
+        if after_count > before_count:
+            fired += 1
+            held.add(sym)
+    state.pop("_force_symbol_override", None)
+    if fired:
+        _log(state, f"  🎯 fired {fired} new trades across {scans} scanned symbols")
+        state["last_action"] = f"fired {fired}/{scans}"
+    elif scans:
+        state["last_action"] = f"scanned {scans} deployed, none GO"
+
+
+def _try_enter_one_symbol(state: dict, mode: str, force_sym: str):
+    """Single-symbol gate + entry — the legacy try_enter_trade body."""
+    if force_sym:
+        best_sym = force_sym
+        state["best_symbol_now"]     = force_sym
+        state["best_symbol_quality"] = 100
+        state["scanner_mode"]        = "multi_scan"
+    else:
+        best_sym = _pick_best_symbol(state)
     if best_sym != R_SYMBOL:
-        # Append best symbol as query param so gate evaluates THAT symbol
         gate_url_with_sym = GATE_URL + ("&" if "?" in GATE_URL else "?") + f"symbol={best_sym}"
     else:
         gate_url_with_sym = GATE_URL
-    gate = _http_json(gate_url_with_sym, timeout=15)
+    gate = _http_json(gate_url_with_sym, timeout=8)
     if not gate or gate.get("verdict") == "ERROR":
         _log(state, f"  gate error: {gate.get('reason_ar', gate.get('_error',''))}")
         state["last_action"] = "gate_error"

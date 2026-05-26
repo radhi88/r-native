@@ -90,8 +90,12 @@ def start_executor(mode: str = "PAPER") -> dict:
     creationflags = 0
     if sys.platform == "win32":
         creationflags = subprocess.CREATE_NO_WINDOW
-    # r_executor uses argparse — PAPER is default, --live for real orders
-    cmd = [sys.executable, "-m", "friday_v3.algory.r_executor"]
+    # r_executor uses argparse — PAPER is default, --live for real orders.
+    # --interval 10 = every 10s scan ALL 12 deployed symbols (was 30s
+    # round-robin = each symbol checked once per 6 minutes — way too slow
+    # for volatile markets like gold).
+    cmd = [sys.executable, "-m", "friday_v3.algory.r_executor",
+           "--interval", "10"]
     if mode.upper() == "LIVE":
         cmd.append("--live")
     _executor_proc = subprocess.Popen(
