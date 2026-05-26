@@ -64,6 +64,7 @@ def _load_default_agents():
         ("session_pl_tracker",  "SessionPLTracker"),
         ("deploy_assistant",    "DeployAssistant"),
         ("dynamic_tp",          "DynamicTP"),
+        ("deployment_status",   "DeploymentStatus"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
