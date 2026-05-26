@@ -82,12 +82,13 @@ R_DEVIATION            = 30
 R_COMMENT_PREFIX       = "R"      # broker comment
 
 # ─── Trailing SL (lock profits aggressively) ───
-R_BREAKEVEN_TRIGGER_USD = 0.50    # move SL to entry when floating profit ≥ this
+# Tightened 2026-05-26 per user: was capturing too small a piece of moves.
+R_BREAKEVEN_TRIGGER_USD = 0.20    # was 0.50 — move SL to entry MUCH faster
 R_BREAKEVEN_BUFFER_USD  = 0.05    # SL set this much past entry on the safe side
-R_TRAIL_TRIGGER_USD     = 1.00    # start trailing when floating profit ≥ this
-R_USE_ADAPTIVE_TRAILING = True    # NEW: confidence-aware SL trail (overrides fixed BE+trail)
-R_TRAIL_DISTANCE_USD    = 1.50    # trailing SL stays this far behind current price
-R_TRAIL_STEP_USD        = 0.20    # only adjust if improvement ≥ this
+R_TRAIL_TRIGGER_USD     = 0.40    # was 1.00 — start trailing at smaller profit
+R_USE_ADAPTIVE_TRAILING = True    # confidence-aware adaptive_trailing.py is primary
+R_TRAIL_DISTANCE_USD    = 0.80    # was 1.50 — trail tighter behind price
+R_TRAIL_STEP_USD        = 0.05    # was 0.20 — react to every $0.05 of improvement
 
 import os as _os
 _BYPASS_QS = []

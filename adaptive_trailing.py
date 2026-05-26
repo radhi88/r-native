@@ -146,23 +146,25 @@ def compute_adaptive_sl(*, ticket: int, symbol: str, side: str,
     entry_state = _load_state().get(str(ticket), {})
     entry_conf = int(entry_state.get("entry_confidence") or 50)
 
-    # 5) Base lock ratio from CURRENT confidence
+    # 5) Base lock ratio — AGGRESSIVE (tightened 2026-05-26 per user
+    # "move SL to bigger profit, was slow and took smaller profit"):
+    # was 50/65/80/90 — too loose, gave back too much on reversals
     if live_confidence >= 80:
-        base_ratio = 0.50
+        base_ratio = 0.72         # was 0.50 — even on strong conviction, lock 72%
     elif live_confidence >= 60:
-        base_ratio = 0.65
+        base_ratio = 0.82         # was 0.65
     elif live_confidence >= 40:
-        base_ratio = 0.80
+        base_ratio = 0.90         # was 0.80
     else:
-        base_ratio = 0.90
+        base_ratio = 0.95         # was 0.90 — almost full lock on low conviction
 
     # 6) Confidence-decay penalty: if live_conf dropped ≥ 25 vs entry, tighten more
     decay = entry_conf - live_confidence
     if decay >= 40:
-        base_ratio = max(base_ratio, 0.92)
+        base_ratio = max(base_ratio, 0.96)   # was 0.92
         decay_note = f"conf-decay {decay}"
     elif decay >= 25:
-        base_ratio = max(base_ratio, 0.85)
+        base_ratio = max(base_ratio, 0.92)   # was 0.85
         decay_note = f"conf-decay {decay}"
     else:
         decay_note = ""
@@ -170,17 +172,25 @@ def compute_adaptive_sl(*, ticket: int, symbol: str, side: str,
     # 7) Signal-flip override: live verdict now says opposite side → lock fast
     flip_note = ""
     if live_side and live_side != side and live_gate and live_gate.get("verdict") == "GO":
-        base_ratio = 0.95
+        base_ratio = 0.98          # was 0.95 — flipped signal, lock almost all
         flip_note = f"FLIP→{live_side}"
 
-    # 8) Near-TP tightening
+    # 8) Progress-based ratchet — much earlier tightening so larger gains
+    # get locked aggressively. Was: trigger only at 80% / 95% of TP.
+    # Now ratchets up from 40% progress.
     near_tp_note = ""
     if progress >= 0.95:
-        base_ratio = 0.97
+        base_ratio = 0.99          # was 0.97 — at TP, lock everything
         near_tp_note = f"~TP({progress*100:.0f}%)"
     elif progress >= 0.80:
-        base_ratio = min(0.95, base_ratio * 1.25)
+        base_ratio = max(base_ratio, 0.96)   # was *1.25 capped 0.95
         near_tp_note = f"near-TP({progress*100:.0f}%)"
+    elif progress >= 0.60:
+        base_ratio = max(base_ratio, 0.92)   # NEW tier
+        near_tp_note = f"prog-60({progress*100:.0f}%)"
+    elif progress >= 0.40:
+        base_ratio = max(base_ratio, 0.88)   # NEW tier — start locking at 40% of way to TP
+        near_tp_note = f"prog-40({progress*100:.0f}%)"
 
     # 9) Compute proposed new SL
     locked = base_ratio * gain
