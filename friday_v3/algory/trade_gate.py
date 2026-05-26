@@ -177,15 +177,25 @@ def _next_session_open(now: datetime) -> datetime:
     return target
 
 
-def _load_deployed_genome(symbol: str) -> dict | None:
-    """Load the genome currently deployed for `symbol` from r_native's per-symbol config.
-    Returns None if no deployment exists (R Native UI didn't DEPLOY anything yet)."""
+def _load_deployed_genome(symbol: str, force_id: str = None) -> dict | None:
+    """Load the genome currently deployed for `symbol`.
+
+    If `force_id` is given, search the symbol's `competitors` list for that
+    specific genome — used by the executor's multi-genome competition path
+    so each (symbol, genome) pair gets its OWN gate evaluation.
+    Falls back to the primary `deployed_genome` if force_id not found.
+    """
     try:
         import json
         from pathlib import Path
         p = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{symbol}.json"
         if not p.exists(): return None
         cfg = json.loads(p.read_text(encoding="utf-8"))
+        if force_id:
+            for c in (cfg.get("competitors") or []):
+                if c.get("id") == force_id:
+                    return c
+            # fall through if not found
         g = cfg.get("deployed_genome")
         if not g or not g.get("id"): return None
         return g
@@ -358,7 +368,10 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
     now = datetime.now(timezone.utc)
 
     # ── H.7.5: Load deployed_genome — override SL/TP/session with R Native UI's choice ──
-    deployed_genome = _load_deployed_genome(snapshot.get("symbol", ""))
+    # If snapshot carries a specific genome_override, use that competitor;
+    # otherwise load the symbol's primary deployed_genome.
+    _gov = snapshot.get("_genome_override")
+    deployed_genome = _load_deployed_genome(snapshot.get("symbol", ""), force_id=_gov)
     _dg_start_h = deployed_genome.get("start_hour") if deployed_genome else None
     _dg_end_h   = deployed_genome.get("end_hour")   if deployed_genome else None
     _dg_sl_mult = deployed_genome.get("sl_atr_mult") if deployed_genome else None

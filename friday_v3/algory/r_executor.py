@@ -846,10 +846,12 @@ def _pick_best_symbol(state: dict) -> str:
     return R_SYMBOL
 
 
-def _list_deployed_symbols() -> list[str]:
-    """Return all symbols with REAL deployed genomes (flags populated).
-    Used by the aggressive cycle scanner so every cycle checks ALL
-    deployed symbols, not just one round-robin pick."""
+def _list_deployed_pairs() -> list[tuple[str, str, float]]:
+    """Return (symbol, genome_id, score) for EVERY deployed competitor.
+    A symbol can have multiple competing genomes — each gets its own gate
+    evaluation and own position. The HoF tracks per-genome live PnL so
+    after ~20 trades each, we can see which one wins on that symbol.
+    """
     try:
         from pathlib import Path as _P
         import json as _j
@@ -858,47 +860,79 @@ def _list_deployed_symbols() -> list[str]:
         for p in cfg_dir.glob("*.json"):
             try:
                 cfg = _j.loads(p.read_text(encoding="utf-8"))
-                dg = cfg.get("deployed_genome") or {}
-                if dg.get("id") and any((dg.get("flags") or {}).values()) \
-                   and cfg.get("tradeable", True):
-                    out.append((p.stem, float(dg.get("score") or 0)))
+                if not cfg.get("tradeable", True): continue
+                # competitors list (NEW) takes priority; falls back to
+                # singular deployed_genome (legacy single-deploy)
+                comps = cfg.get("competitors") or []
+                if not comps and cfg.get("deployed_genome"):
+                    comps = [cfg["deployed_genome"]]
+                for g in comps:
+                    gid = g.get("id")
+                    if not gid: continue
+                    if not any((g.get("flags") or {}).values()): continue
+                    out.append((p.stem, gid, float(g.get("score") or 0)))
             except Exception: continue
-        # Sort highest-score first so good genomes get first crack at margin
-        out.sort(key=lambda x: -x[1])
-        return [sym for sym, _ in out]
+        # Sort highest-score first
+        out.sort(key=lambda x: -x[2])
+        return out
     except Exception:
         return []
 
 
+def _list_deployed_symbols() -> list[str]:
+    """Legacy: unique symbol list for fallback path."""
+    return list({s for s,_,_ in _list_deployed_pairs()})
+
+
 def try_enter_trade(state: dict, mode: str):
-    """Aggressive multi-symbol scan: check gate for EVERY deployed symbol
-    this cycle. Fire any that says GO until we hit R_MAX_POSITIONS.
-    Makes executor sensitive to ANY market moving (gold violent, BTC
-    breakout, etc.) — not one round-robin pick every 6 minutes."""
-    symbols = _list_deployed_symbols()
-    if not symbols:
-        return _try_enter_one_symbol(state, mode, None)  # fallback path
-    held = { p.symbol for p in (_r_positions() or []) }
+    """Aggressive multi-PAIR scan: every cycle, check the gate for EVERY
+    (symbol, genome) competitor. Each genome on a symbol is treated as
+    its own strategy — its OWN gate evaluation, its OWN position. After
+    enough trades the HoF live_pnl per genome reveals the winner.
+    """
+    pairs = _list_deployed_pairs()
+    if not pairs:
+        return _try_enter_one_symbol(state, mode, None)
+
+    # Avoid stacking: each (symbol, genome) competitor can only have ONE
+    # open position at a time (via R-<gid>-<side> comment matching).
+    open_by_gid = {}    # gid -> count of open positions tagged with that gid
+    for p in (_r_positions() or []):
+        comment = (p.comment or "")
+        if comment.startswith("R-"):
+            parts = comment.split("-", 2)
+            if len(parts) >= 2:
+                gid = parts[1]
+                open_by_gid[gid] = open_by_gid.get(gid, 0) + 1
+
+    held_count = sum(open_by_gid.values())
     fired = 0
     scans = 0
-    for sym in symbols:
-        if len(held) >= R_MAX_POSITIONS: break
-        if sym in held: continue
+    for sym, gid, score in pairs:
+        if held_count >= R_MAX_POSITIONS: break
+        if open_by_gid.get(gid, 0) >= 1:
+            continue   # this genome already has an open position somewhere
         scans += 1
-        # Set the symbol for downstream gate / entry logic
-        state["_force_symbol_override"] = sym
-        before_count = len([p for p in (_r_positions() or []) if p.symbol == sym])
+        # Force the executor's symbol AND the genome id for this iteration
+        state["_force_symbol_override"]  = sym
+        state["_force_genome_override"]  = gid
+        before = sum(1 for p in (_r_positions() or [])
+                     if f"R-{gid}-" in (p.comment or ""))
         _try_enter_one_symbol(state, mode, sym)
-        after_count = len([p for p in (_r_positions() or []) if p.symbol == sym])
-        if after_count > before_count:
+        after = sum(1 for p in (_r_positions() or [])
+                    if f"R-{gid}-" in (p.comment or ""))
+        if after > before:
             fired += 1
-            held.add(sym)
+            held_count += 1
+            open_by_gid[gid] = open_by_gid.get(gid, 0) + 1
     state.pop("_force_symbol_override", None)
+    state.pop("_force_genome_override", None)
+
     if fired:
-        _log(state, f"  🎯 fired {fired} new trades across {scans} scanned symbols")
+        _log(state, f"  🎯 fired {fired} new trades across {scans} (sym,genome) pairs")
         state["last_action"] = f"fired {fired}/{scans}"
     elif scans:
-        state["last_action"] = f"scanned {scans} deployed, none GO"
+        state["last_action"] = f"scanned {scans} pairs, none GO"
 
 
 def _try_enter_one_symbol(state: dict, mode: str, force_sym: str):
@@ -910,8 +944,17 @@ def _try_enter_one_symbol(state: dict, mode: str, force_sym: str):
         state["scanner_mode"]        = "multi_scan"
     else:
         best_sym = _pick_best_symbol(state)
+    # Build gate URL — if competition mode set a specific genome to test
+    # on this iteration, append it so trade_gate uses THAT genome's flags
+    extras = []
     if best_sym != R_SYMBOL:
-        gate_url_with_sym = GATE_URL + ("&" if "?" in GATE_URL else "?") + f"symbol={best_sym}"
+        extras.append(f"symbol={best_sym}")
+    gov = state.get("_force_genome_override")
+    if gov:
+        extras.append(f"genome={gov}")
+    if extras:
+        sep = "&" if "?" in GATE_URL else "?"
+        gate_url_with_sym = GATE_URL + sep + "&".join(extras)
     else:
         gate_url_with_sym = GATE_URL
     gate = _http_json(gate_url_with_sym, timeout=8)
