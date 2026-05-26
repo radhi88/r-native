@@ -174,6 +174,45 @@ def record_deployment(genome_id: str, symbol: str) -> None:
     _write_json(INDEX_PATH, index)
 
 
+def attribute_and_record(ticket: int, profit: float) -> Optional[str]:
+    """Convenience for agents that close R-magic positions directly.
+
+    Looks up the position's OPEN deal in MT5 history, parses R-<gid>-<side>
+    from the comment, and calls record_live_trade. Returns the genome_id
+    we attributed to (or None on failure — no exception raised).
+
+    This exists because r_executor's close path runs record_live_trade
+    automatically, but agent-driven closes (night_shift._close_bleeders,
+    position_aging._close_position) bypass that path. Without this
+    helper, those closes silently drop attribution and HoF live_pnl
+    drifts away from MT5 reality.
+
+    Soft-fail: any error returns None — agents should NEVER block on
+    HoF bookkeeping. The rebuild_hof_live_pnl.py utility is the fallback
+    if attribution misses for any reason.
+    """
+    try:
+        import re as _re
+        import MetaTrader5 as _mt5
+        if not _mt5.initialize(): _mt5.initialize()
+        opens = _mt5.history_deals_get(position=int(ticket)) or []
+        opener_gid = None
+        opener_sym = None
+        for _d in opens:
+            if int(_d.entry) != 0: continue   # opens only
+            m = _re.match(r"R-([A-F0-9]{6})-", _d.comment or "")
+            if m:
+                opener_gid = m.group(1)
+                opener_sym = getattr(_d, "symbol", None)
+                break
+        if not opener_gid:
+            return None
+        record_live_trade(opener_gid, profit, symbol=opener_sym)
+        return opener_gid
+    except Exception:
+        return None
+
+
 def record_live_trade(genome_id: str, pnl: float,
                        symbol: Optional[str] = None) -> None:
     """Update live P/L after a closed trade.

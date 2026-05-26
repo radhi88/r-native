@@ -61,6 +61,7 @@ def _load_default_agents():
         ("side_balance_monitor","SideBalanceMonitor"),
         ("streak_detector",     "StreakDetector"),
         ("position_aging",      "PositionAging"),
+        ("session_pl_tracker",  "SessionPLTracker"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",

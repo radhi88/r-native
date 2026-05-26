@@ -69,6 +69,14 @@ class NightShift(Agent):
                 }
                 r = mt5.order_send(req)
                 if r and r.retcode == mt5.TRADE_RETCODE_DONE:
+                    # Attribute the close to the opener-genome so HoF
+                    # live_pnl stays accurate. Previously night_shift's
+                    # direct order_send bypassed the live tracker that
+                    # r_executor uses, silently dropping attribution.
+                    try:
+                        from r_native.hall_of_fame import attribute_and_record
+                        attribute_and_record(int(p.ticket), float(p.profit))
+                    except Exception: pass
                     closed.append({"ticket": p.ticket, "symbol": p.symbol,
                                     "profit": float(p.profit), "age_h": round(age_hours,1)})
             return closed

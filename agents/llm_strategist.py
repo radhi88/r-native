@@ -378,14 +378,20 @@ class LLMStrategist(Agent):
                 # stop breeding and force focus on cleanup instead. Prevents
                 # the LLM from filling HoF with garbage when the gene pool is
                 # in a bad spot.
+                # IMPORTANT: only count ALIVE crossovers in the denominator.
+                # Killed failed breeds shouldn't permanently blacklist the
+                # pipeline — they've already been pruned, the current pool
+                # is what matters. Previously this counted history forever
+                # and breeding was blocked even after curator cleaned up.
                 breeds = [g for g in index.values()
-                          if (g.get("birth_method") or "").startswith("crossover")]
+                          if (g.get("birth_method") or "").startswith("crossover")
+                          and not g.get("killed")]
                 if len(breeds) >= 5:  # enough sample to judge
                     succ = sum(1 for b in breeds if float(b.get("score") or 0) >= 30)
                     rate = succ / len(breeds) * 100
                     if rate < 15:  # < 15% success → halt breeding
                         emit_insight(self.name, "WARN",
-                            f"🛡 blocked breed: pipeline success {rate:.0f}% "
+                            f"🛡 blocked breed: alive-pipeline success {rate:.0f}% "
                             f"({succ}/{len(breeds)}) — clean gene pool first")
                         return f"blocked_pipeline_rate_{rate:.0f}"
 

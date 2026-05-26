@@ -126,6 +126,15 @@ class PositionAging(Agent):
                 continue
             result = self._close_position(mt5, p)
             if result.get("ok"):
+                # Attribute the close to the original opener-genome so
+                # HoF live_pnl stays accurate. Soft-fail — never block
+                # on bookkeeping.
+                attributed_gid = None
+                try:
+                    from r_native.hall_of_fame import attribute_and_record
+                    attributed_gid = attribute_and_record(int(p.ticket),
+                                                          float(p.profit))
+                except Exception: pass
                 closed.append({
                     "ticket":   int(p.ticket),
                     "symbol":   p.symbol,
@@ -133,6 +142,7 @@ class PositionAging(Agent):
                     "profit":   round(float(p.profit), 2),
                     "age_h":    round(age_h, 1),
                     "reason":   reason,
+                    "attributed_to": attributed_gid,
                 })
             else:
                 emit_insight(self.name, "WARN",
