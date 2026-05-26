@@ -417,6 +417,142 @@ except Exception as _e:
 
 
 # ─── Main entry point ───
+def evaluate_council(snapshot: dict) -> dict:
+    """ENSEMBLE COUNCIL — runs EVERY registered signal + bias on the live
+    snapshot, regardless of any specific genome's flag set. Returns the
+    aggregated direction + a 0-100 ensemble confidence.
+
+    Use case: the trade_gate can call this AS WELL AS the per-genome
+    decide_entry, and use the council as a second opinion:
+      • if council strongly DISAGREES with genome → veto entry
+      • if council strongly AGREES → boost confidence
+      • returns transparent vote tallies so the user can see what every
+        indicator says even when their deployed genome doesn't use it.
+    """
+    sig_buy = 0; sig_sell = 0; sig_neutral = 0
+    sig_votes = []
+    for name, evaluator in SIGNAL_EVALUATORS.items():
+        try:
+            vote, reason = evaluator(snapshot)
+        except Exception:
+            vote, reason = 0, "err"
+        sig_votes.append((name, vote, reason[:60]))
+        if vote == +1:   sig_buy += 1
+        elif vote == -1: sig_sell += 1
+        else:            sig_neutral += 1
+
+    bias_buy = 0; bias_sell = 0
+    bias_votes = []
+    for name, evaluator in BIAS_EVALUATORS.items():
+        try:
+            vote, reason = evaluator(snapshot)
+        except Exception:
+            vote, reason = 0, "err"
+        bias_votes.append((name, vote, reason[:60]))
+        if vote == +1:   bias_buy += 1
+        elif vote == -1: bias_sell += 1
+
+    # Direction = combined signal+bias majority
+    total_buy  = sig_buy + bias_buy
+    total_sell = sig_sell + bias_sell
+    if total_buy > total_sell:
+        direction = "BUY"
+        agreement = total_buy / max(1, total_buy + total_sell)
+    elif total_sell > total_buy:
+        direction = "SELL"
+        agreement = total_sell / max(1, total_buy + total_sell)
+    else:
+        direction = "NEUTRAL"
+        agreement = 0.5
+
+    # Active filters' veto count
+    filter_vetos = []
+    for name, evaluator in FILTER_EVALUATORS.items():
+        try:
+            blocks, reason = evaluator(snapshot)
+            if blocks: filter_vetos.append((name, reason[:60]))
+        except Exception: pass
+
+    # Confidence 0-100
+    confidence = round(agreement * 100)
+
+    return {
+        "direction":      direction,
+        "confidence":     confidence,
+        "agreement_pct":  round(agreement * 100, 1),
+        "signals": {
+            "buy":     sig_buy,
+            "sell":    sig_sell,
+            "neutral": sig_neutral,
+            "total":   len(SIGNAL_EVALUATORS),
+            "votes":   sig_votes,
+        },
+        "biases": {
+            "buy":   bias_buy,
+            "sell":  bias_sell,
+            "total": len(BIAS_EVALUATORS),
+            "votes": bias_votes,
+        },
+        "filter_vetos": filter_vetos,
+    }
+
+
+def decide_entry_with_council(genome_flags: dict, snapshot: dict,
+                               council_required_agreement: float = 0.55
+                               ) -> dict:
+    """Genome's decide_entry + council cross-check.
+
+    Process:
+      1. Run the genome's own evaluation (the standard decide_entry)
+      2. Run the council (all 22 signals + 12 biases) regardless
+      3. If genome wants BUY but council mostly says SELL → VETO
+      4. If they agree → boost genome's confidence by +15
+      5. If council neutral → no change
+
+    Returns the genome decision dict with extra fields:
+      • council: full council eval
+      • council_agrees: bool
+      • original_confidence + final_confidence
+    """
+    genome_decision = decide_entry(genome_flags, snapshot)
+    council = evaluate_council(snapshot)
+    genome_decision["council"] = {
+        "direction":     council["direction"],
+        "confidence":    council["confidence"],
+        "signals_buy":   council["signals"]["buy"],
+        "signals_sell":  council["signals"]["sell"],
+        "biases_buy":    council["biases"]["buy"],
+        "biases_sell":   council["biases"]["sell"],
+        "vetos":         len(council["filter_vetos"]),
+    }
+    if genome_decision.get("decision") in ("BUY", "SELL"):
+        gdir = genome_decision["decision"]
+        cdir = council["direction"]
+        orig_conf = genome_decision.get("confidence", 0)
+        genome_decision["original_confidence"] = orig_conf
+        # 3) Council strongly opposes → veto
+        if cdir != "NEUTRAL" and cdir != gdir and \
+           council["confidence"] >= int(council_required_agreement * 100):
+            genome_decision["decision"]   = "NO"
+            genome_decision["confidence"] = 0
+            genome_decision["council_agrees"] = False
+            genome_decision.setdefault("reasons", []).append(
+                f"🛑 council vetoed: {council['signals']['sell']}S vs "
+                f"{council['signals']['buy']}B says {cdir} ({council['confidence']}%)"
+            )
+        # 4) Council agrees → boost confidence
+        elif cdir == gdir:
+            boost = 15
+            genome_decision["confidence"] = min(100, orig_conf + boost)
+            genome_decision["council_agrees"] = True
+            genome_decision.setdefault("reasons", []).insert(0,
+                f"✅ council agrees {gdir} ({council['confidence']}%) → +{boost}"
+            )
+        else:
+            genome_decision["council_agrees"] = None  # neutral
+    return genome_decision
+
+
 def decide_entry(genome_flags: dict, snapshot: dict) -> dict:
     """Apply the genome's active flags to the current market snapshot.
 

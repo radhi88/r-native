@@ -581,10 +581,15 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
             _g_flags = {gene: True for gene in deployed_genome["active_genes"]}
     if not _ensemble_used and deployed_genome and _g_flags:
         try:
-            from r_native.genome_signal import (decide_entry,
+            from r_native.genome_signal import (decide_entry_with_council,
                                                 build_snapshot_from_trade_gate_snap)
             flat = build_snapshot_from_trade_gate_snap(snapshot)
-            genome_decision = decide_entry(_g_flags, flat)
+            # COUNCIL: every cycle computes ALL 22 signals + 12 biases on
+            # the live snapshot. If they strongly disagree with the
+            # genome's decision → veto. If they agree → +15 confidence
+            # boost. Makes the gate consult every indicator before entry,
+            # not just the 7-of-22 the genome's training selected.
+            genome_decision = decide_entry_with_council(_g_flags, flat)
         except Exception as _e:
             genome_decision = None
 
