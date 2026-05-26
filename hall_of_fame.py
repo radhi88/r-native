@@ -86,8 +86,24 @@ def _read_json(p: Path, default):
 
 
 def _write_json(p: Path, data):
+    """Atomic write — prevents corruption if process is killed mid-write.
+    Cycle 36: HoF index.json got corrupted (lost 90+ genome entries
+    including elite 80-score pinned ones) likely from a race between
+    multiple writers or interrupted write. Now uses tmp+replace.
+    Also keeps a rolling .bak of the last successful write so we can
+    recover if something still goes wrong."""
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    payload = json.dumps(data, ensure_ascii=False, indent=2)
+    tmp = p.with_suffix(p.suffix + ".tmp")
+    tmp.write_text(payload, encoding="utf-8")
+    # Rotate prior copy to .bak before replacing
+    if p.exists():
+        bak = p.with_suffix(p.suffix + ".bak")
+        try:
+            if bak.exists(): bak.unlink()
+            p.rename(bak)
+        except Exception: pass
+    tmp.replace(p)
 
 
 def load_index() -> dict:
