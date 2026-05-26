@@ -1013,24 +1013,34 @@ class RNativeMain(QMainWindow):
             it = self._champions_layout.takeAt(0)
             wdg = it.widget()
             if wdg: wdg.deleteLater()
-        # Build a small card per deployed-genome symbol
+        # Build a small card per REAL deployed-genome symbol
+        # Filter out seeded stubs (id without flags) — they never actually
+        # trade and just create noise across 38 cards. Only show symbols
+        # whose deployed_genome has real flags populated.
         from PySide6.QtWidgets import QFrame, QVBoxLayout, QProgressBar
         rows = []
         for s in (d.get("symbols") or []):
             dg = s.get("deployed_genome")
             if not dg: continue
+            flags = dg.get("flags") or {}
+            if not any(flags.values()):
+                continue  # seeded stub, no actual trading logic
             stats = dg.get("stats") or {}
             life = self._compute_life_pct(dg, stats)
-            rows.append((s["symbol"], dg["id"], dg.get("profit_factor") or 0,
+            score = float(dg.get("score") or 0)
+            rows.append((s["symbol"], dg["id"], score,
+                          stats.get("profit_factor") or 0,
                           stats.get("live_pnl") or 0,
                           stats.get("live_trades") or 0,
                           life))
+        # Sort by score descending — best-performing genomes first
+        rows.sort(key=lambda r: -r[2])
         if not rows:
-            placeholder = QLabel("  no champions yet")
+            placeholder = QLabel("  no deployed genomes with flags — run deploy_multi_symbol.py")
             placeholder.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
             self._champions_layout.addWidget(placeholder)
             return
-        for sym, gid, pf, pnl, n, life in rows[:8]:
+        for sym, gid, score, pf, pnl, n, life in rows[:12]:
             card = QFrame()
             card.setStyleSheet(
                 f"QFrame {{ background: {BG_2}; border: 1px solid {BORDER};"
@@ -1039,12 +1049,16 @@ class RNativeMain(QMainWindow):
             cv.setContentsMargins(8, 4, 8, 4)
             cv.setSpacing(2)
             top = QLabel(f"<b style='color:{GOLD}'>{sym}</b>  "
-                          f"<span style='color:{TEXT_MUTED};font-family:Consolas'>{gid}</span>")
+                          f"<span style='color:{TEXT_MUTED};font-family:Consolas'>"
+                          f"score {score:.0f}</span>")
             top.setStyleSheet("font-size: 11px;")
+            top.setToolTip(f"Deployed genome {gid}\nBacktest score: {score:.1f}\n"
+                           f"Live: {n} trades, ${pnl:+.2f}")
             cv.addWidget(top)
             pnl_color = GREEN if pnl > 0 else (RED if pnl < 0 else TEXT_MUTED)
             mid = QLabel(f"<span style='color:{pnl_color};font-family:Consolas'>"
-                          f"${pnl:+.2f}</span>  · {n}t · PF {pf:.1f}")
+                          f"${pnl:+.2f}</span> live · {n} trades · "
+                          f"<span style='color:{TEXT_MUTED}'>{gid}</span>")
             mid.setStyleSheet("font-size: 9px;")
             cv.addWidget(mid)
             bar = QProgressBar()
