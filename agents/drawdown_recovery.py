@@ -35,6 +35,11 @@ class DrawdownRecovery(Agent):
     DD_LEVEL_3 = 12.0   # 12% off peak — block new entries
     DD_LEVEL_4 = 18.0   # 18% off peak — KILL SWITCH
 
+    # Cycle 32 fix: dedup level emissions. Was firing same ACT every
+    # 30 sec (40 messages per 20 min) flooding insights feed.
+    # Now: only emit on LEVEL TRANSITION (e.g. 1→2 or 2→3 or 2→1).
+    _last_emitted_level: int = -1
+
     def _get_equity(self) -> float | None:
         try:
             import MetaTrader5 as mt5
@@ -100,12 +105,24 @@ class DrawdownRecovery(Agent):
         }
         self._save_state(state)
 
-        if level >= 1 and action_taken:
-            emit_insight(self.name,
-                "ACT" if level >= 2 else "INFO",
-                f"📉 DD {dd_pct:.1f}% off peak ${peak:.2f} (now ${eq:.2f}) — {action_taken}",
-                data=state,
-                action=f"dd_level_{level}" if level >= 2 else None)
+        # Only emit on LEVEL CHANGE — prevents same-level spam every 30s
+        if level != self._last_emitted_level:
+            if level >= 1 and action_taken:
+                arrow = ""
+                if self._last_emitted_level >= 0:
+                    if level > self._last_emitted_level: arrow = " ⬆ worsening"
+                    elif level < self._last_emitted_level: arrow = " ⬇ recovering"
+                emit_insight(self.name,
+                    "ACT" if level >= 2 else "INFO",
+                    f"📉 DD {dd_pct:.1f}% off peak ${peak:.2f} "
+                    f"(now ${eq:.2f}) — {action_taken}{arrow}",
+                    data=state,
+                    action=f"dd_level_{level}" if level >= 2 else None)
+            elif level == 0 and self._last_emitted_level > 0:
+                emit_insight(self.name, "INFO",
+                    f"✓ DD recovered to {dd_pct:.1f}% (under {self.DD_LEVEL_1}%) "
+                    f"— restrictions lifted")
+            self._last_emitted_level = level
 
     def _trip_kill_switch(self, reason: str):
         kp = Path(r"C:\Users\Radhi\MT5\data\kill_switch.json")
