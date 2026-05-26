@@ -32,7 +32,9 @@ class DrawdownRecovery(Agent):
 
     DD_LEVEL_1 = 3.0    # 3% off peak — light caution (info only)
     DD_LEVEL_2 = 7.0    # 7% off peak — halve positions max
-    DD_LEVEL_3 = 12.0   # 12% off peak — block new entries
+    DD_LEVEL_3 = 10.0   # 10% off peak — block new entries (was 12%, tightened
+                         # cycle 37 after multi-cycle bleed showed 12% lets
+                         # too much damage accumulate before halt)
     DD_LEVEL_4 = 18.0   # 18% off peak — KILL SWITCH
 
     # Cycle 32 fix: dedup level emissions. Was firing same ACT every
