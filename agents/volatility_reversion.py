@@ -34,7 +34,11 @@ class VolatilityReversion(Agent):
     name = "volatility_reversion"
     description = "Mean-reversion BUY_LIMIT/SELL_LIMIT straddles at volatility extremes"
     interval_seconds = 180     # every 3 min, same as breakout sibling
-    default_enabled = True
+    # Cycle 30: DISABLED. volatility_hunter (cycle 23 PLACE_REVERSION=True)
+    # now places reversion limits itself, so running both agents produces
+    # DOUBLE same-side BUY/SELL fills (observed: GBPJPYm had 2 BUYs from
+    # vol_r AND volrev-vol_r, each leg costing margin & spread).
+    default_enabled = False
 
     SPIKE_THRESHOLD = 1.8      # match sibling — only on real spikes
     BUFFER_ATR_MULT = 0.3      # entry placed 0.3 ATR beyond swing

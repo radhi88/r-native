@@ -42,7 +42,8 @@ class HedgeResolver(Agent):
     interval_seconds = 60       # check every minute
     default_enabled = True
 
-    MIN_AGE_MIN          = 10.0   # give 10 min for legs to diverge
+    MIN_AGE_MIN          = 5.0    # cycle 30: was 10, tightened — hedges
+                                    # at 5 min are already wasted spread
     NET_LOSS_TRIGGER     = -0.30   # net pnl ≤ -$0.30 = close both
     KEEP_WINNER_NET_FLOOR = 0.30  # net pnl ≥ +$0.30 = keep winner, kill loser
 
