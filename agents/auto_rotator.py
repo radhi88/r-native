@@ -66,6 +66,19 @@ class AutoRotator(Agent):
                                         # of primary's (so we're not promoting
                                         # a clearly weaker genome blindly)
 
+    # SCORE-promotion rule (cycle 23): when a competitor's BACKTEST score is
+    # substantially higher than a non-pinned primary's, promote it directly.
+    # The backtest is the only signal we have for genomes with no live data,
+    # and a 15+ score gap reflects a meaningful quality difference (genome
+    # scores in this system span 0-80, top 10% is 70+).
+    # Examples: GBPJPYm primary 98ED3A (60.5) vs competitor scoring 76 →
+    # promote. Doesn't touch pinned primaries (user/curator chose them).
+    SCORE_PROMOTION_GAP      = 10.0    # competitor.score - primary.score ≥ 10
+                                        # (realistic gap; pool spans ~60-80
+                                        # so 15-pt gaps are rare)
+    SCORE_PROMOTION_MIN      = 65.0    # competitor must score ≥65 too (so we
+                                        # don't promote a 30-vs-15 candidate)
+
     def _load_hof(self) -> dict:
         try:
             from r_native.hall_of_fame import load_index
@@ -137,16 +150,22 @@ class AutoRotator(Agent):
                 continue
 
             primary_stats = self._genome_stats(hof, primary_gid)
+            primary_entry = hof.get(primary_gid) or {}
+            primary_is_pinned = bool(primary_entry.get("pinned"))
             if primary_stats["killed"]:
                 # primary was killed — definitely look for replacement
                 pass
             elif primary_stats["trades"] < self.MIN_PRIMARY_TRADES:
-                # Normal rotation needs 5+ primary trades, but PUNT can
-                # fire with as few as PUNT_PRIMARY_MIN_TRADES (default 3)
-                # if the primary is clearly bleeding. Don't continue — let
-                # the PUNT logic decide below.
-                if not (primary_stats["trades"] >= self.PUNT_PRIMARY_MIN_TRADES
-                        and primary_stats["pnl"] <= self.PUNT_PRIMARY_PNL_FLOOR):
+                # Normal rotation needs 5+ primary trades. Exceptions that
+                # allow flow-through to specialized rules below:
+                #   • PUNT (cycle 16): primary bleeding ≥3 trades / ≥$1 loss
+                #   • SCORE-PROMOTE (cycle 23): primary not pinned (so a
+                #     higher-score competitor can replace it on backtest
+                #     signal alone, even at 0 live trades)
+                punt_eligible = (primary_stats["trades"] >= self.PUNT_PRIMARY_MIN_TRADES
+                                  and primary_stats["pnl"] <= self.PUNT_PRIMARY_PNL_FLOOR)
+                score_eligible = not primary_is_pinned
+                if not (punt_eligible or score_eligible):
                     continue
 
             # Find best competitor (qualifies + not killed + beats primary)
@@ -163,6 +182,35 @@ class AutoRotator(Agent):
                 if best is None or cs["pnl"] > best["pnl"]:
                     best = cs
                     best["edge"] = edge
+
+            # SCORE-PROMOTION fallback: no live-edge winner exists, but a
+            # competitor's backtest score is dramatically higher than the
+            # primary's. The primary must not be pinned (user/curator
+            # chose it). Promote based on score signal.
+            score_promo_reason = None
+            if best is None and not primary_stats["killed"]:
+                primary_entry = hof.get(primary_gid) or {}
+                if not primary_entry.get("pinned"):
+                    primary_score = float(primary_entry.get("score") or 0)
+                    best_score_comp = None
+                    for comp in competitors:
+                        cid = comp.get("id") if isinstance(comp, dict) else comp
+                        if not cid or cid == primary_gid: continue
+                        centry = hof.get(cid) or {}
+                        if centry.get("killed"): continue
+                        cscore = float(centry.get("score") or 0)
+                        if cscore < self.SCORE_PROMOTION_MIN: continue
+                        if cscore - primary_score < self.SCORE_PROMOTION_GAP: continue
+                        if best_score_comp is None or cscore > best_score_comp["score"]:
+                            best_score_comp = self._genome_stats(hof, cid)
+                            best_score_comp["score"] = cscore
+                    if best_score_comp:
+                        best = best_score_comp
+                        best["edge"] = best_score_comp["score"] - primary_score
+                        score_promo_reason = (
+                            f"SCORE-promote — primary {primary_gid} score "
+                            f"{primary_score:.1f}, competitor {best['id']} "
+                            f"score {best_score_comp['score']:.1f}")
 
             # PUNT fallback: bleeding primary, no qualified competitor by
             # live-edge rule, but a high-score competitor exists with no
@@ -254,15 +302,22 @@ class AutoRotator(Agent):
                     "promoted": best["id"],
                     "edge":     round(best["edge"], 2),
                 })
-                label = "🎲 PUNT" if punt_reason else "🔄 rotated"
-                detail = punt_reason or (
-                    f"(${best['edge']:+.2f} live edge, "
-                    f"{best['trades']}t WR {best['wr']:.0f}%)")
+                if punt_reason:
+                    label = "🎲 PUNT"
+                    detail = punt_reason
+                elif score_promo_reason:
+                    label = "⬆ SCORE-PROMOTE"
+                    detail = score_promo_reason
+                else:
+                    label = "🔄 rotated"
+                    detail = (f"(${best['edge']:+.2f} live edge, "
+                              f"{best['trades']}t WR {best['wr']:.0f}%)")
                 emit_insight(self.name, "ACT",
                     f"{label} {symbol}: {primary_gid} → {best['id']} {detail}",
                     data={"symbol": symbol, "old": primary_gid, "new": best["id"],
                            "edge": best["edge"], "old_pnl": primary_stats["pnl"],
-                           "new_pnl": best["pnl"], "punt": bool(punt_reason)},
+                           "new_pnl": best["pnl"], "punt": bool(punt_reason),
+                           "score_promote": bool(score_promo_reason)},
                     action="genome_rotated")
             except Exception as e:
                 emit_insight(self.name, "WARN",
