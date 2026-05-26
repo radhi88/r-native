@@ -60,6 +60,7 @@ def _load_default_agents():
         ("auto_rotator",        "AutoRotator"),
         ("side_balance_monitor","SideBalanceMonitor"),
         ("streak_detector",     "StreakDetector"),
+        ("position_aging",      "PositionAging"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
