@@ -32,7 +32,13 @@ def _ensure():
 def _hydrate_ring_from_disk():
     """Load the last 500 lines from insights.jsonl into the ring buffer.
     Called once on first emit (cheap, idempotent). Survives brain restarts
-    so the UI never shows an empty AI Advisors feed after a quick reboot."""
+    so the UI never shows an empty AI Advisors feed after a quick reboot.
+
+    Also seeds the in-memory dedup window from the loaded insights so
+    that "same WARN every 3 minutes after a restart" spam is suppressed.
+    Without this, the dedup dict resets to {} on every brain restart and
+    every old WARN re-fires on the first tick post-startup.
+    """
     global _ring_hydrated
     if _ring_hydrated: return
     _ring_hydrated = True
@@ -41,11 +47,28 @@ def _hydrate_ring_from_disk():
         # Read all lines, take last 500
         with INSIGHTS_PATH.open("r", encoding="utf-8") as f:
             lines = f.readlines()
+        import time as _t
+        from datetime import datetime as _dt
+        now_s = _t.time()
         for line in lines[-500:]:
             line = line.strip()
             if not line: continue
             try:
-                _insights_ring.append(json.loads(line))
+                rec = json.loads(line)
+                _insights_ring.append(rec)
+                # Seed dedup window for this (agent, msg-prefix) — only if it
+                # would still be inside the dedup interval right now.
+                if not rec.get("action"):
+                    try:
+                        ts = _dt.fromisoformat(rec["ts"].replace("Z", "+00:00"))
+                        age_s = now_s - ts.timestamp()
+                        if 0 <= age_s < DEDUP_INTERVAL_S:
+                            sig = (rec.get("agent"), (rec.get("message") or "")[:50])
+                            # Store original emit time (now_s - age_s) so window
+                            # naturally expires at the right wall-clock moment.
+                            prev = _dedup_window.get(sig, 0)
+                            _dedup_window[sig] = max(prev, now_s - age_s)
+                    except Exception: pass
             except Exception:
                 continue
     except Exception as e:

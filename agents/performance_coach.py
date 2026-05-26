@@ -34,6 +34,10 @@ class PerformanceCoach(Agent):
         # Find all genomes that have live trades
         comp = []
         for gid, g in idx.items():
+            # Skip already-killed genomes — risk_sentinel / genome_curator
+            # already retired them. Repeatedly flagging "💀 KILL or re-breed"
+            # on a corpse is just spam. Only review live / still-deployed ones.
+            if g.get("killed"): continue
             n = int(g.get("live_trades") or 0)
             if n < self.MIN_TRADES_FOR_VERDICT: continue
             pl = float(g.get("live_pnl") or 0)
