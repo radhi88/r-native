@@ -55,8 +55,11 @@ class DeployAssistant(Agent):
     # silently dropping the new genome. Without this, a single score-32
     # competitor squatting an idle slot blocks a score-50 newcomer forever.
     EVICT_MIN_SCORE_EDGE     = 10.0   # candidate must beat lowest by ≥10
-    EVICT_BIG_SCORE_EDGE     = 15.0   # ≥15 = evict regardless of age (clear upgrade)
+    EVICT_BIG_SCORE_EDGE     = 15.0   # ≥15 = evict on idle+age (clear upgrade)
     EVICT_MIN_IDLE_HOURS     = 2.0    # standard evict: idle 2h+ AND 0 live trades
+    EVICT_BIG_EDGE_MIN_AGE   = 0.5    # even BIG_EDGE waits 30min so new blood
+                                       # gets a chance to fire its first trade
+                                       # before being shuffled out by next-best
 
     def _load_all_configs(self) -> dict:
         """Return {symbol: cfg_dict}."""
@@ -157,7 +160,12 @@ class DeployAssistant(Agent):
                 # Eviction triggers (either-or):
                 #   BIG_EDGE alone (score gap is huge — always evict)
                 #   OR (MIN_EDGE AND idle 2h+ with no live trades)
-                if edge >= self.EVICT_BIG_SCORE_EDGE:
+                # BIG_EDGE: clear upgrade, but still give the squatter at
+                # least EVICT_BIG_EDGE_MIN_AGE (default 30 min) to fire its
+                # first trade. Otherwise newly-deployed genomes never get
+                # to prove themselves before being shuffled out.
+                if (edge >= self.EVICT_BIG_SCORE_EDGE
+                        and weakest["slot_age_h"] >= self.EVICT_BIG_EDGE_MIN_AGE):
                     evict_target = weakest
                 elif (edge >= self.EVICT_MIN_SCORE_EDGE
                       and weakest["live"] == 0
