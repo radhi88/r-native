@@ -70,6 +70,7 @@ def _load_default_agents():
         ("trade_journal",       "TradeJournal"),
         ("volatility_reversion","VolatilityReversion"),
         ("hedge_resolver",      "HedgeResolver"),
+        ("sl_safety_tightener", "SLSafetyTightener"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",

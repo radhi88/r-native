@@ -46,19 +46,16 @@ class PositionAging(Agent):
     STAGNATION_PL_BAND    = 0.30    # |pl| < $0.30 = stagnant
     SLOW_BLEED_AGE_HOURS  = 3.0     # was 4.0 — bleed for 3h is enough
     SLOW_BLEED_PL_FLOOR   = -0.50   # < -$0.50 after 3h = cut
-    # Fast-bleed tier (cycle 15): catches volatility-hunter straddle fakeouts
-    # that lose $1.50+ within an hour. Without this, USDCHFm BUY-type fast
-    # losers grind down to SL (-$2.50+) before slow_bleed (3h) triggers.
+    # Fast-bleed tier (cycle 15, tightened cycle 31): catches volatility-hunter
+    # straddle fakeouts. -$1.00 floor matches modern $100 account size.
     # Active 24/7 — unlike night_shift's -$1 floor that only runs at night.
     FAST_BLEED_AGE_HOURS  = 1.0
-    FAST_BLEED_PL_FLOOR   = -1.50
-    # EMERGENCY tier (cycle 24): catastrophic-fast losses (≥$3 in any time
-    # frame, even brand new positions). On a $120 account that's 2.5% on a
-    # single trade — at this magnitude we cut now, no MIN_AGE grace period.
-    # Triggered by observation: XAUUSDm SELL and XAGUSDm SELL each hit
-    # -$3+ within 2 minutes of opening. The genomes set SL too wide for
-    # high-volatility metals (XAGUSDm SL was $10.30 max loss = 8% account).
-    EMERGENCY_PL_FLOOR    = -3.00
+    FAST_BLEED_PL_FLOOR   = -1.00   # was -1.50 in cycle 15
+    # EMERGENCY tier (cycle 24, tightened cycle 31): catastrophic-fast losses.
+    # On a $100 account, $2 = 2% loss per trade — already significant.
+    # Was -$3 but ETHUSDm just hit -$3.18 SL because there was no cap
+    # between fast_bleed (-$1.50) and full SL hit. Tightened to -$2.
+    EMERGENCY_PL_FLOOR    = -2.00   # was -3.00 — too lenient for smaller account
     EMERGENCY_OVERRIDE_MIN_AGE = True   # bypasses MIN_AGE_HOURS=1.0
 
     # Protections
