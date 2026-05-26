@@ -498,12 +498,12 @@ def evaluate_council(snapshot: dict) -> dict:
 
 
 def decide_entry_with_council(genome_flags: dict, snapshot: dict,
-                               council_required_agreement: float = 0.65
+                               council_required_agreement: float = 0.55
                                ) -> dict:
-    # User asked (2026-05-26): "خله يدخل صفقات بسرعة لا يوقف". Loosened
-    # council veto threshold from 0.55 → 0.65 so only STRONG disagreement
-    # (65%+ of council on opposite side) blocks the genome's decision.
-    # Result: many more entries pass through, system stays active.
+    # Cycle 25 REVERT: cycle-23's loosening to 0.65 fired 2 metals trades
+    # that hit -$13 in 30 min. Restored to 0.55. The "more entries" goal
+    # is still achievable via volatility_hunter pending grid + safer
+    # symbol_learning thresholds — without lowering council quality.
     """Genome's decide_entry + council cross-check.
 
     Process:

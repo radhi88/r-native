@@ -23,8 +23,9 @@ class VolatilityHunter(Agent):
     interval_seconds = 180   # every 3 min
     default_enabled = True
 
-    SPIKE_THRESHOLD = 1.4    # was 1.8 — lowered per user "خله يدخل بسرعة"
-                              # any 1.4× spike now triggers a 4-order grid
+    SPIKE_THRESHOLD = 1.6    # cycle 25 partial revert: 1.4 was too loose
+                              # (caught noise as spikes). Back to 1.6 — still
+                              # more sensitive than original 1.8.
     BUFFER_ATR_MULT = 0.3    # entry placed 0.3 ATR beyond swing
     SL_ATR_MULT     = 1.5
     TP_ATR_MULT     = 3.0    # R:R = 1:2
