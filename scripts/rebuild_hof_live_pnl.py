@@ -23,7 +23,7 @@ HOF_INDEX = Path(r"C:\Users\Radhi\MT5\data\r_native\hall_of_fame\index.json")
 R_MAGIC = 20260605
 
 
-def main(lookback_hours: int = 48):
+def main(lookback_hours: int = 48, zero_stale: bool = False):
     import MetaTrader5 as mt5
     if not mt5.initialize():
         print("MT5 init failed")
@@ -101,21 +101,30 @@ def main(lookback_hours: int = 48):
         hof[gid]["live_wr_pct"] = round(stats["wins"] / max(1, stats["trades"]) * 100, 1)
         hof[gid]["last_synced"] = datetime.now(timezone.utc).isoformat()
         updated += 1
-    # Also zero out genomes that USED to have live stats but don't match any current MT5 deals
-    for gid, g in hof.items():
-        if gid in gid_stats: continue
-        # Was it ever credited? Reset if so.
-        if g.get("live_trades", 0) > 0 or abs(g.get("live_pnl", 0)) > 0.01:
-            print(f"  🧹 zeroing stale stats on {gid} (was {g.get('live_trades')}t ${g.get('live_pnl'):+.2f})")
-            g["live_trades"] = 0
-            g["live_pnl"]    = 0
-            g["live_wins"]   = 0
-            g["live_wr_pct"] = 0
-            g["last_synced"] = datetime.now(timezone.utc).isoformat()
+    # Optionally zero out genomes that USED to have live stats but don't match
+    # current MT5 deals. DEFAULT OFF (cycle 14 fix): running with a shorter
+    # lookback than what previously captured stats was destroying legitimate
+    # older attribution data. The original intent — fixing broken pre-ticket-
+    # based-attribution stats — should now happen once explicitly via
+    # zero_stale=True. Routine syncs should not nuke older data.
+    zeroed = 0
+    if zero_stale:
+        for gid, g in hof.items():
+            if gid in gid_stats: continue
+            if g.get("live_trades", 0) > 0 or abs(g.get("live_pnl", 0)) > 0.01:
+                print(f"  🧹 zeroing stale stats on {gid} "
+                      f"(was {g.get('live_trades')}t ${g.get('live_pnl'):+.2f})")
+                g["live_trades"] = 0
+                g["live_pnl"]    = 0
+                g["live_wins"]   = 0
+                g["live_wr_pct"] = 0
+                g["last_synced"] = datetime.now(timezone.utc).isoformat()
+                zeroed += 1
     json.dump(hof, open(HOF_INDEX, "w"), ensure_ascii=False, indent=2)
     msg = f"\n✅ Updated {updated} genome entries in HoF"
-    if created: msg += f" ({created} auto-created from MT5 history)"
-    msg += " · zeroed stale ones"
+    if created: msg += f" · {created} auto-created"
+    if zeroed:  msg += f" · {zeroed} zeroed (explicit)"
+    elif not zero_stale: msg += " · zero_stale OFF (existing older stats preserved)"
     print(msg)
 
     mt5.shutdown()
@@ -124,4 +133,6 @@ def main(lookback_hours: int = 48):
 if __name__ == "__main__":
     import sys
     h = int(sys.argv[1]) if len(sys.argv) > 1 else 48
-    main(h)
+    # zero_stale only when explicitly requested via --wipe flag
+    wipe = "--wipe" in sys.argv
+    main(h, zero_stale=wipe)
