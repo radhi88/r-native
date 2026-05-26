@@ -200,6 +200,33 @@ def _maybe_auto_deploy(symbol: str, summary: dict, threshold: float,
         except Exception:
             pass
 
+    # ── Lane-aware threshold (Phase 5) ──────────────────────────
+    # SMC genomes shouldn't have to beat the all-time classic king to get a
+    # live test slot — only their own lane. If this genome is SMC and the
+    # current deploy is classic (or vice-versa), compare against the best
+    # in the candidate's OWN lane instead of the currently deployed.
+    try:
+        from r_native.hall_of_fame import get_elites_by_lane, _classify_lane
+        new_lane = _classify_lane(top.get("active_genes") or top.get("genes") or [])
+        cur_lane = "classic"
+        if cur_id:
+            from r_native.hall_of_fame import load_index
+            cur_entry = load_index().get(cur_id) or {}
+            cur_lane = cur_entry.get("lane") or _classify_lane(
+                cur_entry.get("active_genes") or [])
+        if new_lane != cur_lane:
+            same_lane_elite = get_elites_by_lane(symbol, new_lane, n=1)
+            lane_threshold_score = (same_lane_elite[0]["score"]
+                                    if same_lane_elite else 0.0)
+            delta_lane = new_score - lane_threshold_score
+            if delta_lane >= threshold:
+                _log(f"   🛣 lane-aware deploy: {new_lane} beats own-lane "
+                     f"best {lane_threshold_score:.1f} by {delta_lane:.1f}")
+                cur_score = lane_threshold_score
+                cur_id    = (same_lane_elite[0]["id"] if same_lane_elite else None)
+    except Exception as _e:
+        _log(f"   ⚠ lane-aware compare failed (using global): {_e}")
+
     delta = new_score - cur_score
     if delta < threshold:
         return {"deployed": False,

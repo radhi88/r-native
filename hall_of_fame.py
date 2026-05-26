@@ -137,6 +137,7 @@ def admit(genome: dict, symbol: str, tf: str, score: float,
         "stats":         stats or {},
         "all_params":    all_params or existing.get("all_params", {}),
         "active_genes":  active_genes or existing.get("active_genes", []),
+        "lane":          _classify_lane(active_genes or existing.get("active_genes", [])),
         "deployments":   existing.get("deployments", []),
         "live_pnl":      existing.get("live_pnl", 0.0),
         "live_trades":   existing.get("live_trades", 0),
@@ -289,6 +290,56 @@ def get_elites(symbol: str, n: int = 10, include_pinned: bool = True) -> list[di
             if e.get("id") in pinned and e not in top:
                 top.append(e)
     return top
+
+
+# ─── SMC Lane (Phase 5) ──────────────────────────────────────────
+def _classify_lane(active_genes: list) -> str:
+    """Return 'smc' if the genome uses any SMC concept, else 'classic'.
+    Used by the breeder to reserve elite-carry slots so SMC genomes don't
+    get crowded out by classics before they prove themselves per-symbol."""
+    if not active_genes: return "classic"
+    return "smc" if any("smc" in g for g in active_genes) else "classic"
+
+
+def get_elites_by_lane(symbol: str, lane: str, n: int = 10,
+                       include_pinned: bool = True) -> list[dict]:
+    """Return top-N genomes for this symbol restricted to one lane.
+
+    `lane` is "smc" or "classic". Backfills `lane` on older entries that
+    were admitted before Phase 5 (they had no lane field) by re-classifying
+    from their `active_genes` on read.
+    """
+    by_sym = load_symbol(symbol)
+    pinned = set(load_pinned())
+    alive  = [e for e in by_sym if not e.get("killed")]
+    out: list[dict] = []
+    for e in alive:
+        e_lane = e.get("lane") or _classify_lane(e.get("active_genes") or [])
+        if e_lane == lane:
+            out.append(e)
+    top = out[:n]
+    if include_pinned:
+        for e in alive:
+            e_lane = e.get("lane") or _classify_lane(e.get("active_genes") or [])
+            if e_lane == lane and e.get("id") in pinned and e not in top:
+                top.append(e)
+    return top
+
+
+def lane_summary(symbol: str) -> dict:
+    """For observability: per-lane count, best score, deployed id."""
+    by_sym = load_symbol(symbol)
+    alive  = [e for e in by_sym if not e.get("killed")]
+    out: dict = {"smc": {"count": 0, "best_score": 0.0, "best_id": None},
+                 "classic": {"count": 0, "best_score": 0.0, "best_id": None}}
+    for e in alive:
+        ln = e.get("lane") or _classify_lane(e.get("active_genes") or [])
+        if ln not in out: continue
+        out[ln]["count"] += 1
+        if e.get("score", 0) > out[ln]["best_score"]:
+            out[ln]["best_score"] = float(e["score"])
+            out[ln]["best_id"]    = e["id"]
+    return out
 
 
 def get_breeding_pool(symbol: str, n: int = 20) -> list[dict]:
