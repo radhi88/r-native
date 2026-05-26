@@ -62,6 +62,7 @@ def _load_default_agents():
         ("streak_detector",     "StreakDetector"),
         ("position_aging",      "PositionAging"),
         ("session_pl_tracker",  "SessionPLTracker"),
+        ("deploy_assistant",    "DeployAssistant"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
