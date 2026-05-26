@@ -29,6 +29,14 @@ class VolatilityHunter(Agent):
     TP_ATR_MULT     = 3.0    # R:R = 1:2
     EXPIRY_HOURS    = 2
     MAX_STRADDLES   = 3      # don't flood
+    # Cycle-21 fix: even if no pending exists right now (filled or
+    # canceled), don't re-place a straddle on the same symbol within
+    # this many minutes. Observed pattern: same symbol with identical
+    # spike values fired 7 times in 15 min, polluting the insight feed.
+    SAME_SYMBOL_COOLDOWN_MIN = 30
+
+    # State: {symbol -> last_placed_ts} survives within agent's process
+    _last_placed_by_sym: dict[str, float] = {}
 
     def _list_deployed_symbols(self) -> list[str]:
         import json
@@ -80,10 +88,17 @@ class VolatilityHunter(Agent):
         )
         cancel_expired(max_age_hours=self.EXPIRY_HOURS)
         existing_syms = {o["symbol"] for o in list_r_pending()}
+        import time as _t
+        now_s = _t.time()
         placed = 0
         for sym in self._list_deployed_symbols():
             if placed >= self.MAX_STRADDLES: break
             if sym in existing_syms: continue
+            # Same-symbol cooldown — even if pendings vanished, don't
+            # immediately re-fire a straddle on the same symbol.
+            last_ts = self._last_placed_by_sym.get(sym, 0)
+            if (now_s - last_ts) < self.SAME_SYMBOL_COOLDOWN_MIN * 60:
+                continue
             spike = self._detect_spike(sym)
             if not spike: continue
             buf = self.BUFFER_ATR_MULT * spike["current_atr"]
@@ -104,6 +119,7 @@ class VolatilityHunter(Agent):
                           reason="vol_spike", expiry_hours=self.EXPIRY_HOURS,
                           agent_name="volhun")
             placed += 1
+            self._last_placed_by_sym[sym] = now_s
             emit_insight(self.name, "ACT",
                 f"⚡ {sym} volatility spike {spike['spike_mult']:.2f}x — "
                 f"placed BUY_STOP@{buy_entry:.5f} + SELL_STOP@{sell_entry:.5f}",
