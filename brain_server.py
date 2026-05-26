@@ -688,7 +688,7 @@ def _quick_tf_snapshot(symbol: str, tf, n_bars: int = 60) -> dict:
         elif slope < -0.5: bias = "DOWN"
         else: bias = "RANGE"
         # Swing high/low across n_bars
-        return {
+        out = {
             "ok":        True,
             "current":   round(float(c[-1]), 3),
             "atr":       round(atr, 3),
@@ -699,6 +699,15 @@ def _quick_tf_snapshot(symbol: str, tf, n_bars: int = 60) -> dict:
             "bias":      bias,
             "slope_atr": round(slope, 2),
         }
+        # ── SMC sub-dict (Phase 4): attach OB/FVG/BOS/CHoCH/sweep/IDM/pools
+        # so genome_signal SMC evaluators have data to read. Failures here
+        # MUST NOT break the TF snapshot — return empty smc on any error.
+        try:
+            from r_native import smc_engine as _se
+            out["smc"] = _se.compute_offline(rates)
+        except Exception:
+            out["smc"] = {}
+        return out
     except Exception as e:
         return {"ok": False, "reason": str(e)}
 
