@@ -66,6 +66,7 @@ def _load_default_agents():
         ("dynamic_tp",          "DynamicTP"),
         ("deployment_status",   "DeploymentStatus"),
         ("breakeven_lock",      "BreakevenLock"),
+        ("margin_safety",       "MarginSafety"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
