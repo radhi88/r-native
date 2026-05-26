@@ -44,8 +44,11 @@ class StreakDetector(Agent):
 
     HOT_STREAK_MIN  = 3   # ≥3 wins in a row to fire
     COLD_STREAK_MIN = 3   # ≥3 losses in a row to fire
-    EVICT_ON_COLD_STREAK = 5  # ≥5 losses in a row: actively REMOVE from
-                               # symbol's competitor list (cycle 34)
+    EVICT_ON_COLD_STREAK = 4  # ≥4 losses in a row: actively REMOVE from
+                               # symbol's competitor list (cycle 34 → tightened
+                               # to 4 in cycle 35 — 8CE50E on BTCUSDm was at
+                               # 4 losses + $-7.48 still bleeding; lower
+                               # threshold catches earlier).
     LOOKBACK_HOURS  = 48
 
     def _load_state(self) -> dict:
@@ -186,6 +189,18 @@ class StreakDetector(Agent):
 
             # Fire only on direction-flip OR growth
             grew_or_flipped = (direction != prev_dir) or (length > prev_len)
+
+            # Cycle 35 fix: eviction must run even when length is unchanged.
+            # If a cold streak hits threshold and persists, we want eviction
+            # to fire EVERY tick until the genome is gone — not just on
+            # the one tick where it grew.
+            should_evict_now = (direction == "LOSS"
+                                and length >= self.EVICT_ON_COLD_STREAK
+                                and not hof_entry.get("killed"))
+            if should_evict_now:
+                self._evict_from_competitors(gid, info["symbol"], length,
+                                              info["trailing_pnl"])
+
             if not grew_or_flipped:
                 new_state[gid] = info
                 continue
