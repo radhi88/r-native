@@ -317,6 +317,12 @@ class LLMStrategist(Agent):
                 if not gid: return "kill_no_id"
                 entry = load_index().get(gid)
                 if not entry: return f"kill_unknown_id_{gid}"
+                # Short-circuit: if already killed, return clear status so
+                # the LLM stops re-suggesting kills on corpses. Previously
+                # kill() returned False (idempotent) and we returned the
+                # generic "kill_failed", which the LLM kept retrying.
+                if entry.get("killed"):
+                    return "already_killed"
                 score = float(entry.get("score") or 0)
                 if score > self.KILL_SCORE_CEILING:
                     emit_insight(self.name, "WARN",
@@ -331,6 +337,14 @@ class LLMStrategist(Agent):
                         f"🛡 blocked LLM kill of {gid} — currently deployed "
                         f"on {deployed_on}")
                     return f"blocked_deployed_{deployed_on}"
+                # Kill-protected check (asymmetry specialists) — give clear
+                # status so LLM doesn't retry. kill() refuses these.
+                try:
+                    from r_native.genome_asymmetry import is_kill_protected
+                    protected, why = is_kill_protected(gid)
+                    if protected:
+                        return f"blocked_protected_{why[:30]}"
+                except Exception: pass
                 if kill(gid, rec.get("reason", "LLM strategist")):
                     return f"killed_score{score:.1f}"
                 return "kill_failed"

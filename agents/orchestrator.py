@@ -59,6 +59,7 @@ def _load_default_agents():
         ("regime_scaler",       "RegimeScaler"),
         ("auto_rotator",        "AutoRotator"),
         ("side_balance_monitor","SideBalanceMonitor"),
+        ("streak_detector",     "StreakDetector"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
