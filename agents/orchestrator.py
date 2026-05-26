@@ -44,6 +44,23 @@ def _load_default_agents():
         register(LLMStrategist())
     except Exception as e:
         print(f"[orchestrator] LLMStrategist failed to load: {e}")
+    # ── Specialist agents added 2026-05-26 (user requested while sleeping) ──
+    for mod_name, cls_name in [
+        ("gap_hunter",          "GapHunter"),
+        ("news_blocker",        "NewsBlocker"),
+        ("correlation_guard",   "CorrelationGuard"),
+        ("drawdown_recovery",   "DrawdownRecovery"),
+        ("session_specialist",  "SessionSpecialist"),
+        ("volatility_hunter",   "VolatilityHunter"),
+        ("performance_coach",   "PerformanceCoach"),
+        ("night_shift",         "NightShift"),
+    ]:
+        try:
+            mod = __import__(f"r_native.agents.{mod_name}",
+                             fromlist=[cls_name])
+            register(getattr(mod, cls_name)())
+        except Exception as e:
+            print(f"[orchestrator] {cls_name} failed: {e}")
 
 
 _started = False
