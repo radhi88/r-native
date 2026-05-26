@@ -52,16 +52,36 @@ def _hydrate_ring_from_disk():
         print(f"[insights] hydrate err: {e}", flush=True)
 
 
+_dedup_window: dict = {}   # (agent, msg_signature) -> last_emit_ts
+DEDUP_INTERVAL_S = 600     # don't emit same message twice within 10 min
+
+
 def emit_insight(agent: str, level: str, message: str,
                  data: Optional[dict] = None, action: Optional[str] = None):
     """Push an insight to the unified stream. Called by agents.
 
     level: INFO | WARN | ACT  (ACT = the agent actually changed something)
+
+    Auto-deduplication: identical (agent, first-50-chars-of-message) pairs
+    fired more than once within 10 minutes are silently dropped. Stops
+    the LLM strategist (and any other agent) from spamming the same
+    "blocked: pipeline 14%" warning every 7 minutes.
     """
     _ensure()
     with _insights_lock:
         if not _ring_hydrated:
             _hydrate_ring_from_disk()
+    # Dedup check — applies to all levels (INFO/WARN/ACT). ACT-level
+    # insights with explicit `action` are exempt (we want every actual
+    # state change logged even if the message text is similar).
+    if not action:
+        import time as _t
+        sig = (agent, message[:50])
+        now_s = _t.time()
+        last = _dedup_window.get(sig, 0)
+        if (now_s - last) < DEDUP_INTERVAL_S:
+            return None   # silently dropped
+        _dedup_window[sig] = now_s
     rec = {
         "ts":      datetime.now(timezone.utc).isoformat(),
         "agent":   agent,

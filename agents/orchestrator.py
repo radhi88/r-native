@@ -54,6 +54,7 @@ def _load_default_agents():
         ("volatility_hunter",   "VolatilityHunter"),
         ("performance_coach",   "PerformanceCoach"),
         ("night_shift",         "NightShift"),
+        ("winner_booster",      "WinnerBooster"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
