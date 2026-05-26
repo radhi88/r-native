@@ -263,7 +263,7 @@ def _write_brain_json(gate: dict, state: dict, in_position: bool = False):
         "source":  "R_EXECUTOR",
         "killed":  False,
         "decision": decision,
-        "drawings": [],
+        "drawings": _collect_drawings(R_SYMBOL, decision, gate),
     }
     try:
         MT5_COMMON.mkdir(parents=True, exist_ok=True)
@@ -273,6 +273,43 @@ def _write_brain_json(gate: dict, state: dict, in_position: bool = False):
         tmp.replace(BRAIN_JSON)   # atomic swap
     except Exception as e:
         _log(state, f"⚠ failed to write Brain JSON: {e}")
+
+
+def _collect_drawings(symbol: str, decision: dict, gate: dict) -> list:
+    """Compose the drawings[] array for the EA chart bridge.
+
+    Pulls live SMC zones (OB, FVG, BOS/CHoCH, sweep, IDM, liquidity)
+    from smc_engine and adds trade overlays (entry marker, SL/TP zones)
+    when the latest gate verdict is GO. Best-effort — any failure
+    inside returns [] so the brain JSON write is never blocked.
+    """
+    try:
+        from r_native import smc_engine as _se
+        from r_native import chart_drawings as _cd
+        # H1 SMC snapshot for the active symbol
+        snap = _se.compute_smc_snapshot(symbol, "H1", bars_back=200)
+        drawings = _cd.drawings_from_smc_snapshot(symbol, "h1", snap)
+        # Trade overlay if there's an active GO verdict
+        if decision and decision.get("final_action") == "PLACE":
+            side = (decision.get("side") or "").upper()
+            entry = float(decision.get("entry") or 0)
+            sl    = float(decision.get("sl")    or 0)
+            tp    = float(decision.get("tp")    or 0)
+            if side and entry and sl and tp:
+                drawings.extend(_cd.draw_sl_tp_zone(
+                    symbol, entry=entry, sl=sl, tp=tp,
+                    side="long" if side == "BUY" else "short"))
+                drawings.append(_cd.draw_entry_marker(
+                    symbol, ts=int(datetime.now(timezone.utc).timestamp()),
+                    price=entry, side=side,
+                    reason_short=(decision.get("reason") or "")[:40]))
+        # TTL prune + per-symbol cap
+        return _cd.filter_and_cap(drawings, max_per_symbol=50,
+                                   stale_after_sec=6 * 3600)
+    except Exception as _e:
+        try: print(f"[r_executor] _collect_drawings err: {_e}", flush=True)
+        except Exception: pass
+        return []
 
 
 def _log(state: dict, msg: str):

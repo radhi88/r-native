@@ -782,7 +782,36 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
             spread_price_local = chl.get("spread_points", 0) * (point_size if 'point_size' in dir() else 0.001)
             min_sl_dist = max(spread_price_local * 2.5, h1_atr * 0.3)
 
-            if use_levels:
+            # ─── SMC-anchored SL/TP (Phase 3 wiring) ────────────────
+            # If the deployed genome has any SMC anchor flag on, try the
+            # resolver first. On success its levels override both
+            # `use_levels` and ATR fallback; on failure we fall through to
+            # the existing branches unchanged.
+            smc_anchored = False
+            try:
+                from r_native.sl_tp_resolver import resolve_sl_tp
+                _dg_flags = (deployed_genome or {}).get("flags") or {}
+                _smc_keys = ("sl_anchor_smc_ob", "sl_anchor_smc_swing",
+                             "tp_target_smc_liq", "tp_target_smc_ob")
+                if any(_dg_flags.get(k) for k in _smc_keys):
+                    _smc_out = resolve_sl_tp(
+                        genome=deployed_genome or {},
+                        side=side, entry=entry, snap=snapshot,
+                        h1_atr=h1_atr, max_sl_dist=max_sl_price_dist,
+                    )
+                    if _smc_out.get("ok"):
+                        sl      = _smc_out["sl"]
+                        near_tp = _smc_out["near_tp"]
+                        far_tp  = _smc_out["far_tp"]
+                        smc_anchored = True
+                        use_levels = False     # we own SL/TP now
+                        soft_warnings.append(
+                            f"smc_anchored sl={_smc_out['sl_anchor']} "
+                            f"tp={_smc_out['tp_anchor']}")
+            except Exception as _se:
+                soft_warnings.append(f"smc_resolver_err:{_se}")
+
+            if not smc_anchored and use_levels:
                 sl      = level_proposal["sl"]
                 near_tp = level_proposal["near_tp"]
                 far_tp  = level_proposal["far_tp"]
@@ -799,7 +828,7 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
                     use_levels = False
                     soft_warnings.append(f"level SL too tight ({sl_dist:.4f} < min {min_sl_dist:.4f}) → using ATR")
 
-            if not use_levels:
+            if not use_levels and not smc_anchored:
                 # ATR-based fallback (sl_dist in price units)
                 sl_dist = min(tpl_sl_dist, max_sl_price_dist)
                 # Enforce minimum SL distance vs spread (so order isn't rejected)

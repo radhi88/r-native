@@ -68,10 +68,31 @@ Each phase = one or more focused PRs, each fully shippable in isolation. The
 existing platform keeps running through every phase — backwards-compatible
 additions only.
 
-### **Phase 0 — Bug fix + Design** (this PR — DONE)
-- ✅ Fix `volatility_hunter` direction-blindness (already committed)
+### **Phase 0 — Bug fix + Design** (DONE)
+- ✅ Fix `volatility_hunter` direction-blindness
 - ✅ Send broker-side `expiration` in `pending_orders.place_pending`
 - ✅ Write four design docs in `docs/smc/`
+
+### **Phases 1-8 — Implementation status (DONE on branch)**
+
+| Phase | Status | Module |
+|---|---|---|
+| 1 — SMC Engine | ✅ | `smc_engine.py` |
+| 1 — Chart drawings | ✅ | `chart_drawings.py` + `DrawingRenderer.mqh` |
+| 1-wire — r_executor draws | ✅ | `r_executor._collect_drawings` + populates `drawings[]` |
+| 2 — SMC genes | ✅ | `genes.py` (+13 flags, +3 params) |
+| 2 — SMC signal evaluators | ✅ | `genome_signal.py` (+6 sigs, +3 filters) |
+| 3 — SL/TP resolver | ✅ | `sl_tp_resolver.py` |
+| 3-wire — trade_gate uses resolver | ✅ | `trade_gate.evaluate_gate` (SMC anchors override ATR) |
+| 4 — Snapshot wiring | ✅ | `brain_server._quick_tf_snapshot` adds `smc` per TF |
+| 5 — SMC lane in HoF | ✅ | `hall_of_fame.get_elites_by_lane`, `lane_summary` |
+| 5 — Lane-aware deploy threshold | ✅ | `continuous_evolution._maybe_auto_deploy` |
+| 6 — Neural SMC scorer | 🔲 | needs training data, deferred |
+| 7 — Arabic narrator | ✅ | `agents/smc_narrator.py` (+orchestrator registration) |
+| 8a — Genome rollback | ✅ | `genome_rollback.py` (evaluate + execute) |
+| 8b — Agent governance | ✅ | `agent_governance.py` (singleton policy enforcer) |
+
+Tests: 69+ unit tests passing in `tests/`. Run `python tests/run_all.py`.
 
 ### **Phase 1 — SMC Engine + Drawing Bridge** (PR-1)
 Two modules, one MQ5 include, end-to-end smoke test:

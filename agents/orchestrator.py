@@ -56,6 +56,8 @@ def _load_default_agents():
         ("night_shift",         "NightShift"),
         ("winner_booster",      "WinnerBooster"),
         ("market_scanner",      "MarketScanner"),
+        # ── SMC agents (Phase 7+8) ──
+        ("smc_narrator",        "SMCNarrator"),
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",
