@@ -824,13 +824,12 @@ def _pick_best_symbol(state: dict) -> str:
                 if _need is not None and _need > _free_margin * 0.83:
                     continue
             except Exception: pass
-            # Seed a genome for this symbol if it's missing one — so the
-            # next gate evaluation produces an R-<gid>-<side> comment instead
-            # of falling through to the Algory archetype path.
-            try:
-                did, why = ensure_seeded(sym)
-                if did: _log(state, f"  🌱 seeded {sym}: {why}")
-            except Exception: pass
+            # NOTE: auto-seeding DISABLED. It was creating empty-flag stubs
+            # for every symbol the scanner touched, polluting the system
+            # with 1600+ fake HoF entries + 24 fake symbol_configs.
+            # Symbols only get genomes via deliberate deploy_multi_symbol.py
+            # or via continuous_evolution discovering a real one.
+            pass
             state["best_symbol_now"]     = sym
             state["best_symbol_quality"] = c["quality"]
             return sym
