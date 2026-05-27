@@ -162,9 +162,17 @@ def main(symbol: str = "XAUUSDm", poll: float = 1.0):
     last_macd_cross = None
     last_liq_grab_ts = 0
 
-    _print(f"📡 live_pulse v3.3 online · {symbol} · tick poll {poll}s")
-    _print(f"   sensors: M1 close+anatomy, RSI hysteresis, engulf, OB, FVG, "
-            f"pressure 10M1, tick velocity, spread, levels, +MTF align +liq grab +MACD")
+    last_swing_emit = (None, 0)        # (price, ts) of last swing emitted
+    last_bos = None                      # "BULL_BOS" / "BEAR_BOS"
+    last_choch = None                    # "BULL_CHOCH" / "BEAR_CHOCH"
+    last_adx_regime = None               # "TRENDING" / "RANGING"
+    last_sr_alert = {}                   # key: cluster price → last alert ts
+    last_vol_trend = None
+
+    _print(f"📡 live_pulse v3.4 online · {symbol} · tick poll {poll}s")
+    _print(f"   sensors: M1 close+anatomy, RSI, engulf, OB, FVG, pressure, "
+            f"velocity, spread, levels, MTF align, liq grab, MACD, +S/R +BOS "
+            f"+CHoCH +ZigZag +ADX +Vol Trend")
 
     while True:
         try:
@@ -310,6 +318,135 @@ def main(symbol: str = "XAUUSDm", poll: float = 1.0):
                     _print(f"🪤 BEAR LIQ GRAB · high {bar_now['high']:.2f} swept "
                             f"above {hi20:.2f} then rejected (close {bar_now['close']:.2f})")
                     last_liq_grab_ts = now_ts
+            except Exception: pass
+
+            # ─── NEW v3.4: ZigZag swings + BOS + CHoCH (M5) ───
+            try:
+                m5_arr_zz = m5_arr if 'm5_arr' in dir() else [dict(b._asdict()) if hasattr(b,'_asdict') else {k:b[k] for k in b.dtype.names} for b in m5]
+                # Find swing highs/lows (5-bar fractal)
+                sw_highs, sw_lows = [], []
+                for i in range(2, len(m5_arr_zz)-2):
+                    w_h = [b["high"] for b in m5_arr_zz[i-2:i+3]]
+                    w_l = [b["low"]  for b in m5_arr_zz[i-2:i+3]]
+                    if m5_arr_zz[i]["high"] == max(w_h):
+                        sw_highs.append({"i": i, "price": m5_arr_zz[i]["high"], "t": int(m5_arr_zz[i]["time"])})
+                    if m5_arr_zz[i]["low"] == min(w_l):
+                        sw_lows.append({"i": i, "price": m5_arr_zz[i]["low"],  "t": int(m5_arr_zz[i]["time"])})
+                # Emit newest swing pivot on first detection
+                if sw_highs:
+                    sh_last = sw_highs[-1]
+                    if last_swing_emit[1] < sh_last["t"]:
+                        _print(f"📐 ZigZag swing HIGH @ {sh_last['price']:.2f}")
+                        last_swing_emit = (sh_last["price"], sh_last["t"])
+                if sw_lows:
+                    sl_last = sw_lows[-1]
+                    if last_swing_emit[1] < sl_last["t"]:
+                        _print(f"📐 ZigZag swing LOW @ {sl_last['price']:.2f}")
+                        last_swing_emit = (sl_last["price"], sl_last["t"])
+
+                # BOS: current close breaks LAST swing high (bull BOS) or low (bear BOS)
+                last_bar_close = m5_arr_zz[-1]["close"]
+                if sw_highs:
+                    prev_swing_high = sw_highs[-1]["price"]
+                    if last_bar_close > prev_swing_high and last_bos != "BULL_BOS":
+                        _print(f"🚀 BULL BOS · M5 close {last_bar_close:.2f} broke swing-H {prev_swing_high:.2f}")
+                        last_bos = "BULL_BOS"
+                if sw_lows:
+                    prev_swing_low = sw_lows[-1]["price"]
+                    if last_bar_close < prev_swing_low and last_bos != "BEAR_BOS":
+                        _print(f"💥 BEAR BOS · M5 close {last_bar_close:.2f} broke swing-L {prev_swing_low:.2f}")
+                        last_bos = "BEAR_BOS"
+
+                # CHoCH: in downtrend (LH series), bullish break of LAST LH = trend change
+                if len(sw_highs) >= 2 and len(sw_lows) >= 2:
+                    # Downtrend if last LH < prior LH
+                    dn_trend = sw_highs[-1]["price"] < sw_highs[-2]["price"]
+                    up_trend = sw_lows[-1]["price"] > sw_lows[-2]["price"]
+                    if dn_trend and last_bar_close > sw_highs[-1]["price"] and last_choch != "BULL_CHOCH":
+                        _print(f"🔄 BULL CHoCH · downtrend broken, close {last_bar_close:.2f} > LH {sw_highs[-1]['price']:.2f}")
+                        last_choch = "BULL_CHOCH"
+                    elif up_trend and last_bar_close < sw_lows[-1]["price"] and last_choch != "BEAR_CHOCH":
+                        _print(f"🔄 BEAR CHoCH · uptrend broken, close {last_bar_close:.2f} < LL {sw_lows[-1]['price']:.2f}")
+                        last_choch = "BEAR_CHOCH"
+            except Exception: pass
+
+            # ─── NEW v3.4: ADX(14) M5 — trend strength regime ───
+            try:
+                m5_arr_adx = m5_arr if 'm5_arr' in dir() else [dict(b._asdict()) if hasattr(b,'_asdict') else {k:b[k] for k in b.dtype.names} for b in m5]
+                if len(m5_arr_adx) >= 30:
+                    plus_dm, minus_dm, trs = [], [], []
+                    for j in range(1, len(m5_arr_adx)):
+                        h, l = m5_arr_adx[j]["high"], m5_arr_adx[j]["low"]
+                        ph, pl, pc = m5_arr_adx[j-1]["high"], m5_arr_adx[j-1]["low"], m5_arr_adx[j-1]["close"]
+                        up = h - ph; dn = pl - l
+                        plus_dm.append(up if up > dn and up > 0 else 0)
+                        minus_dm.append(dn if dn > up and dn > 0 else 0)
+                        trs.append(max(h-l, abs(h-pc), abs(l-pc)))
+                    p = 14
+                    if len(trs) >= p+1:
+                        atr_w   = sum(trs[:p])/p
+                        plus_w  = sum(plus_dm[:p])/p
+                        minus_w = sum(minus_dm[:p])/p
+                        for j in range(p, len(trs)):
+                            atr_w   = (atr_w*(p-1)+trs[j])/p
+                            plus_w  = (plus_w*(p-1)+plus_dm[j])/p
+                            minus_w = (minus_w*(p-1)+minus_dm[j])/p
+                        plus_di  = (plus_w  / atr_w * 100) if atr_w > 0 else 0
+                        minus_di = (minus_w / atr_w * 100) if atr_w > 0 else 0
+                        dx = (abs(plus_di - minus_di) / max(plus_di + minus_di, 1e-9)) * 100
+                        adx_val = round(dx, 1)
+                        regime = "TRENDING" if adx_val >= 25 else ("RANGING" if adx_val < 20 else None)
+                        if regime and regime != last_adx_regime:
+                            dirn = "↑" if plus_di > minus_di else "↓"
+                            _print(f"⚡ ADX M5 = {adx_val} → {regime} {dirn}  (+DI={plus_di:.0f} -DI={minus_di:.0f})")
+                            last_adx_regime = regime
+            except Exception: pass
+
+            # ─── NEW v3.4: S/R clusters auto-detected from swing density ───
+            try:
+                if 'sw_highs' in dir() and 'sw_lows' in dir() and (sw_highs or sw_lows):
+                    all_pivots = [s["price"] for s in sw_highs] + [s["price"] for s in sw_lows]
+                    # Cluster: group pivots within $1.0 of each other
+                    clusters = []
+                    for p in sorted(all_pivots):
+                        if clusters and abs(p - clusters[-1]["center"]) < 1.0:
+                            clusters[-1]["pts"].append(p)
+                            clusters[-1]["center"] = sum(clusters[-1]["pts"]) / len(clusters[-1]["pts"])
+                        else:
+                            clusters.append({"center": p, "pts": [p]})
+                    # Significant cluster = ≥2 pivots in same zone
+                    sr_levels = [round(c["center"], 2) for c in clusters if len(c["pts"]) >= 2]
+                    for sr in sr_levels:
+                        if abs(cur - sr) < 0.40:
+                            key = f"SR-{int(sr*10)}"
+                            if last_sr_alert.get(key, 0) < now_ts - 600:
+                                count = sum(1 for c in clusters if abs(c["center"] - sr) < 1.0 for _ in c["pts"])
+                                _print(f"🎯 S/R cluster @ {sr:.2f} ({count}x pivots) — price testing")
+                                last_sr_alert[key] = now_ts
+            except Exception: pass
+
+            # ─── NEW v3.4: Volume Trend (M5 vs recent average + direction) ───
+            try:
+                m5_arr_v = m5_arr if 'm5_arr' in dir() else [dict(b._asdict()) if hasattr(b,'_asdict') else {k:b[k] for k in b.dtype.names} for b in m5]
+                if len(m5_arr_v) >= 10:
+                    cur_v = int(m5_arr_v[-1]["tick_volume"])
+                    prev_vs = [int(b["tick_volume"]) for b in m5_arr_v[-11:-1]]
+                    avg_v = sum(prev_vs) / len(prev_vs)
+                    vol_pct = (cur_v / max(avg_v, 1)) * 100
+                    # Direction by last 3 closes
+                    closes_3 = [b["close"] for b in m5_arr_v[-3:]]
+                    rising = closes_3[-1] > closes_3[0]
+                    if vol_pct >= 200:
+                        trend = f"BURST {vol_pct:.0f}% {'↑BULL' if rising else '↓BEAR'}"
+                        if trend != last_vol_trend:
+                            _print(f"📊 VOL TREND M5 · {trend}")
+                            last_vol_trend = trend
+                    elif vol_pct < 60:
+                        if last_vol_trend != "DRY":
+                            _print(f"💨 VOL TREND M5 · DRY {vol_pct:.0f}% (consolidation)")
+                            last_vol_trend = "DRY"
+                    else:
+                        last_vol_trend = "NORMAL"
             except Exception: pass
 
             # ─── NEW: MACD M5 Cross ───
