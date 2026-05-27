@@ -96,6 +96,20 @@ class VolatilityHunter(Agent):
         from r_native.pending_orders import (
             place_pending, list_r_pending, cancel_expired
         )
+        # CYCLE-39 FIX: volatility_hunter was bypassing recovery_mode by
+        # placing straddles directly via mt5.order_send. Result: XAU/XAG
+        # SELL_LIMITs filled even though recovery_mode whitelists those
+        # symbols as BUY-only. Account dropped \$98→\$82 from these
+        # illegal straddles. Check whitelist + side restrictions BEFORE
+        # placing each leg.
+        try:
+            from r_native.agents.recovery_mode import (
+                is_recovery_active, WHITELIST as _REC_WHITELIST,
+            )
+            _rec_on = is_recovery_active()
+        except Exception:
+            _rec_on = False; _REC_WHITELIST = {}
+
         cancel_expired(max_age_hours=self.EXPIRY_HOURS)
         existing_syms = {o["symbol"] for o in list_r_pending()}
         import time as _t
@@ -104,6 +118,9 @@ class VolatilityHunter(Agent):
         for sym in self._list_deployed_symbols():
             if placed >= self.MAX_STRADDLES: break
             if sym in existing_syms: continue
+            # RECOVERY GATE — symbol must be on whitelist OR recovery is off
+            if _rec_on and sym not in _REC_WHITELIST:
+                continue   # symbol not allowed in recovery
             # Same-symbol cooldown — even if pendings vanished, don't
             # immediately re-fire a straddle on the same symbol.
             last_ts = self._last_placed_by_sym.get(sym, 0)
@@ -111,44 +128,53 @@ class VolatilityHunter(Agent):
                 continue
             spike = self._detect_spike(sym)
             if not spike: continue
+            # Determine allowed sides for this symbol under recovery
+            allowed_sides = _REC_WHITELIST.get(sym, "BOTH") if _rec_on else "BOTH"
             buf = self.BUFFER_ATR_MULT * spike["current_atr"]
-            # BUY_STOP above range
-            buy_entry = spike["swing_high"] + buf
-            buy_sl    = buy_entry - spike["current_atr"] * self.SL_ATR_MULT
-            buy_tp    = buy_entry + spike["current_atr"] * self.TP_ATR_MULT
-            place_pending(symbol=sym, side="BUY",  order_kind="STOP",
-                          price=buy_entry, sl=buy_sl, tp=buy_tp,
-                          reason="vol_spike", expiry_hours=self.EXPIRY_HOURS,
-                          agent_name="volhun")
-            # SELL_STOP below range
-            sell_entry = spike["swing_low"] - buf
-            sell_sl    = sell_entry + spike["current_atr"] * self.SL_ATR_MULT
-            sell_tp    = sell_entry - spike["current_atr"] * self.TP_ATR_MULT
-            place_pending(symbol=sym, side="SELL", order_kind="STOP",
-                          price=sell_entry, sl=sell_sl, tp=sell_tp,
-                          reason="vol_spike", expiry_hours=self.EXPIRY_HOURS,
-                          agent_name="volhun")
+            # BUY_STOP above range — only if BUY allowed
+            if allowed_sides in ("BUY", "BOTH"):
+                buy_entry = spike["swing_high"] + buf
+                buy_sl    = buy_entry - spike["current_atr"] * self.SL_ATR_MULT
+                buy_tp    = buy_entry + spike["current_atr"] * self.TP_ATR_MULT
+                place_pending(symbol=sym, side="BUY",  order_kind="STOP",
+                              price=buy_entry, sl=buy_sl, tp=buy_tp,
+                              reason="vol_spike", expiry_hours=self.EXPIRY_HOURS,
+                              agent_name="volhun")
+            # SELL_STOP below range — only if SELL allowed
+            if allowed_sides in ("SELL", "BOTH"):
+                sell_entry = spike["swing_low"] - buf
+                sell_sl    = sell_entry + spike["current_atr"] * self.SL_ATR_MULT
+                sell_tp    = sell_entry - spike["current_atr"] * self.TP_ATR_MULT
+                place_pending(symbol=sym, side="SELL", order_kind="STOP",
+                              price=sell_entry, sl=sell_sl, tp=sell_tp,
+                              reason="vol_spike", expiry_hours=self.EXPIRY_HOURS,
+                              agent_name="volhun")
             # ── REVERSION SIDE (cycle 23 fix) ──
             # SELL_LIMIT at swing_high+buf (sell into a peak — expect rejection)
             # BUY_LIMIT  at swing_low-buf  (buy into a bottom — expect bounce)
             rev_msg = ""
             if self.PLACE_REVERSION:
-                rev_sell_entry = spike["swing_high"] + buf
-                rev_sell_sl    = rev_sell_entry + spike["current_atr"] * self.REV_SL_ATR_MULT
-                rev_sell_tp    = rev_sell_entry - spike["current_atr"] * self.REV_TP_ATR_MULT
-                place_pending(symbol=sym, side="SELL", order_kind="LIMIT",
-                              price=rev_sell_entry, sl=rev_sell_sl, tp=rev_sell_tp,
-                              reason="vol_rev",  expiry_hours=self.EXPIRY_HOURS,
-                              agent_name="volhun")
-                rev_buy_entry = spike["swing_low"] - buf
-                rev_buy_sl    = rev_buy_entry - spike["current_atr"] * self.REV_SL_ATR_MULT
-                rev_buy_tp    = rev_buy_entry + spike["current_atr"] * self.REV_TP_ATR_MULT
-                place_pending(symbol=sym, side="BUY",  order_kind="LIMIT",
-                              price=rev_buy_entry, sl=rev_buy_sl, tp=rev_buy_tp,
-                              reason="vol_rev",  expiry_hours=self.EXPIRY_HOURS,
-                              agent_name="volhun")
-                rev_msg = (f" + REV: SELL_LIMIT@{rev_sell_entry:.5f}/"
-                            f"BUY_LIMIT@{rev_buy_entry:.5f}")
+                # Reversion side legs — also gated by recovery whitelist
+                if allowed_sides in ("SELL", "BOTH"):
+                    rev_sell_entry = spike["swing_high"] + buf
+                    rev_sell_sl    = rev_sell_entry + spike["current_atr"] * self.REV_SL_ATR_MULT
+                    rev_sell_tp    = rev_sell_entry - spike["current_atr"] * self.REV_TP_ATR_MULT
+                    place_pending(symbol=sym, side="SELL", order_kind="LIMIT",
+                                  price=rev_sell_entry, sl=rev_sell_sl, tp=rev_sell_tp,
+                                  reason="vol_rev",  expiry_hours=self.EXPIRY_HOURS,
+                                  agent_name="volhun")
+                    rev_msg += f" SELL_LIMIT@{rev_sell_entry:.5f}"
+                if allowed_sides in ("BUY", "BOTH"):
+                    rev_buy_entry = spike["swing_low"] - buf
+                    rev_buy_sl    = rev_buy_entry - spike["current_atr"] * self.REV_SL_ATR_MULT
+                    rev_buy_tp    = rev_buy_entry + spike["current_atr"] * self.REV_TP_ATR_MULT
+                    place_pending(symbol=sym, side="BUY",  order_kind="LIMIT",
+                                  price=rev_buy_entry, sl=rev_buy_sl, tp=rev_buy_tp,
+                                  reason="vol_rev",  expiry_hours=self.EXPIRY_HOURS,
+                                  agent_name="volhun")
+                    rev_msg += f" BUY_LIMIT@{rev_buy_entry:.5f}"
+                if rev_msg:
+                    rev_msg = " + REV:" + rev_msg
             placed += 1
             self._last_placed_by_sym[sym] = now_s
             emit_insight(self.name, "ACT",

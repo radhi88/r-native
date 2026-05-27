@@ -126,7 +126,23 @@ def _check_closes(open_pos: dict, snapshot, paper_equity: float) -> tuple[dict, 
     return still_open, pnl_total
 
 
+_LAST_PROPOSAL_BAR: dict = {}    # {(genome_name, symbol) → last M1 bar timestamp proposed}
+
+
 def _try_propose_and_fill(genome, snapshot, account, open_pos: dict) -> dict:
+    # Dedup: only re-evaluate the genome ONCE per closed M1 bar per symbol.
+    # Without this, paper_trader spammed 3000+ identical BLOCKED proposals
+    # in 30 min because it runs every 2s on the same forming bar.
+    try:
+        m1 = snapshot.tfs.get("M1")
+        if m1 and m1.last_bar:
+            cur_bar_ts = int(m1.last_bar.get("time", 0))
+            key = (genome.name, snapshot.symbol)
+            if _LAST_PROPOSAL_BAR.get(key) == cur_bar_ts:
+                return open_pos    # already evaluated this bar
+            _LAST_PROPOSAL_BAR[key] = cur_bar_ts
+    except Exception: pass
+
     proposal = genome.propose(snapshot, account)
     if not proposal: return open_pos
 
