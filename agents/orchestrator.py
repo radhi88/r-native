@@ -71,6 +71,7 @@ def _load_default_agents():
         ("volatility_reversion","VolatilityReversion"),
         ("hedge_resolver",      "HedgeResolver"),
         ("sl_safety_tightener", "SLSafetyTightener"),
+        ("recovery_mode",       "RecoveryMode"),   # cycle 39 — winners-only gate until $105
     ]:
         try:
             mod = __import__(f"r_native.agents.{mod_name}",

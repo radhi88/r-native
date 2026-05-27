@@ -42,15 +42,17 @@ ROOT = Path(r"C:\Users\Radhi\MT5\friday_v3")
 
 
 # ─── Safety thresholds (tunable) ───
-DAILY_LOSS_CAP_USD   = 10.0     # stop after losing $10 in 24h (matches 3 × per-trade risk)
-MIN_BALANCE_USD      = 50.0     # never trade if balance below this
-MAX_CONCURRENT       = 3        # up to 3 parallel positions
+# USER OVERRIDE 2026-05-25: caps relaxed by explicit owner instruction
+# "let him run until we win or die with full balance"
+DAILY_LOSS_CAP_USD   = 99999.0  # disabled — no daily stop
+MIN_BALANCE_USD      = 1.0      # only bail at $1 — full-balance run
+MAX_CONCURRENT       = 5        # SCALED DOWN 2026-05-25: $60 account → 5 max (was 12)
 MIN_H1_ATR_PRICE     = 3.0      # $3 = 3000pt — need real range
 MAX_SPREAD_ATR_RATIO = 0.20     # spread must be ≤ 20% of H1 ATR
 NEWS_BLACKOUT_MIN    = 15       # block 15 min around HIGH-impact news
 MAX_RISK_PCT         = 0.025    # max 2.5% of balance per trade
 MAX_RISK_USD_HARD    = 2.50     # absolute hard cap regardless of balance
-ADX_MIN_H1           = 20.0     # H1 ADX below this = chop, refuse trade
+ADX_MIN_H1           = 0.0      # USER OVERRIDE 2026-05-25: disabled — trade chop too
 
 # ─── Session window (Algory top-5 consensus) ───
 SESSION_START_HOUR_UTC = 8
@@ -98,6 +100,10 @@ class TradeVerdict:
     deployed_genome_pf: Optional[float] = None
     deployed_genome_archetype: Optional[str] = None
     deployed_genome_compat:    Optional[str] = None   # MATCH / DIVERGE / NONE
+    # decision-log payload (additive, optional — never affects gate logic)
+    genome_signals_fired:    list = field(default_factory=list)
+    genome_biases_aligned:   list = field(default_factory=list)
+    genome_filters_blocking: list = field(default_factory=list)
 
     def to_dict(self):
         d = asdict(self)
@@ -171,20 +177,181 @@ def _next_session_open(now: datetime) -> datetime:
     return target
 
 
-def _load_deployed_genome(symbol: str) -> dict | None:
-    """Load the genome currently deployed for `symbol` from r_native's per-symbol config.
-    Returns None if no deployment exists (R Native UI didn't DEPLOY anything yet)."""
+def _load_deployed_genome(symbol: str, force_id: str = None) -> dict | None:
+    """Load the genome currently deployed for `symbol`.
+
+    If `force_id` is given, search the symbol's `competitors` list for that
+    specific genome — used by the executor's multi-genome competition path
+    so each (symbol, genome) pair gets its OWN gate evaluation.
+    Falls back to the primary `deployed_genome` if force_id not found.
+    """
     try:
         import json
         from pathlib import Path
         p = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{symbol}.json"
         if not p.exists(): return None
         cfg = json.loads(p.read_text(encoding="utf-8"))
+        if force_id:
+            for c in (cfg.get("competitors") or []):
+                if c.get("id") == force_id:
+                    return c
+            # fall through if not found
         g = cfg.get("deployed_genome")
         if not g or not g.get("id"): return None
         return g
     except Exception:
         return None
+
+
+# ── Multi-Genome Ensemble ──────────────────────────────────────────────
+# Schema: in symbol_configs/<sym>.json add an optional `deployed_genomes`:
+#   "deployed_genomes": [
+#     {"id": "B99880", "weight": 1.0},
+#     {"id": "456FC5", "weight": 0.8}
+#   ]
+# Vote: each member returns BUY/SELL/NO; weighted sum decides direction.
+ENSEMBLE_VOTE_THRESHOLD = 0.5   # |sum| / total_weight must exceed this to fire
+
+
+def _load_deployed_ensemble(symbol: str) -> list[dict]:
+    """Resolve `deployed_genomes` (list) into a list of full genome dicts with
+    active_genes + params + weight. Returns [] if no ensemble configured.
+
+    Each member of the list is hydrated by looking up the matching entry in
+    `ga_strategies` (where the full active_genes + multipliers live).
+    """
+    try:
+        import json
+        from pathlib import Path
+        p = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{symbol}.json"
+        if not p.exists(): return []
+        cfg = json.loads(p.read_text(encoding="utf-8"))
+        ensemble = cfg.get("deployed_genomes")
+        if not isinstance(ensemble, list) or len(ensemble) < 2: return []
+        strats = {s["id"]: s for s in cfg.get("ga_strategies", []) if s.get("id")}
+        out = []
+        for entry in ensemble:
+            gid    = entry.get("id")
+            weight = float(entry.get("weight") or 1.0)
+            if not gid: continue
+            full = strats.get(gid)
+            if not full: continue   # genome ID not found in vault → skip
+            out.append({
+                "id":            gid,
+                "weight":        weight,
+                "active_genes":  full.get("active_genes") or [],
+                "sl_atr_mult":   full.get("sl_atr_mult"),
+                "tp_atr_mult":   full.get("tp_atr_mult"),
+                "start_hour":    full.get("start_hour"),
+                "end_hour":      full.get("end_hour"),
+                "profit_factor": full.get("profit_factor"),
+            })
+        return out
+    except Exception:
+        return []
+
+
+def _ensemble_decide(members: list[dict], snapshot: dict) -> Optional[dict]:
+    """Run decide_entry() per member and return a merged genome_decision dict.
+
+    Returns dict with same shape as decide_entry but reflecting weighted vote.
+    Returns None if no member fired or the vote was inconclusive.
+    """
+    try:
+        from r_native.genome_signal import (decide_entry,
+                                             build_snapshot_from_trade_gate_snap)
+    except Exception:
+        return None
+    flat = build_snapshot_from_trade_gate_snap(snapshot)
+
+    per_member = []
+    for m in members:
+        flags = {g: True for g in (m.get("active_genes") or [])}
+        if not flags: continue
+        try:
+            d = decide_entry(flags, flat)
+        except Exception:
+            continue
+        per_member.append((m, d))
+
+    if not per_member:
+        return None
+
+    total_w   = sum(m["weight"] for m, _ in per_member) or 1.0
+    vote_sum  = 0.0
+    buy_conf, sell_conf = [], []
+    sigs_buy, sigs_sell = [], []
+    biases, filters_blk = [], []
+    member_votes = []
+
+    for m, d in per_member:
+        w = m["weight"]
+        biases.extend(d.get("biases_aligned") or [])
+        filters_blk.extend(d.get("filters_blocking") or [])
+        decision = d.get("decision")
+        conf     = int(d.get("confidence") or 0)
+        if decision == "BUY":
+            vote_sum += w
+            buy_conf.append(conf * w)
+            sigs_buy.extend(d.get("signals_fired") or [])
+        elif decision == "SELL":
+            vote_sum -= w
+            sell_conf.append(conf * w)
+            sigs_sell.extend(d.get("signals_fired") or [])
+        member_votes.append(f"{m['id']}={decision}({conf})×{w}")
+
+    vote_strength = abs(vote_sum) / total_w
+    if vote_strength < ENSEMBLE_VOTE_THRESHOLD:
+        return {
+            "decision":  "NO",
+            "confidence": 0,
+            "reasons":   [f"ensemble inconclusive vote_sum={vote_sum:+.2f}/"
+                          f"total={total_w:.2f} ({', '.join(member_votes)})"],
+            "signals_fired":   [],
+            "biases_aligned":  biases,
+            "filters_blocking": filters_blk,
+            "ensemble":  {"members": len(per_member),
+                           "vote_sum": round(vote_sum, 3),
+                           "total_weight": round(total_w, 3),
+                           "member_votes": member_votes},
+        }
+
+    if vote_sum > 0:
+        winning_conf = (sum(buy_conf) / sum(m["weight"] for m, d in per_member
+                                            if d.get("decision") == "BUY")
+                        if buy_conf else 0)
+        return {
+            "decision":  "BUY",
+            "confidence": int(round(winning_conf * vote_strength)),
+            "reasons":   [f"ensemble BUY ({vote_strength:.0%} agreement, "
+                          f"{', '.join(member_votes)})"],
+            "signals_fired":   sigs_buy,
+            "biases_aligned":  biases,
+            "filters_blocking": filters_blk,
+            "ensemble":  {"members": len(per_member),
+                           "vote_sum": round(vote_sum, 3),
+                           "total_weight": round(total_w, 3),
+                           "agreement": round(vote_strength, 3),
+                           "member_votes": member_votes},
+        }
+    else:
+        winning_conf = (sum(sell_conf) / sum(m["weight"] for m, d in per_member
+                                              if d.get("decision") == "SELL")
+                        if sell_conf else 0)
+        return {
+            "decision":  "SELL",
+            "confidence": int(round(winning_conf * vote_strength)),
+            "reasons":   [f"ensemble SELL ({vote_strength:.0%} agreement, "
+                          f"{', '.join(member_votes)})"],
+            "signals_fired":   sigs_sell,
+            "biases_aligned":  biases,
+            "filters_blocking": filters_blk,
+            "ensemble":  {"members": len(per_member),
+                           "vote_sum": round(vote_sum, 3),
+                           "total_weight": round(total_w, 3),
+                           "agreement": round(vote_strength, 3),
+                           "member_votes": member_votes},
+        }
 
 
 def evaluate_gate(snapshot: dict, news_events: list = None,
@@ -201,7 +368,10 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
     now = datetime.now(timezone.utc)
 
     # ── H.7.5: Load deployed_genome — override SL/TP/session with R Native UI's choice ──
-    deployed_genome = _load_deployed_genome(snapshot.get("symbol", ""))
+    # If snapshot carries a specific genome_override, use that competitor;
+    # otherwise load the symbol's primary deployed_genome.
+    _gov = snapshot.get("_genome_override")
+    deployed_genome = _load_deployed_genome(snapshot.get("symbol", ""), force_id=_gov)
     _dg_start_h = deployed_genome.get("start_hour") if deployed_genome else None
     _dg_end_h   = deployed_genome.get("end_hour")   if deployed_genome else None
     _dg_sl_mult = deployed_genome.get("sl_atr_mult") if deployed_genome else None
@@ -386,14 +556,40 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
     # Algory's 4 hardcoded archetypes (BREAKOUT_HUNTER etc.) are kept as
     # a FALLBACK for when no genome is deployed (initial state, or after
     # all genomes have been killed by safety logic).
-    genome_decision = None  # filled when deployed_genome present
-    if deployed_genome and deployed_genome.get("flags"):
+    genome_decision = None  # filled when deployed_genome(s) present
+    # First try the Multi-Genome Ensemble (deployed_genomes list). When present
+    # with ≥2 members, weighted vote drives the decision. Otherwise fall back
+    # to the single deployed_genome path.
+    _ensemble_members = _load_deployed_ensemble(snapshot.get("symbol", ""))
+    _ensemble_used = False
+    if _ensemble_members:
         try:
-            from r_native.genome_signal import (decide_entry,
+            genome_decision = _ensemble_decide(_ensemble_members, snapshot)
+            _ensemble_used = genome_decision is not None
+        except Exception:
+            genome_decision = None
+
+    # Genome deployments may carry flags either as dict ({flag:bool}) OR as
+    # active_genes list. GA campaigns produce active_genes lists, manual
+    # deployments may produce flags dicts. Normalize both into a flags dict
+    # so decide_entry() always has something to evaluate.
+    _g_flags: dict = {}
+    if deployed_genome:
+        if isinstance(deployed_genome.get("flags"), dict):
+            _g_flags = deployed_genome.get("flags") or {}
+        if not _g_flags and isinstance(deployed_genome.get("active_genes"), list):
+            _g_flags = {gene: True for gene in deployed_genome["active_genes"]}
+    if not _ensemble_used and deployed_genome and _g_flags:
+        try:
+            from r_native.genome_signal import (decide_entry_with_council,
                                                 build_snapshot_from_trade_gate_snap)
             flat = build_snapshot_from_trade_gate_snap(snapshot)
-            genome_decision = decide_entry(deployed_genome.get("flags") or {},
-                                            flat)
+            # COUNCIL: every cycle computes ALL 22 signals + 12 biases on
+            # the live snapshot. If they strongly disagree with the
+            # genome's decision → veto. If they agree → +15 confidence
+            # boost. Makes the gate consult every indicator before entry,
+            # not just the 7-of-22 the genome's training selected.
+            genome_decision = decide_entry_with_council(_g_flags, flat)
         except Exception as _e:
             genome_decision = None
 
@@ -509,21 +705,41 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
                 direction = None
                 direction_reason = f"H4={h4_bias} vs H1={h1_bias} CONFLICT — wait"
 
-            # RSI sanity: extreme RSI → REVERSE direction (counter-trend reversal play)
-            # This makes R trade more opportunities — oversold = buy bounce, overbought = sell pullback
-            if direction == "BUY" and h1_rsi > 75:
-                direction = "SELL"
-                direction_reason = f"H1 RSI {h1_rsi} > 75 → flip to SELL (overbought pullback)"
-            elif direction == "SELL" and h1_rsi < 25:
-                direction = "BUY"
-                direction_reason = f"H1 RSI {h1_rsi} < 25 → flip to BUY (oversold bounce)"
-            # Mild zone: skip
-            elif direction == "BUY" and h1_rsi > 70:
+            # ═══════════════════════════════════════════════════════════════
+            # CYCLE-39 ROOT-CAUSE FIX 2026-05-27 — "RSI FLIP" was the #1 loss
+            # source. Old logic FLIPPED a multi-TF-aligned BUY into a SELL
+            # whenever H1 RSI > 75 — but in a strong uptrend RSI camps above
+            # 75 for HOURS. Fading that = catching a moving train.
+            #
+            # Evidence (last 7 days, magic 20260605):
+            #   XAUUSDm BUYS:  17 trades 76% WR  +$5.5  ← trend-aligned, WIN
+            #   XAUUSDm SELLS: 21 trades 57% WR -$43.7  ← FLIP-induced LOSS
+            #   XAGUSDm BUYS:   4 trades 100% WR +$12.7
+            #   XAGUSDm SELLS:  5 trades  40% WR  -$8.8
+            #   US30_x10m BUYS:30 trades  90% WR  +$3.4
+            # The pattern across every trending instrument is identical: the
+            # trend-following BUYs won, the FLIP-generated SELLs bled.
+            #
+            # NEW policy: trust the multi-TF consensus. On extreme RSI we
+            # WAIT (skip the entry), we NEVER flip blindly. A flip would
+            # require divergence + wick rejection — neither of which we can
+            # confirm here cheaply, so just don't trade those bars.
+            # ═══════════════════════════════════════════════════════════════
+            if direction == "BUY" and h1_rsi >= 80:
                 direction = None
-                direction_reason = f"H1 RSI {h1_rsi} > 70 overbought → wait"
-            elif direction == "SELL" and h1_rsi < 30:
+                direction_reason = (f"H1 RSI {h1_rsi} ≥ 80 — too stretched, wait "
+                                     f"for pullback (no blind flip)")
+            elif direction == "SELL" and h1_rsi <= 20:
                 direction = None
-                direction_reason = f"H1 RSI {h1_rsi} < 30 oversold → wait"
+                direction_reason = (f"H1 RSI {h1_rsi} ≤ 20 — too stretched, wait "
+                                     f"for bounce (no blind flip)")
+            elif direction == "BUY" and h1_rsi > 72:
+                # Mild overbought in a confirmed uptrend → still OK to take
+                # the trade but flag it. Old code WAITed here; that costs
+                # us trades when uptrend just keeps running.
+                direction_reason += f"  · note: H1 RSI {h1_rsi} elevated"
+            elif direction == "SELL" and h1_rsi < 28:
+                direction_reason += f"  · note: H1 RSI {h1_rsi} depressed"
 
             if not direction:
                 verdict = "WAIT"
@@ -718,6 +934,9 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
         deployed_genome_pf        = deployed_genome.get("profit_factor") if deployed_genome else None,
         deployed_genome_archetype = dg_archetype,
         deployed_genome_compat    = dg_compat,
+        genome_signals_fired      = (genome_decision.get("signals_fired")    if genome_decision else []) or [],
+        genome_biases_aligned     = (genome_decision.get("biases_aligned")   if genome_decision else []) or [],
+        genome_filters_blocking   = (genome_decision.get("filters_blocking") if genome_decision else []) or [],
     )
 
 

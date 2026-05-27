@@ -670,20 +670,42 @@ def reconcile_closed_positions(state: dict, mode: str):
             _log(state, f"  🧬 per-symbol intel updated for {sym}")
         except Exception as e:
             _log(state, f"  [symbol_learning err: {e}]")
-        # ── Hall of Fame live P/L tracker — credits the deployed genome
+        # ── Hall of Fame live P/L tracker — credits the ACTUAL genome that
+        # opened the trade (parsed from the OPEN deal's comment).
+        # OLD BUG: was crediting symbol's primary deployed_genome, even
+        # when a competitor genome was the real opener. Plus when SL/TP
+        # closed the trade, broker overwrote close-deal comment with
+        # "[sl X]" / "[tp Y]" losing the R-<gid>-<side> tag entirely.
+        # FIX: look up the OPEN deal for this ticket → parse its comment.
         _dl_genome_id = None
         try:
             from r_native.hall_of_fame import record_live_trade
-            import json as _json
-            from pathlib import Path as _Path
-            cfg_path = _Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{sym}.json"
-            if cfg_path.exists():
-                _sc = _json.loads(cfg_path.read_text(encoding="utf-8"))
-                _dg_id = (_sc.get("deployed_genome") or {}).get("id")
-                _dl_genome_id = _dg_id
-                if _dg_id:
-                    record_live_trade(_dg_id, profit)
-                    _log(state, f"  🏆 HoF: credited ${profit:+.2f} to genome {_dg_id}")
+            import re as _re
+            _opener_gid = None
+            try:
+                # Find the OPEN deal (entry=0) for this position ticket
+                _open_deals = mt5.history_deals_get(position=int(last_ticket)) or []
+                for _d in _open_deals:
+                    if int(_d.entry) == 0:
+                        m = _re.match(r"R-([A-F0-9]{6})-", _d.comment or "")
+                        if m:
+                            _opener_gid = m.group(1)
+                            break
+            except Exception: pass
+            if _opener_gid:
+                # Pass symbol so HoF can auto-create a stub if this genome
+                # isn't yet registered (retired competitors keep trading).
+                _opener_sym = None
+                try:
+                    for _d in _open_deals:
+                        if int(_d.entry) == 0:
+                            _opener_sym = getattr(_d, "symbol", None); break
+                except Exception: pass
+                record_live_trade(_opener_gid, profit, symbol=_opener_sym)
+                _dl_genome_id = _opener_gid
+                _log(state, f"  🏆 HoF: ${profit:+.2f} → genome {_opener_gid} (from open comment)")
+            else:
+                _log(state, f"  ⚠ HoF: ticket {last_ticket} has no R-<gid>- open comment")
         except Exception as e:
             _log(state, f"  [HoF live tracker err: {e}]")
         # ── Decision log: persist trade CLOSE (fail-soft) ──
@@ -1083,6 +1105,18 @@ def _try_enter_one_symbol(state: dict, mode: str, force_sym: str):
             if same_side and abs(p.price_open - proposed_entry) < sl_dist * 0.8:
                 state["last_action"] = f"too close to existing #{p.ticket} on {p.symbol} (same side)"
                 return
+            # Cycle 27 anti-hedge: same symbol, OPPOSITE side. Wastes
+            # spread×2 with no possible directional gain (one wins what
+            # other loses, both pay spread). Block unless the existing
+            # position is already deeply profitable (>$1) where hedging
+            # could lock the gain.
+            if (not same_side
+                    and float(p.profit) < 1.0):
+                state["last_action"] = (f"hedge-block: opposite of #{p.ticket} "
+                                         f"on {p.symbol} (pl ${p.profit:+.2f})")
+                _log(state, f"  🚫 anti-hedge: opposite side of #{p.ticket} "
+                            f"on {p.symbol} (pl ${p.profit:+.2f}, only allowed if existing pl>$1)")
+                return
 
     side    = gate.get("side")
     entry   = gate.get("entry")
@@ -1120,8 +1154,101 @@ def _try_enter_one_symbol(state: dict, mode: str, force_sym: str):
         base_lot *= monster_mult
         state["last_monster_mult"] = monster_mult
         _log(state, f"  🔥 monster boost ×{monster_mult}: {monster_reason}")
+    # ⚖ REGIME SCALER — per-symbol-per-side multiplier driven by MTF alignment
+    # (M15+H1+H4) from the market_scanner agent. Aligned trends get boosted,
+    # counter-trend trades get throttled, DEAD regimes get halved. File is
+    # written by agents/regime_scaler.py every 2 min; missing file = 1.0×.
+    try:
+        from pathlib import Path as _P
+        import json as _j
+        _rfile = _P(r"C:\Users\Radhi\MT5\data\r_native\regime_multipliers.json")
+        if _rfile.exists():
+            _rdata = _j.loads(_rfile.read_text(encoding="utf-8"))
+            _sym_block = (_rdata.get("symbols") or {}).get(trade_symbol) or {}
+            _key = "buy_mult" if (side or "").upper() == "BUY" else "sell_mult"
+            _regime_mult = float(_sym_block.get(_key) or 1.0)
+            if _regime_mult != 1.0:
+                base_lot *= _regime_mult
+                state["last_regime_mult"] = _regime_mult
+                _log(state, f"  ⚖ regime ×{_regime_mult} ({_sym_block.get('mtf_alignment','?')}"
+                            f" {_sym_block.get('alignment_count',0)}/3, "
+                            f"{_sym_block.get('regime','?')})")
+    except Exception: pass
     effective_lot = round(base_lot, 2)
     if effective_lot < 0.01: effective_lot = 0.01   # broker min
+
+    # ── Cycle 25 SAFETY: drawdown-recovery blocks_new_entries gate ──
+    # CRITICAL BUG FOUND: drawdown_recovery agent writes blocks_new_entries=true
+    # at severity 3+ but NOBODY was reading the flag. System bled $19 today
+    # because the "DD lockout" did nothing. This honors the flag.
+    try:
+        from pathlib import Path as _P
+        import json as _j
+        _ddfile = _P(r"C:\Users\Radhi\MT5\data\r_native\dd_recovery_state.json")
+        if _ddfile.exists():
+            _ddstate = _j.loads(_ddfile.read_text(encoding="utf-8"))
+            if _ddstate.get("blocks_new_entries"):
+                _ddpct = _ddstate.get("drawdown_pct", 0)
+                state["last_action"] = (f"BLOCKED by drawdown_recovery "
+                                         f"(DD {_ddpct:.1f}%)")
+                _log(state, f"  🛑 DD-BLOCK: new entries blocked "
+                            f"(DD {_ddpct:.1f}%, action={_ddstate.get('action','?')})")
+                return
+    except Exception: pass
+
+    # ── Cycle 39 RECOVERY MODE gate ── (2026-05-27)
+    # Active until equity ≥ $105. Blocks every symbol+side combo that
+    # wasn't a proven 7-day winner, caps lot to 0.01, max 2 positions.
+    # See r_native/agents/recovery_mode.py for the whitelist + reasoning.
+    try:
+        from r_native.agents.recovery_mode import (
+            filter_entry as _rec_filter, max_positions as _rec_max_pos,
+            is_recovery_active as _rec_active,
+        )
+        if _rec_active():
+            if r_count >= _rec_max_pos():
+                state["last_action"] = (f"RECOVERY: at max {_rec_max_pos()} "
+                                          f"positions ({r_count})")
+                _log(state, f"  🛟 recovery cap: {r_count}/{_rec_max_pos()}")
+                return
+            _rec_ok, _rec_lot, _rec_reason = _rec_filter(
+                trade_symbol, side or "?", effective_lot)
+            if not _rec_ok:
+                state["last_action"] = f"RECOVERY blocks {trade_symbol} {side}: {_rec_reason}"
+                _log(state, f"  🛟 recovery blocks {trade_symbol} {side}: {_rec_reason}")
+                return
+            if _rec_lot < effective_lot:
+                _log(state, f"  🛟 recovery lot cap: {effective_lot}→{_rec_lot}")
+                effective_lot = _rec_lot
+    except Exception as _rec_e:
+        _log(state, f"  [recovery_mode err: {_rec_e}]")
+
+    # ── Cycle 24 SAFETY: max-loss-per-trade cap ──
+    # Compute potential SL distance × pip value × lot. If it would risk
+    # more than MAX_SL_LOSS_PCT of account equity, REJECT this entry.
+    # This caught a XAGUSDm SELL that had $10.30 SL loss = 8% of $120
+    # account — way over our 3% per-trade limit.
+    try:
+        import MetaTrader5 as _mt5_safety
+        _acc = _mt5_safety.account_info()
+        _si  = _mt5_safety.symbol_info(trade_symbol)
+        if _acc and _si and sl and entry:
+            _equity = float(_acc.equity)
+            _sl_distance = abs(float(entry) - float(sl))
+            # tick_value tells us $ per point per 1.0 lot
+            _per_point  = float(_si.trade_tick_value) / max(float(_si.trade_tick_size), 1e-9)
+            _max_loss = _sl_distance * _per_point * effective_lot
+            _max_loss_pct = (_max_loss / _equity * 100) if _equity > 0 else 0
+            MAX_LOSS_PCT = 3.0
+            if _max_loss_pct > MAX_LOSS_PCT:
+                state["last_action"] = (f"REJECT {trade_symbol} {side}: "
+                                         f"SL loss ${_max_loss:.2f} = "
+                                         f"{_max_loss_pct:.1f}% > {MAX_LOSS_PCT}% cap")
+                _log(state, f"  🛑 SAFETY: rejected — SL loss ${_max_loss:.2f} "
+                            f"({_max_loss_pct:.1f}%) > {MAX_LOSS_PCT}% cap")
+                return
+    except Exception as _safety_e:
+        _log(state, f"  [safety check err: {_safety_e}]")
 
     # ── Exposure Guard: stop churn / DD spirals / stacking ──
     try:
