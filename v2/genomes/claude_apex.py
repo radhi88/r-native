@@ -55,12 +55,16 @@ class ClaudeApex(Genome):
     lot     = 0.01
 
     # Tunable thresholds (all justified in thesis)
-    MIN_M1_ATR    = 0.70
-    M1_RSI_OS     = 35.0
-    SL_BUFFER_PT  = 0.20      # 20 cents above swing low for buffer
-    NEAR_TP_RR    = 1.0
-    FAR_TP_RR     = 1.8
-    MAX_HOLD_MIN  = 25
+    MIN_M1_ATR     = 0.70
+    M1_RSI_OS      = 35.0
+    NEAR_TP_RR     = 1.0
+    FAR_TP_RR      = 1.8
+    MAX_HOLD_MIN   = 25
+    # SL design (cycle-39 lesson: tight SLs kill winners on M1 noise).
+    # Use the LARGER of M5 swing low or M1 swing low - (ATR M1 × MULT).
+    # Floor: SL distance ≥ 1.5× ATR M1 so noise can't tag it.
+    SL_ATR_MULT    = 1.5
+    SL_BUFFER_PT   = 1.00     # was 0.20 — give 1pt below the structure low
 
     def propose(self, snapshot, account) -> Optional[Proposal]:
         if snapshot.symbol not in self.symbols: return None
@@ -87,13 +91,19 @@ class ClaudeApex(Genome):
         trigger = (m1.bull_engulf or m1.pin_bot or m1.rsi < self.M1_RSI_OS)
         if not trigger: return None
 
-        # Build trade
+        # Build trade — SMARTER SL (cycle-39 chart-feedback lesson)
         entry = snapshot.ask
-        # SL = recent M1 swing low - buffer
-        sl = m1.swing_low - self.SL_BUFFER_PT
-        # Guard: SL must be below entry
+        # Option A: structural — below M5 swing low (more meaningful than M1)
+        sl_struct = m5.swing_low - self.SL_BUFFER_PT
+        # Option B: volatility-aware — entry - 1.5× M1 ATR (lets noise wiggle)
+        sl_atr = entry - m1.atr * self.SL_ATR_MULT
+        # Take the FURTHER of the two — give the trade real room
+        sl = min(sl_struct, sl_atr)
+        # Guard: SL must be below entry AND at least 1× ATR away
         if sl >= entry: return None
         sl_dist = entry - sl
+        if sl_dist < m1.atr * 1.0:
+            return None     # SL too tight even after smart pick — skip
         # Far TP at 1.8R
         tp = entry + sl_dist * self.FAR_TP_RR
 
