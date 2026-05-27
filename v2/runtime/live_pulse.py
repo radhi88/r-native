@@ -158,8 +158,13 @@ def main(symbol: str = "XAUUSDm", poll: float = 1.0):
     last_spread_alert = 0
     last_pressure_dir = "FLAT"
     last_ob = None; last_bull_fvg = None; last_bear_fvg = None
+    last_mtf_align = "MIXED"
+    last_macd_cross = None
+    last_liq_grab_ts = 0
 
-    _print(f"📡 live_pulse v2 online · {symbol} · tick poll {poll}s")
+    _print(f"📡 live_pulse v3.3 online · {symbol} · tick poll {poll}s")
+    _print(f"   sensors: M1 close+anatomy, RSI hysteresis, engulf, OB, FVG, "
+            f"pressure 10M1, tick velocity, spread, levels, +MTF align +liq grab +MACD")
 
     while True:
         try:
@@ -258,6 +263,79 @@ def main(symbol: str = "XAUUSDm", poll: float = 1.0):
                     _print(f"⚡ M1 RSI = {rsi} → OVERBOUGHT (after run-up)"); last_rsi_state = "OVERBOUGHT"
                 elif rsi < 30:
                     _print(f"⚡ M1 RSI = {rsi} → OVERSOLD (after sell-off)"); last_rsi_state = "OVERSOLD"
+
+            # ─── NEW: MTF Pressure Alignment ───
+            # When M1+M5+M15 ALL show same direction = high-prob trend
+            def _net_body(bars_arr, n=10):
+                if len(bars_arr) < n+1: return 0
+                last = bars_arr[-(n+1):-1]
+                bull = sum(b["close"]-b["open"] for b in last if b["close"]>b["open"])
+                bear = sum(b["open"]-b["close"] for b in last if b["close"]<b["open"])
+                return bull - bear
+            try:
+                m1_arr  = [dict(b._asdict()) if hasattr(b, "_asdict") else {k: b[k] for k in b.dtype.names} for b in m1] if hasattr(m1, "__iter__") else list(m1)
+                m5_arr  = [dict(b._asdict()) if hasattr(b, "_asdict") else {k: b[k] for k in b.dtype.names} for b in m5] if hasattr(m5, "__iter__") else list(m5)
+                m15_arr = [dict(b._asdict()) if hasattr(b, "_asdict") else {k: b[k] for k in b.dtype.names} for b in m15] if hasattr(m15, "__iter__") else list(m15)
+                n1 = _net_body(m1_arr, 10); n5 = _net_body(m5_arr, 6); n15 = _net_body(m15_arr, 4)
+                if n1 > 1 and n5 > 1 and n15 > 0: align = "BUY+ALL"
+                elif n1 < -1 and n5 < -1 and n15 < 0: align = "SELL+ALL"
+                else: align = "MIXED"
+                if align != last_mtf_align and align != "MIXED":
+                    _print(f"🎯🎯 MTF ALIGN {align} · M1=${n1:+.1f} M5=${n5:+.1f} M15=${n15:+.1f}")
+                    last_mtf_align = align
+                elif align == "MIXED":
+                    last_mtf_align = "MIXED"
+            except Exception: pass
+
+            # ─── NEW: Liquidity-Grab Detector ───
+            # Last M1 wick > 2× ATR beyond recent 20-bar extreme + close back inside
+            try:
+                bar_now = bars[-1]
+                bars_window = bars[-21:-1]
+                hi20 = max(b["high"] for b in bars_window)
+                lo20 = min(b["low"]  for b in bars_window)
+                atr14 = sum(max(b["high"]-b["low"], abs(b["high"]-bars[i+1]["close"]),
+                                  abs(b["low"]-bars[i+1]["close"]))
+                              for i,b in enumerate(bars[-15:-1])) / 14
+                # Bull grab: low went below lo20 by > 0.5×ATR but close back above lo20
+                if (bar_now["low"] < lo20 - 0.3 * atr14
+                        and bar_now["close"] > lo20
+                        and now_ts - last_liq_grab_ts > 30):
+                    _print(f"🪤 BULL LIQ GRAB · low {bar_now['low']:.2f} swept "
+                            f"below {lo20:.2f} then reclaimed (close {bar_now['close']:.2f})")
+                    last_liq_grab_ts = now_ts
+                elif (bar_now["high"] > hi20 + 0.3 * atr14
+                        and bar_now["close"] < hi20
+                        and now_ts - last_liq_grab_ts > 30):
+                    _print(f"🪤 BEAR LIQ GRAB · high {bar_now['high']:.2f} swept "
+                            f"above {hi20:.2f} then rejected (close {bar_now['close']:.2f})")
+                    last_liq_grab_ts = now_ts
+            except Exception: pass
+
+            # ─── NEW: MACD M5 Cross ───
+            # 12/26/9 MACD on M5. Print on bullish/bearish crossover.
+            try:
+                m5_closes = [b["close"] for b in m5]
+                ema12 = _ema(m5_closes, 12); ema26 = _ema(m5_closes, 26)
+                # Compute MACD line history (last 5) for cross detection
+                def _ema_series(vals, p):
+                    if not vals: return []
+                    k = 2/(p+1); out = [vals[0]]
+                    for v in vals[1:]:
+                        out.append(v*k + out[-1]*(1-k))
+                    return out
+                e12s = _ema_series(m5_closes, 12)
+                e26s = _ema_series(m5_closes, 26)
+                if len(e12s) >= 2 and len(e26s) >= 2:
+                    macd_now = e12s[-1] - e26s[-1]
+                    macd_prev = e12s[-2] - e26s[-2]
+                    cross = None
+                    if macd_prev <= 0 < macd_now: cross = "BULL"
+                    elif macd_prev >= 0 > macd_now: cross = "BEAR"
+                    if cross and cross != last_macd_cross:
+                        _print(f"📈 MACD M5 {cross} CROSS · macd={macd_now:+.2f} (was {macd_prev:+.2f})")
+                        last_macd_cross = cross
+            except Exception: pass
 
             # ─── Tick velocity (momentum/news) ───
             if len(tick_history) > 10:
