@@ -59,7 +59,11 @@ class ClaudeApex(Genome):
     M1_RSI_OS      = 35.0
     NEAR_TP_RR     = 1.0
     FAR_TP_RR      = 1.8
-    MAX_HOLD_MIN   = 25
+    # MAX_HOLD_MIN — REMOVED cycle 39. User feedback "لا تحط وقت يا حبيبي":
+    # time-based forced closes killed winning setups. The market doesn't
+    # respect our calendar. A position exits ONLY on SL, TP, or a real
+    # structure break — never on a clock.
+    MAX_HOLD_MIN   = None
     # SL design (cycle-39 lesson: tight SLs kill winners on M1 noise).
     # Use the LARGER of M5 swing low or M1 swing low - (ATR M1 × MULT).
     # Floor: SL distance ≥ 1.5× ATR M1 so noise can't tag it.

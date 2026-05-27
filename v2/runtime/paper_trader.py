@@ -101,14 +101,13 @@ def _check_closes(open_pos: dict, snapshot, paper_equity: float) -> tuple[dict, 
             if cur_ask >= p["sl"]: closed_reason = "SL"; close_price = p["sl"]
             elif cur_ask <= p["tp"]: closed_reason = "TP"; close_price = p["tp"]
 
-        # Expiry
-        if not closed_reason:
-            opened = datetime.fromisoformat(p["opened_at"])
-            if opened.tzinfo is None: opened = opened.replace(tzinfo=timezone.utc)
-            age_min = (datetime.now(timezone.utc) - opened).total_seconds() / 60
-            if age_min > 25:
-                closed_reason = "EXPIRY"
-                close_price = cur_bid if side == "BUY" else cur_ask
+        # NO EXPIRY (cycle 39 user feedback "لا تحط وقت يا حبيبي").
+        # Positions exit only on SL or TP — never on a clock. The
+        # market decides when a setup is done, not the calendar.
+        # Compute age for logging only.
+        opened = datetime.fromisoformat(p["opened_at"])
+        if opened.tzinfo is None: opened = opened.replace(tzinfo=timezone.utc)
+        age_min = (datetime.now(timezone.utc) - opened).total_seconds() / 60
 
         if closed_reason:
             pnl_per_unit = (close_price - p["entry"]) if side == "BUY" else (p["entry"] - close_price)
@@ -200,7 +199,7 @@ def _update_stats(open_pos: dict):
     })
 
 
-def run_loop(symbols: tuple = ("XAUUSDm",), poll_sec: int = 10):
+def run_loop(symbols: tuple = ("XAUUSDm",), poll_sec: int = 2):
     print(f"[paper_trader] starting · symbols={symbols} · poll={poll_sec}s")
     genomes = [ClaudeApex()]
     open_pos = _load(OPEN_POS, {})
@@ -228,4 +227,5 @@ def run_loop(symbols: tuple = ("XAUUSDm",), poll_sec: int = 10):
 if __name__ == "__main__":
     import sys
     syms = tuple(sys.argv[1].split(",")) if len(sys.argv) > 1 else ("XAUUSDm",)
-    run_loop(symbols=syms)
+    poll = int(sys.argv[2]) if len(sys.argv) > 2 else 2     # default 2s — near real-time
+    run_loop(symbols=syms, poll_sec=poll)
