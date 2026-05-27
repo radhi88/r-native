@@ -184,6 +184,52 @@ def _compute_volume_profile(bars: list, bin_size: float = 1.0):
     return {"poc": poc, "val": sorted_keys[lo], "vah": sorted_keys[hi]}
 
 
+def _detect_sr_clusters(m5_bars, lookback=40, group_dist=1.0):
+    """Auto-detect S/R via swing-point clustering. Returns list of
+    {price, strength} for clusters with ≥2 pivots."""
+    pivots = []
+    for i in range(2, len(m5_bars)-2):
+        w_h = [b["high"] for b in m5_bars[i-2:i+3]]
+        w_l = [b["low"]  for b in m5_bars[i-2:i+3]]
+        if m5_bars[i]["high"] == max(w_h):
+            pivots.append(m5_bars[i]["high"])
+        if m5_bars[i]["low"] == min(w_l):
+            pivots.append(m5_bars[i]["low"])
+    if not pivots: return []
+    clusters = []
+    for p in sorted(pivots):
+        if clusters and abs(p - clusters[-1]["center"]) < group_dist:
+            clusters[-1]["pts"].append(p)
+            clusters[-1]["center"] = sum(clusters[-1]["pts"]) / len(clusters[-1]["pts"])
+        else:
+            clusters.append({"center": p, "pts": [p]})
+    return [{"price": round(c["center"],2), "strength": len(c["pts"])}
+             for c in clusters if len(c["pts"]) >= 2]
+
+
+def _compute_adx(bars, period=14):
+    if len(bars) < period*2: return None, None, None
+    plus_dm, minus_dm, trs = [], [], []
+    for j in range(1, len(bars)):
+        h, l = bars[j]["high"], bars[j]["low"]
+        ph, pl, pc = bars[j-1]["high"], bars[j-1]["low"], bars[j-1]["close"]
+        up, dn = h-ph, pl-l
+        plus_dm.append(up if up > dn and up > 0 else 0)
+        minus_dm.append(dn if dn > up and dn > 0 else 0)
+        trs.append(max(h-l, abs(h-pc), abs(l-pc)))
+    p = period
+    atr_w = sum(trs[:p])/p; plus_w = sum(plus_dm[:p])/p; minus_w = sum(minus_dm[:p])/p
+    for j in range(p, len(trs)):
+        atr_w   = (atr_w*(p-1)+trs[j])/p
+        plus_w  = (plus_w*(p-1)+plus_dm[j])/p
+        minus_w = (minus_w*(p-1)+minus_dm[j])/p
+    if atr_w <= 0: return None, None, None
+    plus_di  = plus_w  / atr_w * 100
+    minus_di = minus_w / atr_w * 100
+    dx = (abs(plus_di - minus_di) / max(plus_di + minus_di, 1e-9)) * 100
+    return round(dx,1), round(plus_di,1), round(minus_di,1)
+
+
 def build_drawings():
     """Compute the FULL drawing set for the chart."""
     try:
@@ -198,11 +244,12 @@ def build_drawings():
     asia_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
     # Fetch bars
+    m1  = _get_bars(mt5, mt5.TIMEFRAME_M1,  60)
     m5  = _get_bars(mt5, mt5.TIMEFRAME_M5,  120)
     m15 = _get_bars(mt5, mt5.TIMEFRAME_M15, 96)   # 24h
     h1  = _get_bars(mt5, mt5.TIMEFRAME_H1,  48)
     d1  = _get_bars(mt5, mt5.TIMEFRAME_D1,  10)
-    if not (m5 and m15 and h1 and d1): return []
+    if not (m1 and m5 and m15 and h1 and d1): return []
 
     tick = mt5.symbol_info_tick(SYMBOL)
     if not tick: return []
@@ -220,6 +267,16 @@ def build_drawings():
         drawings.append({
             "type": "hline", "price": fvg["bot"], "color": col,
             "label": f"{label} bot ${fvg['bot']:.2f}",
+        })
+
+    # ─── S/R Clusters auto-detected ───
+    sr_clusters = _detect_sr_clusters(m5, lookback=40, group_dist=1.0)
+    for sr in sr_clusters[:8]:
+        # Color intensity by strength (more pivots = brighter)
+        col = "#FFAA00" if sr["strength"] >= 3 else "#888844"
+        drawings.append({
+            "type": "hline", "price": sr["price"], "color": col,
+            "label": f"S/R ×{sr['strength']} @ {sr['price']:.2f}",
         })
 
     # ─── Order Blocks (M5) ───
@@ -332,6 +389,37 @@ def build_drawings():
         if p.tp:
             drawings.append({"type": "hline", "price": p.tp, "color": COLOR_TP,
                               "label": f"TP ${p.tp:.2f}"})
+
+    # ─── Live indicator status as informational hlines (top-right info)  ───
+    # Compute ADX, RSI, pressure for status panel
+    adx_m5, pdi, mdi = _compute_adx(m5, 14)
+    closes_m1 = [b["close"] for b in m1[:-1]]
+    if len(closes_m1) >= 15:
+        g = [max(closes_m1[k]-closes_m1[k-1], 0) for k in range(1,len(closes_m1))]
+        l = [max(closes_m1[k-1]-closes_m1[k], 0) for k in range(1,len(closes_m1))]
+        ag = sum(g[:14])/14; al = sum(l[:14])/14
+        for k in range(14, len(g)):
+            ag = (ag*13+g[k])/14; al = (al*13+l[k])/14
+        rsi_m1 = 100 if al == 0 else round(100 - 100/(1 + ag/al), 1)
+    else: rsi_m1 = None
+    # Pressure 10-M1 net body $
+    last10 = m1[-11:-1]
+    bull_body = sum(b["close"]-b["open"] for b in last10 if b["close"]>b["open"])
+    bear_body = sum(b["open"]-b["close"] for b in last10 if b["close"]<b["open"])
+    pressure = round(bull_body - bear_body, 2)
+    pressure_dir = "BUY+" if pressure > 1 else ("SELL+" if pressure < -1 else "FLAT")
+    # Volume burst
+    cur_vol = int(m5[-1]["tick_volume"])
+    avg_vol = sum(int(b["tick_volume"]) for b in m5[-11:-1])/10
+    vol_pct = round(cur_vol/max(avg_vol,1)*100)
+
+    # Push status as a dummy hline label at top-right of chart (use far_right price band)
+    # Combined ascii summary written as label on prior-day-close hline replicate
+    status_line = f"📊 ADX={adx_m5} ±{pdi}/{mdi} · RSI={rsi_m1} · Pressure={pressure_dir}({pressure:+.1f}) · Vol={vol_pct}%"
+    drawings.append({
+        "type": "hline", "price": cur + 30, "color": "#FFFFFF",
+        "label": status_line,
+    })
 
     # ─── My TARGETS for the next move (educated guess from levels) ───
     # Up-target: nearest level above current (resistance to reach)
