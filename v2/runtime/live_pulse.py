@@ -244,8 +244,10 @@ def main(symbol: str = "XAUUSDm", poll: float = 1.0):
                     _print(f"🟥 BEAR FVG M5: ${bear_fvg[0]:.2f}-${bear_fvg[1]:.2f}")
                     last_bear_fvg = bear_fvg
 
-            # ─── RSI w/ hysteresis ───
-            closes = [b["close"] for b in m1]
+            # ─── RSI w/ hysteresis (CLOSED bars only — the forming bar's
+            # close ticks with every quote and used to flip OS/OB state
+            # several times per minute. Exclude bars[-1]). ───
+            closes = [b["close"] for b in m1[:-1]]
             rsi = _rsi(closes, 14)
             if last_rsi_state == "OVERBOUGHT":
                 if rsi < 65: last_rsi_state = "neutral"
@@ -308,16 +310,18 @@ def main(symbol: str = "XAUUSDm", poll: float = 1.0):
             for name, level, tol in levels_to_watch:
                 if level is None: continue
                 if abs(cur - level) < tol:
-                    key = f"{name}-{int(level*100)}"
+                    # Dedup by NAME only (was name+price → price changes
+                    # by cents tick-to-tick → key changes → spam)
+                    key = name
                     if last_level_alert.get(key, 0) < now_ts - 300:
                         side = "above" if cur > level else "below"
                         _print(f"📍 price {cur:.2f} testing {name} {level:.2f} (cur {side})")
                         last_level_alert[key] = now_ts
 
-            # Round numbers
+            # Round numbers — dedup by integer round value (not float)
             for rn in _round_levels(cur, 5):
                 if abs(cur - rn) < 0.30:
-                    key = f"RN-{rn}"
+                    key = f"RN-{int(rn)}"
                     if last_level_alert.get(key, 0) < now_ts - 600:
                         _print(f"🔢 round number {rn:.0f} in play (price {cur:.2f})")
                         last_level_alert[key] = now_ts
