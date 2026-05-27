@@ -77,14 +77,15 @@ def _candle_anatomy(bar):
     body_pct = body / rng * 100
     bullish = c > o
     kind = "neutral"
-    if body_pct < 15:
+    # Wick-dominant FIRST so tiny-body hammers aren't mislabeled "doji"
+    if lower >= 2 * max(body, rng * 0.05) and upper < max(body, rng * 0.10):
+        kind = "hammer" if bullish or body_pct < 15 else "hanging_man"
+    elif upper >= 2 * max(body, rng * 0.05) and lower < max(body, rng * 0.10):
+        kind = "shooting_star" if not bullish or body_pct < 15 else "inverted_hammer"
+    elif body_pct < 15:
         kind = "doji"
     elif body_pct >= 80:
         kind = "marubozu_bull" if bullish else "marubozu_bear"
-    elif upper >= 2 * body and lower < body:
-        kind = "shooting_star" if not bullish else "inverted_hammer"
-    elif lower >= 2 * body and upper < body:
-        kind = "hammer" if bullish else "hanging_man"
     elif body_pct >= 60:
         kind = "strong_bull" if bullish else "strong_bear"
     elif body_pct >= 30:
