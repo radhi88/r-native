@@ -136,6 +136,20 @@ class ClaudeApex(Genome):
         if mb:
             return None     # sellers just won a clean fight, wait
 
+        # ─── SMC RULE 5: ABORT on recent liquidity-sweep upper wicks ───
+        # Cycle-39 LIVE lesson (2026-05-27 08:30): a green bar with
+        # body 7% + upper wick $1.48 + volume 176% looked like BUY+
+        # pressure flip on aggregate. The next bar dumped -$3.76.
+        # The upper wick was a stop-hunt. Filter it out.
+        for b in m1_bars[-3:-1]:    # last 2 closed bars
+            body = abs(b["close"] - b["open"])
+            rng  = max(b["high"] - b["low"], 1e-9)
+            upper_wick = b["high"] - max(b["open"], b["close"])
+            # Big upper wick (≥ 1.5× body) on a high-volume bar = sweep
+            if (body > 0 and upper_wick >= 1.5 * body
+                    and upper_wick / rng > 0.5):
+                return None     # liquidity sweep — sellers waiting above
+
         # ─── BASELINE 4: pullback setup ───
         pullback = (m5f.last_close < m5f.ema9 and m5f.ema9 > m5f.ema21)
         # During FVG retest, "pullback" is implicit — but require uptrend EMAs
