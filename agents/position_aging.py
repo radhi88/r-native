@@ -51,12 +51,20 @@ class PositionAging(Agent):
     # Active 24/7 — unlike night_shift's -$1 floor that only runs at night.
     FAST_BLEED_AGE_HOURS  = 1.0
     FAST_BLEED_PL_FLOOR   = -1.00   # was -1.50 in cycle 15
-    # EMERGENCY tier (cycle 24, tightened cycle 31): catastrophic-fast losses.
-    # On a $100 account, $2 = 2% loss per trade — already significant.
-    # Was -$3 but ETHUSDm just hit -$3.18 SL because there was no cap
-    # between fast_bleed (-$1.50) and full SL hit. Tightened to -$2.
-    EMERGENCY_PL_FLOOR    = -2.00   # was -3.00 — too lenient for smaller account
-    EMERGENCY_OVERRIDE_MIN_AGE = True   # bypasses MIN_AGE_HOURS=1.0
+    # EMERGENCY tier — was firing too aggressively on fresh M1 entries.
+    # CYCLE-39 FIX (user feedback "وقف الخسارة قريبه"): on 2026-05-27
+    # BUY_STOP @ 4502.85 hit aging_zombie_cut at $-2.00 after 7 min, then
+    # price ran +$11 to 4511. M1 noise easily wicks $2; firing EMERGENCY
+    # without ANY grace period killed a winner.
+    #
+    # NEW policy: EMERGENCY still bypasses MIN_AGE, but only after a SHORT
+    # grace (5 min) so M1 noise can't trigger it. AND threshold widened
+    # from -$2 → -$2.50 so the actual SL placed by the gate (typically
+    # at the 3% cap = ~$2.88) gets a chance to do its job first.
+    EMERGENCY_PL_FLOOR    = -2.50   # was -2.00 — let SL trigger first
+    EMERGENCY_MIN_AGE_MIN = 5       # was 0 (override flag) — 5 min grace
+    EMERGENCY_OVERRIDE_MIN_AGE = True   # still bypasses MIN_AGE_HOURS=1.0
+                                         # after the 5-min EMERGENCY_MIN_AGE_MIN
 
     # Protections
     WINNER_PROTECT_PL     = 1.00    # > $1 = always keep (let trail manage)
@@ -90,9 +98,15 @@ class PositionAging(Agent):
 
     def _classify(self, age_h: float, profit: float) -> tuple[bool, str]:
         """Decide if a position should be closed. Returns (should_close, reason)."""
-        # EMERGENCY first — bypass ALL grace periods on catastrophic loss
-        if profit <= self.EMERGENCY_PL_FLOOR and self.EMERGENCY_OVERRIDE_MIN_AGE:
-            return True, f"🚨 EMERGENCY {age_h:.2f}h, ${profit:+.2f} ≤ ${self.EMERGENCY_PL_FLOOR}"
+        # EMERGENCY first — bypasses MIN_AGE_HOURS but honors a SHORT grace
+        # so M1 noise can't fire it. The user lost a winner on 2026-05-27
+        # because EMERGENCY fired at 7 min on $-2 while market was about to
+        # reverse +$11 — fixed cycle 39.
+        age_min = age_h * 60
+        if (profit <= self.EMERGENCY_PL_FLOOR
+                and self.EMERGENCY_OVERRIDE_MIN_AGE
+                and age_min >= self.EMERGENCY_MIN_AGE_MIN):
+            return True, f"🚨 EMERGENCY {age_min:.1f}m, ${profit:+.2f} ≤ ${self.EMERGENCY_PL_FLOOR}"
         # Protections (skipped only by emergency)
         if age_h < self.MIN_AGE_HOURS:
             return False, "fresh entry"

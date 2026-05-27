@@ -38,13 +38,23 @@ R_MAGIC = 20260605
 
 class BreakevenLock(Agent):
     name = "breakeven_lock"
-    description = "Snaps SL to break-even immediately when profit >= $0.30"
-    interval_seconds = 30      # very fast — half a minute
+    description = "Snaps SL to break-even on PROVEN winners (3 min old + ≥ $0.80 profit)"
+    interval_seconds = 30      # half-minute scan
     default_enabled = True
 
-    TRIGGER_PL_USD     = 0.30   # profit threshold to lock
-    BUFFER_POINTS      = 1.0    # SL goes to entry + 1 pip (in profit direction)
-                                 # use "points" not pips because pip size varies
+    # CYCLE-39 FIX (user feedback "وقف الخسارة قريبه"): the old
+    # 30-second / $0.30 trigger was killing winners. On 2026-05-27 the
+    # BUY_LIMIT @ 4499.50 went +$0.63 in 30 seconds, BE-lock fired,
+    # micro-reversal touched the new BE-SL, then price ran +$11 to 4511.
+    # Lost $5+ of free PnL because BE snapped too fast.
+    #
+    # NEW policy: need PROVEN winner before locking.
+    #   • Position must be ≥ 3 minutes old (price has had time to confirm)
+    #   • Profit must be ≥ $0.80 (3× the noise floor of $0.30 wicks)
+    #   • SL moves to entry + 2pt (small protection, not flush BE)
+    TRIGGER_PL_USD     = 0.80   # was $0.30 — too tight, caught noise
+    MIN_AGE_SECONDS    = 180    # was 0 — fire after 3 min minimum
+    BUFFER_POINTS      = 2.0    # was 1.0 — slightly bigger BE buffer
 
     def _is_sl_locked(self, position, entry: float) -> bool:
         """Has SL already been moved to break-even or better?"""
@@ -91,8 +101,15 @@ class BreakevenLock(Agent):
         if not r_positions: return
 
         locked = []
+        from datetime import datetime as _dt
+        now_ts = _dt.now().timestamp()
         for p in r_positions:
             if float(p.profit) < self.TRIGGER_PL_USD: continue
+
+            # CYCLE-39: age gate — don't lock fresh trades.
+            age_sec = now_ts - int(p.time)
+            if age_sec < self.MIN_AGE_SECONDS:
+                continue
 
             entry = float(p.price_open)
             if self._is_sl_locked(p, entry):
