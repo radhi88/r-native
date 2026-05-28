@@ -54,8 +54,45 @@ def _hour_from_ts(ts: str) -> int:
         return 12
 
 
-def _featurize(row: dict, side: str) -> list[float]:
-    """Build the normalized feature vector for one sample."""
+_VOLT = {"RISING": 1.0, "STEADY": 0.0, "FALLING": -1.0, None: 0.0, "": 0.0}
+
+
+def _rich(raw: dict) -> dict:
+    """Pull the rich indicators brain_v1 captures (footprint/SMC/momentum)."""
+    if not isinstance(raw, dict):
+        return {}
+    bid = raw.get("bid") or raw.get("ask") or 0.0
+    macd = raw.get("macd_m5") or {}
+    adx = raw.get("adx") or {}
+    # Order-block / FVG proximity: is price inside or near a bull/bear zone?
+    def _near_zone(z, kind):
+        try:
+            box = (z or {}).get(kind)
+            if not box: return 0.0
+            top, bot = box.get("top", 0), box.get("bot", 0)
+            if bot <= bid <= top: return 1.0          # inside the zone
+            dist = min(abs(bid - top), abs(bid - bot))
+            atr = (raw.get("atr") or {}).get("m5", 1) or 1
+            return max(0.0, 1.0 - dist / (atr * 3))    # proximity 0..1
+        except Exception:
+            return 0.0
+    fvg5 = raw.get("fvg_m5") or {}
+    return {
+        "cvd": max(-500.0, min(500.0, float(raw.get("cvd_30m1") or 0))) / 500.0,
+        "macd_hist": max(-30.0, min(30.0, float(macd.get("hist") or 0))) / 30.0,
+        "adx_m5": min(float(adx.get("m5") or 0), 100.0) / 100.0,
+        "adx_m15": min(float(adx.get("m15") or 0), 100.0) / 100.0,
+        "vol_trend": _VOLT.get(raw.get("vol_trend_m5"), 0.0),
+        "ob_bull_prox": _near_zone(raw.get("ob_m5"), "bull"),
+        "ob_bear_prox": _near_zone(raw.get("ob_m5"), "bear"),
+        "fvg_bull_n": min(len(fvg5.get("bull") or []), 3) / 3.0,
+        "fvg_bear_n": min(len(fvg5.get("bear") or []), 3) / 3.0,
+        "liq_sweep": 1.0 if raw.get("liquidity_sweep_m5") else 0.0,
+    }
+
+
+def _featurize(row: dict, side: str, raw: dict | None = None) -> list[float]:
+    """Build the normalized feature vector for one sample (base + rich indicators)."""
     rsi_m1 = (row.get("rsi_m1") or 50) / 100.0
     rsi_m5 = (row.get("rsi_m5") or 50) / 100.0
     atr_m1 = row.get("atr_m1") or 0.0
@@ -75,12 +112,19 @@ def _featurize(row: dict, side: str) -> list[float]:
     reg = row.get("regime") or "?"
     reg_oh = [1.0 if reg == s else 0.0 for s in _REGIMES]
 
-    return ([rsi_m1, rsi_m5, atr_ratio, pressure, b1, b5, b15, bh1,
-             mtf_align, side_buy, hour_sin, hour_cos] + sess_oh + reg_oh)
+    base = [rsi_m1, rsi_m5, atr_ratio, pressure, b1, b5, b15, bh1,
+            mtf_align, side_buy, hour_sin, hour_cos]
+    r = _rich(raw or {})
+    rich = [r.get(k, 0.0) for k in _RICH_KEYS]
+    return base + rich + sess_oh + reg_oh
 
+
+_RICH_KEYS = ["cvd", "macd_hist", "adx_m5", "adx_m15", "vol_trend",
+              "ob_bull_prox", "ob_bear_prox", "fvg_bull_n", "fvg_bear_n", "liq_sweep"]
 
 FEATURE_NAMES = (["rsi_m1", "rsi_m5", "atr_ratio", "pressure", "bias_m1", "bias_m5",
                   "bias_m15", "bias_h1", "mtf_align", "side_buy", "hour_sin", "hour_cos"]
+                 + _RICH_KEYS
                  + [f"sess_{s}" for s in _SESSIONS] + [f"reg_{r}" for r in _REGIMES])
 
 
@@ -108,7 +152,13 @@ def build_dataset() -> tuple[np.ndarray, np.ndarray, list[str]]:
                 break
         if cand is None:
             continue
-        feat = _featurize(cand, t["side"])
+        raw = {}
+        try:
+            if cand.get("raw_json"):
+                raw = json.loads(cand["raw_json"])
+        except Exception:
+            pass
+        feat = _featurize(cand, t["side"], raw)
         X.append(feat)
         y.append(1 if t["pnl"] > 0 else 0)
         ts_list.append(t["ts"])
@@ -222,7 +272,7 @@ def predict(snap: dict, side: str) -> float:
         "regime": snap.get("regime"),
         "ts": snap.get("ts", ""),
     }
-    feat = np.array([_featurize(row, side)], dtype=np.float32)
+    feat = np.array([_featurize(row, side, snap)], dtype=np.float32)
     try:
         return float(_loaded["model"].predict_proba(feat)[0, 1])
     except Exception:
