@@ -38,6 +38,7 @@ SERVICES = [
     "unified_trader",           # THE sole executor
     "trailing_stop_manager",    # SL trail
     "decision_outcome_filler",  # PnL backfill
+    "trade_sync",               # MT5 history → db (manual trades feed learning)
 ]
 
 _spawned: dict[str, int] = {}   # service -> pid we started

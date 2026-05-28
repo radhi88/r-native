@@ -263,8 +263,36 @@ def fire_entry(side: str, confidence: float, reason: str,
         if _breaker: _breaker.mark_trade()
         print(f"[{datetime.now():%H:%M:%S}] 🎯 {side} #{r.order} @ {r.price:.2f} "
                f"SL {sl:.2f} TP {tp:.2f} lot {lot} conf {confidence:.2f} | {reason}")
+        # BUY alert — persistent flag + desktop toast (the child's first/every BUY)
+        if side == "BUY":
+            _emit_buy_alert(int(r.order), float(r.price), lot, confidence, reason, genome_name)
     else:
         print(f"[{datetime.now():%H:%M:%S}] ❌ {side} failed: {getattr(r, 'retcode', None)}")
+
+
+def _emit_buy_alert(ticket: int, price: float, lot: float,
+                    confidence: float, reason: str, genome_name: str) -> None:
+    """Persist a BUY alert + try a desktop notification."""
+    alert = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "ticket": ticket, "price": price, "lot": lot,
+        "confidence": confidence, "genome": genome_name, "reason": reason,
+    }
+    try:
+        p = PATHS["brain_decisions"].parent / "buy_alerts.jsonl"
+        with p.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(alert, ensure_ascii=False, default=str) + "\n")
+    except Exception:
+        pass
+    # Desktop toast (best-effort — never blocks trading)
+    try:
+        from win10toast import ToastNotifier
+        ToastNotifier().show_toast(
+            "🟢 ولدك اشترى!", f"BUY #{ticket} @ {price:.2f} ({genome_name})",
+            duration=10, threaded=True)
+    except Exception:
+        pass
+    print(f"[{datetime.now():%H:%M:%S}] 🔔 BUY ALERT written → buy_alerts.jsonl")
 
 
 # ──────────────────────────────────────────────────────────
