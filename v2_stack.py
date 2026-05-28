@@ -70,6 +70,18 @@ def start_all() -> dict:
     Returns {"started": [...], "already_running": [...], "failed": [...]}.
     """
     LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+    # 🛡️ Restore our son BEFORE spawning evolver/promoter (so the GA can't
+    # touch the pool before the champion is re-seeded).
+    try:
+        import sys as _sys
+        _sys.path.insert(0, str(R_NATIVE_V2))
+        from runtime.champion_seeder import seed as _seed
+        _r = _seed()
+        print(f"[v2_stack] champion: {_r.get('champion')} — {_r.get('actions')}", flush=True)
+    except Exception as _e:
+        print(f"[v2_stack] champion seed skipped: {_e}", flush=True)
+
     already = _running_modules()
 
     started, skipped, failed = [], [], []
