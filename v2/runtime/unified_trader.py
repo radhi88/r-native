@@ -107,8 +107,14 @@ def _write_son_status(stage: str, detail: str, genome: str, snap: dict,
             "rsi_m1": (snap.get("rsi") or {}).get("m1"),
             "pressure": snap.get("pressure_10m1"),
         }
-        (PATHS["brain_decisions"].parent / "son_status.json").write_text(
-            json.dumps(st, ensure_ascii=False, default=str), encoding="utf-8")
+        payload = json.dumps(st, ensure_ascii=False, default=str)
+        (PATHS["brain_decisions"].parent / "son_status.json").write_text(payload, encoding="utf-8")
+        # Mirror to MT5 Common/Files so FRIDAY_Brain_Executor.mq5 (the EA) can read it
+        try:
+            from runtime.shared.tokens import COMMON_FILES
+            (COMMON_FILES / "son_status.json").write_text(payload, encoding="utf-8")
+        except Exception:
+            pass
     except Exception:
         pass
 
