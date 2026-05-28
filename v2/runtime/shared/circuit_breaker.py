@@ -149,16 +149,20 @@ class CircuitBreaker:
         # Fetch deals over a generous window to account for broker timezone offset
         since = datetime.now(timezone.utc) - timedelta(seconds=window_sec * 2 + 86400)
         deals = mt5.history_deals_get(since, datetime.now(timezone.utc) + timedelta(hours=24)) or []
-        # Count DEAL_ENTRY_IN (entries). Use newest-deal-relative window to be
-        # timezone-safe: take the latest entry as "now" and count those within window_sec.
-        my_entries = sorted(
-            [d for d in deals if int(d.magic) == self.magic and int(d.entry) == 0],
-            key=lambda d: d.time, reverse=True,
-        )
-        if not my_entries:
+        # Reference "now" in BROKER time (same clock as deal.time) — use the live
+        # tick timestamp. Count entries within window_sec of NOW (not of the last
+        # historical trade — that bug froze the engine permanently).
+        tick = mt5.symbol_info_tick(self.symbol)
+        now_broker = float(tick.time) if tick else 0.0
+        if now_broker <= 0:
+            # fallback: newest deal time across ALL magics ≈ broker now
+            all_times = [d.time for d in deals]
+            now_broker = float(max(all_times)) if all_times else 0.0
+        if now_broker <= 0:
             return 0
-        newest_t = my_entries[0].time
-        return sum(1 for d in my_entries if newest_t - d.time < window_sec)
+        return sum(1 for d in deals
+                   if int(d.magic) == self.magic and int(d.entry) == 0
+                   and 0 <= (now_broker - d.time) < window_sec)
 
     def _consec_loss_count(self) -> int:
         since = datetime.now(timezone.utc) - timedelta(hours=6)
