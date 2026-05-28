@@ -60,7 +60,7 @@ from pathlib import Path
 from collections import deque
 
 SYMBOL = "XAUUSDm"
-POLL = 2.0
+POLL = 1.0          # real-time snapshots (was 2.0) — لحظي، لا نفوّت فرصة
 MEMORY     = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_memory.jsonl")
 LIVE       = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_live.json")
 DECISIONS  = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_decisions.jsonl")

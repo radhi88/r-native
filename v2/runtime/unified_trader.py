@@ -55,7 +55,11 @@ from runtime.shared.decision_log import (                        # noqa: E402
 # ──────────────────────────────────────────────────────────
 MAGIC  = MAGICS["claude_genome"]   # 99782 — same as old claude_genome (continuity)
 SYMBOL = "XAUUSDm"
-POLL_S = 3.0
+POLL_S = 1.0          # real-time: react within ~1s (was 3.0). لا نفوق أي فرصة
+
+# Anti-pyramid: never stack more than this many open positions on SYMBOL+MAGIC.
+# This is THE guard that prevents the over-leverage stop-out that wiped magic-0.
+MAX_OPEN = 1
 
 # Files we read (single source of truth)
 BRAIN_LIVE  = PATHS["brain_live"]
@@ -72,13 +76,73 @@ TRAIL_LADDER = [
 
 # Confidence threshold (genome's signal strength must clear this to fire)
 MIN_CONFIDENCE = 0.5
-# ML clone gate — minimum P(win) from the user-cloned model to allow entry
-ML_MIN_PWIN = 0.50
+# ── ML clone gate — SELF-TUNING ──────────────────────────────────────────
+# User mandate (2026-05-28): "خفّض العتبة، وخلّه هو يرفعها إذا بدأ يخسر."
+# Lower BASE so our son actually trades; then he RAISES the bar on himself
+# when he starts losing (consecutive losers / red day) or when the market is
+# choppy. He relaxes back toward BASE after wins / when a clean trend returns.
+ML_BASE_PWIN = 0.42        # floor — trades freely above this in clean trends
+ML_MAX_PWIN  = 0.66        # ceiling — gets this strict only when bleeding/chop
+_thr_cache = {"t": 0.0, "v": ML_BASE_PWIN, "why": f"base {ML_BASE_PWIN}"}
 
 # Module state
 _breaker: CircuitBreaker | None = None
 _last_genome_name: str | None = None
 _last_status_print: float = 0.0
+
+
+def _adaptive_pwin_threshold(regime: str) -> tuple[float, str]:
+    """Self-tuning ML gate. Returns (threshold, human-readable why).
+
+    threshold = BASE
+              + regime penalty   (chop/dead/range → pickier)
+              + loss penalty      (each trailing consecutive loser → +0.03)
+              + red-day penalty   (today's realized P/L < -$3 → +0.05)
+    clamped to [BASE, MAX]. Cached 20s so we don't hammer history_deals_get."""
+    global _thr_cache
+    now = time.time()
+    if now - _thr_cache["t"] < 20:
+        return _thr_cache["v"], _thr_cache["why"]
+    thr = ML_BASE_PWIN
+    why = [f"base {ML_BASE_PWIN:.2f}"]
+    r = (regime or "?").upper()
+    if r in ("CHOP", "DEAD"):
+        thr += 0.10; why.append("+.10 chop")
+    elif r == "RANGE":
+        thr += 0.06; why.append("+.06 range")
+    elif r == "TRANSITION":
+        thr += 0.04; why.append("+.04 transit")
+    try:
+        import datetime as _dt
+        now_dt = _dt.datetime.now()
+        deals = mt5.history_deals_get(now_dt - _dt.timedelta(hours=12), now_dt) or []
+        ours = sorted([d for d in deals if d.magic == MAGIC and d.entry == 1],
+                      key=lambda d: d.time, reverse=True)
+        consec = 0
+        for d in ours:
+            if d.profit < 0: consec += 1
+            else: break
+        if consec:
+            bump = min(consec, 6) * 0.03
+            thr += bump; why.append(f"+{bump:.2f} {consec}L")
+        day_pnl = sum(d.profit for d in ours
+                      if _dt.datetime.fromtimestamp(d.time).date() == now_dt.date())
+        if day_pnl < -3.0:
+            thr += 0.05; why.append("+.05 day<-$3")
+    except Exception:
+        pass
+    thr = round(max(ML_BASE_PWIN, min(ML_MAX_PWIN, thr)), 3)
+    _thr_cache = {"t": now, "v": thr, "why": " ".join(why)}
+    return thr, _thr_cache["why"]
+
+
+def _open_count() -> int:
+    """How many positions we already hold on SYMBOL+MAGIC (anti-pyramid)."""
+    try:
+        pos = mt5.positions_get(symbol=SYMBOL) or []
+        return sum(1 for p in pos if p.magic == MAGIC)
+    except Exception:
+        return 0
 
 
 # ──────────────────────────────────────────────────────────
@@ -91,7 +155,8 @@ def _read_json(p: Path) -> dict | None:
 
 
 def _write_son_status(stage: str, detail: str, genome: str, snap: dict,
-                      side: str = "", p_win: float = 0.0) -> None:
+                      side: str = "", p_win: float = 0.0,
+                      ml_min: float = ML_BASE_PWIN) -> None:
     """Persist the live verdict so the UI / OUR SON tab can show what it's thinking."""
     try:
         acc = mt5.account_info()
@@ -99,7 +164,7 @@ def _write_son_status(stage: str, detail: str, genome: str, snap: dict,
             "ts": datetime.now(timezone.utc).isoformat(),
             "stage": stage, "detail": detail, "genome": genome,
             "side": side, "p_win": round(p_win, 3),
-            "ml_min": ML_MIN_PWIN,
+            "ml_min": round(ml_min, 3),
             "balance": acc.balance if acc else None,
             "equity": acc.equity if acc else None,
             "regime": snap.get("regime"),
@@ -384,18 +449,29 @@ def main():
             # 2. Manage open positions FIRST (always do this even if gates block entry)
             manage_open_positions()
 
-            # 3. Gate: orchestrator
-            orch_block = is_engine_active(MAGIC)
-            if orch_block:
-                _status(f"gate: {orch_block}")
-                _write_son_status("WAITING", f"البوابة: {orch_block}", genome_name, snap)
-                time.sleep(POLL_S); continue
+            # 3. Regime (orchestrator) — now a SOFT signal, not a hard block.
+            #    User: "ليه ما دخل صفقات؟ لا نفوّت أي فرصة." The blanket
+            #    "CHOP → everyone standby" froze him 100% of the time. Instead
+            #    we fold regime into the self-tuning ML threshold below: he CAN
+            #    trade choppy markets, but only on much stronger ML conviction.
+            regime_name = (regime.get("regime") or snap.get("regime") or "?")
+            orch_block  = is_engine_active(MAGIC)   # kept for transparency only
 
-            # 4. Gate: circuit breaker
+            # 4. Gate: circuit breaker — the REAL hard stop (cascade / DD / rate)
             cb_block = _breaker.check()
             if cb_block:
                 _status(f"breaker: {cb_block}")
                 _write_son_status("FROZEN", f"circuit breaker: {cb_block}", genome_name, snap)
+                time.sleep(POLL_S); continue
+
+            # 4b. Anti-pyramid guard — THE protection that magic-0 lacked.
+            #     Manage existing positions, but never stack a new one on top.
+            held = _open_count()
+            if held >= MAX_OPEN:
+                _status(f"hold: {held} open (max {MAX_OPEN}) — managing, no new entry")
+                _write_son_status("MANAGING",
+                                   f"صفقة مفتوحة ({held}) — يراقبها ولا يكدّس",
+                                   genome_name, snap)
                 time.sleep(POLL_S); continue
 
             # 5. Evaluate genome
@@ -409,24 +485,28 @@ def main():
                 _write_son_status("LOW_CONF", f"conf {confidence} | {reason}", genome_name, snap)
                 time.sleep(POLL_S); continue
 
-            # 5b. ML CLONE GATE — only fire in contexts that historically WIN
+            # 5b. SELF-TUNING ML CLONE GATE — fire only where he historically WINS.
+            #     Threshold lowers the bar (trade more) but he raises it on himself
+            #     when losing / in chop. (orch_block makes regime visible in logs.)
+            thr, thr_why = _adaptive_pwin_threshold(regime_name)
             p_win = 0.5
             try:
                 from runtime.ml_clone import predict as _ml_predict
                 p_win = _ml_predict(snap, side)
-                if p_win < ML_MIN_PWIN:
-                    _status(f"ml gate: P(win) {p_win:.2f} < {ML_MIN_PWIN} — skip {side}")
+                if p_win < thr:
+                    _status(f"ml gate: P(win) {p_win:.2f} < {thr:.2f} ({thr_why}) — skip {side}")
                     _write_son_status("ML_BLOCK",
-                                       f"{side} signal لكن P(win) {p_win:.2f} < {ML_MIN_PWIN}",
-                                       genome_name, snap, side=side, p_win=p_win)
+                                       f"{side}: P(win) {p_win:.2f} < {thr:.2f} [{thr_why}]"
+                                       + (f" · {orch_block}" if orch_block else ""),
+                                       genome_name, snap, side=side, p_win=p_win, ml_min=thr)
                     time.sleep(POLL_S); continue
-                reason = f"{reason} | P(win) {p_win:.2f}"
+                reason = f"{reason} | P(win) {p_win:.2f}≥{thr:.2f}"
             except Exception:
                 pass  # ML never blocks trading on error
 
             # 6. FIRE
-            _write_son_status("FIRING", f"{side} conf {confidence} P(win) {p_win:.2f}",
-                              genome_name, snap, side=side, p_win=p_win)
+            _write_son_status("FIRING", f"{side} conf {confidence} P(win) {p_win:.2f}≥{thr:.2f}",
+                              genome_name, snap, side=side, p_win=p_win, ml_min=thr)
             fire_entry(side, confidence, reason, snap, genome_params, genome_name)
 
             time.sleep(POLL_S)
