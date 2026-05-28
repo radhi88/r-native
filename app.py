@@ -1461,6 +1461,7 @@ class RNativeMain(QMainWindow):
         tabs.addTab(self._build_genes_tab(),    "🧬 GENES")
         tabs.addTab(self._build_hof_tab(),      "🏆 HALL OF FAME")
         tabs.addTab(self._build_advisors_tab(), "🤖 AI ADVISORS")
+        tabs.addTab(self._build_son_tab(),      "🧬 OUR SON")
         self.center_stack.addWidget(tabs)
 
         # mode 1: ADVANCED — PROP FIRM + EXECUTION & SPREAD + EVOLUTION panels
@@ -2252,6 +2253,134 @@ class RNativeMain(QMainWindow):
             trades=[], purge_req={}, classification=cls,
             params={}, active_genes=[], flags={}, exit_breakdown={},
             equity_curve=[], oos_split_idx=0)
+
+    def _build_son_tab(self):
+        """🧬 OUR SON — live view of the v2 unified system (GEN-CHILD + ML gate)."""
+        from pathlib import Path as _P
+        w = QWidget(); v = QVBoxLayout(w)
+        v.setContentsMargins(10, 10, 10, 10); v.setSpacing(8)
+
+        hdr = QLabel("🧬 OUR SON  ·  GEN-CHILD  ·  unified_trader + ML gate")
+        hdr.setStyleSheet("font-size:17px; font-weight:bold; color:#FFD24A;")
+        v.addWidget(hdr)
+
+        sub = QLabel("النظام الحقيقي v2 — يتداول بأسلوبك (ML AUC 0.72) · محمي بكل البوابات")
+        sub.setStyleSheet("font-size:12px; color:#8892a8;")
+        v.addWidget(sub)
+
+        self.son_view = QPlainTextEdit()
+        self.son_view.setReadOnly(True)
+        self.son_view.setStyleSheet(
+            "background:#0c0e18; color:#c8d0e0; "
+            "font-family:'Cascadia Mono','Consolas',monospace; font-size:13px;")
+        v.addWidget(self.son_view, 1)
+
+        self._son_data = _P(r"C:\Users\Radhi\MT5\r_native_v2\data")
+        self._son_champ = _P(r"C:\Users\Radhi\MT5\r_native_v2\genomes\champion_genome.json")
+        self._son_timer = QTimer(self)
+        self._son_timer.timeout.connect(self._refresh_son_tab)
+        self._son_timer.start(3000)
+        QTimer.singleShot(400, self._refresh_son_tab)
+        return w
+
+    def _refresh_son_tab(self):
+        """Repaint the OUR SON view from the v2 data files (every 3s)."""
+        import json as _json, time as _time
+        D = self._son_data
+        def _rd(name):
+            try: return _json.loads((D / name).read_text(encoding="utf-8"))
+            except Exception: return {}
+        def _age(name):
+            try: return _time.time() - (D / name).stat().st_mtime
+            except Exception: return 9999
+
+        snap = _rd("brain_live.json"); reg = _rd("market_regime.json")
+        act  = _rd("active_engines.json"); live = _rd("live_genome.json")
+        L = []
+
+        # ── Services (freshness as proxy) ──
+        svc = [
+            ("brain_v1", "brain_live.json", 10),
+            ("regime_classifier", "market_regime.json", 15),
+            ("trader_orchestrator", "active_engines.json", 45),
+            ("genome_promoter", "live_genome.json", 9999),
+            ("genome_fitness", "genome_fitness.json", 9999),
+        ]
+        up = sum(1 for _, f, lim in svc if _age(f) < lim)
+        L.append(f"  المحركات الأساسية: {up}/{len(svc)} تكتب بيانات طازجة")
+        for nm, f, lim in svc:
+            a = _age(f)
+            mark = "🟢" if a < lim else "🟡" if a < 9000 else "🔴"
+            L.append(f"     {mark} {nm:22s} {int(a) if a<9000 else '—'}s")
+        L.append("")
+
+        # ── Regime + gate ──
+        regime = reg.get("regime", "?")
+        adx = reg.get("metrics", {}).get("adx_m5", 0)
+        gate_open = 99782 in act.get("active_magics", [])
+        L.append(f"  🌡️ Regime: {regime}  (ADX {adx:.1f})")
+        L.append(f"  🚦 البوابة لولدنا (99782): {'🟢 مفتوحة' if gate_open else '🔴 مقفلة (standby)'}")
+        L.append(f"  🧬 LIVE genome: {live.get('name','?')}")
+        L.append("")
+
+        # ── Market + genome conditions ──
+        b = snap.get("bias", {}) or {}
+        up_n = sum(1 for x in b.values() if x == "UP")
+        dn_n = sum(1 for x in b.values() if x == "DOWN")
+        rsi = (snap.get("rsi") or {}).get("m1", 50)
+        pressure = float(snap.get("pressure_10m1", 0) or 0)
+        sess = snap.get("session", "?")
+        p = live.get("params", {}) or {}
+        min_mtf = p.get("min_mtf_agreement", 2)
+        rsi_max = p.get("rsi_max", 72); rsi_min = 100 - rsi_max
+        min_p = p.get("min_pressure_abs", 5)
+        L.append(f"  📊 السوق: M1={b.get('m1','?')} M5={b.get('m5','?')} "
+                 f"M15={b.get('m15','?')} H1={b.get('h1','?')}  →  {up_n}↑/{dn_n}↓")
+        L.append(f"     RSI {rsi}  ·  Pressure {pressure:+.1f}  ·  {sess}")
+        L.append("")
+
+        def chk(ok): return "✅" if ok else "❌"
+        L.append("  🟢 شروط الشراء:")
+        L.append(f"     {chk(up_n>=min_mtf)} {up_n} UP ≥ {min_mtf}   "
+                 f"{chk(rsi<rsi_max)} RSI<{rsi_max}   "
+                 f"{chk(abs(pressure)>=min_p)} |P|≥{min_p}   "
+                 f"{chk(pressure>0)} P موجبة")
+        L.append("  🔴 شروط البيع:")
+        L.append(f"     {chk(dn_n>=min_mtf)} {dn_n} DOWN ≥ {min_mtf}   "
+                 f"{chk(rsi>rsi_min)} RSI>{rsi_min}   "
+                 f"{chk(abs(pressure)>=min_p)} |P|≥{min_p}   "
+                 f"{chk(pressure<0)} P سالبة")
+        L.append("")
+
+        # ── Recent decisions (incl ML P(win) in reason) ──
+        L.append("  📜 آخر قرارات ولدنا:")
+        try:
+            dec_lines = (D / "decisions.jsonl").read_text(encoding="utf-8").splitlines()[-6:]
+            if not dec_lines:
+                L.append("     (لا قرارات بعد — ينتظر سياق رابح)")
+            for ln in reversed(dec_lines):
+                try:
+                    d = _json.loads(ln)
+                    ts = (d.get("ts","")[11:19])
+                    pnl = d.get("pnl")
+                    out = f"${pnl:+.2f}" if pnl is not None else "open"
+                    mk = "🟢" if (pnl or 0) > 0 else "⌛" if pnl is None else "🔴"
+                    L.append(f"     {ts} {mk} {d.get('side','?')} @ {d.get('entry',0):.2f}  {out}  · {(d.get('reason','') or '')[:46]}")
+                except Exception: continue
+        except Exception:
+            L.append("     (لا قرارات بعد)")
+        L.append("")
+
+        # ── BUY alerts ──
+        try:
+            ba = (D / "buy_alerts.jsonl").read_text(encoding="utf-8").splitlines()
+            if ba:
+                last = _json.loads(ba[-1])
+                L.append(f"  🔔 آخر تنبيه شراء: #{last.get('ticket')} @ {last.get('price'):.2f} ({last.get('ts','')[11:19]})")
+        except Exception:
+            pass
+
+        self.son_view.setPlainText("\n".join(L))
 
     def _build_advisors_tab(self):
         """🤖 AI Advisors — live insight stream + agent control panel."""
