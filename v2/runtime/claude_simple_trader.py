@@ -27,6 +27,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from runtime.shared.orchestrator_gate import is_engine_active  # noqa: E402
 from runtime.shared.circuit_breaker import CircuitBreaker  # noqa: E402
+from runtime.shared.decision_log import record_decision, update_decision_ticket  # noqa: E402
 
 _breaker = None
 
@@ -138,6 +139,18 @@ def execute(mt5, side: str, reason: str):
         tp = price - TP_PTS
         order_type = mt5.ORDER_TYPE_SELL
 
+    # Record decision in unified log
+    _snap = None
+    try:
+        import json as _json
+        _snap = _json.loads(BRAIN_LIVE.read_text(encoding="utf-8"))
+    except Exception: pass
+    _dec_id = record_decision(
+        source="claude_simple", magic=MAGIC, symbol=SYMBOL, side=side,
+        entry=price, sl=sl, tp=tp, lot=LOT_PER_TRADE,
+        reason=reason, snap=_snap,
+    )
+
     req = {
         "action": mt5.TRADE_ACTION_DEAL, "symbol": SYMBOL,
         "volume": LOT_PER_TRADE, "type": order_type,
@@ -152,6 +165,8 @@ def execute(mt5, side: str, reason: str):
         req["type_filling"] = mt5.ORDER_FILLING_IOC
         r = mt5.order_send(req)
     ok = r and r.retcode == mt5.TRADE_RETCODE_DONE
+    update_decision_ticket(_dec_id, int(r.order) if ok else 0,
+                            error="" if ok else f"retcode {getattr(r,'retcode','?')}")
     if ok:
         _last_trade_ts = time.time()
         print(f"[{datetime.now():%H:%M:%S}] ✅ {side} #{r.order} @ {r.price:.2f} "

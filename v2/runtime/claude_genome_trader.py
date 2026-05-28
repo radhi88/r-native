@@ -42,6 +42,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from runtime.shared.orchestrator_gate import is_engine_active, get_active_summary  # noqa: E402
 from runtime.shared.circuit_breaker import CircuitBreaker  # noqa: E402
+from runtime.shared.decision_log import record_decision, update_decision_ticket  # noqa: E402
 
 _breaker = None  # lazy-init after MAGIC defined
 
@@ -191,6 +192,18 @@ def execute(side: str, genome_name: str, reason: str, confidence: float):
         price = tick.bid; sl = price + SL_PTS; tp = price - tp_dist
         order_type = mt5.ORDER_TYPE_SELL
 
+    # Record decision in unified log BEFORE order_send
+    _snap_for_log = None
+    try:
+        import json as _json
+        _snap_for_log = _json.loads(BRAIN_LIVE.read_text(encoding="utf-8"))
+    except Exception: pass
+    _dec_id = record_decision(
+        source="claude_genome", magic=MAGIC, symbol=SYMBOL, side=side,
+        entry=price, sl=sl, tp=tp, lot=lot,
+        reason=f"{genome_name}: {reason}", confidence=confidence, snap=_snap_for_log,
+    )
+
     req = {
         "action": mt5.TRADE_ACTION_DEAL, "symbol": SYMBOL,
         "volume": lot, "type": order_type,
@@ -205,6 +218,8 @@ def execute(side: str, genome_name: str, reason: str, confidence: float):
         req["type_filling"] = mt5.ORDER_FILLING_IOC
         r = mt5.order_send(req)
     ok = r and r.retcode == mt5.TRADE_RETCODE_DONE
+    update_decision_ticket(_dec_id, int(r.order) if ok else 0,
+                            error="" if ok else f"retcode {getattr(r,'retcode','?')}")
     if ok:
         _last_trade_ts = time.time()
         if _breaker: _breaker.mark_trade()
