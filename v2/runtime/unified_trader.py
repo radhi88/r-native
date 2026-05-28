@@ -59,7 +59,14 @@ POLL_S = 1.0          # real-time: react within ~1s (was 3.0). لا نفوق أ�
 
 # Anti-pyramid: never stack more than this many open positions on SYMBOL+MAGIC.
 # This is THE guard that prevents the over-leverage stop-out that wiped magic-0.
-MAX_OPEN = 1
+# 2 = a little concurrency for speed, still tiny risk (2×0.02 lot on a $150 acct).
+MAX_OPEN = 2
+
+# Pullback entries: in a CONFIRMED trend, allow buying the dip / selling the
+# rally even when short-term pressure is mildly contra — that's a pullback, not
+# a reversal. Block only when the counter-flow is deeper than this (a real
+# reversal). The ML gate makes the final call. Lets him trade far more often.
+PULLBACK_MAX_CONTRA = 15.0
 
 # Files we read (single source of truth)
 BRAIN_LIVE  = PATHS["brain_live"]
@@ -241,19 +248,36 @@ def evaluate_genome(snap: dict, genome_params: dict) -> tuple[str | None, float,
     if direction == "SELL" and rsi <= rsi_min:
         return (None, 0, f"SELL blocked: RSI {rsi:.1f} ≤ {rsi_min}")
 
-    # Pressure must confirm direction
-    pressure = float(snap.get("pressure_10m1", 0))
-    if abs(pressure) < min_pressure_abs:
-        return (None, 0, f"pressure |{pressure:.1f}| < {min_pressure_abs}")
-    if direction == "BUY"  and pressure < 0: return (None, 0, "pressure contra BUY")
-    if direction == "SELL" and pressure > 0: return (None, 0, "pressure contra SELL")
+    # Pressure: two ways in —
+    #   • MOMENTUM (with-trend): pressure confirms the side → needs real flow.
+    #   • PULLBACK (counter-trend dip): pressure mildly contra in a confirmed
+    #     trend → buy the dip / sell the rally. ML gate decides if it's worth it.
+    pressure   = float(snap.get("pressure_10m1", 0))
+    trend_n    = max(up_count, dn_count)
+    strong_trend = trend_n >= 3
+    confirms = (direction == "BUY" and pressure > 0) or (direction == "SELL" and pressure < 0)
 
-    # Confidence — combine MTF + pressure
-    mtf_score = max(up_count, dn_count) / 4   # 0..1
-    pres_score = min(abs(pressure) / 10, 1.0) # 0..1
-    confidence = round((mtf_score * 0.6 + pres_score * 0.4), 2)
+    if confirms:
+        if abs(pressure) < min_pressure_abs:
+            return (None, 0, f"pressure |{pressure:.1f}| < {min_pressure_abs}")
+        entry_mode = "momentum"
+    else:
+        # counter-pressure = pullback
+        if not strong_trend:
+            return (None, 0, f"contra {direction}, weak trend {trend_n}/4")
+        if abs(pressure) > PULLBACK_MAX_CONTRA:
+            return (None, 0, f"pullback too deep |{pressure:.1f}|>{PULLBACK_MAX_CONTRA:.0f}")
+        entry_mode = "pullback"
 
-    reason = (f"{direction} MTF{max(up_count, dn_count)}/4 "
+    # Confidence
+    mtf_score = trend_n / 4   # 0..1
+    if entry_mode == "momentum":
+        pres_score = min(abs(pressure) / 10, 1.0)
+        confidence = round(mtf_score * 0.6 + pres_score * 0.4, 2)
+    else:                      # pullback — lean on trend strength
+        confidence = round(mtf_score * 0.7, 2)
+
+    reason = (f"{direction} {entry_mode} MTF{trend_n}/4 "
               f"RSI{rsi:.0f} P{pressure:+.1f} regime{reg} sess{sess}")
     return (direction, confidence, reason)
 
