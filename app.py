@@ -3826,6 +3826,18 @@ def main():
     except Exception as _e:
         print(f"[unified] failed to start embedded services: {_e}", flush=True)
 
+    # ── V2 UNIFIED STACK: brain + regime + orchestrator + unified_trader ──
+    # "الحل 3 — جعل R Native نفسه يطلق كل شي". Spawns the 8 v2 processes
+    # (dedup-safe — skips any already running). Logs to r_native_v2/data/logs/.
+    try:
+        from r_native import v2_stack
+        _v2 = v2_stack.start_all()
+        print(f"[v2_stack] started={_v2['started']} "
+              f"already={_v2['already_running']} failed={_v2['failed']}", flush=True)
+        print(f"[v2_stack] {v2_stack.summary_line()}", flush=True)
+    except Exception as _e:
+        print(f"[v2_stack] failed to start unified stack: {_e}", flush=True)
+
     win = RNativeMain()
     win.showMaximized()    # open at full screen — no manual resize needed
     win.raise_()
