@@ -1529,6 +1529,16 @@ def api_r_force_trade():
             tp = round(price - tp_pts * point, digits)
             order_type = mt5.ORDER_TYPE_SELL
 
+        # External bridge — respect Claude orchestrator's regime decision
+        try:
+            from r_native.external_gate import can_trade
+            allowed, reason = can_trade(20260605)
+            if not allowed:
+                return jsonify({"ok": False, "vetoed": True,
+                                 "reason": f"orchestrator: {reason}"})
+        except Exception:
+            pass  # fail-open if bridge unavailable
+
         req = {
             "action":       mt5.TRADE_ACTION_DEAL,
             "symbol":       symbol,

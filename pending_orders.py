@@ -60,6 +60,16 @@ def place_pending(*, symbol: str, side: str, order_kind: str, price: float,
         # Comment is capped at 31 chars in MT5
         comment = f"R-P-{agent_name[:6]}-{reason[:8]}"[:31]
 
+        # External bridge — respect Claude orchestrator's regime decision
+        try:
+            from r_native.external_gate import can_trade
+            allowed, gate_reason = can_trade(R_MAGIC)
+            if not allowed:
+                return {"ok": False, "vetoed": True,
+                        "error": f"orchestrator: {gate_reason}"}
+        except Exception:
+            pass  # fail-open
+
         # Expiry — broker may not honor; we'll also do soft cleanup
         expiry_dt = datetime.now() + timedelta(hours=expiry_hours)
         req = {

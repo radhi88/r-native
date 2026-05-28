@@ -523,11 +523,11 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
     spread_price = spread_pt * point_size
     spread_atr_ratio = (spread_price / h1_atr) if h1_atr > 0 else 99
 
-    # ATR threshold: scale to 0.1% of price (universal across all symbols)
-    min_atr_threshold = max(0.0001, bid_price * 0.001) if bid_price else MIN_H1_ATR_PRICE
+    # ATR threshold: scale to 0.04% of price (relaxed from 0.1% — was blocking too often)
+    min_atr_threshold = max(0.0001, bid_price * 0.0004) if bid_price else MIN_H1_ATR_PRICE
     add("h1_atr_sufficient",
         h1_atr >= min_atr_threshold,
-        f"H1 ATR={h1_atr:.4f} ≥ {min_atr_threshold:.4f} (0.1% of price)")
+        f"H1 ATR={h1_atr:.4f} ≥ {min_atr_threshold:.4f} (0.04% of price - relaxed)")
 
     add("spread_below_atr_ratio",
         spread_atr_ratio < MAX_SPREAD_ATR_RATIO,
@@ -705,21 +705,41 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
                 direction = None
                 direction_reason = f"H4={h4_bias} vs H1={h1_bias} CONFLICT — wait"
 
-            # RSI sanity: extreme RSI → REVERSE direction (counter-trend reversal play)
-            # This makes R trade more opportunities — oversold = buy bounce, overbought = sell pullback
-            if direction == "BUY" and h1_rsi > 75:
-                direction = "SELL"
-                direction_reason = f"H1 RSI {h1_rsi} > 75 → flip to SELL (overbought pullback)"
-            elif direction == "SELL" and h1_rsi < 25:
-                direction = "BUY"
-                direction_reason = f"H1 RSI {h1_rsi} < 25 → flip to BUY (oversold bounce)"
-            # Mild zone: skip
-            elif direction == "BUY" and h1_rsi > 70:
+            # ═══════════════════════════════════════════════════════════════
+            # CYCLE-39 ROOT-CAUSE FIX 2026-05-27 — "RSI FLIP" was the #1 loss
+            # source. Old logic FLIPPED a multi-TF-aligned BUY into a SELL
+            # whenever H1 RSI > 75 — but in a strong uptrend RSI camps above
+            # 75 for HOURS. Fading that = catching a moving train.
+            #
+            # Evidence (last 7 days, magic 20260605):
+            #   XAUUSDm BUYS:  17 trades 76% WR  +$5.5  ← trend-aligned, WIN
+            #   XAUUSDm SELLS: 21 trades 57% WR -$43.7  ← FLIP-induced LOSS
+            #   XAGUSDm BUYS:   4 trades 100% WR +$12.7
+            #   XAGUSDm SELLS:  5 trades  40% WR  -$8.8
+            #   US30_x10m BUYS:30 trades  90% WR  +$3.4
+            # The pattern across every trending instrument is identical: the
+            # trend-following BUYs won, the FLIP-generated SELLs bled.
+            #
+            # NEW policy: trust the multi-TF consensus. On extreme RSI we
+            # WAIT (skip the entry), we NEVER flip blindly. A flip would
+            # require divergence + wick rejection — neither of which we can
+            # confirm here cheaply, so just don't trade those bars.
+            # ═══════════════════════════════════════════════════════════════
+            if direction == "BUY" and h1_rsi >= 80:
                 direction = None
-                direction_reason = f"H1 RSI {h1_rsi} > 70 overbought → wait"
-            elif direction == "SELL" and h1_rsi < 30:
+                direction_reason = (f"H1 RSI {h1_rsi} ≥ 80 — too stretched, wait "
+                                     f"for pullback (no blind flip)")
+            elif direction == "SELL" and h1_rsi <= 20:
                 direction = None
-                direction_reason = f"H1 RSI {h1_rsi} < 30 oversold → wait"
+                direction_reason = (f"H1 RSI {h1_rsi} ≤ 20 — too stretched, wait "
+                                     f"for bounce (no blind flip)")
+            elif direction == "BUY" and h1_rsi > 72:
+                # Mild overbought in a confirmed uptrend → still OK to take
+                # the trade but flag it. Old code WAITed here; that costs
+                # us trades when uptrend just keeps running.
+                direction_reason += f"  · note: H1 RSI {h1_rsi} elevated"
+            elif direction == "SELL" and h1_rsi < 28:
+                direction_reason += f"  · note: H1 RSI {h1_rsi} depressed"
 
             if not direction:
                 verdict = "WAIT"

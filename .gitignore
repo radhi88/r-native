@@ -39,3 +39,6 @@ dist/
 
 # Local config that varies per machine
 local_config.json
+v2/__pycache__/
+v2/**/__pycache__/
+.tmp
