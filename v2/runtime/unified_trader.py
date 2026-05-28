@@ -190,30 +190,40 @@ def evaluate_genome(snap: dict, genome_params: dict) -> tuple[str | None, float,
 # ──────────────────────────────────────────────────────────
 # Trailing SL (in-process, only on OUR positions)
 # ──────────────────────────────────────────────────────────
+# Per-symbol "1 pt" in price units, so the XAU-tuned ladder scales to any symbol.
+_PT = {"XAUUSDm": 1.0, "XAGUSDm": 0.10, "BTCUSDm": 100.0, "EURUSDm": 0.0001,
+       "GBPUSDm": 0.0001, "USDJPYm": 0.01, "GBPJPYm": 0.01}
+
+
 def _ideal_sl(pos, tick) -> tuple[float, str] | None:
-    p_pts = (tick.bid - pos.price_open) if pos.type == 0 else (pos.price_open - tick.ask)
+    pt = _PT.get(pos.symbol, 1.0)
+    digits = 5 if pt <= 0.0001 else (3 if pt <= 0.01 else 2)
+    # profit in symbol-native "pts"
+    p_pts = ((tick.bid - pos.price_open) if pos.type == 0
+             else (pos.price_open - tick.ask)) / pt
     for trigger, dist in TRAIL_LADDER:
         if p_pts >= trigger:
             if dist == 0:
-                return (pos.price_open, f"BE@{trigger:.0f}")
+                return (round(pos.price_open, digits), f"BE@{trigger:.0f}")
             if pos.type == 0:   # BUY
-                return (round(tick.bid - dist, 2), f"trail{dist:.0f}@{trigger:.0f}")
-            return (round(tick.ask + dist, 2), f"trail{dist:.0f}@{trigger:.0f}")
+                return (round(tick.bid - dist * pt, digits), f"trail{dist:.0f}@{trigger:.0f}")
+            return (round(tick.ask + dist * pt, digits), f"trail{dist:.0f}@{trigger:.0f}")
     return None
 
 
 def _better_sl(pos, new_sl: float) -> bool:
+    eps = _PT.get(pos.symbol, 1.0) * 0.5      # half a pt — symbol-aware
     if pos.sl == 0: return True
-    if pos.type == 0: return new_sl > pos.sl + 0.01
-    return new_sl < pos.sl - 0.01
+    if pos.type == 0: return new_sl > pos.sl + eps
+    return new_sl < pos.sl - eps
 
 
 def manage_open_positions() -> None:
-    """Trail SL on our open positions."""
-    positions = mt5.positions_get(symbol=SYMBOL) or []
-    my_pos = [p for p in positions if int(p.magic) == MAGIC]
-    for p in my_pos:
-        tick = mt5.symbol_info_tick(SYMBOL)
+    """Trail SL on EVERY open position — our son watches them all, any symbol,
+    any magic (own trades + legacy + manual). 'خله يناظر الصفقات ويتصرف براحته'."""
+    positions = mt5.positions_get() or []          # ALL positions, every symbol/magic
+    for p in positions:
+        tick = mt5.symbol_info_tick(p.symbol)
         if not tick: continue
         ideal = _ideal_sl(p, tick)
         if ideal is None: continue
@@ -222,10 +232,10 @@ def manage_open_positions() -> None:
         req = {
             "action":   mt5.TRADE_ACTION_SLTP,
             "position": int(p.ticket),
-            "symbol":   SYMBOL,
+            "symbol":   p.symbol,
             "sl":       float(new_sl),
             "tp":       float(p.tp),
-            "magic":    MAGIC,
+            "magic":    int(p.magic),
         }
         r = mt5.order_send(req)
         if r and r.retcode == mt5.TRADE_RETCODE_DONE:
