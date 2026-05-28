@@ -178,7 +178,10 @@ THRESHOLDS = {
 # ─────────────────────────────────────────────────────────────────
 # PATHS — single source of truth
 # ─────────────────────────────────────────────────────────────────
-ROOT = Path(r"C:\Users\Radhi\MT5\r_native_v2")
+# Auto-detect ROOT from this file's location: <ROOT>/runtime/shared/tokens.py
+# Falls back to the canonical path if detection looks wrong.
+_detected = Path(__file__).resolve().parent.parent.parent
+ROOT = _detected if (_detected / "runtime").exists() else Path(r"C:\Users\Radhi\MT5\r_native_v2")
 DATA = ROOT / "data"
 DOCS = ROOT / "docs"
 RUNTIME = ROOT / "runtime"

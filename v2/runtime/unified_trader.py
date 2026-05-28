@@ -313,6 +313,15 @@ def main():
 
     _breaker = CircuitBreaker(magic=MAGIC, symbol=SYMBOL)
 
+    # 🛡️ Guard our son — restore the champion genome if it ever went missing
+    try:
+        from runtime.champion_seeder import seed as _seed_champion
+        _cr = _seed_champion()
+        if _cr.get("ok"):
+            print(f"[champion] {_cr['champion']} — {', '.join(_cr['actions'])}")
+    except Exception as _e:
+        print(f"[champion] seeder skipped: {_e}")
+
     while True:
         try:
             # 1. Read state
