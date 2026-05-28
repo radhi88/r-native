@@ -78,6 +78,7 @@ def _rich(raw: dict) -> dict:
             return 0.0
     fvg5 = raw.get("fvg_m5") or {}
     im = raw.get("intermarket") or {}
+    fp = raw.get("footprint") or {}
     return {
         "cvd": max(-500.0, min(500.0, float(raw.get("cvd_30m1") or 0))) / 500.0,
         "macd_hist": max(-30.0, min(30.0, float(macd.get("hist") or 0))) / 30.0,
@@ -91,6 +92,14 @@ def _rich(raw: dict) -> dict:
         "liq_sweep": 1.0 if raw.get("liquidity_sweep_m5") else 0.0,
         # inter-market (gold↔oil) — the user's insight
         "gold_oil_div": float(im.get("gold_oil_divergence") or 0.0),
+        # deep footprint (CLAUDE_FOOTPRINT_v4 order-flow)
+        "fp_cum_delta": float(fp.get("fp_cum_delta") or 0.0),
+        "fp_poc_dist": float(fp.get("fp_poc_dist") or 0.0),
+        "fp_va_position": float(fp.get("fp_va_position") or 0.0),
+        "fp_signal": float(fp.get("fp_signal") or 0.0),
+        "fp_delta_div": float(fp.get("fp_delta_div") or 0.0),
+        "fp_supply_prox": float(fp.get("fp_supply_prox") or 0.0),
+        "fp_demand_prox": float(fp.get("fp_demand_prox") or 0.0),
     }
 
 
@@ -124,7 +133,9 @@ def _featurize(row: dict, side: str, raw: dict | None = None) -> list[float]:
 
 _RICH_KEYS = ["cvd", "macd_hist", "adx_m5", "adx_m15", "vol_trend",
               "ob_bull_prox", "ob_bear_prox", "fvg_bull_n", "fvg_bear_n", "liq_sweep",
-              "gold_oil_div"]
+              "gold_oil_div",
+              "fp_cum_delta", "fp_poc_dist", "fp_va_position", "fp_signal",
+              "fp_delta_div", "fp_supply_prox", "fp_demand_prox"]
 
 FEATURE_NAMES = (["rsi_m1", "rsi_m5", "atr_ratio", "pressure", "bias_m1", "bias_m5",
                   "bias_m15", "bias_h1", "mtf_align", "side_buy", "hour_sin", "hour_cos"]

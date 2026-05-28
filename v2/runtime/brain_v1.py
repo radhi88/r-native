@@ -414,6 +414,14 @@ def capture(mt5) -> dict:
     except Exception:
         snap["intermarket"] = {}
 
+    # Deep footprint (CLAUDE_FOOTPRINT_v4 order-flow: POC, value-area, delta div)
+    try:
+        from runtime.shared.footprint_features import footprint_features as _ff
+        _atr = (snap.get("atr") or {}).get("m5", 1) or 1
+        snap["footprint"] = _ff(snap.get("bid", 0), _atr)
+    except Exception:
+        snap["footprint"] = {}
+
     return snap
 
 
