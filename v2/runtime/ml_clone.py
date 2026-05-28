@@ -77,6 +77,7 @@ def _rich(raw: dict) -> dict:
         except Exception:
             return 0.0
     fvg5 = raw.get("fvg_m5") or {}
+    im = raw.get("intermarket") or {}
     return {
         "cvd": max(-500.0, min(500.0, float(raw.get("cvd_30m1") or 0))) / 500.0,
         "macd_hist": max(-30.0, min(30.0, float(macd.get("hist") or 0))) / 30.0,
@@ -88,6 +89,8 @@ def _rich(raw: dict) -> dict:
         "fvg_bull_n": min(len(fvg5.get("bull") or []), 3) / 3.0,
         "fvg_bear_n": min(len(fvg5.get("bear") or []), 3) / 3.0,
         "liq_sweep": 1.0 if raw.get("liquidity_sweep_m5") else 0.0,
+        # inter-market (gold↔oil) — the user's insight
+        "gold_oil_div": float(im.get("gold_oil_divergence") or 0.0),
     }
 
 
@@ -120,7 +123,8 @@ def _featurize(row: dict, side: str, raw: dict | None = None) -> list[float]:
 
 
 _RICH_KEYS = ["cvd", "macd_hist", "adx_m5", "adx_m15", "vol_trend",
-              "ob_bull_prox", "ob_bear_prox", "fvg_bull_n", "fvg_bear_n", "liq_sweep"]
+              "ob_bull_prox", "ob_bear_prox", "fvg_bull_n", "fvg_bear_n", "liq_sweep",
+              "gold_oil_div"]
 
 FEATURE_NAMES = (["rsi_m1", "rsi_m5", "atr_ratio", "pressure", "bias_m1", "bias_m5",
                   "bias_m15", "bias_h1", "mtf_align", "side_buy", "hour_sin", "hour_cos"]

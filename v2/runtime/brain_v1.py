@@ -404,6 +404,16 @@ def capture(mt5) -> dict:
     except Exception:
         snap["regime"] = "?"
 
+    # Inter-market: gold↔oil divergence (user's insight — gold/oil inverse)
+    try:
+        import sys as _sys
+        from pathlib import Path as _P2
+        _sys.path.insert(0, str(_P2(__file__).resolve().parent.parent))
+        from runtime.shared.intermarket import intermarket as _im
+        snap["intermarket"] = _im()
+    except Exception:
+        snap["intermarket"] = {}
+
     return snap
 
 
