@@ -72,6 +72,8 @@ TRAIL_LADDER = [
 
 # Confidence threshold (genome's signal strength must clear this to fire)
 MIN_CONFIDENCE = 0.5
+# ML clone gate — minimum P(win) from the user-cloned model to allow entry
+ML_MIN_PWIN = 0.50
 
 # Module state
 _breaker: CircuitBreaker | None = None
@@ -363,6 +365,19 @@ def main():
             if confidence < MIN_CONFIDENCE:
                 _status(f"low conf {confidence}: {reason}")
                 time.sleep(POLL_S); continue
+
+            # 5b. ML CLONE GATE — only fire in contexts that historically WIN
+            #     (learned from the user's 80%-WR trades; AUC 0.72). Advisory:
+            #     if no model, p_win=0.5 (pass-through). Blocks weak contexts.
+            try:
+                from runtime.ml_clone import predict as _ml_predict
+                p_win = _ml_predict(snap, side)
+                if p_win < ML_MIN_PWIN:
+                    _status(f"ml gate: P(win) {p_win:.2f} < {ML_MIN_PWIN} — skip {side}")
+                    time.sleep(POLL_S); continue
+                reason = f"{reason} | P(win) {p_win:.2f}"
+            except Exception:
+                pass  # ML never blocks trading on error
 
             # 6. FIRE
             fire_entry(side, confidence, reason, snap, genome_params, genome_name)
