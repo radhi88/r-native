@@ -2296,7 +2296,21 @@ class RNativeMain(QMainWindow):
 
         snap = _rd("brain_live.json"); reg = _rd("market_regime.json")
         act  = _rd("active_engines.json"); live = _rd("live_genome.json")
+        son  = _rd("son_status.json")
         L = []
+
+        # ── Live verdict (what unified_trader is thinking right NOW) ──
+        if son:
+            stage = son.get("stage", "?")
+            icon = {"FIRING":"🎯","ML_BLOCK":"🧠⏸️","WAITING":"⏳","FROZEN":"🧊",
+                    "NO_SIGNAL":"😴","LOW_CONF":"🤏"}.get(stage, "•")
+            pw = son.get("p_win", 0)
+            L.append(f"  {icon} ولدنا الآن: {stage}")
+            L.append(f"     {son.get('detail','')}")
+            if son.get("side"):
+                L.append(f"     إشارة {son.get('side')} · P(win) {pw:.2f} (عتبة {son.get('ml_min',0.5)})")
+            L.append(f"     💰 ${son.get('balance','?')} · {(son.get('ts','') or '')[11:19]}")
+            L.append("")
 
         # ── Services (freshness as proxy) ──
         svc = [

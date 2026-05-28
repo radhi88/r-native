@@ -90,6 +90,29 @@ def _read_json(p: Path) -> dict | None:
     except Exception: return None
 
 
+def _write_son_status(stage: str, detail: str, genome: str, snap: dict,
+                      side: str = "", p_win: float = 0.0) -> None:
+    """Persist the live verdict so the UI / OUR SON tab can show what it's thinking."""
+    try:
+        acc = mt5.account_info()
+        st = {
+            "ts": datetime.now(timezone.utc).isoformat(),
+            "stage": stage, "detail": detail, "genome": genome,
+            "side": side, "p_win": round(p_win, 3),
+            "ml_min": ML_MIN_PWIN,
+            "balance": acc.balance if acc else None,
+            "equity": acc.equity if acc else None,
+            "regime": snap.get("regime"),
+            "session": snap.get("session"),
+            "rsi_m1": (snap.get("rsi") or {}).get("m1"),
+            "pressure": snap.get("pressure_10m1"),
+        }
+        (PATHS["brain_decisions"].parent / "son_status.json").write_text(
+            json.dumps(st, ensure_ascii=False, default=str), encoding="utf-8")
+    except Exception:
+        pass
+
+
 def _status(msg: str, force: bool = False) -> None:
     """Print one-line status, throttled to every 30s unless force=True."""
     global _last_status_print
@@ -349,37 +372,45 @@ def main():
             orch_block = is_engine_active(MAGIC)
             if orch_block:
                 _status(f"gate: {orch_block}")
+                _write_son_status("WAITING", f"البوابة: {orch_block}", genome_name, snap)
                 time.sleep(POLL_S); continue
 
             # 4. Gate: circuit breaker
             cb_block = _breaker.check()
             if cb_block:
                 _status(f"breaker: {cb_block}")
+                _write_son_status("FROZEN", f"circuit breaker: {cb_block}", genome_name, snap)
                 time.sleep(POLL_S); continue
 
             # 5. Evaluate genome
             side, confidence, reason = evaluate_genome(snap, genome_params)
             if side is None:
                 _status(f"no signal: {reason}")
+                _write_son_status("NO_SIGNAL", reason, genome_name, snap)
                 time.sleep(POLL_S); continue
             if confidence < MIN_CONFIDENCE:
                 _status(f"low conf {confidence}: {reason}")
+                _write_son_status("LOW_CONF", f"conf {confidence} | {reason}", genome_name, snap)
                 time.sleep(POLL_S); continue
 
             # 5b. ML CLONE GATE — only fire in contexts that historically WIN
-            #     (learned from the user's 80%-WR trades; AUC 0.72). Advisory:
-            #     if no model, p_win=0.5 (pass-through). Blocks weak contexts.
+            p_win = 0.5
             try:
                 from runtime.ml_clone import predict as _ml_predict
                 p_win = _ml_predict(snap, side)
                 if p_win < ML_MIN_PWIN:
                     _status(f"ml gate: P(win) {p_win:.2f} < {ML_MIN_PWIN} — skip {side}")
+                    _write_son_status("ML_BLOCK",
+                                       f"{side} signal لكن P(win) {p_win:.2f} < {ML_MIN_PWIN}",
+                                       genome_name, snap, side=side, p_win=p_win)
                     time.sleep(POLL_S); continue
                 reason = f"{reason} | P(win) {p_win:.2f}"
             except Exception:
                 pass  # ML never blocks trading on error
 
             # 6. FIRE
+            _write_son_status("FIRING", f"{side} conf {confidence} P(win) {p_win:.2f}",
+                              genome_name, snap, side=side, p_win=p_win)
             fire_entry(side, confidence, reason, snap, genome_params, genome_name)
 
             time.sleep(POLL_S)
