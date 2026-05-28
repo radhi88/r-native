@@ -64,15 +64,20 @@ def _random_genome(name: str) -> dict:
         "lot": 0.02,
         "use_footprint": True,
         "side_bias": random.choice([None, None, None, "BUY_ONLY", "SELL_ONLY"]),
+        # NEW evolvable genes
+        "entry_mode": random.choice(["trend", "trend", "pullback"]),
+        "min_trend_strength": round(random.choice([0.0, 0.3, 0.5, 0.8, 1.2, 1.6]), 2),
         "born": "random",
     }
 
 
 def _crossover(a: dict, b: dict, name: str) -> dict:
     """Marry two genomes — each gene from one parent at random + light mutation."""
-    genes = ["rsi_max", "min_pressure_abs", "min_mtf_agreement", "sl_pts", "tp_pts", "side_bias"]
+    genes = ["rsi_max", "min_pressure_abs", "min_mtf_agreement", "sl_pts", "tp_pts",
+             "side_bias", "entry_mode", "min_trend_strength"]
     defaults = {"rsi_max": 65, "min_pressure_abs": 3, "min_mtf_agreement": 2,
-                "sl_pts": 4.0, "tp_pts": 10.0, "side_bias": None}
+                "sl_pts": 4.0, "tp_pts": 10.0, "side_bias": None,
+                "entry_mode": "trend", "min_trend_strength": 0.5}
     child = {"name": name, "lot": 0.02, "use_footprint": True}
     for g in genes:
         # pick from a parent, but never inherit None for numeric genes

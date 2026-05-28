@@ -108,12 +108,14 @@ def backtest(genome: dict, symbol: str, n_bars: int = 2500,
     rsi_min = 100 - rsi_max
     min_p   = genome.get("min_pressure_abs") or 3
     # SL/TP are ATR-relative so they scale to ANY symbol (gold, FX, crypto).
-    # The genome's sl_pts/tp_pts only define the R:R ratio.
     g_sl = float(genome.get("sl_pts") or 4.0)
     g_tp = float(genome.get("tp_pts") or 10.0)
     rr = g_tp / max(g_sl, 0.1)              # reward:risk ratio
     sl_atr_mult = 1.2                        # stop = 1.2 × ATR (universal)
     side_bias = genome.get("side_bias")
+    # NEW genes:
+    entry_mode = genome.get("entry_mode", "trend")     # "trend" | "pullback"
+    min_trend = float(genome.get("min_trend_strength") or 0.0)  # ADX-proxy gate (filters chop)
 
     # ATR proxy = avg true range over recent bars (symbol-native units)
     _ranges = [highs[j] - lows[j] for j in range(max(1, len(highs)-200), len(highs))]
@@ -130,6 +132,13 @@ def backtest(genome: dict, symbol: str, n_bars: int = 2500,
         # MTF proxy: stacked EMAs = trend
         up = ema9[i] > ema21[i] > ema50[i]
         dn = ema9[i] < ema21[i] < ema50[i]
+
+        # Trend-strength gate (ADX proxy): EMA9-EMA50 separation / ATR.
+        # Mirrors the live orchestrator's regime gate — skip chop.
+        trend_strength = abs(ema9[i] - ema50[i]) / atr if atr else 0
+        if trend_strength < min_trend:
+            i += 1; continue
+
         # Pressure proxy: signed sum of last 10 bar bodies, scaled
         body_sum = sum((closes[j] - opens[j]) for j in range(i-9, i+1))
         avg_range = (sum(highs[j]-lows[j] for j in range(i-9, i+1)) / 10) or 1e-9
@@ -144,33 +153,69 @@ def backtest(genome: dict, symbol: str, n_bars: int = 2500,
         if side_bias == "SELL_ONLY" and direction != "SELL": i += 1; continue
 
         r = rsi[i]
-        if direction == "BUY" and r >= rsi_max: i += 1; continue
-        if direction == "SELL" and r <= rsi_min: i += 1; continue
-        if abs(pressure) < min_p: i += 1; continue
-        if direction == "BUY" and pressure < 0: i += 1; continue
-        if direction == "SELL" and pressure > 0: i += 1; continue
+        if entry_mode == "pullback":
+            # Buy the DIP in an uptrend / sell the BOUNCE in a downtrend.
+            # Enter only when price pulled back toward EMA21 and RSI is
+            # stretched against the trend (mean-reversion within trend).
+            near_ema = abs(closes[i] - ema21[i]) <= 0.5 * atr
+            if direction == "BUY":
+                # uptrend but RSI dipped low (pullback) → expect bounce up
+                if not (r <= rsi_min + 15 and near_ema): i += 1; continue
+            else:
+                if not (r >= rsi_max - 15 and near_ema): i += 1; continue
+            # pullback mode ignores the momentum-pressure direction filter
+        else:
+            # TREND mode (momentum continuation)
+            if direction == "BUY" and r >= rsi_max: i += 1; continue
+            if direction == "SELL" and r <= rsi_min: i += 1; continue
+            if abs(pressure) < min_p: i += 1; continue
+            if direction == "BUY" and pressure < 0: i += 1; continue
+            if direction == "SELL" and pressure > 0: i += 1; continue
 
-        # Simulate the trade — outcome normalized to "R units" (× ATR), so
-        # a win = +rr R, a loss = -1 R, comparable across all symbols.
+        # Simulate the trade — outcome normalized to "R units" (× ATR).
         entry = closes[i]
+        use_trailing = genome.get("use_trailing", False)
         if direction == "BUY":
             sl = entry - sl_dist; tp = entry + tp_dist
         else:
             sl = entry + sl_dist; tp = entry - tp_dist
 
         outcome = None
-        for k in range(i+1, min(i+1+lookahead, len(closes))):
-            if direction == "BUY":
-                if lows[k] <= sl: outcome = -1.0; break
-                if highs[k] >= tp: outcome = +rr; break
-            else:
-                if highs[k] >= sl: outcome = -1.0; break
-                if lows[k] <= tp: outcome = +rr; break
-        if outcome is None:
-            # close at last bar — normalize to R units
-            last = closes[min(i+lookahead, len(closes)-1)]
-            raw = (last - entry) if direction == "BUY" else (entry - last)
-            outcome = raw / sl_dist if sl_dist else 0.0
+        if use_trailing:
+            # Trailing exit: move SL forward as price advances (live behaviour).
+            # Breakeven at +1R, then trail 0.6R behind the favorable extreme.
+            be_trig = sl_dist            # +1 ATR → breakeven
+            trail_gap = 0.6 * sl_dist
+            best = entry
+            for k in range(i+1, min(i+1+lookahead*3, len(closes))):
+                if direction == "BUY":
+                    best = max(best, highs[k])
+                    if best - entry >= be_trig:
+                        sl = max(sl, entry, best - trail_gap)   # never lower
+                    if lows[k] <= sl:
+                        outcome = (sl - entry) / sl_dist; break
+                else:
+                    best = min(best, lows[k])
+                    if entry - best >= be_trig:
+                        sl = min(sl, entry, best + trail_gap)
+                    if highs[k] >= sl:
+                        outcome = (entry - sl) / sl_dist; break
+            if outcome is None:
+                last = closes[min(i+lookahead*3, len(closes)-1)]
+                raw = (last - entry) if direction == "BUY" else (entry - last)
+                outcome = raw / sl_dist if sl_dist else 0.0
+        else:
+            for k in range(i+1, min(i+1+lookahead, len(closes))):
+                if direction == "BUY":
+                    if lows[k] <= sl: outcome = -1.0; break
+                    if highs[k] >= tp: outcome = +rr; break
+                else:
+                    if highs[k] >= sl: outcome = -1.0; break
+                    if lows[k] <= tp: outcome = +rr; break
+            if outcome is None:
+                last = closes[min(i+lookahead, len(closes)-1)]
+                raw = (last - entry) if direction == "BUY" else (entry - last)
+                outcome = raw / sl_dist if sl_dist else 0.0
 
         res.trades += 1
         res.pnl_pts += outcome
