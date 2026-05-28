@@ -40,6 +40,7 @@ SERVICES = [
     "decision_outcome_filler",  # PnL backfill
     "trade_sync",               # MT5 history → db (manual trades feed learning)
     "champion_evolution",       # our son keeps getting smarter (re-breed + crown)
+    "genome_academy",           # evolution lab: breed+gauntlet+panel+multi-symbol
 ]
 
 _spawned: dict[str, int] = {}   # service -> pid we started
