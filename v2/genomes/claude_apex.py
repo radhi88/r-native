@@ -170,6 +170,20 @@ class ClaudeApex(Genome):
         if sl >= entry: return None
         sl_dist = entry - sl
         if sl_dist < m1f.atr * 1.0: return None
+
+        # ── Risk-aware sizing: keep 0.01-lot risk ≤ 3% of balance ──
+        # On XAU, $1 per price-pt per 0.01 lot. If the structural stop is too
+        # wide for the account (council caps at 3%), cap the SL to fit so the
+        # proposal can actually be approved instead of being blocked forever.
+        try:
+            bal = float(account.get("balance", 100.0)) if isinstance(account, dict) else 100.0
+        except Exception:
+            bal = 100.0
+        risk_cap_usd = bal * 0.03
+        max_sl_dist = max(risk_cap_usd / 1.0, 0.5)   # $1/pt/0.01lot → pts; floor 0.5
+        if sl_dist > max_sl_dist:
+            sl = round(entry - max_sl_dist, 2)
+            sl_dist = entry - sl
         tp = entry + sl_dist * self.FAR_TP_RR
 
         confluence = [
