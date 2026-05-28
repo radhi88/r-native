@@ -2279,7 +2279,7 @@ class RNativeMain(QMainWindow):
         self._son_champ = _P(r"C:\Users\Radhi\MT5\r_native_v2\genomes\champion_genome.json")
         self._son_timer = QTimer(self)
         self._son_timer.timeout.connect(self._refresh_son_tab)
-        self._son_timer.start(3000)
+        self._son_timer.start(1500)   # near real-time — لحظي، متزامن مع MT5 (was 3000)
         QTimer.singleShot(400, self._refresh_son_tab)
         return w
 
@@ -2303,7 +2303,7 @@ class RNativeMain(QMainWindow):
         if son:
             stage = son.get("stage", "?")
             icon = {"FIRING":"🎯","ML_BLOCK":"🧠⏸️","WAITING":"⏳","FROZEN":"🧊",
-                    "NO_SIGNAL":"😴","LOW_CONF":"🤏"}.get(stage, "•")
+                    "NO_SIGNAL":"😴","LOW_CONF":"🤏","MANAGING":"🛡️"}.get(stage, "•")
             pw = son.get("p_win", 0)
             L.append(f"  {icon} ولدنا الآن: {stage}")
             L.append(f"     {son.get('detail','')}")
