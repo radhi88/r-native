@@ -39,6 +39,7 @@ SERVICES = [
     "trailing_stop_manager",    # SL trail
     "decision_outcome_filler",  # PnL backfill
     "trade_sync",               # MT5 history → db (manual trades feed learning)
+    "champion_evolution",       # our son keeps getting smarter (re-breed + crown)
 ]
 
 _spawned: dict[str, int] = {}   # service -> pid we started
