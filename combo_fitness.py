@@ -170,6 +170,156 @@ def _bump_param(bucket: dict, name: str, value):
     p[k] = p.get(k, 0) + 1
 
 
+# ── SMC per-trade context recording (Phase 6 / learning loop) ─────────
+# Lets the breeder distinguish "OB trades that worked because IDM was swept
+# first" from "raw OB trades that failed" — by partitioning the SAME flag
+# set's trades across the idm_swept_before vs no_idm_sweep context keys.
+_SMC_CTX_KEYS_ALL = (
+    "bos_aligned", "bos_counter",
+    "in_fresh_ob", "in_mitigated_ob",
+    "in_fresh_fvg", "in_mitigated_fvg",
+    "idm_swept_before", "no_idm_sweep",
+    "htf_aligned", "htf_misaligned",
+    "tp_hit_liquidity", "tp_hit_opposite_ob", "tp_hit_atr_target",
+    "exit_sl", "exit_trail",
+)
+
+
+def _ensure_smc_buckets(bucket: dict) -> None:
+    """Backfill smc sub-dicts on a bucket that predates this feature."""
+    bucket.setdefault("smc_combos", {})
+    bucket.setdefault("smc_contexts", {})
+
+
+def _bump_record(store: dict, key: str, stats: dict, won: bool) -> None:
+    """Increment a {key -> {wins,fails,avg_return,last_seen}} record store.
+    Unlike _bump_combo, operates directly on the flat dict (not bucket['combos'])."""
+    c = store.setdefault(key, {"wins": 0, "fails": 0,
+                               "avg_return": 0.0, "last_seen": _today()})
+    if won: c["wins"]  += 1
+    else:   c["fails"] += 1
+    c["last_seen"] = _today()
+    total = c["wins"] + c["fails"]
+    ret = stats.get("total_return_pct", 0) or 0
+    c["avg_return"] = round((c["avg_return"] * (total - 1) + ret) / total, 4)
+
+
+def _smc_ctx_keys(ctx: dict) -> list[str]:
+    """Derive the list of context dimensions a trade belongs to."""
+    keys: list[str] = []
+    if ctx.get("trade_aligned_with_bos") is True:    keys.append("bos_aligned")
+    elif ctx.get("trade_aligned_with_bos") is False: keys.append("bos_counter")
+
+    if ctx.get("entry_in_ob") == "fresh":            keys.append("in_fresh_ob")
+    elif ctx.get("entry_in_ob") == "mitigated":      keys.append("in_mitigated_ob")
+
+    if ctx.get("entry_in_fvg") == "fresh":           keys.append("in_fresh_fvg")
+    elif ctx.get("entry_in_fvg") == "mitigated":     keys.append("in_mitigated_fvg")
+
+    if ctx.get("idm_swept") is True:                 keys.append("idm_swept_before")
+    elif ctx.get("idm_swept") is False:              keys.append("no_idm_sweep")
+
+    if ctx.get("htf_aligned") is True:               keys.append("htf_aligned")
+    elif ctx.get("htf_aligned") is False:            keys.append("htf_misaligned")
+
+    exit_via = ctx.get("exit_via")
+    if   exit_via == "liquidity_pool":  keys.append("tp_hit_liquidity")
+    elif exit_via == "opposite_ob":     keys.append("tp_hit_opposite_ob")
+    elif exit_via == "atr_tp":          keys.append("tp_hit_atr_target")
+    elif exit_via == "sl":              keys.append("exit_sl")
+    elif exit_via == "trail":           keys.append("exit_trail")
+    return keys
+
+
+def record_smc_trade(symbol: str, tf: str, active_genes: list,
+                     smc_context: dict, stats: dict,
+                     db: dict | None = None) -> dict:
+    """Record one trade's SMC context into per-symbol+TF and global buckets.
+
+    Called from ga_simulator (per simulated trade) and from the live
+    executor on position close. `stats` only needs the keys _is_winner
+    reads (profit_factor/trades/max_drawdown_pct) OR a simple
+    {"won": bool, "return_pct": float} shape for single-trade recording.
+    """
+    own_db = db is None
+    db = db if db is not None else load()
+
+    # Single-trade convenience: accept {"won": ..., "return_pct": ...}
+    if "won" in stats:
+        won = bool(stats["won"])
+        norm_stats = {"total_return_pct": stats.get("return_pct", 0)}
+    else:
+        won = _is_winner(stats)
+        norm_stats = stats
+
+    smc_active = [g for g in (active_genes or []) if "smc" in g]
+    ctx_keys = _smc_ctx_keys(smc_context or {})
+
+    for bucket in (_bucket(db, symbol, tf), db["_global"]):
+        _ensure_smc_buckets(bucket)
+        if smc_active:
+            _bump_record(bucket["smc_combos"], combo_key(smc_active), norm_stats, won)
+        for k in ctx_keys:
+            _bump_record(bucket["smc_contexts"], k, norm_stats, won)
+
+    if own_db:
+        save(db)
+    return db
+
+
+def smc_lookup(symbol: str | None = None, tf: str | None = None,
+               active_genes: list | None = None,
+               context_key: str | None = None) -> dict:
+    """Query SMC combo or context win-rate. Symbol+TF first, then global.
+
+    - pass active_genes to look up an SMC gene combo
+    - pass context_key (e.g. "idm_swept_before") to look up a context
+    """
+    db = load()
+
+    def _from(bucket: dict) -> dict | None:
+        _ensure_smc_buckets(bucket)
+        if active_genes:
+            smc_active = [g for g in active_genes if "smc" in g]
+            if smc_active:
+                rec = bucket["smc_combos"].get(combo_key(smc_active))
+                if rec: return {**rec, "key": combo_key(smc_active)}
+        if context_key:
+            rec = bucket["smc_contexts"].get(context_key)
+            if rec: return {**rec, "key": context_key}
+        return None
+
+    if symbol and tf and symbol in db and tf in db[symbol]:
+        r = _from(db[symbol][tf])
+        if r: return {**r, "scope": f"{symbol}/{tf}"}
+    r = _from(db["_global"])
+    if r: return {**r, "scope": "global"}
+    return {"scope": "unseen"}
+
+
+def smc_context_report(symbol: str | None = None,
+                       tf: str | None = None) -> dict:
+    """Return win-rate for every SMC context dimension. For the inspector
+    UI — shows e.g. 'idm_swept_before: 68% (34W/16L)' vs
+    'no_idm_sweep: 41%'."""
+    db = load()
+    bucket = db["_global"]
+    if symbol and tf and symbol in db and tf in db[symbol]:
+        bucket = db[symbol][tf]
+    _ensure_smc_buckets(bucket)
+    out = {}
+    for key, rec in bucket["smc_contexts"].items():
+        total = rec.get("wins", 0) + rec.get("fails", 0)
+        if total == 0: continue
+        out[key] = {
+            "win_rate":   round(rec["wins"] / total * 100, 1),
+            "wins":       rec["wins"],
+            "fails":      rec["fails"],
+            "avg_return": rec.get("avg_return", 0.0),
+        }
+    return out
+
+
 # ── Public API: ingest a full campaign vault ──────────────────────────
 def ingest_campaign(symbol: str, tf: str, vault: list[dict],
                     db: dict | None = None) -> dict:
