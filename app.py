@@ -2284,7 +2284,7 @@ class RNativeMain(QMainWindow):
         return w
 
     def _refresh_son_tab(self):
-        """Repaint the OUR SON view from the v2 data files (every 3s)."""
+        """Repaint the OUR SON view from the v2 data files — ALL symbols (every 1.5s)."""
         import json as _json, time as _time
         D = self._son_data
         def _rd(name):
@@ -2294,30 +2294,79 @@ class RNativeMain(QMainWindow):
             try: return _time.time() - (D / name).stat().st_mtime
             except Exception: return 9999
 
-        snap = _rd("brain_live.json"); reg = _rd("market_regime.json")
-        act  = _rd("active_engines.json"); live = _rd("live_genome.json")
-        son  = _rd("son_status.json")
+        reg = _rd("market_regime.json")
+        act  = _rd("active_engines.json")
+        multi = _rd("son_status_multi.json")
         L = []
 
-        # ── Live verdict (what unified_trader is thinking right NOW) ──
-        if son:
-            stage = son.get("stage", "?")
-            icon = {"FIRING":"🎯","ML_BLOCK":"🧠⏸️","WAITING":"⏳","FROZEN":"🧊",
-                    "NO_SIGNAL":"😴","LOW_CONF":"🤏","MANAGING":"🛡️"}.get(stage, "•")
-            pw = son.get("p_win", 0)
-            L.append(f"  {icon} ولدنا الآن: {stage}")
-            L.append(f"     {son.get('detail','')}")
-            if son.get("side"):
-                L.append(f"     إشارة {son.get('side')} · P(win) {pw:.2f} (عتبة {son.get('ml_min',0.5)})")
-            L.append(f"     💰 ${son.get('balance','?')} · {(son.get('ts','') or '')[11:19]}")
+        STAGE_ICON = {"FIRING":"🎯","ML_BLOCK":"🧠⏸️","WAITING":"⏳","FROZEN":"🧊",
+                      "NO_SIGNAL":"😴","LOW_CONF":"🤏","MANAGING":"🛡️",
+                      "STRUCT_VETO":"🧱","SPREAD":"📏","SESSION":"🕐"}
+        SHORT = {"XAUUSDm":"XAU","EURUSDm":"EUR","GBPUSDm":"GBP","USDJPYm":"JPY"}
+        def chk(ok): return "✅" if ok else "❌"
+
+        # Multi-symbol payload {ts, symbols:{SYM:{...}}}; fall back to legacy single.
+        symbols = (multi.get("symbols") or {}) if isinstance(multi, dict) else {}
+        if not symbols:
+            son = _rd("son_status.json")
+            if son and son.get("symbol"):
+                symbols = {son["symbol"]: son}
+
+        # ── Header: account + how many firing / blocked ──
+        any_row = next(iter(symbols.values()), {}) if symbols else {}
+        bal = any_row.get("balance", "?"); eq = any_row.get("equity", "?")
+        firing = sum(1 for s in symbols.values() if s.get("stage") == "FIRING")
+        frozen = sum(1 for s in symbols.values() if s.get("stage") == "FROZEN")
+        hdr_ts = (multi.get("ts", "") or any_row.get("ts", "") or "")[11:19]
+        L.append(f"  💰 الحساب: ${bal}  ·  Equity ${eq}  ·  ⏱ {hdr_ts}")
+        L.append(f"  🧬 {len(symbols)} عملات تتداول  ·  🎯 {firing} تطلق  ·  🧊 {frozen} مجمّدة")
+        L.append("  " + "─" * 52)
+        L.append("")
+
+        # ── Per-symbol live verdict + buy/sell conditions ──
+        for sym, st in symbols.items():
+            short = SHORT.get(sym, sym.replace("m", ""))
+            stage = st.get("stage", "?")
+            icon = STAGE_ICON.get(stage, "•")
+            pw = st.get("p_win", 0) or 0
+            L.append(f"  {icon} {short}  ·  {stage}  ·  {st.get('genome','?')}")
+            detail = (st.get("detail", "") or "")[:60]
+            if detail:
+                L.append(f"     {detail}")
+            if st.get("side"):
+                L.append(f"     إشارة {st.get('side')} · P(win) {pw:.2f} (عتبة {st.get('ml_min',0.5)})")
+
+            # Per-symbol market + genome conditions (from brain_live__SYM + live_genome__SYM)
+            snap = _rd(f"brain_live__{sym}.json")
+            lg   = _rd(f"live_genome__{sym}.json")
+            b = snap.get("bias", {}) or {}
+            up_n = sum(1 for x in b.values() if x == "UP")
+            dn_n = sum(1 for x in b.values() if x == "DOWN")
+            rsi = (snap.get("rsi") or {}).get("m1", st.get("rsi_m1", 50))
+            pressure = float(snap.get("pressure_10m1", st.get("pressure", 0)) or 0)
+            sess = snap.get("session", st.get("session", "?"))
+            regime = snap.get("regime", st.get("regime", "?"))
+            p = lg.get("params", {}) or {}
+            min_mtf = p.get("min_mtf_agreement", 2)
+            rsi_max = p.get("rsi_max", 72); rsi_min = 100 - rsi_max
+            min_p = p.get("min_pressure_abs", 5)
+            L.append(f"     📊 M1={b.get('m1','?')} M5={b.get('m5','?')} "
+                     f"M15={b.get('m15','?')} H1={b.get('h1','?')} → {up_n}↑/{dn_n}↓ "
+                     f"· RSI {rsi} · P {pressure:+.1f} · {regime}/{sess}")
+            L.append(f"     🟢شراء {chk(up_n>=min_mtf)}{up_n}↑≥{min_mtf} "
+                     f"{chk(rsi<rsi_max)}RSI<{rsi_max} "
+                     f"{chk(abs(pressure)>=min_p)}|P|≥{min_p} {chk(pressure>0)}P+   "
+                     f"🔴بيع {chk(dn_n>=min_mtf)}{dn_n}↓≥{min_mtf} "
+                     f"{chk(rsi>rsi_min)}RSI>{rsi_min} "
+                     f"{chk(abs(pressure)>=min_p)}|P|≥{min_p} {chk(pressure<0)}P-")
             L.append("")
 
-        # ── Services (freshness as proxy) ──
+        # ── Core services (freshness as proxy) ──
         svc = [
             ("brain_v1", "brain_live.json", 10),
             ("regime_classifier", "market_regime.json", 15),
             ("trader_orchestrator", "active_engines.json", 45),
-            ("genome_promoter", "live_genome.json", 9999),
+            ("son_status (multi)", "son_status_multi.json", 10),
             ("genome_fitness", "genome_fitness.json", 9999),
         ]
         up = sum(1 for _, f, lim in svc if _age(f) < lim)
@@ -2332,38 +2381,8 @@ class RNativeMain(QMainWindow):
         regime = reg.get("regime", "?")
         adx = reg.get("metrics", {}).get("adx_m5", 0)
         gate_open = 99782 in act.get("active_magics", [])
-        L.append(f"  🌡️ Regime: {regime}  (ADX {adx:.1f})")
+        L.append(f"  🌡️ Regime العام: {regime}  (ADX {adx:.1f})")
         L.append(f"  🚦 البوابة لولدنا (99782): {'🟢 مفتوحة' if gate_open else '🔴 مقفلة (standby)'}")
-        L.append(f"  🧬 LIVE genome: {live.get('name','?')}")
-        L.append("")
-
-        # ── Market + genome conditions ──
-        b = snap.get("bias", {}) or {}
-        up_n = sum(1 for x in b.values() if x == "UP")
-        dn_n = sum(1 for x in b.values() if x == "DOWN")
-        rsi = (snap.get("rsi") or {}).get("m1", 50)
-        pressure = float(snap.get("pressure_10m1", 0) or 0)
-        sess = snap.get("session", "?")
-        p = live.get("params", {}) or {}
-        min_mtf = p.get("min_mtf_agreement", 2)
-        rsi_max = p.get("rsi_max", 72); rsi_min = 100 - rsi_max
-        min_p = p.get("min_pressure_abs", 5)
-        L.append(f"  📊 السوق: M1={b.get('m1','?')} M5={b.get('m5','?')} "
-                 f"M15={b.get('m15','?')} H1={b.get('h1','?')}  →  {up_n}↑/{dn_n}↓")
-        L.append(f"     RSI {rsi}  ·  Pressure {pressure:+.1f}  ·  {sess}")
-        L.append("")
-
-        def chk(ok): return "✅" if ok else "❌"
-        L.append("  🟢 شروط الشراء:")
-        L.append(f"     {chk(up_n>=min_mtf)} {up_n} UP ≥ {min_mtf}   "
-                 f"{chk(rsi<rsi_max)} RSI<{rsi_max}   "
-                 f"{chk(abs(pressure)>=min_p)} |P|≥{min_p}   "
-                 f"{chk(pressure>0)} P موجبة")
-        L.append("  🔴 شروط البيع:")
-        L.append(f"     {chk(dn_n>=min_mtf)} {dn_n} DOWN ≥ {min_mtf}   "
-                 f"{chk(rsi>rsi_min)} RSI>{rsi_min}   "
-                 f"{chk(abs(pressure)>=min_p)} |P|≥{min_p}   "
-                 f"{chk(pressure<0)} P سالبة")
         L.append("")
 
         # ── Recent decisions (incl ML P(win) in reason) ──
