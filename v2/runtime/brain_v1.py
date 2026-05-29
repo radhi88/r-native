@@ -60,6 +60,14 @@ from pathlib import Path
 from collections import deque
 
 SYMBOL = "XAUUSDm"
+# Multi-symbol: our son now watches more than gold. Gold stays PRIMARY (writes
+# brain_live.json exactly as before — zero regression); each extra symbol writes
+# its own brain_live__<SYM>.json that the trader reads per-symbol. لنطلع على باقي العملات.
+SYMBOLS = ["XAUUSDm", "EURUSDm", "GBPUSDm", "USDJPYm"]
+# Price-unit per "1 pt" and display digits, so gold-tuned rounding/indicators
+# stay correct per instrument (EURUSD must NOT be rounded to 2 decimals).
+_DIGITS = {"XAUUSDm": 2, "XAGUSDm": 3, "BTCUSDm": 1, "EURUSDm": 5,
+           "GBPUSDm": 5, "USDJPYm": 3, "GBPJPYm": 3}
 POLL = 1.0          # real-time snapshots (was 2.0) — لحظي، لا نفوّت فرصة
 MEMORY     = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_memory.jsonl")
 LIVE       = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_live.json")
@@ -285,14 +293,14 @@ def _pressure_10m1(m1):
     return round(bull - bear, 2)
 
 
-def _cvd_30m1(mt5, m1):
+def _cvd_30m1(mt5, m1, sym=SYMBOL):
     if len(m1) < 31: return 0
     from datetime import datetime as _dt, timezone as _tz
     cvd = 0
     for i in range(len(m1)-31, len(m1)-1):
         bar_start = int(m1[i]["time"])
         try:
-            ticks = mt5.copy_ticks_range(SYMBOL,
+            ticks = mt5.copy_ticks_range(sym,
                 _dt.fromtimestamp(bar_start, tz=_tz.utc),
                 _dt.fromtimestamp(bar_start+60, tz=_tz.utc),
                 mt5.COPY_TICKS_ALL)
@@ -329,10 +337,11 @@ def _session(now: datetime):
 
 
 # ───────────── CAPTURE ─────────────
-def capture(mt5) -> dict:
-    """Full indicator stack snapshot."""
+def capture(mt5, sym=SYMBOL) -> dict:
+    """Full indicator stack snapshot for `sym` (gold by default)."""
+    dg = _DIGITS.get(sym, 2)
     def _bars(tf, n):
-        r = mt5.copy_rates_from_pos(SYMBOL, tf, 0, n)
+        r = mt5.copy_rates_from_pos(sym, tf, 0, n)
         return [dict(b._asdict()) if hasattr(b, "_asdict")
                 else {k: b[k] for k in b.dtype.names} for b in r] if r is not None else []
 
@@ -342,7 +351,7 @@ def capture(mt5) -> dict:
     h1  = _bars(mt5.TIMEFRAME_H1, 24)
     if not m1 or not m5: return {}
 
-    tick = mt5.symbol_info_tick(SYMBOL)
+    tick = mt5.symbol_info_tick(sym)
     bid, ask = float(tick.bid), float(tick.ask)
     mid = (bid + ask) / 2
     closes_m1  = [b["close"] for b in m1[:-1]]
@@ -352,9 +361,9 @@ def capture(mt5) -> dict:
     pivots = _zigzag(m5)
     snap = {
         "ts": datetime.now(timezone.utc).isoformat(),
-        "symbol": SYMBOL,
-        "bid": round(bid, 2), "ask": round(ask, 2),
-        "spread": round(ask-bid, 3),
+        "symbol": sym,
+        "bid": round(bid, dg), "ask": round(ask, dg),
+        "spread": round(ask-bid, dg + 1),
         "session": _session(datetime.now(timezone.utc)),
 
         # candle anatomies
@@ -378,7 +387,7 @@ def capture(mt5) -> dict:
 
         # flow
         "pressure_10m1": _pressure_10m1(m1),
-        "cvd_30m1": _cvd_30m1(mt5, m1),
+        "cvd_30m1": _cvd_30m1(mt5, m1, sym),
         "vol_trend_m5": _vol_trend(m5),
 
         # levels
@@ -392,17 +401,25 @@ def capture(mt5) -> dict:
     up = biases.count("UP"); dn = biases.count("DOWN")
     snap["mtf_align"] = "UP" if up >= 3 else ("DOWN" if dn >= 3 else "MIXED")
 
-    # Regime — pulled from regime_classifier output if available
-    try:
-        import json as _json
-        from pathlib import Path as _P
-        rp = _P(r"C:\Users\Radhi\MT5\r_native_v2\data\market_regime.json")
-        if rp.exists():
-            rd = _json.loads(rp.read_text(encoding="utf-8"))
-            snap["regime"] = rd.get("regime", "?")
-            snap["regime_adx_m5"] = rd.get("metrics", {}).get("adx_m5")
-    except Exception:
-        snap["regime"] = "?"
+    # Regime — gold pulls the dedicated regime_classifier output; other symbols
+    # derive their own lightweight regime from their ADX (no per-symbol classifier yet).
+    if sym == SYMBOL:
+        try:
+            import json as _json
+            from pathlib import Path as _P
+            rp = _P(r"C:\Users\Radhi\MT5\r_native_v2\data\market_regime.json")
+            if rp.exists():
+                rd = _json.loads(rp.read_text(encoding="utf-8"))
+                snap["regime"] = rd.get("regime", "?")
+                snap["regime_adx_m5"] = rd.get("metrics", {}).get("adx_m5")
+        except Exception:
+            snap["regime"] = "?"
+    else:
+        _adx5 = (snap.get("adx") or {}).get("m5") or 0
+        snap["regime_adx_m5"] = _adx5
+        snap["regime"] = ("TREND_UP" if _adx5 >= 22 and snap.get("mtf_align") == "UP"
+                          else "TREND_DOWN" if _adx5 >= 22 and snap.get("mtf_align") == "DOWN"
+                          else "RANGE" if _adx5 >= 14 else "CHOP")
 
     # Inter-market: gold↔oil divergence (user's insight — gold/oil inverse)
     try:
@@ -541,7 +558,7 @@ def main_loop():
     except Exception as e:
         print(f"mt5 init err: {e}"); return
 
-    print(f"[brain_v1] ONLINE · {SYMBOL} · poll {POLL}s")
+    print(f"[brain_v1] ONLINE · {' '.join(SYMBOLS)} · poll {POLL}s")
     print(f"[brain_v1] memory → {MEMORY.name}")
     print(f"[brain_v1] decisions → {DECISIONS.name}")
     print(f"[brain_v1] live snapshot → {LIVE.name}")
@@ -550,9 +567,11 @@ def main_loop():
 
     while True:
         try:
-            snap = capture(mt5)
+            # PRIMARY: gold — unchanged path (brain_live.json + memory + decide)
+            snap = capture(mt5, SYMBOL)
             if snap:
                 _save_atomic(LIVE, snap)
+                _save_atomic(LIVE.parent / f"brain_live__{SYMBOL}.json", snap)
                 # Only commit to memory on M1 close transition (avoid 30 dupes/min)
                 cur_m1_ts = snap["m1_last5"][-1]["ts"] if snap.get("m1_last5") else None
                 if cur_m1_ts != last_m1_close_ts:
@@ -561,6 +580,17 @@ def main_loop():
 
                 positions = mt5.positions_get(symbol=SYMBOL) or []
                 decision = decide(snap, positions)
+
+            # EXTRA SYMBOLS: lightweight per-symbol snapshot for the trader only.
+            for _sym in SYMBOLS:
+                if _sym == SYMBOL:
+                    continue
+                try:
+                    s2 = capture(mt5, _sym)
+                    if s2:
+                        _save_atomic(LIVE.parent / f"brain_live__{_sym}.json", s2)
+                except Exception as _e:
+                    print(f"[brain_v1] {_sym} capture err: {_e}")
 
         except KeyboardInterrupt:
             print("[brain_v1] stopped"); break

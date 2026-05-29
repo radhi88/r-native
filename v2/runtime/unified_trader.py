@@ -54,13 +54,22 @@ from runtime.shared.decision_log import (                        # noqa: E402
 # Identity
 # ──────────────────────────────────────────────────────────
 MAGIC  = MAGICS["claude_genome"]   # 99782 — same as old claude_genome (continuity)
-SYMBOL = "XAUUSDm"
+SYMBOL = "XAUUSDm"                  # PRIMARY — gold, the proven one
 POLL_S = 1.0          # real-time: react within ~1s (was 3.0). لا نفوق أي فرصة
 
-# Anti-pyramid: never stack more than this many open positions on SYMBOL+MAGIC.
-# This is THE guard that prevents the over-leverage stop-out that wiped magic-0.
-# 2 = a little concurrency for speed, still tiny risk (2×0.02 lot on a $150 acct).
-MAX_OPEN = 2
+# ── Multi-symbol: our son now trades the rest of the currencies too ──────────
+# User (2026-05-29): "هل نقدر نطلع زي ولدنا على باقي العملات؟" — نعم.
+# Gold stays primary & most-trusted (allowed 2 concurrent). FX pairs are newer,
+# so each is capped at 1 concurrent and there's a global cap on our own magic so
+# margin can never blow up the way the magic-0 EA did.
+SYMBOLS = ["XAUUSDm", "EURUSDm", "GBPUSDm", "USDJPYm"]
+# Per-symbol concurrent-position cap (anti-pyramid — THE guard magic-0 lacked).
+MAX_OPEN_BY_SYM = {"XAUUSDm": 2, "EURUSDm": 1, "GBPUSDm": 1, "USDJPYm": 1}
+MAX_OPEN_DEFAULT = 1
+# Hard ceiling across ALL our son's open positions, every symbol combined.
+GLOBAL_MAX_OPEN = 4
+# Back-compat alias (some code/UI may still reference MAX_OPEN for gold).
+MAX_OPEN = MAX_OPEN_BY_SYM["XAUUSDm"]
 
 # Pullback entries: in a CONFIRMED trend, allow buying the dip / selling the
 # rally even when short-term pressure is mildly contra — that's a pullback, not
@@ -93,9 +102,10 @@ ML_MAX_PWIN  = 0.66        # ceiling — gets this strict only when bleeding/cho
 _thr_cache = {"t": 0.0, "v": ML_BASE_PWIN, "why": f"base {ML_BASE_PWIN}"}
 
 # Module state
-_breaker: CircuitBreaker | None = None
+_breakers: dict = {}                 # per-symbol CircuitBreaker
 _last_genome_name: str | None = None
 _last_status_print: float = 0.0
+_son_multi: dict = {}                # latest per-symbol verdict (for UI summary)
 
 
 def _adaptive_pwin_threshold(regime: str) -> tuple[float, str]:
@@ -143,13 +153,32 @@ def _adaptive_pwin_threshold(regime: str) -> tuple[float, str]:
     return thr, _thr_cache["why"]
 
 
-def _open_count() -> int:
-    """How many positions we already hold on SYMBOL+MAGIC (anti-pyramid)."""
+def _open_count(sym: str = SYMBOL) -> int:
+    """How many positions we already hold on sym+MAGIC (anti-pyramid)."""
     try:
-        pos = mt5.positions_get(symbol=SYMBOL) or []
+        pos = mt5.positions_get(symbol=sym) or []
         return sum(1 for p in pos if p.magic == MAGIC)
     except Exception:
         return 0
+
+
+def _global_open_count() -> int:
+    """Total open positions on OUR magic across ALL symbols (margin ceiling)."""
+    try:
+        pos = mt5.positions_get() or []
+        return sum(1 for p in pos if p.magic == MAGIC)
+    except Exception:
+        return 0
+
+
+def _pt(sym: str) -> float:
+    """Price-units per '1 pt' for sym, so gold-tuned thresholds scale to FX."""
+    return _PT.get(sym, 1.0)
+
+
+def _brain_path_for(sym: str) -> Path:
+    """Per-symbol brain snapshot the trader reads (gold also has its own file)."""
+    return BRAIN_LIVE.parent / f"brain_live__{sym}.json"
 
 
 # ──────────────────────────────────────────────────────────
@@ -163,12 +192,17 @@ def _read_json(p: Path) -> dict | None:
 
 def _write_son_status(stage: str, detail: str, genome: str, snap: dict,
                       side: str = "", p_win: float = 0.0,
-                      ml_min: float = ML_BASE_PWIN) -> None:
-    """Persist the live verdict so the UI / OUR SON tab can show what it's thinking."""
+                      ml_min: float = ML_BASE_PWIN, sym: str = SYMBOL) -> None:
+    """Persist the live verdict so the UI / OUR SON tab can show what it's thinking.
+
+    Gold (PRIMARY) writes son_status.json exactly as before (UI back-compat).
+    Every symbol also writes son_status__<SYM>.json, and a combined
+    son_status_multi.json summarises all symbols for the multi-symbol UI grid."""
     try:
         acc = mt5.account_info()
         st = {
             "ts": datetime.now(timezone.utc).isoformat(),
+            "symbol": sym,
             "stage": stage, "detail": detail, "genome": genome,
             "side": side, "p_win": round(p_win, 3),
             "ml_min": round(ml_min, 3),
@@ -180,11 +214,23 @@ def _write_son_status(stage: str, detail: str, genome: str, snap: dict,
             "pressure": snap.get("pressure_10m1"),
         }
         payload = json.dumps(st, ensure_ascii=False, default=str)
-        (PATHS["brain_decisions"].parent / "son_status.json").write_text(payload, encoding="utf-8")
-        # Mirror to MT5 Common/Files so FRIDAY_Brain_Executor.mq5 (the EA) can read it
+        base = PATHS["brain_decisions"].parent
+        # per-symbol file (always)
+        (base / f"son_status__{sym}.json").write_text(payload, encoding="utf-8")
+        # gold = the canonical son_status.json the existing UI tab reads
+        if sym == SYMBOL:
+            (base / "son_status.json").write_text(payload, encoding="utf-8")
+            try:
+                from runtime.shared.tokens import COMMON_FILES
+                (COMMON_FILES / "son_status.json").write_text(payload, encoding="utf-8")
+            except Exception:
+                pass
+        # combined multi-symbol summary
+        _son_multi[sym] = st
         try:
-            from runtime.shared.tokens import COMMON_FILES
-            (COMMON_FILES / "son_status.json").write_text(payload, encoding="utf-8")
+            (base / "son_status_multi.json").write_text(
+                json.dumps({"ts": st["ts"], "symbols": _son_multi},
+                           ensure_ascii=False, default=str), encoding="utf-8")
         except Exception:
             pass
     except Exception:
@@ -203,13 +249,17 @@ def _status(msg: str, force: bool = False) -> None:
 # ──────────────────────────────────────────────────────────
 # Genome evaluation (CHILD-style — looser, distilled from wins)
 # ──────────────────────────────────────────────────────────
-def evaluate_genome(snap: dict, genome_params: dict) -> tuple[str | None, float, str]:
-    """Return (side, confidence, reason) or (None, 0, why_no_signal)."""
+def evaluate_genome(snap: dict, genome_params: dict, pt: float = 1.0) -> tuple[str | None, float, str]:
+    """Return (side, confidence, reason) or (None, 0, why_no_signal).
+
+    `pt` scales the gold-tuned pressure thresholds into the symbol's own price
+    units (gold pt=1.0; EURUSD pt=0.0001) so the same genome works on any pair."""
     if not snap or not genome_params:
         return (None, 0, "no snap/genome")
 
     rsi_max          = genome_params.get("rsi_max", 60)
-    min_pressure_abs = genome_params.get("min_pressure_abs", 3)
+    # gold-points → symbol price units
+    min_pressure_abs = genome_params.get("min_pressure_abs", 3) * pt
     min_mtf          = genome_params.get("min_mtf_agreement", 2)
     regime_filter    = genome_params.get("regime_filter") or []
     session_filter   = genome_params.get("session_filter") or []
@@ -253,20 +303,21 @@ def evaluate_genome(snap: dict, genome_params: dict) -> tuple[str | None, float,
     #   • PULLBACK (counter-trend dip): pressure mildly contra in a confirmed
     #     trend → buy the dip / sell the rally. ML gate decides if it's worth it.
     pressure   = float(snap.get("pressure_10m1", 0))
+    pullback_max = PULLBACK_MAX_CONTRA * pt   # gold-points → symbol price units
     trend_n    = max(up_count, dn_count)
     strong_trend = trend_n >= 3
     confirms = (direction == "BUY" and pressure > 0) or (direction == "SELL" and pressure < 0)
 
     if confirms:
         if abs(pressure) < min_pressure_abs:
-            return (None, 0, f"pressure |{pressure:.1f}| < {min_pressure_abs}")
+            return (None, 0, f"pressure |{pressure:.4g}| < {min_pressure_abs:.4g}")
         entry_mode = "momentum"
     else:
         # counter-pressure = pullback
         if not strong_trend:
             return (None, 0, f"contra {direction}, weak trend {trend_n}/4")
-        if abs(pressure) > PULLBACK_MAX_CONTRA:
-            return (None, 0, f"pullback too deep |{pressure:.1f}|>{PULLBACK_MAX_CONTRA:.0f}")
+        if abs(pressure) > pullback_max:
+            return (None, 0, f"pullback too deep |{pressure:.4g}|>{pullback_max:.4g}")
         entry_mode = "pullback"
 
     # Confidence
@@ -278,7 +329,7 @@ def evaluate_genome(snap: dict, genome_params: dict) -> tuple[str | None, float,
         confidence = round(mtf_score * 0.7, 2)
 
     reason = (f"{direction} {entry_mode} MTF{trend_n}/4 "
-              f"RSI{rsi:.0f} P{pressure:+.1f} regime{reg} sess{sess}")
+              f"RSI{rsi:.0f} P{pressure:+.4g} regime{reg} sess{sess}")
     return (direction, confidence, reason)
 
 
@@ -343,34 +394,39 @@ def manage_open_positions() -> None:
 # Entry
 # ──────────────────────────────────────────────────────────
 def fire_entry(side: str, confidence: float, reason: str,
-                snap: dict, genome_params: dict, genome_name: str) -> None:
-    global _breaker
-    tick = mt5.symbol_info_tick(SYMBOL)
+                snap: dict, genome_params: dict, genome_name: str,
+                sym: str = SYMBOL) -> None:
+    tick = mt5.symbol_info_tick(sym)
     if not tick: return
 
+    pt = _pt(sym)
+    info = mt5.symbol_info(sym)
+    digits = info.digits if info else (5 if pt <= 0.0001 else (3 if pt <= 0.01 else 2))
+    # genome SL/TP are in gold-points → scale to this symbol's price units
     sl_pts = float(genome_params.get("sl_pts", 4.0))
     tp_pts = float(genome_params.get("tp_pts", 12.0))
-    # Inflate TP — trail handles the real exit
-    tp_pts = max(tp_pts, 20.0)
+    tp_pts = max(tp_pts, 20.0)          # inflate TP — trail handles the real exit
+    sl_px = sl_pts * pt
+    tp_px = tp_pts * pt
     lot = float(genome_params.get("lot", 0.02))
 
     if side == "BUY":
-        price = tick.ask; sl = price - sl_pts; tp = price + tp_pts
+        price = tick.ask; sl = round(price - sl_px, digits); tp = round(price + tp_px, digits)
         otype = mt5.ORDER_TYPE_BUY
     else:
-        price = tick.bid; sl = price + sl_pts; tp = price - tp_pts
+        price = tick.bid; sl = round(price + sl_px, digits); tp = round(price - tp_px, digits)
         otype = mt5.ORDER_TYPE_SELL
 
     # 1. Record decision in unified log
     dec_id = record_decision(
-        source="unified_trader", magic=MAGIC, symbol=SYMBOL, side=side,
+        source="unified_trader", magic=MAGIC, symbol=sym, side=side,
         entry=price, sl=sl, tp=tp, lot=lot,
         reason=f"{genome_name}: {reason}", confidence=confidence, snap=snap,
     )
 
     # 2. Send order
     req = {
-        "action": mt5.TRADE_ACTION_DEAL, "symbol": SYMBOL,
+        "action": mt5.TRADE_ACTION_DEAL, "symbol": sym,
         "volume": lot, "type": otype,
         "price": price, "sl": sl, "tp": tp,
         "deviation": 50, "magic": MAGIC,
@@ -388,11 +444,12 @@ def fire_entry(side: str, confidence: float, reason: str,
     update_decision_ticket(dec_id, int(r.order) if ok else 0,
                             error="" if ok else f"retcode {getattr(r, 'retcode', '?')}")
 
-    # 4. Mark circuit breaker
+    # 4. Mark circuit breaker (per-symbol)
     if ok:
-        if _breaker: _breaker.mark_trade()
-        print(f"[{datetime.now():%H:%M:%S}] 🎯 {side} #{r.order} @ {r.price:.2f} "
-               f"SL {sl:.2f} TP {tp:.2f} lot {lot} conf {confidence:.2f} | {reason}")
+        _b = _breakers.get(sym)
+        if _b: _b.mark_trade()
+        print(f"[{datetime.now():%H:%M:%S}] 🎯 {sym} {side} #{r.order} @ {r.price:.{digits}f} "
+               f"SL {sl:.{digits}f} TP {tp:.{digits}f} lot {lot} conf {confidence:.2f} | {reason}")
         # BUY alert — persistent flag + desktop toast (the child's first/every BUY)
         if side == "BUY":
             _emit_buy_alert(int(r.order), float(r.price), lot, confidence, reason, genome_name)
@@ -426,22 +483,103 @@ def _emit_buy_alert(ticket: int, price: float, lot: float,
 
 
 # ──────────────────────────────────────────────────────────
+# Per-symbol decision (gates → evaluate → ML gate → fire)
+# ──────────────────────────────────────────────────────────
+def process_symbol(sym: str, genome_params: dict, genome_name: str,
+                   g_held: int) -> None:
+    """Run the full decision pipeline for ONE symbol. Gold (XAUUSDm) behaves
+    exactly as before (pt=1.0, regime from regime_classifier); FX pairs scale by
+    their _PT and use their own ADX-derived regime from the brain snapshot."""
+    snap = _read_json(_brain_path_for(sym))
+    if not snap:
+        return
+    pt = _pt(sym)
+
+    # Regime: gold uses the dedicated classifier; others carry their own.
+    regime_name = snap.get("regime") or "?"
+    if sym == SYMBOL:
+        rj = _read_json(REGIME_FILE) or {}
+        regime_name = rj.get("regime") or regime_name
+
+    # Circuit breaker — per symbol (lazy-created)
+    brk = _breakers.get(sym)
+    if brk is None:
+        brk = _breakers[sym] = CircuitBreaker(magic=MAGIC, symbol=sym)
+    cb_block = brk.check()
+    if cb_block:
+        _write_son_status("FROZEN", f"circuit breaker: {cb_block}",
+                          genome_name, snap, sym=sym)
+        return
+
+    # Global margin ceiling — protects the account across ALL symbols.
+    if g_held >= GLOBAL_MAX_OPEN:
+        _write_son_status("MANAGING",
+                          f"سقف عام {g_held}/{GLOBAL_MAX_OPEN} — يراقب فقط",
+                          genome_name, snap, sym=sym)
+        return
+
+    # Per-symbol anti-pyramid guard — THE protection magic-0 lacked.
+    cap  = MAX_OPEN_BY_SYM.get(sym, MAX_OPEN_DEFAULT)
+    held = _open_count(sym)
+    if held >= cap:
+        _write_son_status("MANAGING",
+                          f"{sym}: {held}/{cap} مفتوحة — يراقبها ولا يكدّس",
+                          genome_name, snap, sym=sym)
+        return
+
+    # Evaluate genome (pressure/pullback thresholds scaled to this symbol)
+    side, confidence, reason = evaluate_genome(snap, genome_params, pt)
+    if side is None:
+        _write_son_status("NO_SIGNAL", reason, genome_name, snap, sym=sym)
+        return
+    if confidence < MIN_CONFIDENCE:
+        _write_son_status("LOW_CONF", f"conf {confidence} | {reason}",
+                          genome_name, snap, sym=sym)
+        return
+
+    # SELF-TUNING ML CLONE GATE — fire only where he historically WINS.
+    thr, thr_why = _adaptive_pwin_threshold(regime_name)
+    p_win = 0.5
+    try:
+        from runtime.ml_clone import predict as _ml_predict
+        p_win = _ml_predict(snap, side)
+        if p_win < thr:
+            _write_son_status("ML_BLOCK",
+                              f"{side}: P(win) {p_win:.2f} < {thr:.2f} [{thr_why}]",
+                              genome_name, snap, side=side, p_win=p_win,
+                              ml_min=thr, sym=sym)
+            return
+        reason = f"{reason} | P(win) {p_win:.2f}≥{thr:.2f}"
+    except Exception:
+        pass  # ML never blocks trading on error
+
+    # FIRE
+    _write_son_status("FIRING",
+                      f"{side} conf {confidence} P(win) {p_win:.2f}≥{thr:.2f}",
+                      genome_name, snap, side=side, p_win=p_win, ml_min=thr, sym=sym)
+    fire_entry(side, confidence, reason, snap, genome_params, genome_name, sym=sym)
+
+
+# ──────────────────────────────────────────────────────────
 # Main loop
 # ──────────────────────────────────────────────────────────
 def main():
-    global _breaker, _last_genome_name
+    global _last_genome_name
     if not mt5.initialize() and not mt5.initialize():
         print("[unified_trader] mt5 init failed"); return
     acc = mt5.account_info()
     print("╔══════════════════════════════════════════════════════════╗")
-    print("║ [unified_trader] ONLINE — single-process trading engine  ║")
+    print("║ [unified_trader] ONLINE — multi-symbol trading engine    ║")
     print("║ Replaces: simple + smart + genome + council + trailing   ║")
     print(f"║ Magic: {MAGIC}  ·  Balance: ${acc.balance:.2f}                 ║")
-    print(f"║ Gates: orchestrator + circuit_breaker + ATR-aware TP     ║")
+    print(f"║ Symbols: {' '.join(SYMBOLS)}")
+    print(f"║ Caps: {MAX_OPEN_BY_SYM}  global {GLOBAL_MAX_OPEN}")
     print(f"║ Trail ladder: BE@3pt → +1@5pt → +5@8pt → +10@12pt        ║")
     print("╚══════════════════════════════════════════════════════════╝")
 
-    _breaker = CircuitBreaker(magic=MAGIC, symbol=SYMBOL)
+    # Per-symbol circuit breakers
+    for _s in SYMBOLS:
+        _breakers[_s] = CircuitBreaker(magic=MAGIC, symbol=_s)
 
     # 🛡️ Guard our son — restore the champion genome if it ever went missing
     try:
@@ -454,84 +592,29 @@ def main():
 
     while True:
         try:
-            # 1. Read state
-            snap   = _read_json(BRAIN_LIVE)
-            regime = _read_json(REGIME_FILE) or {}
-            live   = _read_json(LIVE_GENOME) or {}
-            if not snap or not live:
+            # 0. Genome — single source of truth, shared across all symbols
+            live = _read_json(LIVE_GENOME) or {}
+            if not live:
                 time.sleep(POLL_S); continue
             genome_params = live.get("params", {})
             genome_name = live.get("name", "UNKNOWN")
-
-            # Announce LIVE genome changes
             if genome_name != _last_genome_name:
                 print(f"\n[{datetime.now():%H:%M:%S}] 👑 LIVE GENOME = {genome_name}")
                 print(f"  rsi≤{genome_params.get('rsi_max')} P≥{genome_params.get('min_pressure_abs')} "
                        f"mtf≥{genome_params.get('min_mtf_agreement')} lot {genome_params.get('lot')}")
                 _last_genome_name = genome_name
 
-            # 2. Manage open positions FIRST (always do this even if gates block entry)
+            # 1. Manage open positions FIRST — every symbol, every magic
             manage_open_positions()
 
-            # 3. Regime (orchestrator) — now a SOFT signal, not a hard block.
-            #    User: "ليه ما دخل صفقات؟ لا نفوّت أي فرصة." The blanket
-            #    "CHOP → everyone standby" froze him 100% of the time. Instead
-            #    we fold regime into the self-tuning ML threshold below: he CAN
-            #    trade choppy markets, but only on much stronger ML conviction.
-            regime_name = (regime.get("regime") or snap.get("regime") or "?")
-            orch_block  = is_engine_active(MAGIC)   # kept for transparency only
-
-            # 4. Gate: circuit breaker — the REAL hard stop (cascade / DD / rate)
-            cb_block = _breaker.check()
-            if cb_block:
-                _status(f"breaker: {cb_block}")
-                _write_son_status("FROZEN", f"circuit breaker: {cb_block}", genome_name, snap)
-                time.sleep(POLL_S); continue
-
-            # 4b. Anti-pyramid guard — THE protection that magic-0 lacked.
-            #     Manage existing positions, but never stack a new one on top.
-            held = _open_count()
-            if held >= MAX_OPEN:
-                _status(f"hold: {held} open (max {MAX_OPEN}) — managing, no new entry")
-                _write_son_status("MANAGING",
-                                   f"صفقة مفتوحة ({held}) — يراقبها ولا يكدّس",
-                                   genome_name, snap)
-                time.sleep(POLL_S); continue
-
-            # 5. Evaluate genome
-            side, confidence, reason = evaluate_genome(snap, genome_params)
-            if side is None:
-                _status(f"no signal: {reason}")
-                _write_son_status("NO_SIGNAL", reason, genome_name, snap)
-                time.sleep(POLL_S); continue
-            if confidence < MIN_CONFIDENCE:
-                _status(f"low conf {confidence}: {reason}")
-                _write_son_status("LOW_CONF", f"conf {confidence} | {reason}", genome_name, snap)
-                time.sleep(POLL_S); continue
-
-            # 5b. SELF-TUNING ML CLONE GATE — fire only where he historically WINS.
-            #     Threshold lowers the bar (trade more) but he raises it on himself
-            #     when losing / in chop. (orch_block makes regime visible in logs.)
-            thr, thr_why = _adaptive_pwin_threshold(regime_name)
-            p_win = 0.5
-            try:
-                from runtime.ml_clone import predict as _ml_predict
-                p_win = _ml_predict(snap, side)
-                if p_win < thr:
-                    _status(f"ml gate: P(win) {p_win:.2f} < {thr:.2f} ({thr_why}) — skip {side}")
-                    _write_son_status("ML_BLOCK",
-                                       f"{side}: P(win) {p_win:.2f} < {thr:.2f} [{thr_why}]"
-                                       + (f" · {orch_block}" if orch_block else ""),
-                                       genome_name, snap, side=side, p_win=p_win, ml_min=thr)
-                    time.sleep(POLL_S); continue
-                reason = f"{reason} | P(win) {p_win:.2f}≥{thr:.2f}"
-            except Exception:
-                pass  # ML never blocks trading on error
-
-            # 6. FIRE
-            _write_son_status("FIRING", f"{side} conf {confidence} P(win) {p_win:.2f}≥{thr:.2f}",
-                              genome_name, snap, side=side, p_win=p_win, ml_min=thr)
-            fire_entry(side, confidence, reason, snap, genome_params, genome_name)
+            # 2. Each symbol gets its own evaluation + gate + entry
+            g_held = _global_open_count()
+            for sym in SYMBOLS:
+                try:
+                    process_symbol(sym, genome_params, genome_name, g_held)
+                    g_held = _global_open_count()   # refresh after a possible fill
+                except Exception as _e:
+                    print(f"[{sym}] err: {_e}")
 
             time.sleep(POLL_S)
         except KeyboardInterrupt:
