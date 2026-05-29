@@ -63,6 +63,8 @@ class BackgroundPoller(QThread):
             "account":         {},
             "executor":        {},
             "hof_summary":     {},
+            "hof_symbol_list": [],   # ranked genomes for the active HoF symbol
+            "genes_report":    {},   # parsed friday_v3/data/algory_report.json
             "trade_gate_btc":  {},
             "advisor_insights": [],
             "strategist_state": {},
@@ -70,6 +72,10 @@ class BackgroundPoller(QThread):
             "last_refresh_ms": 0,
             "fail_streak":     0,
         }
+        # Which HoF symbol the UI is currently looking at — the poller fetches
+        # only this one each cycle so the Hall of Fame tab can repaint from
+        # cache (no blocking HTTP on the Qt thread). UI sets it via set_hof_symbol.
+        self._hof_symbol = "BTCUSDm"
 
     # ── Public API for UI ─────────────────────────────────────
     def get(self, key: str, default: Any = None) -> Any:
@@ -81,6 +87,15 @@ class BackgroundPoller(QThread):
         """Snapshot copy of the whole cache."""
         with self._lock:
             return dict(self._cache)
+
+    def set_hof_symbol(self, symbol: str) -> None:
+        """UI tells the poller which HoF symbol to keep fresh. Cheap; the
+        next poll cycle picks it up. We clear the cached list so the tab
+        doesn't briefly show the previous symbol's genomes."""
+        with self._lock:
+            if symbol and symbol != self._hof_symbol:
+                self._hof_symbol = symbol
+                self._cache["hof_symbol_list"] = []
 
     def stop(self):
         self._stop.set()
@@ -100,6 +115,24 @@ class BackgroundPoller(QThread):
             new["hof_summary"]= _safe_get_json("http://127.0.0.1:5055/api/r/hof/summary") or {}
             new["trade_gate_btc"] = _safe_get_json("http://127.0.0.1:5055/api/r/trade_gate?symbol=BTCUSDm") or {}
             new["advisor_insights"] = (_safe_get_json("http://127.0.0.1:5055/api/r/agents/insights?n=80") or {}).get("insights", [])
+
+            # Active-symbol HoF list (only the symbol the UI is viewing) so the
+            # Hall of Fame tab repaints from cache instead of blocking the UI.
+            with self._lock:
+                _hof_sym = self._hof_symbol
+            _hof_data = _safe_get_json(
+                f"http://127.0.0.1:5055/api/r/hof/symbol/{_hof_sym}?limit=100", timeout=1.5)
+            if _hof_data and _hof_data.get("ok"):
+                new["hof_symbol_list"] = _hof_data.get("genomes", [])
+
+            # Genes report (local file, cheap) — feeds the GENES tab auto-refresh.
+            try:
+                from pathlib import Path
+                gp = Path(r"C:\Users\Radhi\MT5\friday_v3\data\algory_report.json")
+                if gp.exists():
+                    new["genes_report"] = json.loads(gp.read_text(encoding="utf-8"))
+            except Exception:
+                pass
 
             # Local file: strategist state (no HTTP needed)
             try:

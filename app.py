@@ -2492,6 +2492,11 @@ class RNativeMain(QMainWindow):
         v.addWidget(self.advisor_llm_box)
 
         QTimer.singleShot(800, self._refresh_advisors_panel)
+        # Recurring auto-refresh — the advisor stream + agent rows follow the
+        # background poller live, no manual Refresh click needed.
+        self._advisor_timer = QTimer(self)
+        self._advisor_timer.timeout.connect(self._refresh_advisors_panel)
+        self._advisor_timer.start(3500)
         return w
 
     def _refresh_advisors_panel(self) -> None:
@@ -2761,28 +2766,43 @@ class RNativeMain(QMainWindow):
         self.hof_table.setColumnWidth(7, 90)
         v.addWidget(self.hof_table, 1)
 
-        # Initial populate
+        # Initial populate + recurring auto-refresh (reads poller cache, never
+        # blocks). No more manual Refresh needed — the table follows the agents.
         QTimer.singleShot(500, self._refresh_hof_tab)
+        self._hof_timer = QTimer(self)
+        self._hof_timer.timeout.connect(self._refresh_hof_tab)
+        self._hof_timer.start(4000)
         return w
 
     def _refresh_hof_tab(self) -> None:
-        """Reload Hall of Fame data from brain API."""
-        import urllib.request as _u
-        import json as _json
+        """Repaint Hall of Fame from the BackgroundPoller cache (never blocks
+        the UI). The poller fetches summary + the active symbol's list every
+        ~3s; this just redraws. Selection is preserved so an auto-refresh
+        never disrupts a manual pin/deploy."""
         if not hasattr(self, "hof_table"):
             return
         sym = self.hof_symbol_combo.currentText()
+        poller = getattr(self, "poller", None)
 
-        try:
-            with _u.urlopen("http://127.0.0.1:5055/api/r/hof/summary",
-                            timeout=3) as r:
-                summ = _json.loads(r.read().decode())
-        except Exception:
-            self.hof_summary_lbl.setText("⚠ brain server offline")
-            return
+        if poller is not None:
+            poller.set_hof_symbol(sym)   # tell poller which symbol to keep fresh
+            summ = poller.get("hof_summary", {}) or {}
+            genomes = poller.get("hof_symbol_list", []) or []
+        else:
+            # Fallback (poller failed to start): single blocking fetch.
+            import urllib.request as _u, json as _json
+            try:
+                with _u.urlopen("http://127.0.0.1:5055/api/r/hof/summary", timeout=3) as r:
+                    summ = _json.loads(r.read().decode())
+                with _u.urlopen(f"http://127.0.0.1:5055/api/r/hof/symbol/{sym}?limit=100", timeout=3) as r:
+                    d = _json.loads(r.read().decode())
+                genomes = d.get("genomes", []) if d.get("ok") else []
+            except Exception:
+                self.hof_summary_lbl.setText("⚠ brain server offline")
+                return
 
         if not summ.get("ok"):
-            self.hof_summary_lbl.setText("⚠ HoF API error")
+            self.hof_summary_lbl.setText("⌛ Hall of Fame loading…")
             return
 
         total = summ.get("total_genomes", 0)
@@ -2800,15 +2820,12 @@ class RNativeMain(QMainWindow):
             f"🏆 <b>{total}</b> total genomes · 📌 {pinned} pinned · ❌ {killed} killed\n"
             + "\n".join(sym_lines))
 
-        # Load this symbol's ranked list
-        try:
-            with _u.urlopen(f"http://127.0.0.1:5055/api/r/hof/symbol/{sym}?limit=100",
-                            timeout=3) as r:
-                data = _json.loads(r.read().decode())
-        except Exception:
-            return
+        # Preserve the currently selected genome id across the repaint.
+        _sel_gid = None
+        _row = self.hof_table.currentRow()
+        if _row >= 0 and self.hof_table.item(_row, 0):
+            _sel_gid = self.hof_table.item(_row, 0).data(Qt.UserRole)
 
-        genomes = data.get("genomes", []) if data.get("ok") else []
         self.hof_table.setRowCount(len(genomes))
         for i, g in enumerate(genomes):
             s = g.get("stats", {})
@@ -2843,6 +2860,15 @@ class RNativeMain(QMainWindow):
                 if col == 0:
                     item.setData(Qt.UserRole, g.get("id"))
                 self.hof_table.setItem(i, col, item)
+
+        # Restore the previously selected genome (auto-refresh must not steal
+        # the row the user is about to pin/deploy).
+        if _sel_gid is not None:
+            for r in range(self.hof_table.rowCount()):
+                it = self.hof_table.item(r, 0)
+                if it and it.data(Qt.UserRole) == _sel_gid:
+                    self.hof_table.selectRow(r)
+                    break
 
     def _hof_action(self, action: str) -> None:
         """Pin / unpin / deploy the selected HoF row."""
@@ -2921,6 +2947,13 @@ class RNativeMain(QMainWindow):
         btn = QPushButton("🔁 Refresh from Algory")
         btn.clicked.connect(self._refresh_genes)
         v.addWidget(btn)
+
+        # Auto-populate on load + recurring refresh — genes follow Algory's
+        # OOS learning automatically (no manual Refresh needed).
+        QTimer.singleShot(900, self._refresh_genes)
+        self._genes_timer = QTimer(self)
+        self._genes_timer.timeout.connect(self._refresh_genes)
+        self._genes_timer.start(8000)
         return w
 
     # ─── Right inspector ───
@@ -3768,16 +3801,25 @@ class RNativeMain(QMainWindow):
             self._filter_vault(self.vault_search.text())
 
     def _refresh_genes(self):
-        rpt = PROJECT_ROOT / "friday_v3" / "data" / "algory_report.json"
-        if not rpt.exists():
-            self._log("⚠ algory_report.json not found - start algory_watcher first")
-            self.win_genes_list.setPlainText("Algory watcher not running.\nRun: python -m friday_v3.algory.algory_watcher")
+        if not hasattr(self, "win_genes_list"):
             return
-        try:
-            d = json.loads(rpt.read_text(encoding="utf-8"))
-        except Exception as e:
-            self._log(f"⚠ algory_report parse: {e}")
-            return
+        # Prefer the poller's cached report (refreshed in the background);
+        # fall back to reading the file directly if the poller isn't up yet.
+        d = {}
+        poller = getattr(self, "poller", None)
+        if poller is not None:
+            d = poller.get("genes_report", {}) or {}
+        if not d:
+            rpt = PROJECT_ROOT / "friday_v3" / "data" / "algory_report.json"
+            if not rpt.exists():
+                self.win_genes_list.setPlainText(
+                    "Algory watcher not running.\nRun: python -m friday_v3.algory.algory_watcher")
+                return
+            try:
+                d = json.loads(rpt.read_text(encoding="utf-8"))
+            except Exception as e:
+                self._log(f"⚠ algory_report parse: {e}")
+                return
         # Combined: global ranks + XAU-specific
         glb = d.get("gene_rankings_global", {}) or {}
         xau = d.get("gene_rankings_xauh1", {}) or {}
