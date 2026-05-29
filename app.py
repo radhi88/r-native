@@ -1619,6 +1619,16 @@ class RNativeMain(QMainWindow):
         gg.addWidget(self.ga_status, 4, 0, 1, 4)
         v.addWidget(ga_box)
 
+        # Live auto-evolution banner — campaigns also run AUTOMATICALLY via the
+        # auto-evolution scheduler / champion_evolution agent. This label mirrors
+        # that autonomous activity (updated by _refresh_auto_evo_status on tick),
+        # so the manual ▶ Run button above is an optional override, not required.
+        self.ga_auto_status = QLabel("🧬 Auto-evolution: (booting)…")
+        self.ga_auto_status.setStyleSheet(
+            f"color: {VIOLET}; font-family: 'JetBrains Mono', Consolas; "
+            f"font-size: 12px; padding: 6px 4px;")
+        v.addWidget(self.ga_auto_status)
+
         v.addStretch()
         return w
 
@@ -1673,7 +1683,51 @@ class RNativeMain(QMainWindow):
         self.vault_table.setSortingEnabled(True)
         self.vault_table.itemSelectionChanged.connect(self._on_vault_row_selected)
         v.addWidget(self.vault_table)
+
+        # Auto-load persisted genomes on startup (no manual campaign needed) and
+        # refresh periodically so agent-bred genomes appear without a click.
+        # Reads from disk (symbol_configs/*.json ga_strategies) — cheap + off the
+        # boot critical path via singleShot.
+        QTimer.singleShot(1200, self._refresh_vault_auto)
+        self._vault_timer = QTimer(self)
+        self._vault_timer.timeout.connect(self._refresh_vault_auto)
+        self._vault_timer.start(120_000)  # 2 min — vault changes at most every ~30 min
         return w
+
+    def _refresh_vault_auto(self):
+        """Repopulate the VAULT table from persisted symbol_configs, preserving
+        the selected genome + scroll position so a periodic refresh doesn't
+        disrupt an active browse."""
+        if not hasattr(self, "vault_table"):
+            return
+        # Capture selection (by real genome id stashed on col 0) + scroll offset
+        _sel_id = None
+        try:
+            sel = self.vault_table.selectionModel().selectedRows()
+            if sel:
+                it = self.vault_table.item(sel[0].row(), 0)
+                if it:
+                    _sel_id = it.data(Qt.UserRole)
+        except Exception:
+            pass
+        _scroll = self.vault_table.verticalScrollBar().value() if self.vault_table.verticalScrollBar() else 0
+        try:
+            self._populate_vault_from_campaign(None)
+        except Exception as e:
+            print(f"[vault] auto-refresh err: {e}", flush=True)
+            return
+        # Restore selection + scroll
+        if _sel_id is not None:
+            for r in range(self.vault_table.rowCount()):
+                it = self.vault_table.item(r, 0)
+                if it and it.data(Qt.UserRole) == _sel_id:
+                    self.vault_table.selectRow(r)
+                    break
+        try:
+            if self.vault_table.verticalScrollBar():
+                self.vault_table.verticalScrollBar().setValue(_scroll)
+        except Exception:
+            pass
 
     def _filter_vault(self, text: str = ""):
         """H.17: combined filter — search text + market dropdown + perf dropdown."""
@@ -3526,6 +3580,20 @@ class RNativeMain(QMainWindow):
             except Exception: pass
         self._auto_evo_status_lbl.setText(
             f"cycles: {cycles} · deploys: {deploys} · next: {next_run}")
+
+        # Mirror onto the CAMPAIGN tab banner so it reflects autonomous evolution.
+        if hasattr(self, "ga_auto_status"):
+            if enabled and running:
+                self.ga_auto_status.setText(
+                    f"🧬 Auto-evolution ACTIVE · {phase[:28]} · "
+                    f"cycles {cycles} · deploys {deploys}")
+            elif enabled:
+                self.ga_auto_status.setText(
+                    f"🧬 Auto-evolution ON · cycles {cycles} · "
+                    f"deploys {deploys} · next {next_run}")
+            else:
+                self.ga_auto_status.setText(
+                    "🧬 Auto-evolution OFF — campaigns run only on manual ▶ Run")
 
     def _check_r_executor_running(self) -> bool:
         """Cheap check: any python process with r_executor in command line."""
