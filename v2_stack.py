@@ -26,6 +26,7 @@ from pathlib import Path
 
 # The v2 runtime lives in the sibling r_native_v2 (data paths are absolute there).
 R_NATIVE_V2 = Path(r"C:\Users\Radhi\MT5\r_native_v2")
+MT5_ROOT    = Path(r"C:\Users\Radhi\MT5")
 LOG_DIR = R_NATIVE_V2 / "data" / "logs"
 
 # Order matters: producers before consumers.
@@ -35,13 +36,25 @@ SERVICES = [
     "trader_orchestrator",      # regime gate
     "genome_promoter",          # promote best gene
     "genome_evolver",           # breed genes
-    "unified_trader",           # THE sole executor
+    "r_native_brain_link",      # feed: writes genome_signals.jsonl (council eats this)
+    "unified_trader",           # THE sole executor (market + FVG pendings)
+    "palace_council",           # 5-expert vote → enters its own approved trades (99779)
     "trailing_stop_manager",    # SL trail
     "decision_outcome_filler",  # PnL backfill
     "trade_sync",               # MT5 history → db (manual trades feed learning)
     "champion_evolution",       # our son keeps getting smarter (re-breed + crown)
     "genome_academy",           # evolution lab: breed+gauntlet+panel+multi-symbol
 ]
+
+# The LLM brain (FRIDAY) is a standalone script at MT5 root, not a runtime
+# module — it gets its own launch entry. `--live` makes it place real orders;
+# its own kill_switch.txt + friday_config caps (MAX_LOT, MAX_OPEN) still apply.
+LLM_BRAIN = {
+    "name": "friday_brain",
+    "cmd":  [sys.executable, "friday_brain.py", "--live"],
+    "cwd":  str(MT5_ROOT),
+    "match": "friday_brain.py",   # dedupe token in cmdline
+}
 
 _spawned: dict[str, int] = {}   # service -> pid we started
 
@@ -110,7 +123,41 @@ def start_all() -> dict:
         except Exception as e:
             failed.append((svc, str(e)))
 
+    # ── LLM brain (FRIDAY) — standalone script, separate launch ──────────────
+    try:
+        if _llm_brain_running():
+            skipped.append(LLM_BRAIN["name"])
+        else:
+            logf = open(LOG_DIR / f"{LLM_BRAIN['name']}.log", "a", encoding="utf-8")
+            p = subprocess.Popen(
+                LLM_BRAIN["cmd"], cwd=LLM_BRAIN["cwd"],
+                stdout=logf, stderr=subprocess.STDOUT,
+                creationflags=creationflags, close_fds=True,
+            )
+            _spawned[LLM_BRAIN["name"]] = p.pid
+            started.append(LLM_BRAIN["name"])
+    except Exception as e:
+        failed.append((LLM_BRAIN["name"], str(e)))
+
     return {"started": started, "already_running": skipped, "failed": failed}
+
+
+def _llm_brain_running() -> bool:
+    """True if the FRIDAY LLM brain script is already running."""
+    try:
+        import psutil
+        token = LLM_BRAIN["match"]
+        for p in psutil.process_iter(["name", "cmdline"]):
+            try:
+                if not p.info["name"] or "python" not in p.info["name"].lower():
+                    continue
+                if token in " ".join(p.info["cmdline"] or []):
+                    return True
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+    except Exception:
+        pass
+    return False
 
 
 def stop_all() -> int:
@@ -123,7 +170,8 @@ def stop_all() -> int:
                 if not p.info["name"] or "python" not in p.info["name"].lower():
                     continue
                 cmd = " ".join(p.info["cmdline"] or [])
-                if any(f"runtime.{svc}" in cmd for svc in SERVICES):
+                if any(f"runtime.{svc}" in cmd for svc in SERVICES) \
+                        or LLM_BRAIN["match"] in cmd:
                     p.terminate()
                     killed += 1
             except (psutil.NoSuchProcess, psutil.AccessDenied):
@@ -135,15 +183,17 @@ def stop_all() -> int:
 
 
 def status() -> dict:
-    """Which of the 8 are alive right now."""
+    """Which services are alive right now (incl. the LLM brain)."""
     running = _running_modules()
-    return {svc: (svc in running) for svc in SERVICES}
+    out = {svc: (svc in running) for svc in SERVICES}
+    out[LLM_BRAIN["name"]] = _llm_brain_running()
+    return out
 
 
 def summary_line() -> str:
     s = status()
     up = sum(1 for v in s.values() if v)
-    return f"v2 stack: {up}/{len(SERVICES)} services up"
+    return f"v2 stack: {up}/{len(s)} services up"
 
 
 __all__ = ["start_all", "stop_all", "status", "summary_line", "SERVICES"]
