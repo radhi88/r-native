@@ -34,18 +34,17 @@ SERVICES = [
     "brain_v1",                 # market snapshot
     "regime_classifier",        # TREND/CHOP
     "trader_orchestrator",      # regime gate
-    # "genome_promoter",        # ⛔ LEARNING STOPPED 2026-05-29 ("ولا تعلم")
-    # "genome_evolver",         # ⛔ LEARNING STOPPED — no breeding while we review
+    "genome_promoter",          # promote best gene  (RE-ENABLED 2026-05-29)
+    "genome_evolver",           # breed genes         (RE-ENABLED 2026-05-29)
     "r_native_brain_link",      # feed: writes genome_signals.jsonl (council eats this)
-    # "unified_trader",         # ⛔ STOPPED 2026-05-29 by user ("أوقف الولد كله") —
-    #                             gold genome was buying against TREND_DOWN → losses.
-    #                             Re-enable ONLY after the strategy review.
+    "unified_trader",           # THE sole executor — now with trend-veto + RiskSentinel
     "palace_council",           # 5-expert vote → enters its own approved trades (99779)
     "trailing_stop_manager",    # SL trail
     "decision_outcome_filler",  # PnL backfill
     "trade_sync",               # MT5 history → db (manual trades feed learning)
-    # "champion_evolution",     # ⛔ LEARNING STOPPED 2026-05-29 ("ولا تعلم") — no re-breed/crown
-    # "genome_academy",         # ⛔ LEARNING STOPPED — evolution lab paused until review
+    "champion_evolution",       # our son keeps getting smarter (re-breed + crown)
+    "genome_academy",           # evolution lab: breed+gauntlet+panel+multi-symbol
+    "agent_governor",           # 🆕 agent-autonomy gate: propose→consult/consensus→apply→restart
 ]
 
 # The LLM brain (FRIDAY) is a standalone script at MT5 root, not a runtime
