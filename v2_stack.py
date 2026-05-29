@@ -37,7 +37,9 @@ SERVICES = [
     "genome_promoter",          # promote best gene
     "genome_evolver",           # breed genes
     "r_native_brain_link",      # feed: writes genome_signals.jsonl (council eats this)
-    "unified_trader",           # THE sole executor (market + FVG pendings)
+    # "unified_trader",         # ⛔ STOPPED 2026-05-29 by user ("أوقف الولد كله") —
+    #                             gold genome was buying against TREND_DOWN → losses.
+    #                             Re-enable ONLY after the strategy review.
     "palace_council",           # 5-expert vote → enters its own approved trades (99779)
     "trailing_stop_manager",    # SL trail
     "decision_outcome_filler",  # PnL backfill
