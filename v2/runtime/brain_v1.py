@@ -327,6 +327,64 @@ def _vol_trend(m5):
     return "STEADY"
 
 
+def _vwap(bars):
+    """Volume-Weighted Average Price over the supplied bars (typical price ×
+    tick_volume). Used as a fair-value anchor: longs prefer price ≤ VWAP
+    (discount), shorts prefer ≥ VWAP (premium). Returns (vwap, bands±1σ)."""
+    if not bars or len(bars) < 5:
+        return None
+    num = den = 0.0
+    tps, vols = [], []
+    for b in bars:
+        tp = (b["high"] + b["low"] + b["close"]) / 3.0
+        v  = max(float(b.get("tick_volume", 1)), 1.0)
+        num += tp * v; den += v
+        tps.append(tp); vols.append(v)
+    if den <= 0:
+        return None
+    vwap = num / den
+    # volume-weighted std-dev band
+    var = sum(v * (tp - vwap) ** 2 for tp, v in zip(tps, vols)) / den
+    sd = var ** 0.5
+    return {"vwap": vwap, "upper": vwap + sd, "lower": vwap - sd, "sd": sd}
+
+
+def _volume_profile(bars, bins=24):
+    """Lightweight volume profile over recent bars → POC + value-area edges.
+    Distributes each bar's tick_volume across its high-low range. Returns price
+    levels (POC, VAH, VAL) the structure engine treats as magnets/shelves."""
+    if not bars or len(bars) < 10:
+        return None
+    lo = min(b["low"] for b in bars); hi = max(b["high"] for b in bars)
+    if hi <= lo:
+        return None
+    step = (hi - lo) / bins
+    vol = [0.0] * bins
+    for b in bars:
+        b_lo, b_hi = b["low"], b["high"]
+        v = max(float(b.get("tick_volume", 1)), 1.0)
+        i0 = max(0, int((b_lo - lo) / step))
+        i1 = min(bins - 1, int((b_hi - lo) / step))
+        span = max(i1 - i0 + 1, 1)
+        for i in range(i0, i1 + 1):
+            vol[i] += v / span
+    poc_i = max(range(bins), key=lambda i: vol[i])
+    poc = lo + (poc_i + 0.5) * step
+    # value area = 70% of volume around POC
+    total = sum(vol); target = total * 0.70
+    lo_i = hi_i = poc_i; acc = vol[poc_i]
+    while acc < target and (lo_i > 0 or hi_i < bins - 1):
+        left  = vol[lo_i - 1] if lo_i > 0 else -1
+        right = vol[hi_i + 1] if hi_i < bins - 1 else -1
+        if right >= left:
+            hi_i += 1; acc += max(right, 0)
+        else:
+            lo_i -= 1; acc += max(left, 0)
+    return {"poc": round(poc, 3),
+            "vah": round(lo + (hi_i + 1) * step, 3),
+            "val": round(lo + lo_i * step, 3)}
+
+
 def _session(now: datetime):
     h = now.hour
     if 13 <= h < 17: return "NY_OVERLAP"
@@ -389,6 +447,9 @@ def capture(mt5, sym=SYMBOL) -> dict:
         "pressure_10m1": _pressure_10m1(m1),
         "cvd_30m1": _cvd_30m1(mt5, m1, sym),
         "vol_trend_m5": _vol_trend(m5),
+        "vwap_m5":  _vwap(m5),                 # fair-value anchor (intraday)
+        "vwap_m1":  _vwap(m1[-30:]),           # fast VWAP for scalp timing
+        "vol_profile_m15": _volume_profile(m15),  # POC / value-area levels
 
         # levels
         "sr_clusters": _sr_clusters(pivots, mid),

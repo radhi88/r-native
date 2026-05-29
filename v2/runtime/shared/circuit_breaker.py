@@ -63,6 +63,9 @@ class CircuitBreaker:
     def __init__(self, magic: int, symbol: str, **overrides):
         self.magic = magic
         self.symbol = symbol
+        # State + history are scoped to (magic, symbol) so one symbol's losing
+        # streak never freezes the others. 'كل عمله مستقلة بقاطعها الخاص'.
+        self._key = f"{magic}:{symbol}"
         cfg = {**DEFAULTS, **overrides}
         self.max_trades_per_window = cfg["max_trades_per_window"]
         self.rate_window_sec        = cfg["rate_window_sec"]
@@ -129,7 +132,8 @@ class CircuitBreaker:
     def reset(self) -> None:
         """Clear freeze state — use carefully."""
         all_state = self._load_all_state()
-        all_state.pop(str(self.magic), None)
+        all_state.pop(self._key, None)
+        all_state.pop(str(self.magic), None)   # legacy magic-only key
         self._save_all_state(all_state)
 
     def status(self) -> dict:
@@ -161,14 +165,16 @@ class CircuitBreaker:
         if now_broker <= 0:
             return 0
         return sum(1 for d in deals
-                   if int(d.magic) == self.magic and int(d.entry) == 0
+                   if int(d.magic) == self.magic and d.symbol == self.symbol
+                   and int(d.entry) == 0
                    and 0 <= (now_broker - d.time) < window_sec)
 
     def _consec_loss_count(self) -> int:
         since = datetime.now(timezone.utc) - timedelta(hours=6)
         deals = mt5.history_deals_get(since, datetime.now(timezone.utc)) or []
         exits = sorted([d for d in deals
-                        if int(d.magic) == self.magic and int(d.entry) in (1, 2)],
+                        if int(d.magic) == self.magic and d.symbol == self.symbol
+                        and int(d.entry) in (1, 2)],
                        key=lambda d: d.time, reverse=True)
         n = 0
         for d in exits:
@@ -182,7 +188,8 @@ class CircuitBreaker:
         since = datetime.now(timezone.utc) - timedelta(seconds=window_sec)
         deals = mt5.history_deals_get(since, datetime.now(timezone.utc)) or []
         exits = [d for d in deals
-                 if int(d.magic) == self.magic and int(d.entry) in (1, 2)]
+                 if int(d.magic) == self.magic and d.symbol == self.symbol
+                 and int(d.entry) in (1, 2)]
         return sum(float(d.profit) for d in exits)
 
     # ──────────────────────────────────────────────────────
@@ -203,11 +210,11 @@ class CircuitBreaker:
         tmp.replace(STATE_FILE)
 
     def _load_state(self) -> dict:
-        return self._load_all_state().get(str(self.magic), {})
+        return self._load_all_state().get(self._key, {})
 
     def _save_state(self) -> None:
         all_state = self._load_all_state()
-        all_state[str(self.magic)] = self._state
+        all_state[self._key] = self._state
         self._save_all_state(all_state)
 
     def _freeze(self, minutes: int, reason: str) -> None:

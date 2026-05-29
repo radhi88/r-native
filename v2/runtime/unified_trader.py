@@ -82,6 +82,22 @@ BRAIN_LIVE  = PATHS["brain_live"]
 REGIME_FILE = PATHS["market_regime"]
 LIVE_GENOME = PATHS["live_genome"]
 
+
+def _genome_path_for(sym: str):
+    """Per-symbol genome file, e.g. live_genome__EURUSDm.json.
+    'كل عمله ولها قيمها الخاصة وجيناتها الخاصة' — each symbol may carry its own
+    genes/values; if no per-symbol file exists it falls back to the shared one."""
+    return LIVE_GENOME.parent / f"live_genome__{sym}.json"
+
+
+def _load_genome_for(sym: str, shared: dict) -> tuple[dict, str]:
+    """Return (params, name) for this symbol: its own genome if present, else
+    the shared champion. Gold keeps using the shared champion unless given one."""
+    per = _read_json(_genome_path_for(sym))
+    if per and per.get("params"):
+        return per.get("params", {}), per.get("name", f"{sym}-genome")
+    return shared.get("params", {}), shared.get("name", "UNKNOWN")
+
 # Trailing ladder (replaces trailing_stop_manager for OUR positions)
 TRAIL_LADDER = [
     (12.0, 2.0),   # +12pt profit → trail by 2pt (lock ≥10pt)
@@ -104,6 +120,7 @@ _thr_cache = {"t": 0.0, "v": ML_BASE_PWIN, "why": f"base {ML_BASE_PWIN}"}
 # Module state
 _breakers: dict = {}                 # per-symbol CircuitBreaker
 _last_genome_name: str | None = None
+_last_sym_genome: dict = {}          # per-symbol genome name (for change-logging)
 _last_status_print: float = 0.0
 _son_multi: dict = {}                # latest per-symbol verdict (for UI summary)
 
@@ -537,6 +554,43 @@ def process_symbol(sym: str, genome_params: dict, genome_name: str,
                           genome_name, snap, sym=sym)
         return
 
+    # ── STRUCTURE GATE — the real trader's brain (FVG/IFVG/VWAP/VP/wicks/flow).
+    # Born from the user's complaint that entries were "بالشكل الغبي والمكان الغبي".
+    # • VETO  → never buy into supply / sell into demand / chase >2σ from VWAP.
+    # • OPP   → if structure clearly favors the opposite side, don't fight it.
+    # • WEAK  → no real demand/supply support → skip (enter AT zones, not in air).
+    # struct_min is per-genome tunable so each symbol can demand its own evidence.
+    try:
+        from runtime.shared.structure_entry import structure_decision
+        sd = structure_decision(snap, pt)
+        s_long, s_short = sd.get("score_long", 0.0), sd.get("score_short", 0.0)
+        side_score  = s_long if side == "BUY" else s_short
+        opp_score   = s_short if side == "BUY" else s_long
+        side_vetoes = sd.get("long_vetoes" if side == "BUY" else "short_vetoes") or []
+        struct_min  = float(genome_params.get("struct_min", 0.10))
+
+        if side_vetoes:
+            _write_son_status("STRUCT_VETO", f"{side} مرفوض هيكلياً: {side_vetoes[0]}",
+                              genome_name, snap, side=side, sym=sym)
+            return
+        if opp_score - side_score >= 0.30:
+            _write_son_status("STRUCT_OPP",
+                              f"{side}: الهيكل يفضّل العكس ({opp_score:.2f} ضد {side_score:.2f})",
+                              genome_name, snap, side=side, sym=sym)
+            return
+        if side_score < struct_min:
+            _write_son_status("STRUCT_WEAK",
+                              f"{side}: لا هيكل داعم ({side_score:.2f} < {struct_min:.2f})",
+                              genome_name, snap, side=side, sym=sym)
+            return
+        # structure agrees → it can only RAISE conviction, never lower it
+        confidence = round(min(1.0, max(confidence, side_score)), 2)
+        s_reasons = sd.get("reasons") or []
+        if s_reasons:
+            reason = f"{reason} | هيكل {side_score:.2f}: {'، '.join(s_reasons[:2])}"
+    except Exception as _se:
+        print(f"[structure] gate skipped ({sym}): {_se}")  # never blocks on error
+
     # SELF-TUNING ML CLONE GATE — fire only where he historically WINS.
     thr, thr_why = _adaptive_pwin_threshold(regime_name)
     p_win = 0.5
@@ -564,7 +618,7 @@ def process_symbol(sym: str, genome_params: dict, genome_name: str,
 # Main loop
 # ──────────────────────────────────────────────────────────
 def main():
-    global _last_genome_name
+    global _last_genome_name, _last_sym_genome
     if not mt5.initialize() and not mt5.initialize():
         print("[unified_trader] mt5 init failed"); return
     acc = mt5.account_info()
@@ -607,11 +661,17 @@ def main():
             # 1. Manage open positions FIRST — every symbol, every magic
             manage_open_positions()
 
-            # 2. Each symbol gets its own evaluation + gate + entry
+            # 2. Each symbol gets its OWN genome (own values/genes) if present,
+            #    else falls back to the shared champion. 'كل عمله ولها قيمها الخاصة'.
             g_held = _global_open_count()
             for sym in SYMBOLS:
                 try:
-                    process_symbol(sym, genome_params, genome_name, g_held)
+                    sym_params, sym_name = _load_genome_for(sym, live)
+                    if _last_sym_genome.get(sym) != sym_name:
+                        tag = "خاص" if sym_name != genome_name else "مشترك"
+                        print(f"[{datetime.now():%H:%M:%S}] 🧬 {sym} genome = {sym_name} ({tag})")
+                        _last_sym_genome[sym] = sym_name
+                    process_symbol(sym, sym_params, sym_name, g_held)
                     g_held = _global_open_count()   # refresh after a possible fill
                 except Exception as _e:
                     print(f"[{sym}] err: {_e}")
