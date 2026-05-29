@@ -316,7 +316,7 @@ class TradesTab(QWidget):
             f" color: {TEXT}; gridline-color: {MUTED}; border: 1px solid {BORDER}; }}"
             f"QHeaderView::section {{ background: {BG_3}; color: {VIOLET};"
             f" border: 1px solid {BORDER}; padding: 4px; font-weight: 800;"
-            " letter-spacing: 1px; font-size: 10px; }}"
+            " letter-spacing: 1px; font-size: 10px; }"
         )
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
@@ -633,7 +633,7 @@ class InspectorPanel(QFrame):
         self.setProperty("role", "card")
         self.setStyleSheet(
             f"QFrame[role='card'] {{ background: {BG_1}; border: 1px solid {BORDER};"
-            " border-radius: 6px; }}"
+            " border-radius: 6px; }"
             f"QTabWidget::pane {{ border: 1px solid {BORDER}; background: {BG_1}; }}"
             f"QTabBar::tab {{ background: {BG_2}; color: {MUTED}; padding: 6px 14px;"
             " font-weight: 700; letter-spacing: 1px; font-size: 10px;"
