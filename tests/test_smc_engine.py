@@ -190,7 +190,30 @@ def test_choch_after_opposite_bos():
     print("OK test_choch_after_opposite_bos")
 
 
+def test_compute_and_annotate_caches_by_epoch():
+    bars = [_bar(i, 100 + i*0.1, 100.5 + i*0.1, 99.5 + i*0.1, 100 + i*0.1)
+            for i in range(50)]
+    s1 = se.compute_and_annotate(bars, cache_key=("X", "H1"))
+    s2 = se.compute_and_annotate(bars, cache_key=("X", "H1"))
+    assert s1 is s2, "same last-bar epoch must return the cached object"
+    bars2 = bars + [_bar(50, 105, 105.5, 104.5, 105)]
+    s3 = se.compute_and_annotate(bars2, cache_key=("X", "H1"))
+    assert s3 is not s1, "new bar must trigger recompute"
+    assert "atr14" in s1 and "fresh_ob_above" in s1
+    print("OK test_compute_and_annotate_caches_by_epoch")
+
+
+def test_compute_and_annotate_no_key_always_fresh():
+    bars = [_bar(i, 100, 100.5, 99.5, 100) for i in range(40)]
+    a = se.compute_and_annotate(bars)   # no cache_key
+    b = se.compute_and_annotate(bars)
+    assert a is not b, "without cache_key each call recomputes"
+    print("OK test_compute_and_annotate_no_key_always_fresh")
+
+
 if __name__ == "__main__":
+    test_compute_and_annotate_caches_by_epoch()
+    test_compute_and_annotate_no_key_always_fresh()
     test_pivot_simple_high()
     test_pivot_no_pivot_when_higher_high_after()
     test_bos_bullish()

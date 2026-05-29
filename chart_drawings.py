@@ -287,11 +287,6 @@ def filter_and_cap(drawings: list[dict], max_per_symbol: int = 50,
                    stale_after_sec: int = 6 * 3600) -> list[dict]:
     now = _now()
     fresh = [d for d in drawings
-             if (now - d.get("created_at", now)) < max(d.get("ttl_sec", stale_after_sec),
-                                                       stale_after_sec) is False
-             or (now - d.get("created_at", now)) < stale_after_sec]
-    # Simpler equivalent — only keep recent
-    fresh = [d for d in drawings
              if (now - d.get("created_at", now)) < stale_after_sec]
     per_symbol: dict[str, list[dict]] = {}
     for d in fresh:

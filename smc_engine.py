@@ -398,13 +398,11 @@ def mark_fvg_fill(bars: Bars, fvgs: list[Event], cfg: dict) -> None:
     n = len(bars)
     for f in fvgs:
         gap_lo, gap_hi = f.level_low, f.level_high
-        mid = (gap_lo + gap_hi) / 2
         fill_pct = 0.0
         for k in range(f.idx_end + 1, n):
             bar = bars[k]
             if f.side == "bull":
                 if bar.low <= gap_hi:
-                    pen = min(gap_hi, bar.low + (gap_hi - bar.low))  # how far into gap
                     pen_pct = (gap_hi - max(bar.low, gap_lo)) / (gap_hi - gap_lo) if gap_hi > gap_lo else 0
                     fill_pct = max(fill_pct, pen_pct)
                     if mode == "touch":
@@ -451,12 +449,12 @@ def detect_liquidity_pools(pivots: list[dict], atr_last: float, cfg: dict) -> di
     }
 
 
-# ─── Snapshot composer ──────────────────────────────────────────
-def _build_smc_snapshot(bars: Bars, cfg: dict) -> dict:
-    """Compute the snapshot dict from a Bars view. Pure function."""
-    if len(bars) < 30:
-        return _empty_snapshot()
-    atr = _atr(bars, cfg.get("atr_period", 14))
+# ─── Shared detector pipeline ────────────────────────────────────
+def _run_all_detectors(bars: Bars, cfg: dict) -> dict:
+    """Run every detector once, sharing precomputed pivots/bos/atr so no
+    detector recomputes a dependency. Returns all event lists + atr.
+    Used by both _build_smc_snapshot and compute_events."""
+    atr    = _atr(bars, cfg.get("atr_period", 14))
     pivots = detect_pivots(bars, cfg)
     bos    = detect_bos(bars, cfg, pivots)
     choch  = detect_choch(bars, cfg, bos)
@@ -466,6 +464,20 @@ def _build_smc_snapshot(bars: Bars, cfg: dict) -> dict:
     fvgs   = detect_fvg(bars, cfg)
     mark_ob_mitigation(bars, obs, cfg)
     mark_fvg_fill(bars, fvgs, cfg)
+    return {"atr": atr, "pivots": pivots, "bos": bos, "choch": choch,
+            "sweep": sweep, "idm": idm, "obs": obs, "fvgs": fvgs}
+
+
+# ─── Snapshot composer ──────────────────────────────────────────
+def _build_smc_snapshot(bars: Bars, cfg: dict) -> dict:
+    """Compute the snapshot dict from a Bars view. Pure function."""
+    if len(bars) < 30:
+        return _empty_snapshot()
+    det = _run_all_detectors(bars, cfg)
+    atr, pivots = det["atr"], det["pivots"]
+    bos, choch  = det["bos"], det["choch"]
+    sweep, idm  = det["sweep"], det["idm"]
+    obs, fvgs   = det["obs"], det["fvgs"]
 
     n = len(bars)
     last_idx = n - 1
@@ -608,17 +620,9 @@ def compute_events(bars, cfg: Optional[dict] = None) -> list[Event]:
     cfg = {**DEFAULT_CFG, **(cfg or {})}
     bv = bars if isinstance(bars, Bars) else Bars(bars)
     if len(bv) < 30: return []
-    atr = _atr(bv, cfg.get("atr_period", 14))
-    pivots = detect_pivots(bv, cfg)
-    bos    = detect_bos(bv, cfg, pivots)
-    choch  = detect_choch(bv, cfg, bos)
-    sweep  = detect_sweep(bv, cfg, pivots, atr)
-    idm    = detect_idm(bv, cfg, pivots, bos)
-    obs    = detect_ob(bv, cfg, bos, atr)
-    fvgs   = detect_fvg(bv, cfg)
-    mark_ob_mitigation(bv, obs, cfg)
-    mark_fvg_fill(bv, fvgs, cfg)
-    return bos + choch + sweep + idm + obs + fvgs
+    det = _run_all_detectors(bv, cfg)
+    return (det["bos"] + det["choch"] + det["sweep"]
+            + det["idm"] + det["obs"] + det["fvgs"])
 
 
 # ─── Public entry points ────────────────────────────────────────
@@ -630,6 +634,8 @@ _TF_NAME_TO_MT5 = {
 
 # Per-(symbol, tf) cache: {key: (last_bar_epoch, snapshot_dict)}
 _snapshot_cache: dict = {}
+# Cache for compute_and_annotate (annotated snapshots), same keying.
+_annotated_cache: dict = {}
 
 
 def compute_offline(bars, cfg: Optional[dict] = None) -> dict:
@@ -641,6 +647,42 @@ def compute_offline(bars, cfg: Optional[dict] = None) -> dict:
     cfg = {**DEFAULT_CFG, **(cfg or {})}
     bv = bars if isinstance(bars, Bars) else Bars(bars)
     return _build_smc_snapshot(bv, cfg)
+
+
+def compute_and_annotate(bars, cache_key=None, htf_bias: Optional[str] = None,
+                         cfg: Optional[dict] = None) -> dict:
+    """Compute the SMC snapshot from pre-fetched bars AND attach nn_strength
+    quality scores in one call — so callers don't need to know about
+    smc_neural. Cached by the last bar's epoch when `cache_key` is given,
+    which avoids re-running the full detector suite on every poll while the
+    current bar is still forming.
+    """
+    cfg = {**DEFAULT_CFG, **(cfg or {})}
+    if bars is None or len(bars) < 30:
+        return _empty_snapshot()
+    last_epoch = None
+    try:
+        last_epoch = int(bars["time"][-1])      # numpy structured array
+    except Exception:
+        try: last_epoch = int(bars[-1]["time"])  # list of dicts
+        except Exception: last_epoch = None
+    if cache_key is not None and last_epoch is not None:
+        cached = _annotated_cache.get(cache_key)
+        if cached and cached[0] == last_epoch:
+            return cached[1]
+    snap = _build_smc_snapshot(
+        bars if isinstance(bars, Bars) else Bars(bars), cfg)
+    try:
+        from r_native import smc_neural as _nn
+    except Exception:
+        try: import smc_neural as _nn
+        except Exception: _nn = None
+    if _nn is not None:
+        try: _nn.annotate_snapshot(snap, htf_bias=htf_bias)
+        except Exception: pass
+    if cache_key is not None and last_epoch is not None:
+        _annotated_cache[cache_key] = (last_epoch, snap)
+    return snap
 
 
 def compute_smc_snapshot(symbol: str, tf_name: str, bars_back: int = 200,

@@ -703,14 +703,12 @@ def _quick_tf_snapshot(symbol: str, tf, n_bars: int = 60) -> dict:
         # so genome_signal SMC evaluators have data to read. Failures here
         # MUST NOT break the TF snapshot — return empty smc on any error.
         try:
+            # compute_and_annotate caches by last-bar epoch keyed on
+            # (symbol, tf), so repeated polls during the same bar are cheap,
+            # and attaches nn_strength in the same call.
             from r_native import smc_engine as _se
-            out["smc"] = _se.compute_offline(rates)
-            # Attach nn_strength quality scores (heuristic or learned model)
-            try:
-                from r_native import smc_neural as _nn
-                _nn.annotate_snapshot(out["smc"], htf_bias=out.get("bias"))
-            except Exception:
-                pass
+            out["smc"] = _se.compute_and_annotate(
+                rates, cache_key=(symbol, str(tf)), htf_bias=out.get("bias"))
         except Exception:
             out["smc"] = {}
         return out
