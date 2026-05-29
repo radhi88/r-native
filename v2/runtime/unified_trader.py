@@ -55,7 +55,12 @@ from runtime.shared.decision_log import (                        # noqa: E402
 # ──────────────────────────────────────────────────────────
 MAGIC  = MAGICS["claude_genome"]   # 99782 — same as old claude_genome (continuity)
 SYMBOL = "XAUUSDm"                  # PRIMARY — gold, the proven one
-POLL_S = 1.0          # real-time: react within ~1s (was 3.0). لا نفوق أي فرصة
+# Sub-second reactivity. Full 4-symbol structure read is ~25ms, a tick + a
+# positions_get are ~0.03ms — so a 1s sleep meant the son was idle 97% of the
+# time ("يغفي"). Now: a FAST tick protects open money every POLL_S, while the
+# heavier entry scan (structure + ML) runs every ENTRY_EVERY (no over-firing).
+POLL_S      = 0.15    # fast loop: trailing SL / loss-cut reacts within ~150ms
+ENTRY_EVERY = 0.50    # entry scan cadence — structure/ML don't change faster
 
 # ── Multi-symbol: our son now trades the rest of the currencies too ──────────
 # User (2026-05-29): "هل نقدر نطلع زي ولدنا على باقي العملات؟" — نعم.
@@ -644,37 +649,45 @@ def main():
     except Exception as _e:
         print(f"[champion] seeder skipped: {_e}")
 
+    _last_entry_scan = 0.0
     while True:
         try:
-            # 0. Genome — single source of truth, shared across all symbols
-            live = _read_json(LIVE_GENOME) or {}
-            if not live:
-                time.sleep(POLL_S); continue
-            genome_params = live.get("params", {})
-            genome_name = live.get("name", "UNKNOWN")
-            if genome_name != _last_genome_name:
-                print(f"\n[{datetime.now():%H:%M:%S}] 👑 LIVE GENOME = {genome_name}")
-                print(f"  rsi≤{genome_params.get('rsi_max')} P≥{genome_params.get('min_pressure_abs')} "
-                       f"mtf≥{genome_params.get('min_mtf_agreement')} lot {genome_params.get('lot')}")
-                _last_genome_name = genome_name
-
-            # 1. Manage open positions FIRST — every symbol, every magic
+            # ── FAST PATH (every POLL_S ≈150ms) — protect open money instantly.
+            # Trailing SL / breakeven / loss-cut on EVERY position, any symbol/magic.
+            # This is the part that must never "يغفي" on a fast move.
             manage_open_positions()
 
-            # 2. Each symbol gets its OWN genome (own values/genes) if present,
-            #    else falls back to the shared champion. 'كل عمله ولها قيمها الخاصة'.
-            g_held = _global_open_count()
-            for sym in SYMBOLS:
-                try:
-                    sym_params, sym_name = _load_genome_for(sym, live)
-                    if _last_sym_genome.get(sym) != sym_name:
-                        tag = "خاص" if sym_name != genome_name else "مشترك"
-                        print(f"[{datetime.now():%H:%M:%S}] 🧬 {sym} genome = {sym_name} ({tag})")
-                        _last_sym_genome[sym] = sym_name
-                    process_symbol(sym, sym_params, sym_name, g_held)
-                    g_held = _global_open_count()   # refresh after a possible fill
-                except Exception as _e:
-                    print(f"[{sym}] err: {_e}")
+            # ── ENTRY SCAN (every ENTRY_EVERY ≈500ms) — heavier structure + ML.
+            # Structure zones / regime / ML don't change in 150ms, and scanning
+            # entries this often (vs trailing) avoids any risk of double-firing.
+            now = time.monotonic()
+            if now - _last_entry_scan >= ENTRY_EVERY:
+                _last_entry_scan = now
+                # Genome — single source of truth, shared across all symbols
+                live = _read_json(LIVE_GENOME) or {}
+                if live:
+                    genome_params = live.get("params", {})
+                    genome_name = live.get("name", "UNKNOWN")
+                    if genome_name != _last_genome_name:
+                        print(f"\n[{datetime.now():%H:%M:%S}] 👑 LIVE GENOME = {genome_name}")
+                        print(f"  rsi≤{genome_params.get('rsi_max')} P≥{genome_params.get('min_pressure_abs')} "
+                               f"mtf≥{genome_params.get('min_mtf_agreement')} lot {genome_params.get('lot')}")
+                        _last_genome_name = genome_name
+
+                    # Each symbol gets its OWN genome (own values/genes) if present,
+                    # else falls back to the shared champion. 'كل عمله ولها قيمها الخاصة'.
+                    g_held = _global_open_count()
+                    for sym in SYMBOLS:
+                        try:
+                            sym_params, sym_name = _load_genome_for(sym, live)
+                            if _last_sym_genome.get(sym) != sym_name:
+                                tag = "خاص" if sym_name != genome_name else "مشترك"
+                                print(f"[{datetime.now():%H:%M:%S}] 🧬 {sym} genome = {sym_name} ({tag})")
+                                _last_sym_genome[sym] = sym_name
+                            process_symbol(sym, sym_params, sym_name, g_held)
+                            g_held = _global_open_count()   # refresh after a possible fill
+                        except Exception as _e:
+                            print(f"[{sym}] err: {_e}")
 
             time.sleep(POLL_S)
         except KeyboardInterrupt:

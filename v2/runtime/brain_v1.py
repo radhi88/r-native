@@ -68,7 +68,7 @@ SYMBOLS = ["XAUUSDm", "EURUSDm", "GBPUSDm", "USDJPYm"]
 # stay correct per instrument (EURUSD must NOT be rounded to 2 decimals).
 _DIGITS = {"XAUUSDm": 2, "XAGUSDm": 3, "BTCUSDm": 1, "EURUSDm": 5,
            "GBPUSDm": 5, "USDJPYm": 3, "GBPJPYm": 3}
-POLL = 1.0          # real-time snapshots (was 2.0) — لحظي، لا نفوّت فرصة
+POLL = 0.2          # sub-second snapshots — full 4-sym capture ≈25ms, so 0.2s ≈12% duty. حساس جداً، ما يغفي
 MEMORY     = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_memory.jsonl")
 LIVE       = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_live.json")
 DECISIONS  = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_decisions.jsonl")
