@@ -87,7 +87,9 @@ additions only.
 | 4 — Snapshot wiring | ✅ | `brain_server._quick_tf_snapshot` adds `smc` per TF |
 | 5 — SMC lane in HoF | ✅ | `hall_of_fame.get_elites_by_lane`, `lane_summary` |
 | 5 — Lane-aware deploy threshold | ✅ | `continuous_evolution._maybe_auto_deploy` |
-| 6 — Neural SMC scorer | 🔲 | needs training data, deferred |
+| 6 — Neural SMC scorer | ✅ | `smc_neural.py` (heuristic now, learnable model) |
+| 6-wire — nn_strength in snapshot | ✅ | `brain_server` annotates OB/FVG with nn_strength |
+| learning — SMC context recorder | ✅ | `combo_fitness.record_smc_trade` + contexts |
 | 7 — Arabic narrator | ✅ | `agents/smc_narrator.py` (+orchestrator registration) |
 | 8a — Genome rollback | ✅ | `genome_rollback.py` (evaluate + execute) |
 | 8b — Agent governance | ✅ | `agent_governance.py` (singleton policy enforcer) |
