@@ -172,9 +172,15 @@ class CircuitBreaker:
     def _consec_loss_count(self) -> int:
         since = datetime.now(timezone.utc) - timedelta(hours=6)
         deals = mt5.history_deals_get(since, datetime.now(timezone.utc)) or []
+        # Streak acknowledge: when the user manually unfreezes ("خله يتعلم مره
+        # ثانيه"), we record a broker-time cutoff. Losses at/before that cutoff
+        # are forgiven so the symbol gets a clean shot at breaking its streak —
+        # without it, a frozen symbol can never win to clear the 6h-window count.
+        ack = float(self._state.get("streak_ack_ts", 0) or 0)
         exits = sorted([d for d in deals
                         if int(d.magic) == self.magic and d.symbol == self.symbol
-                        and int(d.entry) in (1, 2)],
+                        and int(d.entry) in (1, 2)
+                        and (ack <= 0 or float(d.time) > ack)],
                        key=lambda d: d.time, reverse=True)
         n = 0
         for d in exits:
@@ -183,6 +189,19 @@ class CircuitBreaker:
             else:
                 break
         return n
+
+    def acknowledge_streak(self) -> None:
+        """Forgive the current losing streak and clear any active freeze, so the
+        symbol may trade again immediately. Records a broker-time cutoff; only
+        losses AFTER this moment count toward a new cascade."""
+        self._state = self._load_state()
+        tick = mt5.symbol_info_tick(self.symbol)
+        broker_now = float(tick.time) if tick and tick.time else time.time()
+        self._state["streak_ack_ts"] = broker_now
+        self._state["freeze_until_ts"] = 0
+        self._state["freeze_reason"] = ""
+        self._state["streak_ack_at"] = datetime.now(timezone.utc).isoformat()
+        self._save_state()
 
     def _drawdown_in_window(self, window_sec: int) -> float:
         since = datetime.now(timezone.utc) - timedelta(seconds=window_sec)

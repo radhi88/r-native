@@ -63,11 +63,14 @@ SYMBOL = "XAUUSDm"
 # Multi-symbol: our son now watches more than gold. Gold stays PRIMARY (writes
 # brain_live.json exactly as before — zero regression); each extra symbol writes
 # its own brain_live__<SYM>.json that the trader reads per-symbol. لنطلع على باقي العملات.
-SYMBOLS = ["XAUUSDm", "EURUSDm", "GBPUSDm", "USDJPYm"]
+SYMBOLS = ["XAUUSDm", "EURUSDm", "GBPUSDm", "USDJPYm",
+           "USDCADm", "AUDUSDm", "NZDUSDm", "USDCHFm", "EURJPYm", "XAGUSDm"]
 # Price-unit per "1 pt" and display digits, so gold-tuned rounding/indicators
 # stay correct per instrument (EURUSD must NOT be rounded to 2 decimals).
 _DIGITS = {"XAUUSDm": 2, "XAGUSDm": 3, "BTCUSDm": 1, "EURUSDm": 5,
-           "GBPUSDm": 5, "USDJPYm": 3, "GBPJPYm": 3}
+           "GBPUSDm": 5, "USDJPYm": 3, "GBPJPYm": 3,
+           "USDCADm": 5, "AUDUSDm": 5, "NZDUSDm": 5, "USDCHFm": 5,
+           "EURJPYm": 3}
 POLL = 0.2          # sub-second snapshots — full 4-sym capture ≈25ms, so 0.2s ≈12% duty. حساس جداً، ما يغفي
 MEMORY     = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_memory.jsonl")
 LIVE       = Path(r"C:\Users\Radhi\MT5\r_native_v2\data\brain_live.json")

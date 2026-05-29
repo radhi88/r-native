@@ -67,12 +67,18 @@ ENTRY_EVERY = 0.50    # entry scan cadence — structure/ML don't change faster
 # Gold stays primary & most-trusted (allowed 2 concurrent). FX pairs are newer,
 # so each is capped at 1 concurrent and there's a global cap on our own magic so
 # margin can never blow up the way the magic-0 EA did.
-SYMBOLS = ["XAUUSDm", "EURUSDm", "GBPUSDm", "USDJPYm"]
+SYMBOLS = ["XAUUSDm", "EURUSDm", "GBPUSDm", "USDJPYm",
+           "USDCADm", "AUDUSDm", "NZDUSDm", "USDCHFm", "EURJPYm", "XAGUSDm"]
 # Per-symbol concurrent-position cap (anti-pyramid — THE guard magic-0 lacked).
-MAX_OPEN_BY_SYM = {"XAUUSDm": 2, "EURUSDm": 1, "GBPUSDm": 1, "USDJPYm": 1}
+# Gold proven → 2 concurrent. All FX/silver newer → 1 each.
+MAX_OPEN_BY_SYM = {"XAUUSDm": 2, "EURUSDm": 1, "GBPUSDm": 1, "USDJPYm": 1,
+                   "USDCADm": 1, "AUDUSDm": 1, "NZDUSDm": 1, "USDCHFm": 1,
+                   "EURJPYm": 1, "XAGUSDm": 1}
 MAX_OPEN_DEFAULT = 1
 # Hard ceiling across ALL our son's open positions, every symbol combined.
-GLOBAL_MAX_OPEN = 4
+# 10 symbols now scanned, but only 5 may be open at once — caps margin/risk
+# on the small $50 account while letting diversification breathe.
+GLOBAL_MAX_OPEN = 5
 # Back-compat alias (some code/UI may still reference MAX_OPEN for gold).
 MAX_OPEN = MAX_OPEN_BY_SYM["XAUUSDm"]
 
@@ -356,11 +362,69 @@ def evaluate_genome(snap: dict, genome_params: dict, pt: float = 1.0) -> tuple[s
 
 
 # ──────────────────────────────────────────────────────────
+# Pre-breakout readiness — "يجهّز نفسه للانطلاقة"
+# ──────────────────────────────────────────────────────────
+def detect_armed(snap: dict, genome_params: dict, pt: float = 1.0) -> tuple[bool, str]:
+    """Detect a coil the trader should *prepare* for — NOT a trade.
+
+    Two patterns the user asked to catch ("أي حركات قوية أو تجمعات ضعيفة
+    يجهّز نفسه للانطلاقة"):
+
+      • LOADING — direction already chosen by MTF, pressure CONFIRMS that side
+        and is climbing toward the fire threshold (≥55% of it). A strong move
+        is loading; the moment pressure crosses min_pressure_abs the normal
+        momentum path fires. We surface it early so the system/UI is primed.
+
+      • SQUEEZE — tight accumulation: very low pressure in a RANGE/TRANSITION/
+        CHOP regime with MTF just starting to lean. Energy is building inside a
+        coil; we flag it as "waiting for the break" so a breakout isn't missed.
+
+    Pure visibility/telemetry. Returns (armed, detail). The real FIRE path and
+    every risk gate downstream are completely unchanged — this never sends an
+    order, it only re-labels a NO_SIGNAL tick as ARMED so the readiness shows.
+    """
+    try:
+        min_pressure_abs = genome_params.get("min_pressure_abs", 3) * pt
+        min_mtf = genome_params.get("min_mtf_agreement", 2)
+        if min_pressure_abs <= 0:
+            return (False, "")
+        bias = snap.get("bias", {}) or {}
+        up = sum(1 for v in bias.values() if v == "UP")
+        dn = sum(1 for v in bias.values() if v == "DOWN")
+        pressure = float(snap.get("pressure_10m1", 0) or 0)
+        ap = abs(pressure)
+        reg = snap.get("regime", "?")
+
+        # LOADING — side decided + pressure confirming + nearing threshold
+        if up >= min_mtf or dn >= min_mtf:
+            direction = "BUY" if up >= min_mtf else "SELL"
+            confirms = (direction == "BUY" and pressure > 0) or \
+                       (direction == "SELL" and pressure < 0)
+            if confirms and 0.55 * min_pressure_abs <= ap < min_pressure_abs:
+                pct = ap / min_pressure_abs * 100.0
+                return (True, f"🔫 LOADING {direction} — ضغط {ap:.3g}/"
+                              f"{min_pressure_abs:.3g} ({pct:.0f}%) يجهّز للانطلاق")
+
+        # SQUEEZE — tight accumulation building energy inside a coil
+        if reg in ("TRANSITION", "RANGE", "CHOP") and ap < 0.45 * min_pressure_abs \
+                and (up >= 1 or dn >= 1):
+            lean = "↑" if up > dn else ("↓" if dn > up else "—")
+            return (True, f"🧨 SQUEEZE — تجمّع/انضغاط (ميل {lean} {max(up, dn)}/4، "
+                          f"ضغط {ap:.3g}) ينتظر الكسر")
+
+        return (False, "")
+    except Exception:
+        return (False, "")
+
+
+# ──────────────────────────────────────────────────────────
 # Trailing SL (in-process, only on OUR positions)
 # ──────────────────────────────────────────────────────────
 # Per-symbol "1 pt" in price units, so the XAU-tuned ladder scales to any symbol.
 _PT = {"XAUUSDm": 1.0, "XAGUSDm": 0.10, "BTCUSDm": 100.0, "EURUSDm": 0.0001,
-       "GBPUSDm": 0.0001, "USDJPYm": 0.01, "GBPJPYm": 0.01}
+       "GBPUSDm": 0.0001, "USDJPYm": 0.01, "GBPJPYm": 0.01,
+       "USDCADm": 0.0001, "AUDUSDm": 0.0001, "NZDUSDm": 0.0001,
+       "USDCHFm": 0.0001, "EURJPYm": 0.01}
 
 
 def _ideal_sl(pos, tick) -> tuple[float, str] | None:
@@ -552,7 +616,13 @@ def process_symbol(sym: str, genome_params: dict, genome_name: str,
     # Evaluate genome (pressure/pullback thresholds scaled to this symbol)
     side, confidence, reason = evaluate_genome(snap, genome_params, pt)
     if side is None:
-        _write_son_status("NO_SIGNAL", reason, genome_name, snap, sym=sym)
+        # Not firing — but is it coiling toward a launch? Surface ARMED so the
+        # system/UI is primed for the breakout (LOADING) or watching a SQUEEZE.
+        armed, armed_detail = detect_armed(snap, genome_params, pt)
+        if armed:
+            _write_son_status("ARMED", armed_detail, genome_name, snap, sym=sym)
+        else:
+            _write_son_status("NO_SIGNAL", reason, genome_name, snap, sym=sym)
         return
     if confidence < MIN_CONFIDENCE:
         _write_son_status("LOW_CONF", f"conf {confidence} | {reason}",

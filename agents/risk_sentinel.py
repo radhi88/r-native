@@ -23,6 +23,7 @@ from r_native.agents.base import Agent, emit_insight
 
 
 KILL_SWITCH_PATH = Path(r"C:\Users\Radhi\MT5\data\kill_switch.json")
+PEAK_EQUITY_PATH = Path(r"C:\Users\Radhi\MT5\data\r_native\peak_equity.json")
 SYMBOL_CFG_DIR   = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs")
 STARTING_BALANCE_GUESS = 100.0   # falls back if no record
 
@@ -39,11 +40,42 @@ class RiskSentinel(Agent):
     MAX_CONSECUTIVE_LOSSES  = 5      # 5 in a row → flip kill switch
     MIN_MARGIN_FREE_PCT     = 20.0   # <20% free margin → block new entries
 
+    # If balance has collapsed below this fraction of the remembered peak,
+    # treat it as an account reset/withdrawal (NOT a live drawdown) and
+    # rebaseline the peak to current equity instead of tripping the switch.
+    RESET_DETECT_FRACTION = 0.50
+
     def __init__(self):
         super().__init__()
-        self._peak_equity: float = 0.0
+        self._peak_equity: float = self._load_persisted_peak()
         self._tripped_today: bool = False
         self._last_trip_day: str  = ""
+
+    def _load_persisted_peak(self) -> float:
+        """Seed peak from disk so a process restart doesn't carry a stale
+        in-memory high. Clamped to >=0; 0.0 if unavailable."""
+        try:
+            if PEAK_EQUITY_PATH.exists():
+                d = json.loads(PEAK_EQUITY_PATH.read_text(encoding="utf-8"))
+                # existing file uses key "peak"; accept "peak_equity" too
+                v = d.get("peak", d.get("peak_equity"))
+                return max(0.0, float(v or 0.0))
+        except Exception:
+            pass
+        return 0.0
+
+    def _persist_peak(self, reason: str = ""):
+        try:
+            PEAK_EQUITY_PATH.parent.mkdir(parents=True, exist_ok=True)
+            payload = {"peak": self._peak_equity,
+                       "updated_at": datetime.now(timezone.utc).isoformat()}
+            if reason:
+                payload["rebased_reason"] = reason
+            PEAK_EQUITY_PATH.write_text(
+                json.dumps(payload, ensure_ascii=False, indent=2),
+                encoding="utf-8")
+        except Exception:
+            pass
 
     # ── helpers ──
     def _read_account(self) -> dict | None:
@@ -128,8 +160,25 @@ class RiskSentinel(Agent):
         margin_free = float(account.get("margin_free") or 0)
         margin      = float(account.get("margin") or 0)
 
+        # ── 0. Account-reset / withdrawal self-heal ──
+        # A genuine drawdown shows equity falling while balance holds (open
+        # losers). If BALANCE itself has collapsed far below the remembered
+        # peak, the account was reset or money was withdrawn — the old peak is
+        # stale. Rebaseline to current equity instead of tripping a false alarm.
+        if (self._peak_equity > 0 and balance > 0
+                and balance < self._peak_equity * self.RESET_DETECT_FRACTION):
+            old_peak = self._peak_equity
+            self._peak_equity = equity
+            self._persist_peak()
+            emit_insight(self.name, "INFO",
+                f"↺ peak rebaselined ${old_peak:.2f}→${equity:.2f} "
+                f"(account reset/withdrawal detected — balance ${balance:.2f})",
+                data={"old_peak": old_peak, "new_peak": equity,
+                      "balance": balance})
+
         if equity > self._peak_equity:
             self._peak_equity = equity
+            self._persist_peak()
 
         # ── 1. Account-level drawdown vs peak equity ──
         if self._peak_equity > 0:
