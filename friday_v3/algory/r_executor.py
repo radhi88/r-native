@@ -723,6 +723,32 @@ def reconcile_closed_positions(state: dict, mode: str):
                     _log(state, f"  🏆 HoF: credited ${profit:+.2f} to genome {_dg_id}")
         except Exception as e:
             _log(state, f"  [HoF live tracker err: {e}]")
+        # ── SMC context recorder (Phase learning): per-trade learning so
+        # the breeder can answer "did this OB win because IDM was swept?".
+        # We can only reliably derive exit_via + active SMC genes at close
+        # time; richer fields (entry_in_ob, idm_swept) would need the
+        # snapshot captured at fill — deferred to a future enhancement.
+        try:
+            from r_native.combo_fitness import record_smc_trade
+            _exit_via_map = {
+                "TP":         "atr_tp",
+                "SL":         "sl",
+                "TRAIL_TP":   "trail",
+                "TRAIL_SL":   "trail",
+                "WIN_CLOSE":  "trail",
+                "LOSS_CLOSE": "sl",
+            }
+            _active_genes = ((_sc.get("deployed_genome") or {})
+                             .get("active_genes")) if _dl_genome_id else []
+            _smc_ctx = {"exit_via": _exit_via_map.get(exit_reason)}
+            record_smc_trade(
+                symbol=sym, tf="M5",
+                active_genes=_active_genes or [],
+                smc_context=_smc_ctx,
+                stats={"won": profit > 0, "return_pct": float(profit)},
+            )
+        except Exception as e:
+            _log(state, f"  [combo_fitness smc err: {e}]")
         # ── Decision log: persist trade CLOSE (fail-soft) ──
         try:
             if HAS_DECISION_LOG and _decision_log is not None:

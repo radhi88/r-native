@@ -279,6 +279,30 @@ def run_one_cycle(reason: str = "scheduled") -> dict:
     max_today  = int(cfg.get("max_deploys_per_day", 6))
 
     for sym in cfg.get("symbols") or []:
+        # ── Rollback guard (Phase 8a): before running a new campaign for
+        # this symbol, check whether the currently-deployed genome has
+        # regressed vs its predecessor; if so, revert. Cheap (HoF + 1
+        # config read) and safe — evaluate_post_deploy returns
+        # ok=True/regressed=False on insufficient data.
+        try:
+            from r_native.genome_rollback import (evaluate_post_deploy,
+                                                   execute_rollback)
+            _rb = evaluate_post_deploy(sym, window_trades=10, regression_pct=15.0)
+            if _rb.get("ok") and _rb.get("regressed"):
+                _rb_res = execute_rollback(
+                    sym, reason=(f"WR regression "
+                                 f"{_rb.get('new_wr')}% vs "
+                                 f"{_rb.get('prev_wr')}% "
+                                 f"(gap {_rb.get('gap_pct')}%)"))
+                if _rb_res.get("ok"):
+                    _log(f"   ⏪ rolled back {sym}: "
+                         f"{_rb_res['failed']} -> {_rb_res['restored']}")
+                    cycle_summary["results"].append({
+                        "symbol": sym, "rolled_back": _rb_res,
+                    })
+        except Exception as _rbe:
+            _log(f"   ⚠ rollback check failed for {sym}: {_rbe}")
+
         if cfg.get("deploys_today", 0) >= max_today:
             _log(f"⛔ daily deploy cap reached ({max_today}) — skipping rest")
             cycle_summary["results"].append({
