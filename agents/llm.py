@@ -129,6 +129,19 @@ def ask(prompt: str, system: str = "", preferred_backend: str = "auto",
             "error": f"no LLM backend available (tried {len(tried)})"}
 
 
+def chat_complete(prompt: str, system: str = "", model: str = None,
+                  max_tokens: int = 800, temperature: float = 0.3) -> Optional[str]:
+    """Thin convenience wrapper over ask() that returns plain text or None.
+
+    Several modules (genome_certifier, future tools) expect a simple
+    text-in/text-out call. `max_tokens` is accepted for API compatibility;
+    the underlying backends cap their own output length.
+    """
+    out = ask(prompt=prompt, system=system, preferred_backend="auto",
+              model=model, temperature=temperature)
+    return out.get("text") if out.get("ok") else None
+
+
 def extract_json(text: str) -> Optional[dict]:
     """Extract first JSON object from LLM response. Forgiving."""
     if not text: return None
