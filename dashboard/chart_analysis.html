@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>R Native · تحليل الشارت بالذكاء</title>
+<style>
+:root{
+  --bg-0:#060418; --bg-1:#0d0824; --bg-2:#14092e; --bg-3:#1c1142;
+  --gold-0:#fbbf24; --gold-1:#f59e0b; --gold-2:#b45309;
+  --violet:#8b5cf6; --green:#10b981; --red:#ef4444; --cyan:#22d3ee;
+  --text:#f1f5f9; --muted:#94a3b8; --border:#2d1b69;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(135deg,var(--bg-0),var(--bg-1) 50%,var(--bg-2));
+  color:var(--text);font-family:'Inter','Segoe UI',Tahoma,sans-serif;min-height:100vh;padding:18px}
+.nav{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.nav a{font-size:12px;color:var(--muted);text-decoration:none;padding:6px 10px;border:1px solid var(--border);border-radius:8px}
+.nav a:hover{color:var(--gold-0)}
+h1{font-size:20px;color:var(--gold-0);margin-bottom:4px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+select,button,input{background:var(--bg-3);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;font-family:inherit}
+button{cursor:pointer;border:none;font-weight:600}
+.primary{background:linear-gradient(135deg,var(--gold-1),var(--gold-2));color:#1a1205}
+.violet{background:linear-gradient(135deg,var(--violet),#4c1d95);color:#fff}
+.layout{display:grid;grid-template-columns:1fr 320px;gap:16px}
+@media(max-width:780px){.layout{grid-template-columns:1fr}}
+.panel{background:rgba(28,17,66,.55);border:1px solid var(--border);border-radius:12px;padding:16px;backdrop-filter:blur(8px)}
+.dirbig{font-size:30px;font-weight:800;text-align:center;margin:6px 0}
+.LONG{color:var(--green)} .SHORT{color:var(--red)} .NONE{color:var(--muted)}
+.lvl{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.lvl .k{color:var(--muted)}
+.lvl .entry{color:var(--gold-0)} .lvl .stop{color:var(--red)} .lvl .tp{color:var(--green)}
+.confbar{height:8px;background:var(--bg-3);border-radius:99px;margin:10px 0;overflow:hidden}
+.confbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold-0),var(--green))}
+.rationale{font-size:12px;line-height:1.7;color:var(--text);margin-top:10px}
+.struct{font-size:12px;color:var(--cyan);margin-top:6px}
+.indchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.chip{font-size:10px;padding:3px 7px;border-radius:99px}
+.b{background:rgba(16,185,129,.16);color:var(--green)}
+.s{background:rgba(239,68,68,.16);color:var(--red)}
+.n{background:rgba(148,163,184,.14);color:var(--muted)}
+.ask{margin-top:14px}
+.ask textarea{width:100%;min-height:60px;background:var(--bg-3);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font-family:inherit;font-size:12px}
+.spin{color:var(--cyan);font-size:12px}
+.err{color:var(--red);font-size:12px;margin-top:8px}
+.warn{color:var(--gold-0);font-size:11px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/r/indicators">📊 المؤشرات</a>
+  <a href="/r/strategies">🧠 بناء استراتيجية</a>
+  <a href="/r/analyze">🔍 تحليل الشارت</a>
+  <a href="/r/monitor">📡 المتابعة المباشرة</a>
+</div>
+<h1>🔍 تحليل الشارت بالذكاء</h1>
+<div class="sub">Entry / Stop / T1·T2·T3 / Confidence على أي رمز — مع رسم المستويات على شارت MT5</div>
+
+<div class="bar">
+  <label>الرمز <select id="symbol">
+    <option>XAUUSDm</option><option>XAGUSDm</option><option>BTCUSDm</option>
+    <option>EURUSDm</option><option>GBPUSDm</option></select></label>
+  <label>الفريم <select id="tf">
+    <option value="5m">5m</option><option value="15m" selected>15m</option>
+    <option value="30m">30m</option><option value="1h">1h</option>
+    <option value="4h">4h</option></select></label>
+  <button class="primary" onclick="analyze(false)">🔍 تحليل</button>
+  <button class="violet" onclick="analyze(true)">✏ تحليل + رسم على MT5</button>
+  <span id="status" class="spin"></span>
+</div>
+
+<div class="layout">
+  <div class="panel" id="resultPanel">
+    <div class="dirbig NONE" id="dir">—</div>
+    <div class="confbar"><i id="confbar" style="width:0%"></i></div>
+    <div class="sub" id="confLabel" style="text-align:center"></div>
+    <div class="lvl"><span class="k">دخول</span><span class="entry" id="lvEntry">—</span></div>
+    <div class="lvl"><span class="k">وقف الخسارة</span><span class="stop" id="lvStop">—</span></div>
+    <div class="lvl"><span class="k">الهدف 1</span><span class="tp" id="lvT1">—</span></div>
+    <div class="lvl"><span class="k">الهدف 2</span><span class="tp" id="lvT2">—</span></div>
+    <div class="lvl"><span class="k">الهدف 3</span><span class="tp" id="lvT3">—</span></div>
+    <div class="lvl"><span class="k">R:R</span><span id="lvRR">—</span></div>
+    <div class="struct" id="struct"></div>
+    <div class="rationale" id="rationale"></div>
+    <div class="indchips" id="indchips"></div>
+    <div class="warn" id="warn"></div>
+    <div class="err" id="err"></div>
+  </div>
+  <div class="panel">
+    <h1 style="font-size:15px">💬 اسأل الذكاء عن التحليل</h1>
+    <div class="sub">سؤال متابعة يُرسل نفس السياق</div>
+    <div class="ask">
+      <textarea id="followup" placeholder="مثال: ليش الثقة منخفضة؟ وين أقرب سيولة؟"></textarea>
+      <button class="primary" style="margin-top:8px" onclick="ask()">إرسال</button>
+      <div id="answer" class="rationale"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let LAST=null;
+async function safeFetch(url,opt){try{const r=await fetch(url,opt);return await r.json();}catch(e){return{_err:e.message};}}
+async function analyze(draw){
+  const sym=document.getElementById('symbol').value;
+  const tf=document.getElementById('tf').value;
+  document.getElementById('status').textContent='…يحلّل الذكاء';
+  document.getElementById('err').textContent='';document.getElementById('warn').textContent='';
+  const res=await safeFetch(`/api/r/chart_analysis?symbol=${sym}&tf=${tf}&draw=${draw?1:0}&t=`+Date.now());
+  document.getElementById('status').textContent='';
+  if(res._err){document.getElementById('err').textContent='خطأ: '+res._err;return;}
+  LAST=res;const a=res.analysis||{};
+  const dir=document.getElementById('dir');dir.textContent=a.direction||'NONE';dir.className='dirbig '+(a.direction||'NONE');
+  const c=a.confidence||0;
+  document.getElementById('confbar').style.width=Math.max(2,c)+'%';
+  document.getElementById('confLabel').textContent='الثقة '+c.toFixed(0)+'%';
+  const f=v=>v?(+v).toFixed(2):'—';
+  document.getElementById('lvEntry').textContent=f(a.entry);
+  document.getElementById('lvStop').textContent=f(a.stop);
+  document.getElementById('lvT1').textContent=f((a.targets||[])[0]);
+  document.getElementById('lvT2').textContent=f((a.targets||[])[1]);
+  document.getElementById('lvT3').textContent=f((a.targets||[])[2]);
+  document.getElementById('lvRR').textContent=a.rr?('1:'+a.rr.toFixed(1)):'—';
+  document.getElementById('struct').textContent=a.structure?('🏛 '+a.structure):'';
+  document.getElementById('rationale').textContent=a.rationale||'';
+  const chips=document.getElementById('indchips');chips.innerHTML='';
+  Object.entries(res.indicators||{}).forEach(([k,v])=>{
+    const cls=v==='BULLISH'?'b':v==='BEARISH'?'s':'n';
+    chips.appendChild(Object.assign(document.createElement('span'),{className:'chip '+cls,textContent:k}));});
+  if(res.fallback) document.getElementById('warn').textContent='⚠ الذكاء غير متاح — قراءة بنيوية فقط ('+(res.reason||'')+')';
+  if(draw&&res.drawings) document.getElementById('warn').textContent+=' ✏ رُسمت '+res.drawings.length+' عناصر على شارت MT5';
+  if(res.draw_error) document.getElementById('err').textContent='تعذّر الرسم: '+res.draw_error;
+}
+async function ask(){
+  const q=document.getElementById('followup').value.trim();
+  if(!q||!LAST){document.getElementById('answer').textContent='حلّل الشارت أولاً ثم اسأل.';return;}
+  // Follow-up is rendered client-side from the analysis context (no extra endpoint needed)
+  const a=LAST.analysis||{};
+  document.getElementById('answer').textContent=
+    `السياق: ${a.direction} بثقة ${(a.confidence||0).toFixed(0)}%. ${a.structure||''} ${a.rationale||''}\n\n`
+    +`(للأسئلة الحرّة المتقدّمة فعّل خادم الذكاء؛ هنا نعرض ملخّص التحليل الحالي.)`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>R Native · المتابعة المباشرة وسجل القرارات</title>
+<style>
+:root{
+  --bg-0:#060418; --bg-1:#0d0824; --bg-2:#14092e; --bg-3:#1c1142;
+  --gold-0:#fbbf24; --gold-1:#f59e0b; --gold-2:#b45309;
+  --violet:#8b5cf6; --green:#10b981; --red:#ef4444; --cyan:#22d3ee;
+  --text:#f1f5f9; --muted:#94a3b8; --border:#2d1b69;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(135deg,var(--bg-0),var(--bg-1) 50%,var(--bg-2));
+  color:var(--text);font-family:'Inter','Segoe UI',Tahoma,sans-serif;min-height:100vh;padding:18px}
+.nav{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.nav a{font-size:12px;color:var(--muted);text-decoration:none;padding:6px 10px;border:1px solid var(--border);border-radius:8px}
+.nav a:hover{color:var(--gold-0)}
+h1{font-size:20px;color:var(--gold-0);margin-bottom:4px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:16px}
+@media(max-width:780px){.layout{grid-template-columns:1fr}}
+.panel{background:rgba(28,17,66,.55);border:1px solid var(--border);border-radius:12px;padding:14px;backdrop-filter:blur(8px)}
+.strat{border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;font-size:12px}
+.strat .name{font-weight:700;font-size:13px}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px}
+.ACTIVE{background:rgba(16,185,129,.18);color:var(--green)}
+.PAUSED{background:rgba(251,191,36,.18);color:var(--gold-0)}
+.STOPPED{background:rgba(239,68,68,.18);color:var(--red)}
+.strat .ctrls{display:flex;gap:6px;margin-top:8px}
+button{cursor:pointer;border:none;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:600;font-family:inherit}
+.primary{background:linear-gradient(135deg,var(--gold-1),var(--gold-2));color:#1a1205}
+.ghost{background:var(--bg-3);color:var(--text);border:1px solid var(--border)}
+.feed{font-family:'Consolas',monospace;font-size:12px;max-height:70vh;overflow:auto}
+.line{padding:4px 6px;border-bottom:1px solid rgba(45,27,105,.4);display:flex;gap:8px}
+.line .ts{color:var(--muted);flex-shrink:0}
+.line .tag{color:var(--violet);flex-shrink:0}
+.line.ok .txt{color:var(--green)}
+.line.warn .txt{color:var(--gold-0)}
+.line.err .txt{color:var(--red)}
+.line.info .txt{color:var(--text)}
+.empty{color:var(--muted);text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/r/indicators">📊 المؤشرات</a>
+  <a href="/r/strategies">🧠 بناء استراتيجية</a>
+  <a href="/r/analyze">🔍 تحليل الشارت</a>
+  <a href="/r/monitor">📡 المتابعة المباشرة</a>
+</div>
+<h1>📡 المتابعة المباشرة وسجل القرارات</h1>
+<div class="sub">تقييم الاستراتيجيات النشطة + بثّ القرارات (لا تنفيذ حقيقي بدون تأكيد/ديمو)</div>
+
+<div class="layout">
+  <div>
+    <div class="panel">
+      <h1 style="font-size:14px">الاستراتيجيات</h1>
+      <div id="strats"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h1 style="font-size:14px">🧾 سجل القرارات الحيّ</h1>
+    <div class="sub" id="feedStatus"></div>
+    <div class="feed" id="feed"><div class="empty">لا قرارات بعد — فعّل استراتيجية واضغط «تقييم الآن»</div></div>
+  </div>
+</div>
+
+<script>
+async function safeFetch(url,opt){try{const r=await fetch(url,opt);return await r.json();}catch(e){return{_err:e.message};}}
+
+async function loadStrats(){
+  const res=await safeFetch('/api/r/strategy/list?t='+Date.now());
+  const box=document.getElementById('strats');box.innerHTML='';
+  if(!(res.strategies||[]).length){box.innerHTML='<div class="empty">لا استراتيجيات — أنشئ واحدة من «بناء استراتيجية»</div>';return;}
+  res.strategies.forEach(s=>{
+    const d=document.createElement('div');d.className='strat';
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="name">${s.name}</span><span class="badge ${s.status}">${s.status}</span></div>
+      <div class="sub" style="margin:4px 0">${(s.pairs||[]).join(', ')||'بدون أزواج'} · ${s.timeframe} · ${s.methodology}</div>
+      <div class="ctrls">
+        ${s.status==='ACTIVE'
+          ?`<button class="ghost" onclick="setStatus('${s.id}','PAUSED')">⏸ إيقاف</button>`
+          :`<button class="primary" onclick="setStatus('${s.id}','ACTIVE')">▶ تفعيل</button>`}
+        <button class="ghost" onclick="evaluateNow('${s.id}')">⚡ تقييم الآن</button>
+      </div>`;
+    box.appendChild(d);});
+}
+async function setStatus(id,status){
+  await safeFetch('/api/r/strategy/'+id+'/status',{method:'POST',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+  loadStrats();
+}
+async function evaluateNow(id){
+  document.getElementById('feedStatus').textContent='…يقيّم';
+  const res=await safeFetch('/api/r/strategy/'+id+'/evaluate',{method:'POST',
+    headers:{'Content-Type':'application/json'},body:'{}'});
+  document.getElementById('feedStatus').textContent=res.ok?('أُضيفت '+res.emitted+' أسطر'):('خطأ: '+(res.reason||res._err));
+  loadFeed();
+}
+async function loadFeed(){
+  const res=await safeFetch('/api/r/strategy/decisions?n=120&t='+Date.now());
+  const feed=document.getElementById('feed');
+  if(!(res.logs||[]).length){feed.innerHTML='<div class="empty">لا قرارات بعد</div>';return;}
+  feed.innerHTML='';
+  res.logs.slice().reverse().forEach(l=>{
+    const t=new Date(l.ts).toLocaleTimeString('ar');
+    const d=document.createElement('div');d.className='line '+(l.level||'info');
+    d.innerHTML=`<span class="ts">${t}</span><span class="tag">[${l.tag}]</span><span class="txt">${l.text}</span>`;
+    feed.appendChild(d);});
+}
+loadStrats();loadFeed();
+setInterval(loadFeed,5000);
+setInterval(loadStrats,15000);
+</script>
+</body>
+</html>

@@ -3017,6 +3017,168 @@ def api_r_genomes_active():
     return jsonify({"ok": True, "count": len(out), "symbols": out})
 
 
+# ── Pipflow: Prompt-Trading / dashboards / chart-AI / monitor ──────────────────
+# Additive endpoints. All wrapped so a missing dep never 500s the whole server.
+
+@app.route("/api/r/indicators")
+def api_r_indicators():
+    """Live indicator panel for a symbol/timeframe (Feature 2)."""
+    symbol = request.args.get("symbol", "XAUUSDm")
+    tf     = request.args.get("tf", "15m")
+    try:
+        from r_native.live_indicators import compute_indicator_panel
+        return jsonify(compute_indicator_panel(symbol, tf))
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/performance")
+def api_r_performance():
+    """Live performance summary from MT5 deal history (Feature 2)."""
+    magic = request.args.get("magic")
+    symbol = request.args.get("symbol")
+    hours = int(request.args.get("hours", 168))
+    try:
+        from r_native.strategy_performance import live_performance, R_MAGIC
+        m = int(magic) if magic not in (None, "", "all") else (None if magic == "all" else R_MAGIC)
+        return jsonify(live_performance(magic=m, since_hours=hours, symbol=symbol))
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/strategy/polish", methods=["POST"])
+def api_r_strategy_polish():
+    """Claude Call A — natural language -> structured Strategy (Feature 1)."""
+    try:
+        body = request.get_json(force=True, silent=True) or {}
+        from r_native.strategy_builder import polish_strategy
+        return jsonify(polish_strategy(
+            body.get("rawPrompt", ""),
+            name_hint=body.get("name", ""),
+            pairs_hint=body.get("pairs") or [],
+            timeframe_hint=body.get("timeframe", "15m"),
+        ))
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/strategy/list")
+def api_r_strategy_list():
+    try:
+        from r_native.strategy_store import list_strategies
+        return jsonify({"ok": True, "strategies": list_strategies()})
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/strategy/create", methods=["POST"])
+def api_r_strategy_create():
+    try:
+        body = request.get_json(force=True, silent=True) or {}
+        from r_native.strategy_types import Strategy
+        from r_native.strategy_store import save_strategy
+        strat = Strategy.from_dict(body.get("strategy") or body)
+        return jsonify({"ok": True, "strategy": save_strategy(strat)})
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/strategy/<sid>/status", methods=["POST"])
+def api_r_strategy_status(sid):
+    try:
+        body = request.get_json(force=True, silent=True) or {}
+        from r_native.strategy_store import set_status
+        res = set_status(sid, body.get("status", "PAUSED"))
+        return jsonify({"ok": bool(res), "strategy": res})
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/strategy/<sid>/delete", methods=["POST"])
+def api_r_strategy_delete(sid):
+    try:
+        from r_native.strategy_store import delete_strategy
+        return jsonify({"ok": delete_strategy(sid)})
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/chart_analysis")
+def api_r_chart_analysis():
+    """Claude Call B — analyze a chart, optionally draw on MT5 (Feature 3)."""
+    symbol = request.args.get("symbol", "XAUUSDm")
+    tf     = request.args.get("tf", "15m")
+    draw   = request.args.get("draw", "0") in ("1", "true", "yes")
+    try:
+        from r_native import chart_analysis as ca
+        fn = ca.analyze_and_draw if draw else ca.analyze_chart
+        return jsonify(fn(symbol, tf))
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/strategy/decisions")
+def api_r_strategy_decisions():
+    """Live decision-log feed for the monitor (Feature 4)."""
+    n   = int(request.args.get("n", 100))
+    tag = request.args.get("tag")
+    try:
+        from r_native.strategy_store import recent_logs
+        return jsonify({"ok": True, "logs": recent_logs(n, tag)})
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+@app.route("/api/r/strategy/<sid>/evaluate", methods=["POST"])
+def api_r_strategy_evaluate(sid):
+    """Run one evaluation pass for a strategy now (Feature 4)."""
+    try:
+        from r_native.strategy_store import load_strategy
+        from r_native.strategy_monitor import evaluate_strategy_once
+        strat = load_strategy(sid)
+        if not strat:
+            return jsonify({"ok": False, "reason": "strategy not found"})
+        logs = evaluate_strategy_once(strat)
+        return jsonify({"ok": True, "emitted": len(logs), "logs": logs})
+    except Exception as e:
+        return jsonify({"ok": False, "reason": str(e)})
+
+
+def _serve_dashboard(filename: str):
+    """Serve a dashboard/<filename> HTML file (shared helper for Pipflow pages)."""
+    from pathlib import Path as _P
+    for base in (DASHBOARD, _P(__file__).resolve().parent / "dashboard"):
+        try:
+            fp = _P(base) / filename
+            if fp.exists():
+                return Response(fp.read_text(encoding="utf-8"),
+                                mimetype="text/html")
+        except Exception:
+            continue
+    return Response(f"<h1>{filename} not found</h1>", status=404,
+                    mimetype="text/html")
+
+
+@app.route("/r/strategies")
+def page_strategies():
+    return _serve_dashboard("strategy_builder.html")
+
+
+@app.route("/r/indicators")
+def page_indicators():
+    return _serve_dashboard("indicators.html")
+
+
+@app.route("/r/monitor")
+def page_monitor():
+    return _serve_dashboard("monitor.html")
+
+
+@app.route("/r/analyze")
+def page_analyze():
+    return _serve_dashboard("chart_analysis.html")
+
+
 # ── Main ───────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
