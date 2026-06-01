@@ -224,17 +224,33 @@ def render(bars: list, result: dict, symbol: str, out_path: Path,
 
 
 # ─── CLI ────────────────────────────────────────────────────────
+def _load_bars_from_json(path: Path) -> tuple[str, list, dict]:
+    """Load bars exported by tools/export_mt5_bars.py."""
+    import json
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    return payload["symbol"], payload["bars"], payload
+
+
 def main():
     ap = argparse.ArgumentParser(description="Stochastic-Reversion backtest on REAL MT5 gold M3 data")
-    ap.add_argument("--symbol",  default="XAUUSDm", help="Gold symbol on your broker")
+    ap.add_argument("--symbol",  default="XAUUSDm", help="Gold symbol on your broker (live mode)")
     ap.add_argument("--bars",    type=int, default=4000, help="How many M3 bars to backtest")
     ap.add_argument("--use-sl",  type=int, default=1,    help="1 = ATR SL, 0 = no SL (screenshot mode)")
     ap.add_argument("--sl-mult", type=float, default=2.5, help="ATR x N for SL distance")
     ap.add_argument("--out",     default="stoch_rev_real.png", help="Output PNG path")
+    ap.add_argument("--json",    default=None,
+                    help="Load bars from a JSON exported by tools/export_mt5_bars.py "
+                         "(works in Linux/cloud without MT5)")
     args = ap.parse_args()
 
-    print(f"Fetching {args.bars} M3 bars of {args.symbol} from MT5...")
-    sym, bars = fetch_mt5_bars(args.symbol, args.bars)
+    if args.json:
+        sym, bars, payload = _load_bars_from_json(Path(args.json))
+        print(f"Loaded {len(bars)} M3 bars of {sym} from {args.json}")
+        print(f"  broker:     {payload.get('broker', '?')} ({payload.get('account_ccy', '?')})")
+        print(f"  exported:   {payload.get('fetched_at', '?')}")
+    else:
+        print(f"Fetching {args.bars} M3 bars of {args.symbol} from MT5...")
+        sym, bars = fetch_mt5_bars(args.symbol, args.bars)
     days = (bars[-1]["time"] - bars[0]["time"]) / 86400
     print(f"  got {len(bars)} M3 bars ≈ {days:.1f} days   "
           f"first={datetime.fromtimestamp(bars[0]['time'])}   "
