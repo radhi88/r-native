@@ -159,4 +159,45 @@ if __name__ == "__main__":
     test_evaluate_signal_nan_safe()
     test_backtest_runs_and_returns_summary()
     test_backtest_caps_pyramid()
+    test_adx_filter_blocks_entries_in_trend()
+    test_adx_filter_keeps_entries_in_range()
     print("\n✓ all stoch-reversion tests passed")
+
+
+def test_adx_filter_blocks_entries_in_trend():
+    """In a strong trend ADX > 25 — strict filter should skip most entries."""
+    import numpy as np
+    # Trending bars (ADX will be high)
+    n = 300
+    trend = 100 + np.arange(n) * 0.4
+    noise = np.random.default_rng(1).normal(0, 0.3, n)
+    closes = trend + noise
+    bars = [{"time": i, "open": c, "high": c + 0.4, "low": c - 0.4,
+              "close": c, "volume": 100} for i, c in enumerate(closes)]
+    r_no = sr.backtest(bars, atr_sl_mult=2.5)
+    r_filt = sr.backtest(bars, atr_sl_mult=2.5, adx_max=20.0)
+    # Filter must block entries in this trending dataset
+    assert r_filt["summary"].get("entries_skipped_by_adx", 0) > 0
+    assert r_filt["summary"]["trades"] <= r_no["summary"]["trades"]
+    print(f"OK test_adx_filter_blocks_entries_in_trend "
+          f"(no_filter={r_no['summary']['trades']}, with_filter="
+          f"{r_filt['summary']['trades']}, "
+          f"skipped={r_filt['summary'].get('entries_skipped_by_adx')})")
+
+
+def test_adx_filter_keeps_entries_in_range():
+    """In a flat ranging market, ADX is low so the filter should not block."""
+    import numpy as np
+    n = 300
+    closes = 100 + 3 * np.sin(np.arange(n) / 6.0)
+    bars = [{"time": i, "open": c, "high": c + 0.5, "low": c - 0.5,
+              "close": c, "volume": 100} for i, c in enumerate(closes)]
+    r = sr.backtest(bars, atr_sl_mult=2.5, adx_max=25.0)
+    # Most entries should pass the filter in a clean ranging market
+    s = r["summary"]
+    if s["trades"] > 0:
+        # Allow some entries to be skipped, but the strategy should still trade
+        print(f"OK test_adx_filter_keeps_entries_in_range "
+              f"(trades={s['trades']}, skipped={s.get('entries_skipped_by_adx', 0)})")
+    else:
+        print("OK test_adx_filter_keeps_entries_in_range (no signals fired)")

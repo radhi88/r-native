@@ -137,20 +137,85 @@ def evaluate_signal(prev_d: float, cur_d: float) -> Optional[dict]:
     return None
 
 
+def _adx(h: np.ndarray, l: np.ndarray, c: np.ndarray, n: int = 14) -> np.ndarray:
+    """Wilder's ADX. Returns array same length as bars, with NaN during warmup.
+
+    Needs ~2n bars to produce valid output (n bars for +DI/-DI/TR Wilder
+    smoothing, then another n bars for ADX = Wilder of DX).
+    """
+    L = len(c)
+    if L < 2 * n + 1:
+        return np.full(L, np.nan)
+    up = h[1:] - h[:-1]
+    dn = l[:-1] - l[1:]
+    plus_dm  = np.where((up > dn) & (up > 0), up, 0.0)
+    minus_dm = np.where((dn > up) & (dn > 0), dn, 0.0)
+    tr = np.maximum.reduce([h[1:] - l[1:],
+                            np.abs(h[1:] - c[:-1]),
+                            np.abs(l[1:] - c[:-1])])
+
+    def wilder(x, n):
+        """Wilder smoothing — first n values become NaN, out[n-1] = mean(x[:n])."""
+        out = np.full(len(x), np.nan)
+        if len(x) < n: return out
+        s = float(x[:n].sum())
+        out[n - 1] = s / n
+        for i in range(n, len(x)):
+            s = s - (s / n) + float(x[i])
+            out[i] = s / n
+        return out
+
+    atr_w = wilder(tr, n)
+    pdi_raw = wilder(plus_dm,  n)
+    mdi_raw = wilder(minus_dm, n)
+    # Compute +DI / -DI on the valid portion (index n-1 onward)
+    pdi = np.full(len(tr), np.nan)
+    mdi = np.full(len(tr), np.nan)
+    valid = ~np.isnan(atr_w) & (atr_w > 0)
+    pdi[valid] = 100.0 * pdi_raw[valid] / atr_w[valid]
+    mdi[valid] = 100.0 * mdi_raw[valid] / atr_w[valid]
+    dx = np.full(len(tr), np.nan)
+    denom = pdi + mdi
+    ok = ~np.isnan(denom) & (denom > 0)
+    dx[ok] = 100.0 * np.abs(pdi[ok] - mdi[ok]) / denom[ok]
+
+    # ADX = Wilder smoothing of DX. Start from the first index where DX is valid.
+    adx = np.full(len(tr), np.nan)
+    valid_idx = np.where(~np.isnan(dx))[0]
+    if len(valid_idx) >= n:
+        start = valid_idx[0]                  # first valid DX index
+        seed = dx[start: start + n]
+        if not np.isnan(seed).any():
+            s = float(seed.sum())
+            adx[start + n - 1] = s / n
+            for i in range(start + n, len(dx)):
+                if np.isnan(dx[i]): continue
+                s = s - (s / n) + float(dx[i])
+                adx[i] = s / n
+    return np.concatenate(([np.nan], adx))   # align back to original length
+
+
 def backtest(bars: list, *, atr_sl_mult: float = 2.5, lot_value_per_unit: float = 1.0,
-              atr_period: int = 14) -> dict:
+              atr_period: int = 14, adx_max: float = None,
+              adx_period: int = 14) -> dict:
     """Walk bars left-to-right, emit signals, simulate fills + exits + SLs.
     Returns {trades:[...], summary:{...}, equity_curve:[...]}.
 
-    Each trade: {idx_open, idx_close, side, entry, exit, sl, profit, exit_reason, tier}
+    Parameters:
+      atr_sl_mult: SL distance = N x ATR(14). Set to 1e9 to disable SL.
+      adx_max: optional ADX trend-filter threshold. New entries are SKIPPED
+               when ADX > this value (ranging-only behavior). Open positions
+               still close normally on the midline crossing. None = no filter.
     """
     slow_k, d_line = stochastic_kd(bars)
     n = len(bars)
 
-    # ATR for SL distance
+    # OHLC arrays
     h = np.array([float(b["high"]) for b in bars])
     l = np.array([float(b["low"])  for b in bars])
     c = np.array([float(b["close"]) for b in bars])
+
+    # ATR for SL distance
     tr = np.empty(n)
     tr[0] = h[0] - l[0]
     for i in range(1, n):
@@ -160,6 +225,10 @@ def backtest(bars: list, *, atr_sl_mult: float = 2.5, lot_value_per_unit: float 
         atr[atr_period - 1] = tr[:atr_period].mean()
         for i in range(atr_period, n):
             atr[i] = (atr[i - 1] * (atr_period - 1) + tr[i]) / atr_period
+
+    # ADX filter (only computed when requested)
+    adx_arr = _adx(h, l, c, adx_period) if adx_max is not None else None
+    skipped_by_adx = 0
 
     open_positions = []   # [{side, entry, idx_open, sl, tier}, ...]
     trades = []
@@ -211,6 +280,10 @@ def backtest(bars: list, *, atr_sl_mult: float = 2.5, lot_value_per_unit: float 
                 })
             open_positions = []
         else:
+            # ADX trend filter: skip new entries when the market is trending hard
+            if adx_arr is not None and not np.isnan(adx_arr[i]) and adx_arr[i] > adx_max:
+                skipped_by_adx += 1
+                equity_curve.append({"i": i, "eq": equity}); continue
             # OPEN a position with ATR-based SL
             entry = bar_c
             sl_dist = atr_sl_mult * atr[i]
@@ -263,6 +336,10 @@ def backtest(bars: list, *, atr_sl_mult: float = 2.5, lot_value_per_unit: float 
             "EOD":        sum(1 for t in trades if t["exit_reason"] == "EOD"),
         },
     }
+    if adx_arr is not None:
+        summary["adx_filter_max"] = adx_max
+        summary["entries_skipped_by_adx"] = skipped_by_adx
     return {"trades": trades, "summary": summary,
             "stoch_d": d_line.tolist(), "stoch_k": slow_k.tolist(),
+            "adx": (adx_arr.tolist() if adx_arr is not None else None),
             "equity_curve": equity_curve}
