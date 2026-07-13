@@ -482,19 +482,25 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
 
     # News blackout
     soonest_high = None
-    for ev in news_events:
-        try:
-            from friday_v3.core.news_straddle import parse_event_time
-            t = parse_event_time(ev)
-            if t and ev.get("impact") == "High":
-                mins = (t - now).total_seconds() / 60
-                if -NEWS_BLACKOUT_MIN <= mins <= NEWS_BLACKOUT_MIN:
-                    soonest_high = (mins, ev.get("title",""))
-                    break
-        except Exception: continue
+    try:
+        from friday_v3.core.news_straddle import parse_event_time
+    except Exception:
+        parse_event_time = None
+    if parse_event_time is not None:
+        for ev in news_events:
+            try:
+                t = parse_event_time(ev)
+                if t and ev.get("impact") == "High":
+                    mins = (t - now).total_seconds() / 60
+                    if -NEWS_BLACKOUT_MIN <= mins <= NEWS_BLACKOUT_MIN:
+                        soonest_high = (mins, ev.get("title",""))
+                        break
+            except Exception: continue
     add("not_in_news_blackout",
         soonest_high is None,
-        f"clear" if soonest_high is None
+        ("clear" if parse_event_time is not None
+         else "news parser unavailable — blackout check SKIPPED")
+        if soonest_high is None
         else f"{soonest_high[1]} in {soonest_high[0]:.0f} min")
 
     # ── B: ALGORY WISDOM GATES (symbol-aware) ──

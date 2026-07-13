@@ -110,6 +110,12 @@ def start_all() -> dict:
         if svc in already:
             skipped.append(svc)
             continue
+        if not (R_NATIVE_V2 / "runtime" / f"{svc}.py").exists():
+            # Popen would "succeed" and the child would die instantly with
+            # ModuleNotFoundError buried in the log — surface it here instead.
+            failed.append((svc, "module file missing: runtime/" + svc + ".py"))
+            print(f"[v2_stack] SKIP {svc}: runtime/{svc}.py not found", flush=True)
+            continue
         try:
             logf = open(LOG_DIR / f"{svc}.log", "a", encoding="utf-8")
             p = subprocess.Popen(
