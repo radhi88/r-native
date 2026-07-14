@@ -903,18 +903,23 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
         _mscore = _mx.get("score")
         _mdir = _mx.get("direction")
         _malign = float(_mx.get("trend_align") or 0)
-        if side and _mdir and _mscore is not None:
-            _oppose = (side == "BUY" and _mdir == "BEAR") or (side == "SELL" and _mdir == "BULL")
-            _agree = (side == "BUY" and _mdir == "BULL") or (side == "SELL" and _mdir == "BEAR")
-            _strong = (_mscore <= 32 or _mscore >= 68)
-            if _oppose and _strong and _malign >= 0.66:
-                _matrix_veto = True
-                _matrix_note = (f"confluence {_mscore}% {_mdir} strongly opposes {side} "
-                                f"(align {int(_malign*100)}%) → WAIT")
-            elif _agree:
-                _matrix_note = f"confluence {_mscore}% {_mdir} agrees with {side}"
+        if _mdir and _mscore is not None:
+            # matrix IS present — surface the reading even when there is no trade
+            # side yet (verdict WAIT), so the note reflects live data not "no data".
+            if side:
+                _oppose = (side == "BUY" and _mdir == "BEAR") or (side == "SELL" and _mdir == "BULL")
+                _agree = (side == "BUY" and _mdir == "BULL") or (side == "SELL" and _mdir == "BEAR")
+                _strong = (_mscore <= 32 or _mscore >= 68)
+                if _oppose and _strong and _malign >= 0.66:
+                    _matrix_veto = True
+                    _matrix_note = (f"confluence {_mscore}% {_mdir} strongly opposes {side} "
+                                    f"(align {int(_malign*100)}%) → WAIT")
+                elif _agree:
+                    _matrix_note = f"confluence {_mscore}% {_mdir} agrees with {side}"
+                else:
+                    _matrix_note = f"confluence {_mscore}% {_mdir} (mild/neutral vs {side})"
             else:
-                _matrix_note = f"confluence {_mscore}% {_mdir} (mild/neutral vs {side})"
+                _matrix_note = f"confluence {_mscore}% {_mdir} (align {int(_malign*100)}%) — advisory, no trade side yet"
     except Exception as _mxe:
         _matrix_note = f"matrix skipped ({_mxe})"
     add("matrix_confluence", not _matrix_veto, _matrix_note, weight="SOFT")

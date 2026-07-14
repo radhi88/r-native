@@ -486,6 +486,17 @@ def manage_trailing(state: dict, mode: str):
 def _send_order(symbol: str, side: str, lot: float, sl: float, tp: float,
                 comment: str) -> tuple[bool, dict]:
     """Send a market order on ANY symbol. Returns (ok, raw_result_dict)."""
+    # 🛡 DEMO-GUARD (توحيد #1 hardening): the project is DEMO-only. Refuse REAL
+    # orders unless the account is confirmed demo (server name Trial/Demo). FAIL-
+    # CLOSED: if the account can't be verified, skip the order (safer than risking
+    # real money). See reference_exness_demo_detection (Trial ⇒ demo).
+    try:
+        _acc = mt5.account_info()
+        _srv = ((getattr(_acc, "server", "") or "") if _acc else "").lower()
+        if not ("trial" in _srv or "demo" in _srv):
+            return False, {"reason": f"DEMO-GUARD: refusing real order on non-demo account (server={_srv or 'unknown'})"}
+    except Exception as _dg:
+        return False, {"reason": f"DEMO-GUARD: account unverifiable, order skipped ({_dg})"}
     if not _ensure_symbol_ready(symbol):
         return False, {"reason": f"symbol_select failed: {symbol}"}
     sym = mt5.symbol_info(symbol)

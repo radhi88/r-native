@@ -2453,14 +2453,43 @@ def api_r_trade_gate():
                 mtf_data[label] = _quick_tf_snapshot(target_symbol, tf, 60)
         snap["multi_tf"] = {"tfs": mtf_data}
         # Indicator-matrix confluence (21×6) — advisory breadth-of-agreement fed
-        # into the gate as a TIGHTEN-ONLY counter-trend veto. Reuses the cached
-        # /api/r/indicator_matrix (30s). Fail-open: any error → no matrix key.
+        # into the gate as a TIGHTEN-ONLY counter-trend veto. Read DIRECTLY from the
+        # shared _IND_MATRIX_CACHE (warmed by /api/r/indicator_matrix + the UI's 30s
+        # poll). A nested app.test_client() inside this request raised and skipped the
+        # veto — the direct cache read is reliable. Stale-ok ≤5min (confluence is
+        # slow-moving); if cold, compute once inline. Fail-open: no matrix → no veto.
         try:
-            with app.test_client() as tc:
-                _mr = tc.get(f"/api/r/indicator_matrix?symbol={target_symbol}")
-                _mj = _mr.get_json() if _mr.status_code == 200 else {}
-            if _mj.get("ok"):
-                snap["matrix"] = (_mj.get("matrix") or {}).get("aggregate") or {}
+            _agg = None
+            _c = _IND_MATRIX_CACHE.get(target_symbol)
+            if _c and (time.time() - _c.get("ts", 0)) <= 300:
+                _agg = ((_c.get("data") or {}).get("matrix") or {}).get("aggregate")
+            if _agg is None and HAS_MT5:
+                # cold cache → compute once inline (bars fetched here, cached for reuse)
+                try:
+                    from friday_v3.algory import indicator_matrix as _im2
+                    _tfm = {"M5": mt5.TIMEFRAME_M5, "M15": mt5.TIMEFRAME_M15,
+                            "H1": mt5.TIMEFRAME_H1, "H4": mt5.TIMEFRAME_H4,
+                            "D1": mt5.TIMEFRAME_D1, "W1": mt5.TIMEFRAME_W1}
+                    _bt = {}
+                    mt5.symbol_select(target_symbol, True)
+                    for _lbl, _tf in _tfm.items():
+                        _r = mt5.copy_rates_from_pos(target_symbol, _tf, 0, 300)
+                        if _r is not None and len(_r) >= 30:
+                            _bt[_lbl] = {"o": [float(x["open"]) for x in _r],
+                                         "h": [float(x["high"]) for x in _r],
+                                         "l": [float(x["low"]) for x in _r],
+                                         "c": [float(x["close"]) for x in _r],
+                                         "v": [float(x["tick_volume"]) for x in _r]}
+                    if _bt:
+                        _mx = _im2.build_matrix(_bt)
+                        _agg = (_mx or {}).get("aggregate")
+                        _IND_MATRIX_CACHE[target_symbol] = {
+                            "ts": time.time(),
+                            "data": {"ok": True, "symbol": target_symbol, "matrix": _mx}}
+                except Exception:
+                    pass
+            if _agg:
+                snap["matrix"] = _agg
         except Exception:
             pass
         # Chart levels for the TARGET symbol
