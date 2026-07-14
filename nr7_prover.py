@@ -7,12 +7,12 @@ Edge (DEEP_EDGE_HUNT.md): NR7 volatility-expansion breakout, USTECm M15.
     First cross wins; if a gap would trigger both -> skip the whipsaw.
   * SL = 1.0 x ATR14 (= 1R, hold to EXACTLY 1 ATR — never widen). TP = 3R.
   * Spread veto: skip if live spread > 9 index points.
-  * ONE position at a time. DEMO ONLY. magic 20260715.
+  * ONE position at a time. DEMO ONLY. magic 111111.
 
 This is NOT a live edge yet — it is on FORWARD-PAPER trial. Promotion gate
 (DEEP_EDGE_HUNT.md §3): reproduce expR >= +0.15R over >= 100 forward trades AND
 DD <= -25R. Kill on spread breach or forward expR < 0 after n >= 50.
-Its trades (magic 20260715) feed /api/r/proof_gate?magic=20260715 for the honest read.
+Its trades (magic 111111) feed /api/r/proof_gate?magic=111111 for the honest read.
 """
 from __future__ import annotations
 import json, time
@@ -21,8 +21,8 @@ from pathlib import Path
 
 import MetaTrader5 as mt5
 
-SYMBOL      = "USTECm"
-MAGIC       = 20260715
+SYMBOL      = "USTECm"          # the ONLY symbol NR7 is +EV on (344-symbol scan: 326 negative)
+MAGIC       = 111111            # user's chosen magic — deployed ONLY on the one it's +EV on
 NR_LOOKBACK = 7           # narrowest of last 7 bars
 ATR_LEN     = 14
 TP_R        = 3.0
@@ -174,7 +174,7 @@ def main():
                 "armed": armed is not None, "spread_pts": spread,
                 "spread_ok": spread <= MAX_SPREAD_PTS,
                 "arm_levels": {"hi": armed["hi"], "lo": armed["lo"]} if armed else None,
-                "note": "NR7 forward-paper (DEMO) — feeds /api/r/proof_gate?magic=20260715",
+                "note": "NR7 forward-paper (DEMO) — feeds /api/r/proof_gate?magic=111111",
             })
         except Exception as e:
             _log(f"loop err: {e}")

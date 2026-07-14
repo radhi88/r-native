@@ -41,8 +41,8 @@ ENGINES = {
     # 🎯 المنفّذ الموحّد الوحيد (20260605) تحت الوصيّ — LIVE على الديمو (توحيد #1 Step 3). حواجز:
     # لوت 0.01، سقف يوميّ $10، حظر ليليّ، master_floor، kill_switch. للإيقاف: علّق السطر أو أنشئ kill_switch.txt.
     "friday_v3.algory.r_executor": (["-u", "-m", "friday_v3.algory.r_executor", "--live", "--no-brain-json", "--interval", "8"], MT5),
-    # 🔬 مُثبِت NR7 الأماميّ (magic 20260715): الحافّة الوحيدة التي نجت من المسح العميق —
-    # USTECm M15، إثبات ورقيّ ديمو، مركز واحد. يُغذّي /api/r/proof_gate?magic=20260715.
+    # 🔬 مُثبِت NR7 الأماميّ (magic 111111): الحافّة الوحيدة التي نجت من المسح العميق —
+    # USTECm M15، إثبات ورقيّ ديمو، مركز واحد. يُغذّي /api/r/proof_gate?magic=111111.
     "nr7_prover.py":              (["nr7_prover.py"], MT5),
     # ✅ multi_trader أُعيد (طلب المستخدم 2026-07-02 «رجّع المشروع على جميع العملات») — تحت lot_guard + حوكمة المايسترو.
     "multi_trader.py":            (["multi_trader.py", "--loop"], MT5),
@@ -271,7 +271,7 @@ _FOCUS_KEEP = {"master_floor.py", "peak_watch.py",
                "runtime.unified_trader",                                 # 🧠 الموحّد 99782 (رابحنا المتعدّد!) — كان خارج التركيز فلا يُحيا (علّة 2026-07-14)
                "brain_server.py",                                        # 🧠 العقل الوحيد 5055 (r_native.brain_server أُزيل — توحيد #1)
                "friday_v3.algory.r_executor",                            # 🎯 المنفّذ الموحّد (20260605) — تحت الحراسة حتى في وضع التركيز
-               "nr7_prover.py",                                          # 🔬 مُثبِت NR7 الأماميّ (20260715) — الحافّة الناجية
+               "nr7_prover.py",                                          # 🔬 مُثبِت NR7 الأماميّ (111111) — الحافّة الناجية
 
                "real_lock.py",                                            # 🔒 قفل الحقيقيّ
                "order_janitor.py", "ollama_council.py", "council_executor.py",  # 🧹 البوّاب + 🏛️ المجلس + ⚖️ منفّذه
