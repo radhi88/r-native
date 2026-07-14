@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install test dependencies
+      # Full requirements.txt is Windows-targeted (MetaTrader5, PySide6,
+      # pyttsx3). CI only needs numpy: the GA engine + simulator are pure
+      # numpy, and tests/stubs/MetaTrader5.py stands in for the terminal.
+      run: pip install numpy
+
+    - name: Compile all Python files
+      run: |
+        python - <<'EOF'
+        import py_compile, pathlib, sys
+        errs = []
+        for p in sorted(pathlib.Path('.').rglob('*.py')):
+            if '.git' in p.parts:
+                continue
+            try:
+                py_compile.compile(str(p), doraise=True)
+            except Exception as e:
+                errs.append(f"{p}: {e}")
+        print(f"errors: {len(errs)}")
+        for e in errs:
+            print(e)
+        sys.exit(1 if errs else 0)
+        EOF
+
+    - name: Age-gate unit test
+      run: python tests/test_age_gate.py
+
+    - name: GA campaign smoke test (synthetic MT5 stub)
+      # test_campaign.py imports the repo as the r_native package, so alias
+      # the checkout under that name and put the MT5 stub on the path.
+      run: |
+        mkdir -p /tmp/pkgroot
+        ln -s "$GITHUB_WORKSPACE" /tmp/pkgroot/r_native
+        PYTHONPATH=/tmp/pkgroot:$GITHUB_WORKSPACE/tests/stubs timeout 240 python test_campaign.py

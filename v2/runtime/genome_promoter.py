@@ -104,6 +104,20 @@ def composite_score(genome: dict, fitness: dict, council: dict) -> float:
     return round(score, 2)
 
 
+def _age_minutes(genome: dict) -> float | None:
+    """Minutes since the genome was born. None = unknown/seed (age gate waived)."""
+    born = genome.get("born")
+    if not born or born == "seed":
+        return None
+    try:
+        t = datetime.fromisoformat(born)
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc) - t).total_seconds() / 60.0
+    except (ValueError, TypeError):
+        return None
+
+
 def is_eligible(genome: dict, fitness: dict, council: dict) -> tuple[bool, str]:
     """Check if genome meets promotion criteria."""
     name = genome["name"]
@@ -112,8 +126,10 @@ def is_eligible(genome: dict, fitness: dict, council: dict) -> tuple[bool, str]:
     conf = g_fit.get("avg_confidence_on_signal", 0)
     appr_rate = council.get("approval_rate", 0)
     appr_count = council.get("approved", 0)
-    age_min = MIN_AGE_MINUTES   # TODO: parse 'born' timestamp
+    age_min = _age_minutes(genome)
 
+    if age_min is not None and age_min < MIN_AGE_MINUTES:
+        return (False, f"only {age_min:.0f} min old (need {MIN_AGE_MINUTES})")
     if appr_count < MIN_SIGNALS_FOR_PROMOTION:
         return (False, f"only {appr_count} approved signals (need {MIN_SIGNALS_FOR_PROMOTION})")
     if appr_rate < MIN_APPROVAL_RATE:
