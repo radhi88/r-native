@@ -136,4 +136,10 @@ class DrawdownRecovery(Agent):
                         "tripped_at": datetime.now(timezone.utc).isoformat()})
             kp.parent.mkdir(parents=True, exist_ok=True)
             kp.write_text(json.dumps(cur, indent=2), encoding="utf-8")
+            # توحيد #1 Step 7: kill_switch.json كان يتيماً — اكتب أيضاً الملفّ القانونيّ
+            # kill_switch.txt الذي يحترمه r_executor + master_floor فعليّاً، فيتوقّف التداول حقّاً.
+            try:
+                Path(r"C:\Users\Radhi\MT5\kill_switch.txt").write_text(
+                    f"drawdown_recovery: {reason}", encoding="utf-8")
+            except Exception: pass
         except Exception: pass

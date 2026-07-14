@@ -1357,6 +1357,40 @@ def _try_enter_one_symbol(state: dict, mode: str, force_sym: str):
             return
     except Exception: pass
 
+    # ── Curated safety layer (correlation / news / DD kill) — توحيد #1 Step 6 ──
+    # Wires the previously-ORPHANED curated-guard outputs into the live executor.
+    # TIGHTEN-ONLY + fail-open + each gated by an env flag defaulting OFF, so this
+    # is ZERO behaviour change until you enable one and measure ≥30 trades (doctrine):
+    #   set R_HONOR_CORR_BLOCK=1 / R_HONOR_NEWS_BLOCK=1 / R_HONOR_DD_KILL=1
+    try:
+        import os as _os, json as _json
+        _RN = r"C:\Users\Radhi\MT5\data\r_native"
+        def _in_guard(fname, key):
+            try:
+                coll = (_json.load(open(_os.path.join(_RN, fname), encoding="utf-8")) or {}).get(key)
+                return bool(coll) and (trade_symbol in coll)   # dict-keys or list membership
+            except Exception:
+                return False
+        if _os.environ.get("R_HONOR_CORR_BLOCK") == "1" and _in_guard("correlation_blocks.json", "blocks"):
+            state["last_action"] = f"corr-guard blocks {trade_symbol}"
+            _log(state, f"  🔗 correlation_guard blocks {trade_symbol} (curated)")
+            return
+        if _os.environ.get("R_HONOR_NEWS_BLOCK") == "1" and _in_guard("news_blocked_symbols.json", "blocked_symbols"):
+            state["last_action"] = f"news-guard blocks {trade_symbol}"
+            _log(state, f"  📰 news_blocker blocks {trade_symbol} (curated)")
+            return
+        if _os.environ.get("R_HONOR_DD_KILL") == "1":
+            try:
+                _dd = _json.load(open(_os.path.join(_RN, "kill_switch.json"), encoding="utf-8")) or {}
+                if _dd.get("active") or _dd.get("kill") or _dd.get("stop"):
+                    state["last_action"] = "DD-recovery kill active"
+                    _log(state, "  🛑 drawdown_recovery kill active (curated)")
+                    return
+            except FileNotFoundError:
+                pass
+    except Exception as _cg_e:
+        _log(state, f"  [curated-guard err: {_cg_e}]")
+
     if mode == "LIVE":
         ok, res = _send_order(trade_symbol, side, effective_lot, sl, far_tp, comment)
         if ok:
