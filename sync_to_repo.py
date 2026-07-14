@@ -29,6 +29,17 @@ DENY = {"data","logs","dist","dist_new","build",".venv","venv","__pycache__",".p
         "OpenJarvis","patch_backups","_archive","docs_archive"}
 MAX = 512 * 1024   # skip anything >512KB (data blobs, bundled libs)
 
+# secret-bearing filenames that must NEVER be copied (even redacted)
+SECRET_FILES = {"api_keys.json", "apikeys.json", "secrets.json", "secret.json",
+                "credentials.json", "creds.json", "token.json", "tokens.json",
+                "service_account.json", "hub_secret.txt", "id_rsa"}
+SECRET_HINT = re.compile(r"secret|credential|password|api[_-]?key|_token|\.pem$|\.key$", re.I)
+
+
+def is_secret_filename(f: str) -> bool:
+    lf = f.lower()
+    return lf in SECRET_FILES or lf.startswith(".env") or bool(SECRET_HINT.search(lf))
+
 # secret redaction: pattern -> placeholder (value never printed)
 REDACT = [
     (re.compile(r"<ACCOUNT_LOGIN>"),                         "<ACCOUNT_LOGIN>"),
@@ -64,7 +75,7 @@ def build_mirror() -> tuple[int, float]:
             continue
         for f in files:
             if os.path.splitext(f)[1].lower() not in INCLUDE_EXT: continue
-            if f.startswith(".env"): continue
+            if is_secret_filename(f): continue          # never copy secret files
             sp = os.path.join(root, f)
             try:
                 if os.path.getsize(sp) > MAX: continue
@@ -195,8 +206,44 @@ DEMO فقط · لوت 0.01 · سقف يوميّ $10 · حدّ 3 صفقات · ki
 ## كيف تساهم
 اقترح تغييرات صغيرة قابلة للقياس، اربطها ببند في `ROADMAP.md`، واحترم القواعد الخمس أعلاه.
 """
+    gitignore = """# secrets & credentials — NEVER commit
+.env
+.env.*
+api_keys.json
+*secret*
+*credential*
+*.key
+*.pem
+*.lock
+# live trading state & data (code-only mirror)
+data/
+logs/
+*.db
+*.jsonl
+*.csv
+*.npy
+*.npz
+# builds & environments
+dist/
+dist_new/
+build/
+.venv/
+__pycache__/
+*.pyc
+# editor / os
+.obsidian/
+.DS_Store
+Thumbs.db
+"""
     open(os.path.join(DST, "README.md"), "w", encoding="utf-8").write(readme)
     open(os.path.join(DST, "AI_CONTEXT.md"), "w", encoding="utf-8").write(ai_ctx)
+    open(os.path.join(DST, ".gitignore"), "w", encoding="utf-8").write(gitignore)
+    # bring the scheduled evolution workflow into the mirror (lives under .claude)
+    wf_src = os.path.join(os.path.expanduser("~"), ".claude", "scheduled-tasks",
+                          "r-factory-evolution", "SKILL.md")
+    if os.path.exists(wf_src):
+        os.makedirs(os.path.join(DST, "workflow"), exist_ok=True)
+        shutil.copy2(wf_src, os.path.join(DST, "workflow", "r-factory-evolution.SKILL.md"))
 
 
 def git(*args) -> subprocess.CompletedProcess:

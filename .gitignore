@@ -1,0 +1,28 @@
+# secrets & credentials — NEVER commit
+.env
+.env.*
+api_keys.json
+*secret*
+*credential*
+*.key
+*.pem
+*.lock
+# live trading state & data (code-only mirror)
+data/
+logs/
+*.db
+*.jsonl
+*.csv
+*.npy
+*.npz
+# builds & environments
+dist/
+dist_new/
+build/
+.venv/
+__pycache__/
+*.pyc
+# editor / os
+.obsidian/
+.DS_Store
+Thumbs.db
