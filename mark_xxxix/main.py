@@ -1,4 +1,4 @@
-# ruff: noqa: E402
+﻿# ruff: noqa: E402
 import asyncio
 import base64
 import re

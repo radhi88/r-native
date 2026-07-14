@@ -180,9 +180,24 @@
             /r/ script — all panels now render.
       EST: 40 min
 
-- [ ] P2 · UI · Heatmap — best hour × best symbol grid
+- [x] P2 · UI · Heatmap — best hour × best symbol grid
       WHY: surface time-symbol patterns
       DOD: 24×N grid colored by net_pl, click to drill
+      DONE 2026-07-14: new endpoint /api/r/hour_symbol_heatmap (brain_server) —
+            pulls real broker deals (magic 20260605) over ?days=30 (1–120), pairs
+            open→close by position_id, buckets each closed trade by its ENTRY hour
+            (0–23 UTC, matching hour_quality semantics) × symbol → {trades,wins,net}
+            per cell, plus symbol_totals / hour_totals / grand total / best+worst
+            cell. Symbols ordered by |net| impact. New /r/ UI #heatmap-panel +
+            renderHeatmap(): 24-col × N-symbol grid, cells green/red with alpha
+            scaled to |net|/maxAbs, Σ row + Σ column, click any cell → drill line
+            (trades/wins/WR/net). 60s refresh. VERIFIED: py_compile OK; offline
+            synthetic test 8/8 (pairing incl. shuffled open/close, hour bucketing,
+            |net| ordering, best/worst) ; live curl /api/r/hour_symbol_heatmap?days=60
+            → ok:true, 24-hour axis, correct shape. Grid currently EMPTY because the
+            account was reset to $500 today (M0) and R (magic 20260605) has no deals
+            yet — populates as R trades accrue. Restarted brain_server (watchdog
+            respawn); root re-owns :5055 (no r_native hijack), /r/ serves the panel.
       EST: 35 min
 
 - [ ] P2 · UI · Side-by-side: R's gate verdict vs Algory's latest matching strategy

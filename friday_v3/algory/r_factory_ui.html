@@ -390,6 +390,19 @@ main {
   <div id="heatmap-drill" style="margin-top:8px; font-size:12px; color:var(--muted); min-height:18px;"></div>
 </div>
 
+<!-- ═══════════ R vs ALGORY — رأيان جنباً إلى جنب (تحقّق متقاطع) ═══════════ -->
+<div class="card" id="gva-panel" style="border-left:4px solid #a78bfa;">
+  <h2><span class="ico">⚖️</span> بوّابة R مقابل استراتيجيّة Algory — رأيان لنفس اللحظة (تحقّق متقاطع)</h2>
+  <div style="font-size:11px; color:var(--muted); margin-bottom:8px;">
+    رأي R من بوّابة الدخول ذات الـ10 شروط، ورأي Algory = أفضل نموذج (archetype) مطابق لإعداد H1 الحالي. استشاريّ فقط — لا يرسل أوامر. اتّفاقهما = ثقة أعلى، اختلافهما = انتظر.
+  </div>
+  <div id="gva-badge" style="margin-bottom:10px; font-size:13px; font-weight:800;">—</div>
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    <div id="gva-r"      style="flex:1; min-width:240px; background:var(--bg-2); border-radius:8px; padding:10px; font-size:12px;">جاري التحميل…</div>
+    <div id="gva-algory" style="flex:1; min-width:240px; background:var(--bg-2); border-radius:8px; padding:10px; font-size:12px;">جاري التحميل…</div>
+  </div>
+</div>
+
 <!-- ═══════════════ R LEARNING — التطور الذاتي + كشف تعديلاتك اليدوية ═══════════════ -->
 <div class="card" id="learn-panel" style="border-left:4px solid var(--violet);">
   <h2><span class="ico">🧠</span> R LEARNING — تطور ذاتي + يقرأ تعديلاتك</h2>
@@ -1554,13 +1567,66 @@ async function renderHeatmap(){
   });
 }
 
+// ═══════════ R GATE vs ALGORY STRATEGY — side-by-side cross-validation ═══════════
+function _gvaVerdictColor(v){
+  if(v==='GO'||v==='OK') return 'var(--green)';
+  if(v==='NO'||v==='NO_TRADE'||v==='ERROR') return 'var(--red)';
+  if(v==='WAIT') return 'var(--gold-0)';
+  return 'var(--muted)';
+}
+async function renderGateVsAlgory(){
+  const rEl=$("gva-r"), aEl=$("gva-algory"), bEl=$("gva-badge");
+  if(!rEl||!aEl) return;
+  // same symbol-picking rule as the matrix panel
+  const ex = await safeFetch('/api/r/executor');
+  const sym = (ex && ((ex.r_open_positions||[])[0]||{}).symbol) || (ex && ex.best_symbol_now) || _matrixSym || 'XAUUSDm';
+  const d = await safeFetch(`/api/r/gate_vs_algory?symbol=${encodeURIComponent(sym)}`, 27000);
+  if(!d || d._err || !d.ok){ if(bEl) bEl.innerHTML = `<span style="color:var(--red);">تعذّر التحقّق المتقاطع (${sym}): ${d && (d.error||d._err) || '—'}</span>`; return; }
+  const r=d.r_gate||{}, a=d.algory||{};
+  // header agreement badge
+  const agMap = {
+    AGREE_GO:       ['✅ يتّفقان: دخول', 'var(--green)'],
+    AGREE_STAY_OUT: ['🛑 يتّفقان: ابقَ خارجاً', 'var(--red)'],
+    DISAGREE:       ['⚔️ يختلفان — انتظر', 'var(--gold-0)'],
+    MIXED:          ['🤔 مختلط', 'var(--muted)'],
+    PARTIAL:        ['… بيانات ناقصة', 'var(--muted)'],
+  };
+  const ag = agMap[d.agreement] || ['—','var(--muted)'];
+  bEl.innerHTML = `<b style="color:var(--gold-0); font-family:Consolas,monospace;">${d.symbol}</b> &nbsp; `
+    + `<span style="color:${ag[1]};">${ag[0]}</span>`;
+  // R's side
+  const rp = (r.checks_passed!=null && r.checks_total) ? `${r.checks_passed}/${r.checks_total}` : '—';
+  const rBlk = (r.hard_blockers||[]).slice(0,4).map(x=>`<li style="color:var(--red);">⛔ ${x}</li>`).join('');
+  const rWrn = (r.soft_warnings||[]).slice(0,3).map(x=>`<li style="color:var(--gold-0);">⚠ ${x}</li>`).join('');
+  rEl.innerHTML = `<div style="font-weight:900; color:var(--gold-0); margin-bottom:6px;">🤖 بوّابة R</div>
+    <div>الحكم: <b style="color:${_gvaVerdictColor(r.verdict)}; font-size:15px;">${r.verdict||'—'}</b>
+      ${r.side?`<span style="color:var(--muted);"> · ${r.side}</span>`:''}</div>
+    <div style="color:var(--muted);">النموذج: ${r.archetype||'—'} · الثقة: ${r.confidence!=null?r.confidence:'—'} · الشروط: <b>${rp}</b></div>
+    ${(r.entry!=null)?`<div style="color:var(--muted); font-family:Consolas,monospace;">دخول ${r.entry} · وقف ${r.sl??'—'} · هدف ${r.near_tp??r.far_tp??'—'}</div>`:''}
+    ${(rBlk||rWrn)?`<ul style="margin:6px 0 0; padding-inline-start:16px;">${rBlk}${rWrn}</ul>`:''}
+    ${r.reason_ar?`<div style="margin-top:6px; color:var(--muted); font-size:11px;">${r.reason_ar}</div>`:''}`;
+  // Algory's side
+  const aFail = (a.checks_failed||[]).slice(0,5).map(x=>`<li style="color:var(--red);">✗ ${x}</li>`).join('');
+  const allA = Object.entries(a.all_archetypes||{}).map(([nm,e])=>
+    `<div style="color:var(--muted); font-family:Consolas,monospace;">${nm}: <b style="color:${_gvaVerdictColor(e.verdict)};">${e.verdict||'—'}</b> ${e.score!=null?`(${e.score})`:''}</div>`).join('');
+  aEl.innerHTML = `<div style="font-weight:900; color:#a78bfa; margin-bottom:6px;">📚 استراتيجيّة Algory</div>
+    <div>أفضل نموذج: <b style="color:#a78bfa;">${a.best_archetype||'—'}</b></div>
+    <div>الحكم: <b style="color:${_gvaVerdictColor(a.verdict)}; font-size:15px;">${a.verdict||'—'}</b>
+      <span style="color:var(--muted);"> · درجة ${a.score!=null?a.score:'—'} · انحياز H1 ${a.bias_h1||'—'}</span></div>
+    ${aFail?`<ul style="margin:6px 0 0; padding-inline-start:16px;">${aFail}</ul>`:''}
+    <div style="margin-top:6px;">${allA}</div>
+    ${a.recommendation?`<div style="margin-top:6px; color:var(--muted); font-size:11px;">💡 ${a.recommendation}</div>`:''}`;
+}
+
 refresh();
 renderEquityCurve();
 renderRChart();
 renderMatrix();
 renderHeatmap();
+renderGateVsAlgory();
 setInterval(renderHeatmap, 60000);
 setInterval(renderMatrix, 30000);
+setInterval(renderGateVsAlgory, 20000);
 setInterval(refresh, 10000);
 setInterval(renderEquityCurve, 10000);
 setInterval(renderRChart, 10000);

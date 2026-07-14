@@ -1,6 +1,6 @@
 # R-Native — API Endpoints
 
-`brain_server.py` @ `localhost:5055` — 108 routes (54 under `/api/r/`).
+`brain_server.py` @ `localhost:5055` — 109 routes (55 under `/api/r/`).
 
 
 | Endpoint | Methods | Purpose |
@@ -39,6 +39,7 @@
 | `/api/r/hour_symbol_heatmap` | [GET] | Hour-of-day × symbol P/L heatmap for R trades (magic 20260605). |
 | `/api/r/trade_gate` | [GET] | R's exact decision on whether to enter a trade RIGHT NOW. |
 | `/api/r/multi_tf_strategies` | [GET] | For each TF (M5/M15/H1/H4), produce strategy guidance based on Algory wisdom. |
+| `/api/r/gate_vs_algory` | [GET] | Side-by-side cross-validation: R's live gate verdict vs Algory's |
 | `/api/r/genome/<gid>/info` | [GET] |  |
 | `/api/r/genome/<gid>/decisions` | [GET] |  |
 | `/api/r/genome/<gid>/bars` | [GET] |  |

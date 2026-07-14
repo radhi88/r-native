@@ -2559,6 +2559,97 @@ def api_r_multi_tf():
         return jsonify({"ok": False, "error": str(e), "tb": traceback.format_exc()[:300]})
 
 
+@app.route("/api/r/gate_vs_algory")
+def api_r_gate_vs_algory():
+    """Side-by-side cross-validation: R's live gate verdict vs Algory's
+    best-matching archetype strategy for the SAME symbol/setup RIGHT NOW.
+
+    ADVISORY ONLY — never sends orders. Reuses the existing /api/r/trade_gate
+    and /api/r/multi_tf_strategies endpoints (no duplicated logic, no new MT5
+    connect). Fail-open: any sub-error degrades that side to UNKNOWN, the panel
+    still renders. `agreement` is a coarse concord label for the header badge.
+    """
+    try:
+        symbol = request.args.get("symbol", "XAUUSDm")
+
+        # --- R's side: full gate verdict ---
+        r_gate = {}
+        try:
+            with app.test_client() as tc:
+                gr = tc.get(f"/api/r/trade_gate?symbol={symbol}")
+                gj = gr.get_json() if gr.status_code == 200 else {}
+            checks = gj.get("checks") or []
+            passed = sum(1 for c in checks
+                         if (c.get("passed", c.get("ok")) if isinstance(c, dict) else bool(c)))
+            r_gate = {
+                "verdict":       gj.get("verdict", "UNKNOWN"),
+                "side":          gj.get("side"),
+                "archetype":     gj.get("archetype"),
+                "confidence":    gj.get("confidence"),
+                "entry":         gj.get("entry"),
+                "sl":            gj.get("sl"),
+                "near_tp":       gj.get("near_tp"),
+                "far_tp":        gj.get("far_tp"),
+                "checks_passed": passed,
+                "checks_total":  len(checks),
+                "hard_blockers": gj.get("hard_blockers") or [],
+                "soft_warnings": gj.get("soft_warnings") or [],
+                "reason_ar":     gj.get("reason_ar", ""),
+            }
+        except Exception as _e:
+            r_gate = {"verdict": "UNKNOWN", "error": str(_e)}
+
+        # --- Algory's side: best archetype for the H1 setup ---
+        algory = {}
+        try:
+            from friday_v3.algory.strategy_mirror import get_active_recommendation
+            with app.test_client() as tc:
+                sr = tc.get(f"/api/r/multi_tf_strategies?symbol={symbol}")
+                sj = sr.get_json() if sr.status_code == 200 else {}
+            # H1 is the frame R's gate anchors on; fall back to any frame present.
+            frames = (sj.get("frames") or {}) if sj.get("ok") else {}
+            h1f = frames.get("H1") or next((frames[k] for k in ("H4", "M15", "M5") if frames.get(k)), {})
+            best_arch = h1f.get("best_archetype")
+            evals = h1f.get("archetype_eval") or {}
+            best_ev = evals.get(best_arch, {}) if best_arch else {}
+            rec = get_active_recommendation(symbol, "H1")
+            algory = {
+                "best_archetype": best_arch,
+                "verdict":        best_ev.get("verdict", "UNKNOWN"),
+                "score":          h1f.get("best_score", 0),
+                "bias_h1":        best_ev.get("bias"),
+                "checks_failed":  best_ev.get("checks_failed") or [],
+                "all_archetypes": {a: {"verdict": e.get("verdict"), "score": e.get("score")}
+                                   for a, e in evals.items()},
+                "recommendation": rec.get("recommendation", "") if rec.get("ok") else "",
+            }
+        except Exception as _e:
+            algory = {"verdict": "UNKNOWN", "error": str(_e)}
+
+        # --- Concord label (advisory) ---
+        r_pos = r_gate.get("verdict") == "GO"
+        r_neg = r_gate.get("verdict") in ("NO", "ERROR")
+        a_pos = algory.get("verdict") == "OK"
+        a_neg = algory.get("verdict") == "NO_TRADE"
+        if r_gate.get("verdict") in ("UNKNOWN", None) or algory.get("verdict") in ("UNKNOWN", None):
+            agreement = "PARTIAL"
+        elif r_pos and a_pos:
+            agreement = "AGREE_GO"
+        elif r_neg and a_neg:
+            agreement = "AGREE_STAY_OUT"
+        elif (r_pos and a_neg) or (r_neg and a_pos):
+            agreement = "DISAGREE"
+        else:
+            agreement = "MIXED"
+
+        return jsonify({"ok": True, "symbol": symbol,
+                        "ts": datetime.now(timezone.utc).isoformat(),
+                        "r_gate": r_gate, "algory": algory, "agreement": agreement})
+    except Exception as e:
+        import traceback
+        return jsonify({"ok": False, "error": str(e), "tb": traceback.format_exc()[:300]})
+
+
 @app.route("/api/algory/strategy")
 def api_algory_strategy():
     """FRIDAY's adopted strategy recommendations based on Algory's OOS history."""
