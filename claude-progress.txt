@@ -1,0 +1,41 @@
+# claude-progress.txt — سجل تقدم الوكلاء (اقرأه أول كل جلسة)
+# النمط: أحدث إدخال في الأعلى. حدّثه في نهاية كل جلسة قبل الـcommit.
+
+=== 2026-07-14 — جلسة: تنظيف الأسرار + النشر إلى GitHub + عدّة الوكيل ===
+
+ما أُنجز:
+1. جسر TradingView مبني ومفعّل سابقاً (tradingview_bridge.py :8025) — self-test ناجح
+   (قبول السر الصحيح، رفض 403 للخاطئ). حارس النفق tv_tunnel_keeper يعمل. [مختبَر ✓]
+2. فحص أسرار كامل للمستودع قبل النشر:
+   - سرّ الجسر القديم (eu362a…) كان مكشوفاً في START_TV_BRIDGE_LIVE.bat،
+     TV_BRIDGE_CONTROL.md، tv_selftest.py → استُبدل بـ <TV_BRIDGE_SECRET>.
+     ⚠ السر القديم يجب اعتباره محروقاً — ولّد سراً جديداً (يتولد تلقائياً إن كان فارغاً).
+   - مفتاح Gemini حقيقي كان في mark_xxxix/config/api_keys.json → استُبدل بـplaceholder،
+     والملف أُزيل من التتبع وأُضيف إلى .gitignore. ⚠ يجب تدوير المفتاح من Google Console.
+   - عُدّل الـcommit فالتاريخ المرفوع نظيف تماماً (تحقق: git grep على HEAD).
+3. النشر: فرع export-main دُفع إلى https://github.com/radhi88/r-native (commit 186e69d).
+   ⚠ المستودع كان Public — طُلب من المستخدم جعله Private وفحص الفروع القديمة
+   (main القديم + فرعا claude/*) من أسرار.
+4. sync_to_repo.py قُوّي: أنماط DANGER إضافية (ghp_, github_pat_, سر الجسر القديم،
+   secret="…" عام)، redaction للسر القديم، تنظيف أقفال git القديمة (>5 دقائق)،
+   ضمان remote origin. اختبارات regex نجحت. Commit: 7895910.
+5. عدّة الوكيل طويل التشغيل أُنشئت: feature_list.json (19 ميزة، passes=true فقط
+   للجسر والنفق المختبرين)، init.bat، هذا الملف، وقسم get-your-bearings في CLAUDE.md.
+
+قيد التنفيذ (التالي مباشرة):
+- force push للتاريخ النظيف إلى main (استبدال main القديم الملوث) — ينتظر تفويض
+  device flow من المستخدم. بعده: export-main وmain متطابقان.
+- على جهاز المستخدم: git branch -M main ثم git fetch origin && git reset --hard origin/main
+  لمحاذاة النسخة المحلية، والمصادقة الدائمة عبر Git Credential Manager (أول git push
+  يفتح متصفحاً) أو gh auth login.
+
+سير العمل المعتمد:
+  جهاز جديد:   git clone https://github.com/radhi88/r-native.git
+  بعد الشغل:   python sync_to_repo.py --push   (فحص أسرار إجباري قبل أي دفع)
+  جهاز ثانٍ:   git pull
+
+ملاحظات للوكيل القادم:
+- بيئة Cowork المعزولة: لا تكتب عبر git داخل .git المركّب (كتابات rename تُفسَد
+  وتترك أقفالاً لا تُحذف). اعمل في clone داخل /tmp وادفع منه، أو اترك git للمستخدم.
+- api.github.com محجوب من بيئة العمل؛ github.com متاح (device flow يعمل عبر curl).
+- القواعد الحاكمة في CLAUDE.md وAI_CONTEXT.md — اقرأهما قبل أي تعديل تداولي.

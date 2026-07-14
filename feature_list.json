@@ -1,0 +1,210 @@
+{
+  "_readme": "R-Native feature list — long-running-agent harness. Rules: work ONE feature at a time; NEVER set passes=true without running the steps and seeing them succeed; never remove entries.",
+  "_updated": "2026-07-14",
+  "features": [
+    {
+      "id": "tv-bridge-server",
+      "category": "bridge",
+      "description": "جسر TradingView: خادم HTTP على :8025 يستقبل تنبيهات TV على POST /tv بحماية secret، يحوّلها لأوامر MT5 (magic مخصص، execute flag، default_lot 0.01)",
+      "steps": [
+        "شغّل START_TV_BRIDGE_LIVE.bat",
+        "python tv_selftest.py — السرّ الصحيح يُقبل (ok:true) والخاطئ يُرفض 403",
+        "تحقق من سجل الرفض bad_secret في اللوج"
+      ],
+      "passes": true
+    },
+    {
+      "id": "tv-tunnel-keeper",
+      "category": "bridge",
+      "description": "حارس النفق: tv_tunnel_keeper.py + tv_swap_keeper.bat يبقيان نفق TV العام حيّاً ويعيدان تشغيله عند السقوط",
+      "steps": [
+        "شغّل tv_swap_keeper.bat",
+        "تحقق أن رابط النفق العام يستجيب لـ GET /",
+        "اقتل النفق يدوياً وتأكد من إعادة الإحياء خلال دورة واحدة"
+      ],
+      "passes": true
+    },
+    {
+      "id": "github-sync",
+      "category": "sync",
+      "description": "مزامنة GitHub: sync_to_repo.py يبني mirror كودياً من C:\\Users\\Radhi\\MT5، يحجب الأسرار (redact)، يرفض الدفع إن بقي سرّ حقيقي، ثم commit وpush إلى origin/main",
+      "steps": [
+        "python sync_to_repo.py (بدون push) — mirror يُبنى والفحص clean",
+        "python sync_to_repo.py --push — يصل الـcommit إلى origin/main",
+        "git clone على جهاز آخر ثم git pull يعمل"
+      ],
+      "passes": false
+    },
+    {
+      "id": "secret-scan-gate",
+      "category": "sync",
+      "description": "بوابة الأسرار: أنماط DANGER (مفاتيح Google/OpenAI/Slack/AWS/GitHub، مفاتيح خاصة، سرّ الجسر القديم، secret=\"...\" عام) تُسقط المزامنة قبل أي commit",
+      "steps": [
+        "ضع سراً تجريبياً بصيغة ghp_ في ملف مؤقت داخل المصدر",
+        "python sync_to_repo.py — يجب أن يطبع ABORT ويرفض الالتزام",
+        "احذف السر التجريبي وتأكد من عودة clean"
+      ],
+      "passes": false
+    },
+    {
+      "id": "brain-server-api",
+      "category": "core",
+      "description": "العقل المركزي: brain_server.py على :5055 مع ~54 واجهة /api/r/* (انظر ENDPOINTS.md) تربط المحرّكات بالواجهات والمدراء",
+      "steps": [
+        "شغّل brain_server.py",
+        "GET localhost:5055 يستجيب",
+        "اختبر 3 endpoints من ENDPOINTS.md وتحقق من JSON سليم"
+      ],
+      "passes": false
+    },
+    {
+      "id": "watchdog-guard",
+      "category": "safety",
+      "description": "watchdog_guard.py: مراقبة العمليات الحيوية وإعادة تشغيلها، خط الدفاع التشغيلي الأول",
+      "steps": [
+        "شغّل watchdog_guard.py",
+        "اقتل محرّكاً مراقباً وتحقق من إعادة إحيائه",
+        "راجع لوج الحارس للأحداث"
+      ],
+      "passes": false
+    },
+    {
+      "id": "trade-gate",
+      "category": "trading",
+      "description": "بوابة القرار: friday_v3/algory/trade_gate.py — 10 شروط + فيتو مصفوفة 21×6، fail-open (TIGHTEN-ONLY)",
+      "steps": [
+        "شغّل اختبارات trade_gate إن وجدت في tests/",
+        "غذِّ إشارة سيئة متعمدة وتحقق من الرفض",
+        "تحقق أن إشارة نظيفة تمرّ"
+      ],
+      "passes": false
+    },
+    {
+      "id": "r-executor",
+      "category": "trading",
+      "description": "المنفّذ: friday_v3/algory/r_executor.py — حلقة سرعتين، magic 20260605، DEMO فقط، لوت 0.01",
+      "steps": [
+        "شغّله على DEMO مع MT5 مفتوح",
+        "تحقق من فتح/إدارة صفقة واحدة بحجم 0.01",
+        "تحقق من احترام حدّ 3 صفقات والسقف اليومي"
+      ],
+      "passes": false
+    },
+    {
+      "id": "kill-switch-master-floor",
+      "category": "safety",
+      "description": "الخط المقدّس: master_floor.py + kill_switch — شبكة الأمان الوحيدة للحساب (الحد اليومي أُزيل بطلب المستخدم 2026-07-08)",
+      "steps": [
+        "فعّل kill_switch يدوياً وتحقق من توقف كل المحرّكات",
+        "تحقق أن master_floor يمنع النزول تحت الأرضية",
+        "أعد التفعيل وتحقق من العودة الطبيعية"
+      ],
+      "passes": false
+    },
+    {
+      "id": "gold-level-sentinel",
+      "category": "engines",
+      "description": "حارس مستويات الذهب: gold_level_sentinel.py — مراقبة مستويات XAUUSD والتفاعل معها (config: gold_sentinel_config.json)",
+      "steps": [
+        "شغّله مع MT5 على DEMO",
+        "تحقق من التقاط مستوى مضبوط في الـconfig",
+        "راجع قراراته في اللوج مقابل الشارت"
+      ],
+      "passes": false
+    },
+    {
+      "id": "news-straddle",
+      "category": "engines",
+      "description": "محرك أخبار: news_straddle.py — straddle حول الأحداث الاقتصادية عالية الأثر",
+      "steps": [
+        "شغّله قبل حدث خبري مجدول على DEMO",
+        "تحقق من وضع الأوامر المعلقة الثنائية",
+        "تحقق من الإلغاء/الإدارة بعد الحدث"
+      ],
+      "passes": false
+    },
+    {
+      "id": "portfolio-maestro",
+      "category": "engines",
+      "description": "مايسترو المحفظة: portfolio_maestro.py — تنسيق التعرض عبر المحرّكات والرموز",
+      "steps": [
+        "شغّله مع محرّكين فعّالين على DEMO",
+        "تحقق من احترام سقف التعرض الكلي",
+        "تحقق من قرارات التخفيف عند التعارض"
+      ],
+      "passes": false
+    },
+    {
+      "id": "market-sweeper",
+      "category": "engines",
+      "description": "الماسح: market_sweeper.py — مسح دوري للرموز بحثاً عن إعدادات مطابقة للشروط",
+      "steps": [
+        "شغّله وتحقق من دورة مسح كاملة بلا أخطاء",
+        "تحقق من صحة المرشحين مقابل الشارت"
+      ],
+      "passes": false
+    },
+    {
+      "id": "boundary-pilot",
+      "category": "research",
+      "description": "طيار الحدود: boundary_hunter.py + boundary_pilot.py — بحث حدود النطاق وتجريبها",
+      "steps": [
+        "شغّل boundary_hunter.py على بيانات مخزنة",
+        "walk-forward: n>=30, t>=2, net>0 قبل أي ترقية"
+      ],
+      "passes": false
+    },
+    {
+      "id": "stage-promoter-proof-gate",
+      "category": "learning",
+      "description": "بوابة الإثبات: stage_promoter.py — ترقية استراتيجية فقط بعد n>=30, t>=2, net>0، وخفض فوري عند النزيف",
+      "steps": [
+        "غذِّ سجل صفقات يحقق الشروط وتحقق من الترقية",
+        "غذِّ سجلاً نازفاً وتحقق من الخفض الفوري"
+      ],
+      "passes": false
+    },
+    {
+      "id": "learning-pulse",
+      "category": "learning",
+      "description": "نبض التعلم: learning_pulse.py — دورة تعلم دورية من نتائج الصفقات",
+      "steps": [
+        "شغّله بعد جلسة تداول DEMO",
+        "تحقق من تحديث الأوزان/الحالة بلا أخطاء"
+      ],
+      "passes": false
+    },
+    {
+      "id": "agents-suite",
+      "category": "agents",
+      "description": "طاقم الوكلاء: agents/ (trend, momentum, liquidity, smc, volume, session…) + agent_council.py للتصويت",
+      "steps": [
+        "شغّل agent_council.py",
+        "تحقق من إشارات 3 وكلاء على الأقل في agents_status.json",
+        "تحقق من قرار المجلس المجمّع"
+      ],
+      "passes": false
+    },
+    {
+      "id": "fleet-launchers",
+      "category": "ops",
+      "description": "مشغّلات الأسطول: START_FLEET.bat / R_TRADER.bat / RNative.bat — إقلاع وإيقاف منظم للنظام",
+      "steps": [
+        "START_FLEET.bat يقلع كل المكونات بلا نوافذ خطأ",
+        "RNative_STOP.bat يوقفها نظيفاً"
+      ],
+      "passes": false
+    },
+    {
+      "id": "init-bootstrap",
+      "category": "ops",
+      "description": "init.bat: فحص الحالة الأساسية (git، python، صحة brain_server والجسر) + get-your-bearings لأي وكيل جديد",
+      "steps": [
+        "init.bat يطبع حالة git وعدد الميزات الناجحة",
+        "فحوص الصحة تُظهر UP/DOWN صحيحة",
+        "init.bat start يقلع الأسطول"
+      ],
+      "passes": false
+    }
+  ]
+}
