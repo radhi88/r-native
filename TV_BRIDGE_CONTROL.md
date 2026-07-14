@@ -15,7 +15,7 @@ https://nano-bias-ray-beach.trycloudflare.com/tv
 
 ```json
 {
-  "secret": "<TV_BRIDGE_SECRET>",
+  "secret": "eu362aZ3SPaG5YFtMMJZWzihgJuHT3b7",
   "action": "{{strategy.order.action}}",
   "symbol": "XAUUSDm",
   "lot": 0.01

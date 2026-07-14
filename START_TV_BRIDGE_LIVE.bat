@@ -54,7 +54,7 @@ echo [4/4] Running secret tests against localhost:8025 ...
 echo.
 echo    -- Correct secret (expect accepted) --
 powershell -NoProfile -Command ^
-  "$body = @{secret='<TV_BRIDGE_SECRET>'; action='ping'; symbol='TESTONLY'} | ConvertTo-Json; try { $r = Invoke-RestMethod -Uri 'http://localhost:8025/tv' -Method Post -Body $body -ContentType 'application/json' -TimeoutSec 5; Write-Host ('   [PASS] Accepted: ' + ($r | ConvertTo-Json -Compress)) } catch { Write-Host ('   [FAIL] ' + $_.Exception.Message) }"
+  "$body = @{secret='eu362aZ3SPaG5YFtMMJZWzihgJuHT3b7'; action='ping'; symbol='TESTONLY'} | ConvertTo-Json; try { $r = Invoke-RestMethod -Uri 'http://localhost:8025/tv' -Method Post -Body $body -ContentType 'application/json' -TimeoutSec 5; Write-Host ('   [PASS] Accepted: ' + ($r | ConvertTo-Json -Compress)) } catch { Write-Host ('   [FAIL] ' + $_.Exception.Message) }"
 echo.
 echo    -- Wrong secret (expect 403 rejected) --
 powershell -NoProfile -Command ^

@@ -6,7 +6,7 @@ import json, urllib.request, time
 from pathlib import Path
 
 RN = Path(r"C:\Users\Radhi\MT5") / "data" / "r_native"
-SECRET = "<TV_BRIDGE_SECRET>"
+SECRET = "eu362aZ3SPaG5YFtMMJZWzihgJuHT3b7"
 try:
     URL = json.load(open(RN / "tv_tunnel.json", encoding="utf-8"))["webhook"]
 except Exception:

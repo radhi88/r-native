@@ -2339,7 +2339,7 @@ def api_r_hour_symbol_heatmap():
             in_d, out_d = ds[0], ds[-1]
             sym = str(in_d.symbol)
             # ENTRY hour in UTC (broker server clock ≈ UTC, offset ~7s)
-            hour = datetime.utcfromtimestamp(int(in_d.time)).hour
+            hour = datetime.fromtimestamp(int(in_d.time), _tz.utc).hour
             profit = round(float(out_d.profit) + float(out_d.swap) + float(out_d.commission), 2)
             win = 1 if profit > 0 else 0
 
@@ -2452,6 +2452,17 @@ def api_r_trade_gate():
             for label, tf in tfs:
                 mtf_data[label] = _quick_tf_snapshot(target_symbol, tf, 60)
         snap["multi_tf"] = {"tfs": mtf_data}
+        # Indicator-matrix confluence (21×6) — advisory breadth-of-agreement fed
+        # into the gate as a TIGHTEN-ONLY counter-trend veto. Reuses the cached
+        # /api/r/indicator_matrix (30s). Fail-open: any error → no matrix key.
+        try:
+            with app.test_client() as tc:
+                _mr = tc.get(f"/api/r/indicator_matrix?symbol={target_symbol}")
+                _mj = _mr.get_json() if _mr.status_code == 200 else {}
+            if _mj.get("ok"):
+                snap["matrix"] = (_mj.get("matrix") or {}).get("aggregate") or {}
+        except Exception:
+            pass
         # Chart levels for the TARGET symbol
         chart_levels = {}
         if HAS_MT5:

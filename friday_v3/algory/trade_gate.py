@@ -891,6 +891,37 @@ def evaluate_gate(snapshot: dict, news_events: list = None,
         reason_ar = (f"🟢 جميع الشروط متحققة! Archetype: {arch_name}, side: {side}, R:R 1:{rr}"
                      + dg_note)
 
+    # ── Indicator-matrix confluence (21×6) — TIGHTEN-ONLY counter-trend veto ──
+    # Advisory breadth-of-agreement across M5→W1. It NEVER opens new risk: it can
+    # only downgrade a GO→WAIT when the chosen side fights a STRONG, well-aligned
+    # multi-timeframe confluence (the "don't fight the tape" case). Agreement is
+    # recorded as passing. Fail-open: absent/None matrix → informational only.
+    _matrix_veto = False
+    _matrix_note = "no matrix data"
+    try:
+        _mx = snapshot.get("matrix") or {}
+        _mscore = _mx.get("score")
+        _mdir = _mx.get("direction")
+        _malign = float(_mx.get("trend_align") or 0)
+        if side and _mdir and _mscore is not None:
+            _oppose = (side == "BUY" and _mdir == "BEAR") or (side == "SELL" and _mdir == "BULL")
+            _agree = (side == "BUY" and _mdir == "BULL") or (side == "SELL" and _mdir == "BEAR")
+            _strong = (_mscore <= 32 or _mscore >= 68)
+            if _oppose and _strong and _malign >= 0.66:
+                _matrix_veto = True
+                _matrix_note = (f"confluence {_mscore}% {_mdir} strongly opposes {side} "
+                                f"(align {int(_malign*100)}%) → WAIT")
+            elif _agree:
+                _matrix_note = f"confluence {_mscore}% {_mdir} agrees with {side}"
+            else:
+                _matrix_note = f"confluence {_mscore}% {_mdir} (mild/neutral vs {side})"
+    except Exception as _mxe:
+        _matrix_note = f"matrix skipped ({_mxe})"
+    add("matrix_confluence", not _matrix_veto, _matrix_note, weight="SOFT")
+    if _matrix_veto and verdict == "GO":
+        verdict = "WAIT"
+        reason_ar = f"🧭 {_matrix_note}"
+
     confidence = 0
     if archetype_picks: confidence = archetype_picks[0][1]
     # Subtract from confidence for any soft warnings
