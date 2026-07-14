@@ -33,7 +33,9 @@ ENGINES = {
     # 👑 الرابح أوّلاً (أمر المستخدم 2026-07-10 «كودنا الرابح اطلقه دائماً اول واحد»): الحارس (ماجيك 20260701،
     # +$35.74/66 صفقة) يُفحَص ويُطلَق قبل كلّ المحرّكات — أوّل من يعود عند أيّ سقوط.
     "gold_level_sentinel.py":     (["gold_level_sentinel.py"], MT5),
-    "r_native.brain_server":      (["-u", "-m", "r_native.brain_server"], MT5),
+    # ⛔ DEPRECATED 2026-07-14 (توحيد التشغيل #1): عقلٌ ثانٍ يربط :5055 ويتنازعه مع brain_server.py
+    # الجذر (split-brain — سبب تعارض المنفذ المتكرّر). عقلٌ واحد فقط. للتراجع: أزِل التعليق.
+    # "r_native.brain_server":      (["-u", "-m", "r_native.brain_server"], MT5),
     "runtime.unified_trader":     (["-m", "runtime.unified_trader"], V2),
     "brain_server.py":            (["brain_server.py"], MT5),   # 🧠 العقل 5055 (كان يعمل بلا حارس!)
     # ✅ multi_trader أُعيد (طلب المستخدم 2026-07-02 «رجّع المشروع على جميع العملات») — تحت lot_guard + حوكمة المايسترو.
@@ -261,7 +263,7 @@ _FOCUS_KEEP = {"master_floor.py", "peak_watch.py",
                "r_hybrid_pilot.py", "boundary_pilot.py",                 # 🧪⚔️ منفّذا العيّنات (20260713/20260714)
                "learning_pulse.py", "r_native.auto_ga_daemon",           # 🎓🧬 المُرقّي + حملات الجينات
                "runtime.unified_trader",                                 # 🧠 الموحّد 99782 (رابحنا المتعدّد!) — كان خارج التركيز فلا يُحيا (علّة 2026-07-14)
-               "brain_server.py", "r_native.brain_server",               # 🧠 العقل 5055 + عقل r_native — تحت الحراسة
+               "brain_server.py",                                        # 🧠 العقل الوحيد 5055 (r_native.brain_server أُزيل — توحيد #1)
                "real_lock.py",                                            # 🔒 قفل الحقيقيّ
                "order_janitor.py", "ollama_council.py", "council_executor.py",  # 🧹 البوّاب + 🏛️ المجلس + ⚖️ منفّذه
                "system_graph/server.py",                                 # 🕸️ خريطة المنظومة الحيّة :8012
