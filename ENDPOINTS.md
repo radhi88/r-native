@@ -1,6 +1,6 @@
 # R-Native — API Endpoints
 
-`brain_server.py` @ `localhost:5055` — 109 routes (55 under `/api/r/`).
+`brain_server.py` @ `localhost:5055` — 110 routes (56 under `/api/r/`).
 
 
 | Endpoint | Methods | Purpose |
@@ -36,6 +36,7 @@
 | `/api/r/similar` | [GET] | Pattern matcher: given a proposed setup, find historically similar |
 | `/api/r/equity_curve` | [GET] |  |
 | `/api/r/full` | [GET] | Single rich snapshot for the R Factory UI — combines account, executor, |
+| `/api/r/proof_gate` | [GET] | HONEST PROOF-GATE for the R executor (magic 20260605). |
 | `/api/r/hour_symbol_heatmap` | [GET] | Hour-of-day × symbol P/L heatmap for R trades (magic 20260605). |
 | `/api/r/trade_gate` | [GET] | R's exact decision on whether to enter a trade RIGHT NOW. |
 | `/api/r/multi_tf_strategies` | [GET] | For each TF (M5/M15/H1/H4), produce strategy guidance based on Algory wisdom. |

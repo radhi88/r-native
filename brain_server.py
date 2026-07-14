@@ -2295,6 +2295,83 @@ def api_r_full():
         return jsonify({"ok": False, "error": str(e), "tb": traceback.format_exc()[:300]})
 
 
+@app.route("/api/r/proof_gate")
+def api_r_proof_gate():
+    """HONEST PROOF-GATE for the R executor (magic 20260605).
+
+    Pulls closed-trade net P/Ls for magic 20260605 from the canonical live/display
+    source named by the assessment (MT5 history_deals_get, paired by position_id,
+    net = profit + swap + commission — exactly desk_scoreboard/_api_r_full's rule),
+    feeds proof_gate.compute(), and returns the honest verdict
+    (GREEN / RED / ACCUMULATING). FAIL-OPEN: never 500 — always returns 200 with an
+    'ok' flag and, on any error, verdict='ACCUMULATING' plus an 'error' field.
+
+    Query params:
+        magic (int, default 20260605), days (int, default 14).
+    """
+    MAGIC = 20260605
+    try:
+        magic = int(request.args.get("magic", MAGIC))
+    except Exception:
+        magic = MAGIC
+    try:
+        days = int(request.args.get("days", 14))
+    except Exception:
+        days = 14
+
+    # Import the pure module lazily so a missing/broken import can't take the route down.
+    try:
+        from friday_v3.algory import proof_gate as _pg
+    except Exception:
+        try:
+            import proof_gate as _pg  # fallback if run with algory on path
+        except Exception as e:
+            return jsonify({"ok": False, "magic": magic,
+                            "verdict": "ACCUMULATING",
+                            "reason": "proof_gate module unavailable",
+                            "error": str(e),
+                            "ts": datetime.now().isoformat()})
+
+    out = {"ts": datetime.now().isoformat(), "magic": magic, "days": days,
+           "source": "mt5.history_deals_get (net=profit+swap+commission, paired by position_id)"}
+
+    if not HAS_MT5:
+        res = _pg.compute([], magic=magic)
+        out.update(res)
+        out["ok"] = False
+        out["error"] = "mt5 unavailable"
+        return jsonify(out)
+
+    try:
+        _ensure_mt5_alive()
+        from datetime import timedelta as _td
+        deals = mt5.history_deals_get(datetime.now() - _td(days=days), datetime.now()) or []
+        r_deals = [d for d in deals if int(d.magic) == magic]
+        # Pair entries with exits by position_id; net-of-cost on the CLOSED trade.
+        positions = {}
+        for d in r_deals:
+            positions.setdefault(int(d.position_id), []).append(d)
+        nets = []
+        for pid, ds in positions.items():
+            if len(ds) < 2:
+                continue  # still open / unpaired — not a closed trade
+            ds = sorted(ds, key=lambda x: x.time)
+            out_d = ds[-1]
+            nets.append(float(out_d.profit) + float(out_d.swap) + float(out_d.commission))
+        res = _pg.compute(nets, magic=magic)
+        out.update(res)
+        out["ok"] = True
+        return jsonify(out)
+    except Exception as e:
+        import traceback
+        res = _pg.compute([], magic=magic)
+        out.update(res)
+        out["ok"] = False
+        out["error"] = str(e)
+        out["tb"] = traceback.format_exc()[:300]
+        return jsonify(out)
+
+
 @app.route("/api/r/hour_symbol_heatmap")
 def api_r_hour_symbol_heatmap():
     """Hour-of-day × symbol P/L heatmap for R trades (magic 20260605).
