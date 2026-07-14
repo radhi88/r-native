@@ -45,6 +45,9 @@ jobs:
     - name: Age-gate unit test
       run: python tests/test_age_gate.py
 
+    - name: SMC levels unit test (sweeps + order blocks)
+      run: python tests/test_smc_levels.py
+
     - name: GA campaign smoke test (synthetic MT5 stub)
       # test_campaign.py imports the repo as the r_native package, so alias
       # the checkout under that name and put the MT5 stub on the path.

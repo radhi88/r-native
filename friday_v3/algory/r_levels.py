@@ -167,6 +167,129 @@ def get_fvg_levels(symbol: str, lookback: int = 60) -> list[Level]:
     return bulls + bears
 
 
+# ── SMC: liquidity sweeps ────────────────────────────────────────
+def _atr_from_bars(bars: np.ndarray, period: int = 14) -> float:
+    h = bars["high"].astype(float); l = bars["low"].astype(float)
+    c = bars["close"].astype(float)
+    prev_c = np.roll(c, 1); prev_c[0] = c[0]
+    tr = np.maximum(h - l, np.maximum(abs(h - prev_c), abs(l - prev_c)))
+    n = min(period, len(tr))
+    return float(tr[-n:].mean())
+
+
+def _swing_indices(bars: np.ndarray, pivot: int = 3) -> tuple[list[int], list[int]]:
+    """Indices of swing highs and swing lows (same pivot rule as get_swing_levels)."""
+    highs = bars["high"]; lows = bars["low"]
+    sw_h, sw_l = [], []
+    for i in range(pivot, len(bars) - pivot):
+        if all(highs[i] >= highs[i-k] for k in range(1, pivot+1)) and \
+           all(highs[i] >= highs[i+k] for k in range(1, pivot+1)):
+            sw_h.append(i)
+        elif all(lows[i] <= lows[i-k] for k in range(1, pivot+1)) and \
+             all(lows[i] <= lows[i+k] for k in range(1, pivot+1)):
+            sw_l.append(i)
+    return sw_h, sw_l
+
+
+def _sweeps_from_bars(bars: np.ndarray, pivot: int = 3, recent: int = 8,
+                      confirm: int = 3) -> dict:
+    """Liquidity sweep = a recent bar wicks through a PRIOR swing high/low,
+    then price closes back inside within `confirm` bars (stop-hunt + reversal).
+
+    sweep_above → buy-side liquidity above a swing high was taken (bearish clue)
+    sweep_below → sell-side liquidity below a swing low was taken (bullish clue)
+    """
+    out = {"sweep_above": False, "sweep_below": False,
+           "sweep_above_level": None, "sweep_below_level": None}
+    if bars is None or len(bars) < 2 * pivot + recent + 1:
+        return out
+    highs = bars["high"].astype(float); lows = bars["low"].astype(float)
+    closes = bars["close"].astype(float)
+    first_recent = len(bars) - recent
+    sw_h, sw_l = _swing_indices(bars, pivot)
+
+    swept_high, swept_low = [], []
+    for j in range(first_recent, len(bars)):
+        # swings must predate the sweep bar (and not be inside the pivot
+        # window that includes it)
+        for i in (i for i in sw_h if i < j - pivot):
+            level = highs[i]
+            if highs[j] > level:                     # wick took the high...
+                back = closes[j:j + confirm + 1]
+                if (back <= level).any():            # ...and closed back under
+                    swept_high.append(level)
+        for i in (i for i in sw_l if i < j - pivot):
+            level = lows[i]
+            if lows[j] < level:
+                back = closes[j:j + confirm + 1]
+                if (back >= level).any():
+                    swept_low.append(level)
+    if swept_high:
+        # report the most significant liquidity taken (the highest high)
+        out["sweep_above"] = True
+        out["sweep_above_level"] = round(max(swept_high), 3)
+    if swept_low:
+        out["sweep_below"] = True
+        out["sweep_below_level"] = round(min(swept_low), 3)
+    return out
+
+
+def detect_liquidity_sweeps(symbol: str, lookback: int = 100) -> dict:
+    """H1 liquidity-sweep flags for the gate: sweep_above / sweep_below."""
+    bars = _last_n_bars(symbol, mt5.TIMEFRAME_H1, lookback)
+    if bars is None:
+        return {"sweep_above": False, "sweep_below": False,
+                "sweep_above_level": None, "sweep_below_level": None}
+    return _sweeps_from_bars(bars)
+
+
+# ── SMC: order blocks ────────────────────────────────────────────
+def _order_blocks_from_bars(bars: np.ndarray, impulse_atr_mult: float = 1.5,
+                            impulse_span: int = 3, max_each: int = 3) -> dict:
+    """Bull OB: last down-close candle right before an impulsive up-move
+    (close advances ≥ impulse_atr_mult × ATR within `impulse_span` bars).
+    Bear OB: last up-close candle before an impulsive drop.
+    Zone = the candle's [low, high]. `mitigated` = price traded back into
+    the zone after the impulse (precision entries want UNmitigated blocks).
+    """
+    result = {"OB_bull": [], "OB_bear": []}
+    if bars is None or len(bars) < impulse_span + 5:
+        return result
+    o = bars["open"].astype(float); h = bars["high"].astype(float)
+    l = bars["low"].astype(float);  c = bars["close"].astype(float)
+    atr = _atr_from_bars(bars)
+    if atr <= 0:
+        return result
+
+    for i in range(1, len(bars) - impulse_span):
+        move_up   = max(c[i+1:i+1+impulse_span]) - c[i]
+        move_down = c[i] - min(c[i+1:i+1+impulse_span])
+        if c[i] < o[i] and move_up >= impulse_atr_mult * atr:
+            zone_top, zone_bot = h[i], l[i]
+            mitigated = bool((l[i+impulse_span+1:] <= zone_top).any()) \
+                if i + impulse_span + 1 < len(bars) else False
+            result["OB_bull"].append({
+                "top": round(zone_top, 3), "bottom": round(zone_bot, 3),
+                "bars_ago": len(bars) - 1 - i, "mitigated": mitigated})
+        elif c[i] > o[i] and move_down >= impulse_atr_mult * atr:
+            zone_top, zone_bot = h[i], l[i]
+            mitigated = bool((h[i+impulse_span+1:] >= zone_bot).any()) \
+                if i + impulse_span + 1 < len(bars) else False
+            result["OB_bear"].append({
+                "top": round(zone_top, 3), "bottom": round(zone_bot, 3),
+                "bars_ago": len(bars) - 1 - i, "mitigated": mitigated})
+
+    result["OB_bull"] = result["OB_bull"][-max_each:]
+    result["OB_bear"] = result["OB_bear"][-max_each:]
+    return result
+
+
+def detect_order_blocks(symbol: str, lookback: int = 120) -> dict:
+    """H1 order blocks with mitigation status: OB_bull / OB_bear lists."""
+    bars = _last_n_bars(symbol, mt5.TIMEFRAME_H1, lookback)
+    return _order_blocks_from_bars(bars)
+
+
 # ── Round numbers ───────────────────────────────────────────────
 def get_round_numbers(current_price: float, step: float = 5.0,
                        count_each_side: int = 3) -> list[Level]:
@@ -199,6 +322,29 @@ def compute_all_levels(symbol: str = "XAUUSDm") -> dict:
         all_levels += get_swing_levels(symbol)
         all_levels += get_fvg_levels(symbol)
         all_levels += get_round_numbers(current)
+
+        # SMC: sweeps + order blocks (fail-soft — levels still work without)
+        smc = {"sweep_above": False, "sweep_below": False,
+               "sweep_above_level": None, "sweep_below_level": None,
+               "OB_bull": [], "OB_bear": []}
+        try:
+            smc.update(detect_liquidity_sweeps(symbol))
+            obs = detect_order_blocks(symbol)
+            smc.update(obs)
+            for ob in obs["OB_bull"]:
+                if not ob["mitigated"]:
+                    mid = (ob["top"] + ob["bottom"]) / 2
+                    all_levels.append(Level(
+                        f"OB_BULL_{mid:.2f}", mid, "support", 0.8,
+                        f"Unmitigated bull OB [{ob['bottom']:.2f}-{ob['top']:.2f}]"))
+            for ob in obs["OB_bear"]:
+                if not ob["mitigated"]:
+                    mid = (ob["top"] + ob["bottom"]) / 2
+                    all_levels.append(Level(
+                        f"OB_BEAR_{mid:.2f}", mid, "resistance", 0.8,
+                        f"Unmitigated bear OB [{ob['bottom']:.2f}-{ob['top']:.2f}]"))
+        except Exception:
+            pass
 
         # Deduplicate near-identical levels (within 0.05 = 5 cents)
         all_levels.sort(key=lambda l: l.price)
@@ -245,6 +391,7 @@ def compute_all_levels(symbol: str = "XAUUSDm") -> dict:
             "above":         [to_d(l) for l in above[:8]],
             "below":         [to_d(l) for l in below[:8]],
             "total_levels":  len(dedup),
+            "smc":           smc,
         }
     except Exception as e:
         return {"ok": False, "error": str(e)}

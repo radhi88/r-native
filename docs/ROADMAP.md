@@ -37,10 +37,12 @@
       DOD: chart.js line chart, color-coded segments (green/red)
       EST: 25 min
 
-- [ ] P2 · GATE · Add ADX trend strength to direction check
+- [x] P2 · GATE · Add ADX trend strength to direction check
       WHY: avoid trading in pure chop even when bias agrees
       DOD: gate refuses if ADX < 20 on H1
-      EST: 20 min
+      DONE: _compute_adx_h1 + adx_trend_strength check in trade_gate.
+      NOTE: threshold ADX_MIN_H1 currently 0.0 by owner override
+      2026-05-25 ("trade chop too") — raise to 20 to re-arm the gate
 
 ---
 
@@ -56,20 +58,23 @@
       DOD: symbol_book includes hours_pass_rate; gate respects it
       EST: 40 min
 
-- [ ] P2 · GATE · News blackout window using FF calendar (±15 min around High)
+- [x] P2 · GATE · News blackout window using FF calendar (±15 min around High)
       WHY: avoid getting whipsawed
       DOD: gate adds news_blackout hard check (use existing news_straddle parser)
-      EST: 30 min
+      DONE: trade_gate not_in_news_blackout check; 2026-07 fix made parser
+      failure visible instead of silently reporting "clear"
 
-- [ ] P1 · SMC · Detect liquidity sweeps (recent high/low taken then reversal)
+- [x] P1 · SMC · Detect liquidity sweeps (recent high/low taken then reversal)
       WHY: classic SMC trigger for entries
       DOD: r_levels exposes sweep_above / sweep_below booleans
-      EST: 45 min
+      DONE 2026-07: r_levels.detect_liquidity_sweeps() + smc block in
+      compute_all_levels; unit-tested in tests/test_smc_levels.py
 
-- [ ] P2 · SMC · Order Block detection (last bullish before drop, bearish before rally)
+- [x] P2 · SMC · Order Block detection (last bullish before drop, bearish before rally)
       WHY: precision SL placement
       DOD: r_levels.OB_bull / OB_bear with mitigation status
-      EST: 50 min
+      DONE 2026-07: r_levels.detect_order_blocks() — unmitigated OBs also
+      feed compute_all_levels as weighted S/R levels
 
 ---
 
