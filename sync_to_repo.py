@@ -54,19 +54,11 @@ DANGER = re.compile(
 
 
 def build_mirror() -> tuple[int, float]:
-    # Clear previous working tree but PRESERVE .git (keeps remote + branches intact).
-    if os.path.exists(DST):
-        for name in os.listdir(DST):
-            if name == ".git":
-                continue
-            p = os.path.join(DST, name)
-            if os.path.isdir(p):
-                shutil.rmtree(p, ignore_errors=True)
-            else:
-                try: os.remove(p)
-                except OSError: pass
-    else:
-        os.makedirs(DST, exist_ok=True)
+    # ADDITIVE sync: copy MT5 code over the repo (add/update), NEVER wipe the tree.
+    # This preserves files that live only in the repo (e.g. main's agents/ suite
+    # merged in) — a destructive rebuild would delete them. Trade-off: files you
+    # delete in MT5 won't auto-remove from the repo (remove them there by hand).
+    os.makedirs(DST, exist_ok=True)
     copied = 0; total = 0
     for root, dirs, files in os.walk(SRC):
         dirs[:] = [d for d in dirs if d not in DENY and not d.startswith(".")
@@ -282,8 +274,8 @@ def main():
            "  (nothing to commit)") + (f"\n{c.stdout.strip()}" if c.stdout.strip() else ""))
 
     if args.push:
-        print("→ pushing to origin…")
-        p = git("push", "origin", "HEAD")
+        print("→ pushing to origin/main…")
+        p = git("push", "origin", "HEAD:main")
         print("  " + ("pushed ✓" if p.returncode == 0 else "push failed:\n" + p.stderr))
     else:
         print("\nMirror ready at:", DST)

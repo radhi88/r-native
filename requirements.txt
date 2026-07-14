@@ -1,7 +1,5 @@
-MetaTrader5
-PySide6>=6.7
 anthropic
-flask>=3.0
+MetaTrader5
 joblib
 langchain
 langchain-anthropic
@@ -12,10 +10,8 @@ numpy
 ollama
 openai
 pandas
-psutil>=5.9
-pyarrow
 pydantic
-pyttsx3>=2.90
+pyarrow
 pyzmq
 requests
 scikit-learn
