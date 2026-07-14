@@ -1,0 +1,4175 @@
+[
+  {
+    "ts": "01:45:54",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول بقوة مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:46:21",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:47:02",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:03",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستويات محددة ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:03",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:05",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:06",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول بقوة مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب: خط أفقي مستوى رئيسي ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#a855f7",
+          "label": "level support"
+        },
+        {
+          "type": "channel",
+          "from": {
+            "bars_ago": 20,
+            "price": 4515
+          },
+          "to": {
+            "bars_ago": 0,
+            "price": 4548
+          },
+          "width": 12,
+          "color": "#22d3ee",
+          "label": "ascending channel"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:08",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:47:39",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:39",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4560.0,
+          "reason": "مستوى سعرى فعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:41",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:41",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:43",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "السوق صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى قوي"
+        },
+        {
+          "side": "SELL",
+          "price": 4612.23,
+          "reason": "الدعم من المستويات المحددة"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#a855f7",
+          "label": "POC"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4520.0
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4548.0
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4520.0,
+          "color": "#10b981",
+          "label": "support"
+        },
+        {
+          "type": "fib",
+          "high": 4600.0,
+          "low": 4500.0,
+          "label": "Fib 38.2%"
+        },
+        {
+          "type": "marker",
+          "bars_ago": 3,
+          "shape": "arrowUp|circle",
+          "color": "#22d3ee",
+          "label": "BOS"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:47:45",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:48:17",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "fractal_dir_neutral+smc_bias_BUY"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:18",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "ال Fractal و SMC بيعبجان المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:20",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ومستوى سعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:20",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#a855f7",
+          "label": "POC"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4520.0
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4548.0
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4520.0,
+          "color": "#10b981",
+          "label": "support/demand"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:20",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:22",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:48:53",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الأعلى من المستويات المحددة بحوالي 10 نقاط للحفاظ على التوازن",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4672.49,
+          "reason": "Fractal Neutral"
+        },
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "Strength from fractal and SMC bias"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:53",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:55",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "",
+      "stance": "WAIT",
+      "confidence": 0,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:56",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:48:58",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب المحدد من قبل"
+        },
+        {
+          "side": "SELL",
+          "price": 4527.31,
+          "reason": "دعم المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#a855f7",
+          "label": "POC"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4527.31
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4549.2
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4550.0,
+          "bottom": 4528.0,
+          "color": "#10b981",
+          "label": "support/demand"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:49:00",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:49:33",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:49:34",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:49:35",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "WAIT: أدعم انتظار السوق لحين تحديد إشارات واضحة",
+      "stance": "WAIT",
+      "confidence": 75,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:49:37",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#ff6f61",
+          "label": "Pivot Point"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 20,
+            "price": 4527.32
+          },
+          "to": {
+            "bars_ago": 0,
+            "price": 4538.4
+          },
+          "color": "#1abc9c",
+          "label": "Support"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4520.0,
+          "color": "#e7d31b",
+          "label": "Resistance Zone"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:49:37",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة"
+        },
+        {
+          "side": "BUY",
+          "price": 4600.0,
+          "reason": "مستوى أعلى من المستويات المحددة بحوالي 10 نقاط للحفاظ على التوازن"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:49:39",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:50:11",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4146.23,
+          "reason": "السبريد العالي"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:11",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:12",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:16",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4600.0,
+          "reason": "مستوى دعم قوي واتجاه صاعد"
+        },
+        {
+          "side": "BUY",
+          "price": 4580.0,
+          "reason": "مستوى دعم من المستويات المحددة"
+        },
+        {
+          "side": "BUY",
+          "price": 4560.0,
+          "reason": "مستوى دعم قوي واتجاه صاعد"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:16",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 70,
+      "levels": [],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4527.32,
+          "color": "#a855f7",
+          "label": "Swing↑"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4515
+          },
+          "to": {
+            "bars_ago": 0,
+            "price": 4548
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4555.0,
+          "bottom": 4548.0,
+          "color": "#10b981",
+          "label": "demand"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:18",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:50:48",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، تترقب نتائج فرز مستويات Fractal وإشارات S",
+      "stance": "WAIT",
+      "confidence": 0,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:49",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:49",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:50",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "بسبب التوازن العالية مع دعم مستويات الفولتاجية والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول بقوة",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:50",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:50:52",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:51:21",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، تترقب نتائج فرز مستويات Fractal وإشارات S",
+      "stance": "WAIT",
+      "confidence": 75,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:51:22",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:51:22",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40, أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:51:23",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:51:24",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "مستوى السعر الفعلى"
+        },
+        {
+          "side": "SELL",
+          "price": 4527.8,
+          "reason": "دعم مستويات الفولتاجية"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:51:26",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:51:56",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:51:56",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الزخم يدعم الدخول واتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "دعم مستويات الفولتاجية ومستوى السعر الفعلى"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:51:57",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:51:57",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الأمر غير واضح بالنظر إلى الحالة الحرجة ومخاطر المخاطرة المرتفعة",
+      "stance": "WAIT",
+      "confidence": 0,
+      "levels": [],
+      "drawings": [],
+      "veto": true
+    }
+  },
+  {
+    "ts": "01:51:58",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4681.27,
+          "reason": "مستوى أعلى الاتجاه صاعد"
+        },
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "المستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:52:00",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:52:30",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "خطة الدخول مع احترام لل_fractal_con ودعم المستويات المحددة",
+      "stance": 85,
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:52:31",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "اتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:52:32",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:52:32",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4560.0,
+          "reason": "مستوى مستهدف"
+        },
+        {
+          "side": "SELL",
+          "price": 4538.4,
+          "reason": "مستوى الدعم الأساسي"
+        },
+        {
+          "side": "SELL",
+          "price": 4527.4,
+          "reason": "مستوى المقاومة الأدنى"
+        },
+        {
+          "side": "BUY|SELL",
+          "price": 4600.0,
+          "reason": "مستوى المتوقع للارتفاع"
+        },
+        {
+          "side": "BUY|SELL",
+          "price": 4450.0,
+          "reason": "مستوى المتوقع للتراجع"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:52:33",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:52:35",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:53:07",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:08",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_confiden",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:08",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:09",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:11",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con وم",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى الفعلى والدعم من المستويات المحددة"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#a855f7",
+          "label": "POC"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4520.0
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4548.0
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4538.4,
+          "color": "#10b981",
+          "label": "support"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:13",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:53:46",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي ومستوى سعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "مستوى السعر الفعلى وال_fractal_con"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:47",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:47",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con وثقة ع",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى السعر الفعلى عند 4538.40 ودعم من المستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:48",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:50",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب: مستويات المدفوعات السعرية محددة ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4527.32,
+          "color": "#a855f7",
+          "label": "Swing High"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4520.0
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4548.0
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4538.4,
+          "color": "#10b981",
+          "label": "support"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:53:52",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:54:25",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي مع_fractal_con، أدعم الدخول",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": null,
+          "reason": "_fractal_con"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:54:26",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:54:26",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى السعر الفعلى عند 4538.40، دعم قوي من المستويات المحددة والمستوى السعرى الفعلى"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:54:28",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con وث",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:54:29",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي ومستوى سعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب: مستويات المقاومة التقليدية ودعم المستويات المحددة"
+        },
+        {
+          "side": "SELL",
+          "price": 4527.0,
+          "reason": "السبب: ضغط البيع من حركة السعر"
+        },
+        {
+          "side": "SELL",
+          "price": 4530.0,
+          "reason": "السبب: مستويات المقاومة التقليدية ودعم المستويات المحددة"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#a855f7",
+          "label": "Support"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4527.0
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4555.5
+          },
+          "color": "#fbbf24",
+          "label": "Bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4538.4,
+          "color": "#10b981",
+          "label": "Resistance"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:54:31",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:55:32",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "دخل بيع عند مستوى الفرقة السعرية 4538.00 مع احترام لل_fractal_con",
+      "stance": "SELL",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4538.0,
+          "reason": "fractal_con"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:55:33",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي ومستوى سعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ومستوى السعر الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:55:33",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:55:36",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:55:36",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:56:32",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:57:03",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الزخم يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:03",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ومستوى السعر الفعلى عند 4538.40 يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى السعر الفعلى والاتجاه صاعد"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:04",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con وS",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "Fractal + SMC bias BUY"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:05",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:05",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي ومستوى سعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى الفعلى ودعم قوي من المستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:07",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:57:33",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الزخم يدعم الدخول مع احترام لل_fractal_con ومستوى السعر الفعلى عند 4538.40",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4527.8,
+          "reason": "BUY@4527.80(3.0x)"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:34",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ومستوى السعر الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:36",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم المستويات المحددة والمستوى السعرى الفعلى عند 4538.40 واحترام لل_fractal_con"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:36",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:36",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي ومستوى سعرى الفعلى عند 4538.40، أدعم الدخول في البيع مع احترام لل_fractal_con",
+      "stance": "SELL",
+      "confidence": 70,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "Fractal Contra"
+        },
+        {
+          "side": "SELL",
+          "price": 4528.1,
+          "reason": "Fractal Contra"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#ff6b6b",
+          "label": "SUPPORT"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4527.8
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4538.4
+          },
+          "color": "#fbbf24",
+          "label": "BULL TRENDS"
+        },
+        {
+          "type": "zone",
+          "top": 4681.27,
+          "bottom": 4672.02,
+          "color": "#10b981",
+          "label": "Frac High-Frac Low"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:57:38",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:58:09",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con وم",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى فعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:09",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى الفعلى ودعم المستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:09",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي ومستوى سعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:14",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي ومستوى سعرى الفعلى عند 4538.40، أدعم الدخول بالشراء مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4527.8,
+          "reason": "Fractal Con"
+        },
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:14",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:16",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:58:47",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": ""
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:47",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "مستوى سعرى الفعلى"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:48",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con وت",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "تقاطع مع مستويات swing高的强度倍增"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:49",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ومستوى السعر الفعلى عند 4538.40 يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى السعر الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:50",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى فعال ودعم قوي من المستويات المحددة"
+        },
+        {
+          "side": "SELL",
+          "price": 4600.0,
+          "reason": "التقاط جنباً إلى جنب مع ضغط البيع المتصاعد"
+        },
+        {
+          "side": "SELL",
+          "price": 4520.0,
+          "reason": "مستوى الدعم الجدید المستدام"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:58:52",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:59:18",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "تفضيل الدخول بالشراء مع احترام للfractal ودعم المستويات المحددة",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:18",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي ومستوى سعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى الفعلى والاتجاه صاعد"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:19",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con وت",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4600.0,
+          "reason": "تفعيل فجوة القيمة الجامعية ودعم قوي من المستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:21",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:22",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى الفعلى عند 4538.40 ودعم قوي من المستويات المحددة"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#10b981",
+          "label": "support"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4527.32
+          },
+          "to": {
+            "bars_ago": 1,
+            "price": 4538.4
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4538.0,
+          "color": "#22d3ee",
+          "label": "demand"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:24",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "01:59:52",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40 يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:53",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:53",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "",
+      "stance": "WAIT",
+      "confidence": 0,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:55",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con ون",
+      "stance": "BUY",
+      "confidence": 70,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:55",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con وت",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "01:59:57",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:00:22",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:22",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الزخم يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4600,
+          "reason": "زخم صاعد ودعم قوي من المستويات المحددة"
+        },
+        {
+          "side": "SELL",
+          "price": 4480,
+          "reason": "المستوى السعرى الفعلى عند 4538.40 ودعم قوي من المستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:23",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con ون",
+      "stance": "BUY",
+      "confidence": 100,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:24",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:26",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول.",
+      "stance": "BUY",
+      "confidence": 70,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4600.0,
+          "reason": "السبب"
+        },
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستوى سعرى محتمل لدعم الاتجاه الصاعد"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#a855f7",
+          "label": "Support"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4520.0
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4548.0
+          },
+          "color": "#fbbf24",
+          "label": "Bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4600.0,
+          "bottom": 4500.0,
+          "color": "#10b981",
+          "label": "Potential resistance"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:28",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:00:55",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الزخم يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:57",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعد الاتجاه مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40، أدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 70,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم قوي من المستويات المحددة والمستوى السعرى الفعلى عند 4538.40 مع احترام لل_fractal_con"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:58",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": 100,
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4681.27,
+          "reason": "أعلى مستويات سعرية"
+        },
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "مستوى السعر الفعلي العالي"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:59",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:00:59",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con ون",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4560.0,
+          "reason": "السبب: مستويات محددة والمستوى السعرى الفعلى عند 4538.40"
+        },
+        {
+          "side": "SELL",
+          "price": 4527.0,
+          "reason": "السبب: مستويات المقاومة المحتملة"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4538.4,
+          "color": "#a855f7",
+          "label": "POC"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4527.4
+          },
+          "to": {
+            "bars_ago": 0,
+            "price": 4560.0
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4538.4,
+          "color": "#10b981",
+          "label": "resistance area"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:01:02",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:01:29",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4570.0,
+          "reason": "دعم المستويات المحددة والمستوى السعرى الفعلى عند 4538.40"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:01:30",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "صاعد الاتجاه مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4600.0,
+          "reason": "صعود قوي ودعم من المستويات المحددة"
+        },
+        {
+          "side": "SELL",
+          "price": 4350.0,
+          "reason": "الضغط المحتمل من فوق"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:01:31",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "زخم دعم مستويات Fractal وSMC"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:01:32",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود قوي مع دعم من المستويات المحددة وتحذير لل_fractal_con، أدعم الدخول",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4538.4,
+          "reason": "دعم مستويات محددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con"
+        },
+        {
+          "side": "SELL",
+          "price": 4527.8,
+          "reason": "fractal_con ينذر بال的风险"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:01:33",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "",
+      "stance": "WAIT",
+      "confidence": 0,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:01:35",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4538.4,
+      "sl": 4527.8,
+      "tp": 4600,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:02:43",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود قوي مع دعم من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": 100,
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:02:43",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول رغم اتجاه Fractal Neutral",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "صعود قوي مع دعم من المستويات المحددة وتحذير لل_fractal_con"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:02:43",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة، أدعم الدخول مع احترام لل_fractal_con ون",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ومع دعم قوي من المستويات المحددة وال_fractal_con ن"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:02:44",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "WAIT: السعر قرب المستويات المحددة يحتمل التوقف عن الدخول مع احترام لل_fractal_con",
+      "stance": 30,
+      "confidence": 70,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:02:45",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4560.0,
+          "reason": "دعم مستويات محددة ومستوى سعرى فعلى"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:03:35",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:04:12",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة ودعم السعر الفعلي يدعم الدخول رغم اتجاه Fractal Neutral",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم قوي من المستويات المحددة والمستوى السعرى الفعلى"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:04:13",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود قوي مع دعم من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول رغم اتجاه Fractal Neutral",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4560.0,
+          "reason": "صعود قوي ودعم من المستويات المحددة"
+        },
+        {
+          "side": "SELL",
+          "price": 4530.0,
+          "reason": "顾虑 Fractal Neutral"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:04:14",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول رغم اتجاه Fractal Neutral",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4520.0,
+          "reason": "Fractal Neutral"
+        },
+        {
+          "side": "BUY|SELL",
+          "price": 4555.5,
+          "reason": "دعم المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول"
+        },
+        {
+          "side": "CHoCH",
+          "price": 4672.0,
+          "reason": "الدعم من المستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:04:15",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول مع احترام لل_fractal_con",
+      "stance": 100,
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4672.02,
+          "reason": "الدعم من المستويات المحددة والمستوى السعرى الفعلى"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:04:15",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود قوي مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول",
+      "stance": 85,
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "صعود قوي ودعم من المستويات المحددة"
+        },
+        {
+          "side": "SELL",
+          "price": 4520.0,
+          "reason": "تقلص اتجاه Fractal Neutral"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:04:48",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:05:25",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة والمستوى السعرى الفعلى يدعم الدخول رغم اتجاه Fractal Neutral",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم المستويات المحددة والمستوى السعرى الفعلى وتحقيق سمعة SMC BUY"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:05:26",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود قوي مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "صعود قوي ودعم مستويات محددة"
+        },
+        {
+          "side": "SELL",
+          "price": null,
+          "reason": "اتجاه Fractal Neutral"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:05:28",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول مع استعداد للدخول السريع عند FVG BUY",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "FVG يعكس الاتجاه الصاعد ومستوى s/c الفعلي يدعم الدخول"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:05:28",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود قوي مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4672.02,
+          "color": "#10b981",
+          "label": "support"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4635.0
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4672.0
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4681.27,
+          "bottom": 4672.02,
+          "color": "#10b981",
+          "label": "support zone"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:05:28",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة يشير إلى دخول بيع",
+      "stance": "SELL",
+      "confidence": 70,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4538.4,
+          "reason": "مستوى السعر الفعلي ودعم مستويات المحددة"
+        },
+        {
+          "side": "SELL",
+          "price": 4528.1,
+          "reason": "مستوى السعر الفعلي ودعم مستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": true
+    }
+  },
+  {
+    "ts": "02:05:46",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:06:18",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود قوي مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:06:19",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود قوي مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول إلى价位 4555.50",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "مستويات محددة ودعم من Fractal"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:06:19",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, سجل الدخول عند مستوى swing high وpending buy عند فرقطا",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4150.0,
+          "reason": "مستوى swing high يدعم الدخول"
+        },
+        {
+          "side": "SELL",
+          "price": 4140.0,
+          "reason": "مستوى Fractal يدعم البيع"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:06:20",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "صعود متوقع ودعم من المستويات المحددة"
+        },
+        {
+          "side": "SELL",
+          "price": 4527.8,
+          "reason": "Fractal Neutral"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:06:20",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم قوي من المستويات المحددة يشير إلى دخول بيع عند مستويات الهدف",
+      "stance": "SELL",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY|SELL",
+          "price": 4555.5,
+          "reason": "مستويات الهدف الفنية المستهدفة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:06:53",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:07:35",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة، أدعم الدخول بسعر 4527.80",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "دعم مستويات محددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:07:36",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول إلى价位 4555.50",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:07:36",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4681.27,
+          "reason": "مستويات الهدف المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:07:37",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:07:37",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم قوي من المستويات المحددة، أدعم الدخول عند فرقطا 4527.80",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:07:39",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4527.8,
+      "sl": 4528.1,
+      "tp": 4555.5,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:08:06",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة، أدعم الدخول عند مستوى swing high وpending buy عند فرقطا",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:07",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral، أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "فرقطا"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:07",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند فرقطا 4527.80",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "فرقطا 4527.80"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:10",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فر",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "pending buy"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:11",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral، أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4147.32,
+          "color": "#a855f7",
+          "label": "swing high"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4140.63
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4147.32
+          },
+          "color": "#fbbf24",
+          "label": "bull trend"
+        },
+        {
+          "type": "zone",
+          "top": 4150,
+          "bottom": 4140,
+          "color": "#10b981",
+          "label": "support zone"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:13",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:08:42",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة، أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "pending buy"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:43",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند فرقطا 4527.80 وpending buy عند FVG BUY",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "فرقطا 4527.80 وpending buy عند فر"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:45",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "أدعم الدخول عند مستوى swing high وpending buy عند فرقطا 4527.80",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:45",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:46",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "SELL",
+          "price": 4527.8,
+          "reason": "struct"
+        },
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "swing high and fractal signal"
+        }
+      ],
+      "drawings": [
+        {
+          "type": "hline",
+          "price": 4527.32,
+          "color": "#ff6666",
+          "label": "SWING HIGH"
+        },
+        {
+          "type": "trendline",
+          "from": {
+            "bars_ago": 15,
+            "price": 4520.0
+          },
+          "to": {
+            "bars_ago": 2,
+            "price": 4548.0
+          },
+          "color": "#ffcc33",
+          "label": "BULL TRENDS"
+        },
+        {
+          "type": "zone",
+          "top": 4560.0,
+          "bottom": 4520.0,
+          "color": "#10b981",
+          "label": "DYNAMIC SUPPORT"
+        },
+        {
+          "type": "fib",
+          "high": 4681.27,
+          "low": 4672.02,
+          "label": "FRACTAL L"
+        },
+        {
+          "type": "marker",
+          "bars_ago": 3,
+          "shape": "arrowUp",
+          "color": "#ffcc33",
+          "label": "BOS"
+        }
+      ],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:08:48",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:09:15",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:16",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "الاتجاه صاعد ودعم من المستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:16",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral، أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 95,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "فرقطا 4527.80"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:19",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فر",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "Level defined by Swing High and Fractal Neutral direction"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:19",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:21",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:09:56",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة وpending buy عند فرقطا 4527.80",
+      "stance": "BUY",
+      "confidence": 90,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "دعم من المستويات المحددة وpending buy عند فرقطا 4527.80"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:56",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "",
+      "stance": "WAIT",
+      "confidence": 0,
+      "levels": [],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:57",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد ودعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "Fractalticks=-3 POC=4527.4"
+        },
+        {
+          "side": "SELL",
+          "price": 4528.1,
+          "reason": "Fractalticks=-3 POC=4529.1"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:57",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "الزخم يدعم الدخول عند مستوى swing high وpending buy عند فرقطا 4527.80",
+      "stance": "BUY",
+      "confidence": 0,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "زخم دعم"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:09:58",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "صعود متوقع ودعم من المستويات المحددة"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:10:00",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  },
+  {
+    "ts": "02:10:39",
+    "sender": "RISK",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:10:40",
+    "sender": "HUNTER",
+    "topic": "dialogue",
+    "content": {
+      "say": "الاتجاه صاعد مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فر",
+      "stance": "BUY",
+      "confidence": 80,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:10:40",
+    "sender": "STRUCTURE",
+    "topic": "dialogue",
+    "content": {
+      "say": "دعم الاتجاه الصاعد مع حذر من البنية التقليدية والفرملة بسبب اتجاه فرchet Fractal Neutral, أدعم الدخول عند مستوى swing hi",
+      "stance": "BUY",
+      "confidence": 60,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4527.8,
+          "reason": "Fractal Neutral"
+        },
+        {
+          "side": "SELL",
+          "price": 4681.27,
+          "reason": "FVG BUY below price"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:10:41",
+    "sender": "MOMENTUM",
+    "topic": "dialogue",
+    "content": {
+      "say": "زخم صعودي مع دعم من المستويات المحددة، أدعم الدخول عند مستوى swing high",
+      "stance": "BUY",
+      "confidence": 75,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "زخم صعودي ودعم مستويات سعرية"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:10:41",
+    "sender": "CHARTIST",
+    "topic": "dialogue",
+    "content": {
+      "say": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neutral, أدعم الدخول عند مستوى swing high وpending buy عند فرقط",
+      "stance": "BUY",
+      "confidence": 85,
+      "levels": [
+        {
+          "side": "BUY",
+          "price": 4555.5,
+          "reason": "السبب"
+        }
+      ],
+      "drawings": [],
+      "veto": false
+    }
+  },
+  {
+    "ts": "02:10:45",
+    "sender": "COORDINATOR",
+    "topic": "decision",
+    "content": {
+      "final_action": "WAIT",
+      "side": "BUY",
+      "entry": 4555.5,
+      "sl": 4548.0,
+      "tp": 4570.0,
+      "lot": 0.01,
+      "reason": "SAFETY BLOCK: live not allowed: paper_trades=0/30, wr=0/1"
+    }
+  }
+]

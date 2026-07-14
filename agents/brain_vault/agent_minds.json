@@ -1,0 +1,644 @@
+{
+  "time": "2026-05-21T19:41:32",
+  "confluence": {
+    "time": "2026-05-21T19:41:13.776325",
+    "approved": true,
+    "swing_approved": false,
+    "scalp_approved": true,
+    "votes": 5,
+    "dir_agreement": 2,
+    "total": 8,
+    "scalp_required": 1,
+    "swing_required": 2,
+    "direction": "SELL",
+    "swing_direction": "NONE",
+    "scalp_direction": "SELL",
+    "llm_score": 6,
+    "mode": "SCALP",
+    "agent_votes": {
+      "smc": {
+        "vote": 0,
+        "dir": "SELL"
+      },
+      "volume_profile": {
+        "vote": 1,
+        "dir": "SELL"
+      },
+      "risk": {
+        "vote": 0,
+        "dir": "RISK_WARN"
+      },
+      "guard": {
+        "vote": 0,
+        "dir": "RISK_WARN"
+      },
+      "llm": {
+        "vote": 1,
+        "dir": "LLM_OK"
+      },
+      "experience": {
+        "vote": 1,
+        "dir": "EXP_OK"
+      },
+      "analyst": {
+        "vote": 1,
+        "dir": "PATTERN_OK"
+      },
+      "multi_tf": {
+        "vote": 1,
+        "dir": "BUY"
+      }
+    },
+    "smc": {
+      "bias": "SELL",
+      "bos": false,
+      "choch": false,
+      "ob": 0,
+      "fvg": 0,
+      "ema": "NEUTRAL",
+      "rsi": 50.0,
+      "confluence": "",
+      "sr_near": "NEAR_SWING_H",
+      "swing_high": 4520.52,
+      "swing_low": 4514.54,
+      "pdh": 4552.98,
+      "pdl": 4453.4
+    },
+    "sr_analysis": {
+      "smc_confluence": "",
+      "sr_near": "NEAR_SWING_H",
+      "ob_bos_alert": false,
+      "choch_alert": false,
+      "mtf_sr_bonus": false,
+      "swing_high": 4520.52,
+      "swing_low": 4514.54,
+      "pdh": 4552.98,
+      "pdl": 4453.4,
+      "pp": 4503.19,
+      "r1": 4552.98,
+      "s1": 4453.4,
+      "r2": 4602.77,
+      "s2": 4403.61
+    },
+    "approval_stats": {
+      "scalp": 606,
+      "swing": 149,
+      "rejected": 1
+    },
+    "pending_count": 4,
+    "pending_0_type": "BUY_LIMIT",
+    "pending_0_price": 4453.6,
+    "pending_0_reason": "PDL_SUP",
+    "pending_0_conf": 82,
+    "pending_0_expiry": 4,
+    "pending_1_type": "SELL_LIMIT",
+    "pending_1_price": 4552.78,
+    "pending_1_reason": "PDH_RES",
+    "pending_1_conf": 82,
+    "pending_1_expiry": 4,
+    "pending_2_type": "BUY_LIMIT",
+    "pending_2_price": 4496.13,
+    "pending_2_reason": "VAL_SUP",
+    "pending_2_conf": 80,
+    "pending_2_expiry": 4,
+    "pending_3_type": "SELL_LIMIT",
+    "pending_3_price": 4520.37,
+    "pending_3_reason": "SWING_HIGH",
+    "pending_3_conf": 78,
+    "pending_3_expiry": 4
+  },
+  "status": {
+    "symbol": "XAUUSDm",
+    "price": 4516.207,
+    "spread_points": 280.0,
+    "positions": 0,
+    "trade_allowed": true,
+    "smc_bias": "SELL",
+    "smc_status": "OB:0 FVG:0 --- ↓Bias"
+  },
+  "volume_profile": {
+    "agent": "volume_profile",
+    "time": "2026-05-21T19:41:05.117895",
+    "status": "ok",
+    "poc": 4504.999,
+    "vah": 4510.73,
+    "val": 4495.831,
+    "price": 4516.234,
+    "bias": "BULLISH",
+    "in_value_area": false,
+    "trade_signal": "SELL_ZONE",
+    "dist_poc": 11.24,
+    "source": "mt5_bar_history",
+    "bars": 200,
+    "avg_spread_points": 308.0,
+    "vote": 1,
+    "direction": "SELL"
+  },
+  "decision_stats": {
+    "total": 80,
+    "blocked": 61,
+    "entries": 19,
+    "top_reason": "weak_candle"
+  },
+  "minds": [
+    {
+      "name": "Muraaqib",
+      "eng": "Muraaqib",
+      "emoji": "M",
+      "status": "ok",
+      "vote": null,
+      "stance": "observes",
+      "observation": "يراقب الحالة العامة.",
+      "report_excerpt": "# تقرير مراقب | 2026-05-21T19:41:22.981580\n\n## 📊 الحالة العامة\n| المؤشر | القيمة |\n|--------|--------|\n| الرصيد | 75.88$ |\n| Equity | 73.82$ |\n| أقصى Drawdown | 47.0% |\n| إجمالي المسحات | 776 |\n| OB Zones | 0 |\n| FVG Zones | 0 |\n| BOS | False |\n| Bias | SELL |\n\n## 🤖 تحليل الذكاء الاصطناعي\n[Ollama offline: HTTPConnectionPool(host='localhost', port=11434): Rea"
+    },
+    {
+      "name": "Muhallib",
+      "eng": "Muhallib",
+      "emoji": "A",
+      "status": "no_output",
+      "vote": {
+        "vote": 1,
+        "dir": "PATTERN_OK"
+      },
+      "stance": "observes",
+      "observation": "آخر قرارات SMC: blocked=61 entries=19 reason=weak_candle",
+      "report_excerpt": "# تقرير محلل | 2026-05-21T19:41:05.102701\n\n## 📊 إحصاءات SMC (305 قرار إجمالي)\n| المؤشر | القيمة |\n|--------|--------|\n| OB Hit Rate | 0.0% |\n| FVG Hit Rate | 0.0% |\n| BUY signals | 108 |\n| SELL signals | 86 |\n| Entries (فعلية) | 45 |\n| Blocked (محجوبة) | 260 |\n| نسبة الدخول | 14.8% |\n| أفضل ساعة | 03:00 |\n\n## 🤖 تحليل الذكاء الاصطناعي\n[Ollama offline: HTTPCon"
+    },
+    {
+      "name": "Haaris",
+      "eng": "Haaris",
+      "emoji": "G",
+      "status": "no_output",
+      "vote": {
+        "vote": 0,
+        "dir": "RISK_WARN"
+      },
+      "stance": "observes",
+      "observation": "trade_allowed=True reason=ok",
+      "report_excerpt": "# تقرير حارس | 2026-05-21T19:41:05.103646\n\n## 🟡 مستوى الخطر: YELLOW (Score: 25/100)\n\n| المؤشر | القيمة | الحد الأقصى |\n|--------|--------|-------------|\n| Drawdown | 47.7% | 30.0% |\n| Float Loss | 2.6% | 25.0% |\n| الرصيد | 75.88$ | >10.0$ |\n| P&L الكلي | -69.28$ | - |\n| مناصب مفتوحة | 0 | - |\n\n## 🤖 تقييم الذكاء الاصطناعي\n[Ollama offline: HTTPConnectionPool(h"
+    },
+    {
+      "name": "Mutawwir",
+      "eng": "Mutawwir",
+      "emoji": "O",
+      "status": "ok",
+      "vote": null,
+      "stance": "observes",
+      "observation": "DNA gen=5 gap=1500 tp=0.62 sl=1.12",
+      "report_excerpt": "# تقرير مطوّر | 2026-05-21T19:41:22.987771\n\n## 🧬 تطور DNA\n- الجيل الحالي: **5**\n- تقييم الوكيل لنفسه: **88/100**\n- Gen 5→5 (+0) | P&L: -5.69$\n\n## 📊 أداء الظروف\n```\n  ob=0_fvg=0_bias=SELL: entries=16 blocked=126\n  ob=0_fvg=0_bias=BUY: entries=29 blocked=134\n```\nأفضل ظرف: `ob=0_fvg=0_bias=BUY`\n\n## 🤖 توصيات الذكاء الاصطناعي\n[Ollama offline: HTTPConnectionPool(h"
+    },
+    {
+      "name": "Mujalid",
+      "eng": "Mujalid",
+      "emoji": "V",
+      "status": "no_output",
+      "vote": {
+        "vote": 1,
+        "dir": "SELL"
+      },
+      "stance": "observes",
+      "observation": "VP=SELL_ZONE source=mt5_bar_history spread=308.0",
+      "report_excerpt": "# ملف الحجم | 2026-05-21T19:41\n\n## 📊 مستويات Volume Profile\n| المستوى | القيمة |\n|---------|--------|\n| POC (أعلى حجم) | 4504.999 |\n| VAH (سقف القيمة) | 4510.73 |\n| VAL (قاع القيمة) | 4495.831 |\n| السعر الحالي | 4516.234 |\n| الانحياز | BULLISH |\n| الإشارة | SELL_ZONE |\n| المصدر | mt5_bar_history |\n| الشموع | 200 |\n| متوسط السبريد | 308.0 نقطة |\n\n## 🤖 التحليل"
+    },
+    {
+      "name": "Muhaqqiq",
+      "eng": "Muhaqqiq",
+      "emoji": "L",
+      "status": "ok",
+      "vote": null,
+      "stance": "observes",
+      "observation": "يراقب الحالة العامة.",
+      "report_excerpt": "# محقق اللغة | 2026-05-21T19:41\n\n## 🧠 تقييم التماسك المنطقي\n- الدرجة: **6/10** ✅\n- القرار: **مُوافق للمرور**\n- متوسط الدرجات التاريخي: 6.0/10\n- رفضات LLM: 2 | موافقات: 1502\n\n## 📝 السرد والتقييم\n[Ollama offline — abstaining: ReadTimeout]\n"
+    },
+    {
+      "name": "Khabir",
+      "eng": "Khabir",
+      "emoji": "E",
+      "status": "no_output",
+      "vote": null,
+      "stance": "observes",
+      "observation": "يراقب الحالة العامة.",
+      "report_excerpt": "# محرك الخبرة | 2026-05-21T19:41\n\n## 📚 قاعدة المعرفة\n- أنماط مُتعلَّمة: **12**\n- أنماط سيئة مُحذَّرة: **488**\n\n## 🔍 النمط الحالي\n- البصمة: `dir=SELL_ob=0_fvg=0_bias=SELL_rsi=MID`\n- ظهر: 37803x | أدى لدخول: 17.2%\n- التحذير: ✅ مقبول\n\n## 🤖 التحليل\n[Ollama offline]\n\n## 🏆 أفضل الأنماط التاريخية\n- `dir=SELL_ob=0_fvg=0_bias=BUY_rsi=HIGH`: 1211/1211 دخولات\n- `dir=BU"
+    },
+    {
+      "name": "Mudir",
+      "eng": "Mudir",
+      "emoji": "R",
+      "status": "no_output",
+      "vote": null,
+      "stance": "observes",
+      "observation": "يراقب الحالة العامة.",
+      "report_excerpt": "# مدير المخاطر | 2026-05-21T19:41\n\n## ⚖️ Kelly Fraction: 0.05\n| المؤشر | القيمة |\n|--------|--------|\n| Drawdown | 47.7% |\n| Win Rate | 57.4% |\n| Risk Level | RED |\n\n## 🤖 [Ollama offline]\n"
+    },
+    {
+      "name": "Musharrik",
+      "eng": "Musharrik",
+      "emoji": "T",
+      "status": "no_output",
+      "vote": null,
+      "stance": "observes",
+      "observation": "يراقب الحالة العامة.",
+      "report_excerpt": "# 📊 تحليل متعدد الأطر | 2026-05-21T19:41\n\n## 🟢 BUY — السعر الحالي: **4516.234$**\n\n## 📅 OHLC الأطر السابقة\n| الإطار | فتح | أعلى | أدنى | إغلاق | VWAP |\n|--------|-----|------|------|-------|------|\n| M1 | 4515.973 | 4516.94 | 4515.588 | 4515.973 | 4507.704 |\n| M5 | 4517.665 | 4519.342 | 4516.149 | 4517.665 | 4507.662 |\n| M15 | 4517.665 | 4519.342 | 4515.497 "
+    },
+    {
+      "name": "Mujammi",
+      "eng": "Mujammi",
+      "emoji": "C",
+      "status": "no_output",
+      "vote": 1,
+      "stance": "supports_entry",
+      "observation": "يجمع الأصوات ويحوّلها إلى موافقة أو حظر.",
+      "report_excerpt": "# Confluence Report | 2026-05-21T19:41\n\n## SCALP — SELL\n\nS/R NEAR: NEAR_SWING_H\n\nBUY=1 SELL=2 dir_agree=2 llm=6/10\n\n| Agent | Vote | Dir |\n|--------|------|-----|\n| smc | NO | SELL |\n| volume_profile | YES | SELL |\n| risk | NO | RISK_WARN |\n| guard | NO | RISK_WARN |\n| llm | YES | LLM_OK |\n| experience | YES | EXP_OK |\n| analyst | YES | PATTERN_OK |\n| multi_"
+    }
+  ],
+  "messages": [
+    {
+      "time": "2026-05-21T19:41:32",
+      "from": "Mujalid",
+      "to": "Mujammi",
+      "type": "evidence",
+      "body": "Volume profile from mt5_bar_history says SELL_ZONE at price 4516.234 with POC 4504.999."
+    },
+    {
+      "time": "2026-05-21T19:41:32",
+      "from": "Mujammi",
+      "to": "all",
+      "type": "decision",
+      "body": "Confluence approved SELL with 5/8 votes."
+    }
+  ],
+  "tasks": [
+    {
+      "key": "watch-approved-buy",
+      "title": "راقب أول شمعة بعد موافقة BUY وتحقق هل دخل EA أم بقي بلا صفقة",
+      "assigned_to": "Muraaqib",
+      "source": "Mujammi",
+      "priority": "high",
+      "status": "open",
+      "created": "2026-05-21T06:31:15",
+      "updated": "2026-05-21T19:39:06",
+      "count": 461,
+      "evidence": {
+        "confluence": {
+          "time": "2026-05-21T19:38:52.064151",
+          "approved": true,
+          "swing_approved": false,
+          "scalp_approved": true,
+          "votes": 5,
+          "dir_agreement": 2,
+          "total": 8,
+          "scalp_required": 1,
+          "swing_required": 2,
+          "direction": "BUY",
+          "swing_direction": "NONE",
+          "scalp_direction": "BUY",
+          "llm_score": 6,
+          "mode": "SCALP",
+          "agent_votes": {
+            "smc": {
+              "vote": 0,
+              "dir": "BUY"
+            },
+            "volume_profile": {
+              "vote": 1,
+              "dir": "SELL"
+            },
+            "risk": {
+              "vote": 0,
+              "dir": "RISK_WARN"
+            },
+            "guard": {
+              "vote": 0,
+              "dir": "RISK_WARN"
+            },
+            "llm": {
+              "vote": 1,
+              "dir": "LLM_OK"
+            },
+            "experience": {
+              "vote": 1,
+              "dir": "EXP_OK"
+            },
+            "analyst": {
+              "vote": 1,
+              "dir": "PATTERN_OK"
+            },
+            "multi_tf": {
+              "vote": 1,
+              "dir": "BUY"
+            }
+          },
+          "smc": {
+            "bias": "BUY",
+            "bos": false,
+            "choch": false,
+            "ob": 0,
+            "fvg": 0,
+            "ema": "NEUTRAL",
+            "rsi": 50.0,
+            "confluence": "",
+            "sr_near": "NEAR_SWING_H",
+            "swing_high": 4520.52,
+            "swing_low": 4514.54,
+            "pdh": 4552.98,
+            "pdl": 4453.4
+          },
+          "sr_analysis": {
+            "smc_confluence": "",
+            "sr_near": "NEAR_SWING_H",
+            "ob_bos_alert": false,
+            "choch_alert": false,
+            "mtf_sr_bonus": false,
+            "swing_high": 4520.52,
+            "swing_low": 4514.54,
+            "pdh": 4552.98,
+            "pdl": 4453.4,
+            "pp": 4503.19,
+            "r1": 4552.98,
+            "s1": 4453.4,
+            "r2": 4602.77,
+            "s2": 4403.61
+          },
+          "approval_stats": {
+            "scalp": 599,
+            "swing": 149,
+            "rejected": 1
+          },
+          "pending_count": 4,
+          "pending_0_type": "BUY_LIMIT",
+          "pending_0_price": 4453.6,
+          "pending_0_reason": "PDL_SUP",
+          "pending_0_conf": 82,
+          "pending_0_expiry": 4,
+          "pending_1_type": "SELL_LIMIT",
+          "pending_1_price": 4552.78,
+          "pending_1_reason": "PDH_RES",
+          "pending_1_conf": 82,
+          "pending_1_expiry": 4,
+          "pending_2_type": "BUY_LIMIT",
+          "pending_2_price": 4496.13,
+          "pending_2_reason": "VAL_SUP",
+          "pending_2_conf": 80,
+          "pending_2_expiry": 4,
+          "pending_3_type": "SELL_LIMIT",
+          "pending_3_price": 4520.37,
+          "pending_3_reason": "SWING_HIGH",
+          "pending_3_conf": 78,
+          "pending_3_expiry": 4
+        },
+        "positions": 0
+      }
+    },
+    {
+      "key": "smc-vp-conflict",
+      "title": "اكتب قرار ترجيح عندما SMC يخالف Volume Profile",
+      "assigned_to": "Conflict Arbiter",
+      "source": "Muhaqqiq",
+      "priority": "medium",
+      "status": "open",
+      "created": "2026-05-21T06:30:54",
+      "updated": "2026-05-21T19:39:06",
+      "count": 40,
+      "evidence": {
+        "smc_bias": "SELL",
+        "confluence_direction": "BUY",
+        "vp_signal": "SELL_ZONE"
+      }
+    },
+    {
+      "key": "watch-approved-sell",
+      "title": "راقب أول شمعة بعد موافقة SELL وتحقق هل دخل EA أم بقي بلا صفقة",
+      "assigned_to": "Muraaqib",
+      "source": "Mujammi",
+      "priority": "high",
+      "status": "open",
+      "created": "2026-05-21T06:30:44",
+      "updated": "2026-05-21T19:41:32",
+      "count": 314,
+      "evidence": {
+        "confluence": {
+          "time": "2026-05-21T19:41:13.776325",
+          "approved": true,
+          "swing_approved": false,
+          "scalp_approved": true,
+          "votes": 5,
+          "dir_agreement": 2,
+          "total": 8,
+          "scalp_required": 1,
+          "swing_required": 2,
+          "direction": "SELL",
+          "swing_direction": "NONE",
+          "scalp_direction": "SELL",
+          "llm_score": 6,
+          "mode": "SCALP",
+          "agent_votes": {
+            "smc": {
+              "vote": 0,
+              "dir": "SELL"
+            },
+            "volume_profile": {
+              "vote": 1,
+              "dir": "SELL"
+            },
+            "risk": {
+              "vote": 0,
+              "dir": "RISK_WARN"
+            },
+            "guard": {
+              "vote": 0,
+              "dir": "RISK_WARN"
+            },
+            "llm": {
+              "vote": 1,
+              "dir": "LLM_OK"
+            },
+            "experience": {
+              "vote": 1,
+              "dir": "EXP_OK"
+            },
+            "analyst": {
+              "vote": 1,
+              "dir": "PATTERN_OK"
+            },
+            "multi_tf": {
+              "vote": 1,
+              "dir": "BUY"
+            }
+          },
+          "smc": {
+            "bias": "SELL",
+            "bos": false,
+            "choch": false,
+            "ob": 0,
+            "fvg": 0,
+            "ema": "NEUTRAL",
+            "rsi": 50.0,
+            "confluence": "",
+            "sr_near": "NEAR_SWING_H",
+            "swing_high": 4520.52,
+            "swing_low": 4514.54,
+            "pdh": 4552.98,
+            "pdl": 4453.4
+          },
+          "sr_analysis": {
+            "smc_confluence": "",
+            "sr_near": "NEAR_SWING_H",
+            "ob_bos_alert": false,
+            "choch_alert": false,
+            "mtf_sr_bonus": false,
+            "swing_high": 4520.52,
+            "swing_low": 4514.54,
+            "pdh": 4552.98,
+            "pdl": 4453.4,
+            "pp": 4503.19,
+            "r1": 4552.98,
+            "s1": 4453.4,
+            "r2": 4602.77,
+            "s2": 4403.61
+          },
+          "approval_stats": {
+            "scalp": 606,
+            "swing": 149,
+            "rejected": 1
+          },
+          "pending_count": 4,
+          "pending_0_type": "BUY_LIMIT",
+          "pending_0_price": 4453.6,
+          "pending_0_reason": "PDL_SUP",
+          "pending_0_conf": 82,
+          "pending_0_expiry": 4,
+          "pending_1_type": "SELL_LIMIT",
+          "pending_1_price": 4552.78,
+          "pending_1_reason": "PDH_RES",
+          "pending_1_conf": 82,
+          "pending_1_expiry": 4,
+          "pending_2_type": "BUY_LIMIT",
+          "pending_2_price": 4496.13,
+          "pending_2_reason": "VAL_SUP",
+          "pending_2_conf": 80,
+          "pending_2_expiry": 4,
+          "pending_3_type": "SELL_LIMIT",
+          "pending_3_price": 4520.37,
+          "pending_3_reason": "SWING_HIGH",
+          "pending_3_conf": 78,
+          "pending_3_expiry": 4
+        },
+        "positions": 0
+      }
+    },
+    {
+      "key": "entry-gate-audit",
+      "title": "راجع أسباب BLOCKED واطلب تعديل فلتر واحد فقط في كل دورة",
+      "assigned_to": "Mutawwir",
+      "source": "Muhallib",
+      "priority": "medium",
+      "status": "open",
+      "created": "2026-05-21T06:30:33",
+      "updated": "2026-05-21T06:56:51",
+      "count": 152,
+      "evidence": {
+        "total": 80,
+        "blocked": 65,
+        "entries": 15,
+        "top_reason": "smc_noStr"
+      }
+    },
+    {
+      "key": "spread-shock-model",
+      "title": "ابنِ نموذج سبريد: متى نوسع gap ومتى نمنع الستوبات القريبة",
+      "assigned_to": "Spread Sentinel",
+      "source": "Mujalid",
+      "priority": "high",
+      "status": "open",
+      "created": "2026-05-21T06:30:33",
+      "updated": "2026-05-21T19:41:32",
+      "count": 776,
+      "evidence": {
+        "spread_points": 308.0,
+        "bars": 200
+      }
+    }
+  ],
+  "blueprints": [
+    {
+      "id": "spread-sentinel",
+      "name": "حارس السبريد",
+      "role": "يراقب صدمة السبريد ويقترح gap/SL distance",
+      "reason": "spread above live threshold",
+      "status": "proposed",
+      "allowed_actions": [
+        "observe",
+        "write_report",
+        "suggest_task"
+      ],
+      "created": "2026-05-21T06:30:33",
+      "last_seen": "2026-05-21T19:41:32",
+      "seen_count": 776
+    },
+    {
+      "id": "conflict-arbiter",
+      "name": "حَكَم التعارض",
+      "role": "يوفق بين SMC وVolume Profile وConfluence",
+      "reason": "SMC bias conflicts with confluence",
+      "status": "proposed",
+      "allowed_actions": [
+        "observe",
+        "write_report",
+        "suggest_task"
+      ],
+      "created": "2026-05-21T06:30:54",
+      "last_seen": "2026-05-21T19:39:06",
+      "seen_count": 40
+    },
+    {
+      "id": "entry-gate-doctor",
+      "name": "طبيب بوابة الدخول",
+      "role": "يشخص سبب الحظر المتكرر ويقترح تخفيفاً واحداً",
+      "reason": "top blocked reason is weak_candle",
+      "status": "proposed",
+      "allowed_actions": [
+        "observe",
+        "write_report",
+        "suggest_task"
+      ],
+      "created": "2026-05-21T18:15:02",
+      "last_seen": "2026-05-21T19:41:32",
+      "seen_count": 457
+    }
+  ],
+  "dynamic_agents": [
+    {
+      "id": "spread-sentinel",
+      "name": "حارس السبريد",
+      "path": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\03 Projects\\MT5 Agent System\\dynamic-agents\\spread-sentinel.md",
+      "execution": "Observed avg spread=308.0 points. Current gap=1500 effective_gap=1500. Recommendation: keep stop-reverse distance comfortably above live spread and do not tighten pending stops while spread is elevated."
+    },
+    {
+      "id": "conflict-arbiter",
+      "name": "حَكَم التعارض",
+      "path": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\03 Projects\\MT5 Agent System\\dynamic-agents\\conflict-arbiter.md",
+      "execution": "Observed SMC bias=SELL and VP signal=SELL_ZONE. Recommendation: require written conflict note before changing direction."
+    },
+    {
+      "id": "entry-gate-doctor",
+      "name": "طبيب بوابة الدخول",
+      "path": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\03 Projects\\MT5 Agent System\\dynamic-agents\\entry-gate-doctor.md",
+      "execution": "Observed blocked=61 of 80 recent decisions; top reason=weak_candle. Recommendation: verify the reloaded EA is using the new input defaults; change only one gate per cycle."
+    }
+  ],
+  "typed_links": {
+    "ok": true,
+    "returncode": 0,
+    "stdout": "\n\nEdges by type:\n  advises              59\n  references           29\n  mentions             25\n  lives_in             2\n\nTop-10 most-connected entities (in-degree):\n  agent-brain-timeline                               18\n  mujammi                                            15\n  mt5-live-ea                                        11\n  xauusdm                                            10\n  smc                                                10\n  volume-profile                                     10\n  risk-management                                    10\n  muraaqib                                           2\n  haaris                                             2\n  mujalid                                            2\n\nUnresolved targets (first 20 -- candidates for /refine):\n  wikilinks\n  model-routingmd\n  refinemd\n  run-date-vre-conversation\n  lintmd\n  typed-linksmd\n  canvasmd\n  new-projectmd\n  brain-firstmd\n  ingestmd\n  syncmd\n  weekly-updatemd\n  deep-context-fillmd\n  qualitymd\n  page-formatmd\n  test-before-bulkmd\n  autoresearchmd\n  brain-setupmd\n  tiered-enrichmentmd\n  skillifymd\n\n[run_id] typed-links-2026-05-21T164132Z\n[output] C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\typed-edges.jsonl\n",
+    "stderr": ""
+  },
+  "paths": {
+    "log": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\log.md",
+    "typed_edges": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\typed-edges.jsonl",
+    "agent_edges": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\agent-edges.jsonl",
+    "tasks": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\agent_tasks.json",
+    "blueprints": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\agent_blueprints.json",
+    "dynamic_agents": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault\\03 Projects\\MT5 Agent System\\dynamic-agents",
+    "plutobrain_vendor": "C:\\Users\\Radhi\\MT5\\vendor\\plutobrain"
+  }
+}

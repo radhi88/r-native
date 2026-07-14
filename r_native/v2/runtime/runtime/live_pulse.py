@@ -1,0 +1,555 @@
+"""runtime/live_pulse.py — TICK-LEVEL XAUUSDm watcher (v2).
+
+User mandate (2026-05-27): "اربط نفسك في التكات وادخل داخل تفاصيل الشمعات
+وقوة البايعين والمشترين والمستويات السعرية".
+
+What this watches (each becomes a notification line):
+
+  ─── TICK STREAM ───
+  • Aggressor flow per second — buy ticks vs sell ticks (delta)
+  • Tick velocity spikes (ticks/sec > 3× baseline = momentum/news)
+  • Spread anomalies (spread > 1.5× normal = liquidity event)
+
+  ─── CANDLE ANATOMY (on every M1 close) ───
+  • Body % of range — strong body (>70%) vs indecision (<25%)
+  • Upper / lower wick lengths in $ — rejection signals
+  • Pin bars, hammers, shooting stars, dojis, marubozu
+  • Body color vs prior body — continuation or reversal
+  • Volume (tick_volume on M1) vs 20-bar average
+
+  ─── BUYER vs SELLER STRENGTH ───
+  • Bullish vs bearish bars last N (M1 + M5)
+  • Net body $ last 10 bars (buyers' total push vs sellers')
+  • Higher-highs/lower-lows tracker
+  • Acceleration: each new bar bigger/smaller than prior
+
+  ─── SMART MONEY CONCEPTS (SMC) ───
+  • Order Blocks (OB) — last bullish/bearish bar before impulse
+  • Fair Value Gaps (FVG) — 3-bar imbalance zones (entry magnets)
+  • Liquidity sweeps — wick above/below recent swing then close back
+  • Break of Structure (BOS) — higher-high or lower-low confirmed
+
+  ─── PRICE LEVELS (all in one) ───
+  • Asian session high/low (00:00-08:00 UTC)
+  • Prior day high/low/close
+  • Current day open
+  • M5 / M15 / H1 / H4 EMAs (8, 21, 50)
+  • Daily/weekly pivots (PP, R1/R2/S1/S2)
+  • Round numbers ($5 increments on gold)
+  • Recent swing points (last 20 bars per TF)
+
+Only emits on STATE CHANGES — silence is the default.
+"""
+from __future__ import annotations
+import sys, time
+from datetime import datetime, timezone, timedelta
+
+
+def _print(msg: str):
+    sys.stdout.write(f"[{datetime.now():%H:%M:%S}] {msg}\n")
+    sys.stdout.flush()
+
+
+# ─── helpers ───
+def _ema(values, period):
+    if not values: return 0
+    k = 2 / (period + 1); e = values[0]
+    for v in values[1:]: e = v * k + e * (1 - k)
+    return e
+
+
+def _rsi(closes, period=14):
+    if len(closes) < period + 1: return 50.0
+    g = [max(closes[i]-closes[i-1], 0) for i in range(1,len(closes))]
+    l = [max(closes[i-1]-closes[i], 0) for i in range(1,len(closes))]
+    ag = sum(g[:period])/period; al = sum(l[:period])/period
+    for i in range(period, len(g)):
+        ag = (ag*(period-1)+g[i])/period; al = (al*(period-1)+l[i])/period
+    return 100 if al == 0 else round(100 - 100/(1 + ag/al), 1)
+
+
+def _candle_anatomy(bar):
+    """Return classification of a closed bar's anatomy."""
+    o, h, l, c = bar["open"], bar["high"], bar["low"], bar["close"]
+    body = abs(c - o); rng = h - l
+    if rng == 0: return {"kind": "void", "body_pct": 0, "upper": 0, "lower": 0, "bullish": False}
+    upper = h - max(o, c); lower = min(o, c) - l
+    body_pct = body / rng * 100
+    bullish = c > o
+    kind = "neutral"
+    # Wick-dominant FIRST so tiny-body hammers aren't mislabeled "doji"
+    if lower >= 2 * max(body, rng * 0.05) and upper < max(body, rng * 0.10):
+        kind = "hammer" if bullish or body_pct < 15 else "hanging_man"
+    elif upper >= 2 * max(body, rng * 0.05) and lower < max(body, rng * 0.10):
+        kind = "shooting_star" if not bullish or body_pct < 15 else "inverted_hammer"
+    elif body_pct < 15:
+        kind = "doji"
+    elif body_pct >= 80:
+        kind = "marubozu_bull" if bullish else "marubozu_bear"
+    elif body_pct >= 60:
+        kind = "strong_bull" if bullish else "strong_bear"
+    elif body_pct >= 30:
+        kind = "normal_bull" if bullish else "normal_bear"
+    else:
+        kind = "small_bull" if bullish else "small_bear"
+    return {
+        "kind": kind, "body_pct": round(body_pct, 0),
+        "body_$": round(body, 2), "upper_$": round(upper, 2), "lower_$": round(lower, 2),
+        "bullish": bullish, "range_$": round(rng, 2),
+    }
+
+
+def _detect_fvg(bars):
+    """3-bar imbalance: bull FVG when bars[i+1].low > bars[i-1].high.
+    Returns the most recent unfilled FVG zone (top, bot) per direction.
+    Lookback last 20 bars only."""
+    bull_fvg = None; bear_fvg = None
+    n = min(20, len(bars) - 2)
+    for i in range(len(bars) - 2, len(bars) - n - 2, -1):
+        if i < 1: break
+        a, b, c = bars[i-1], bars[i], bars[i+1]
+        # Bullish FVG: c.low > a.high (gap between candle a's high and c's low)
+        if c["low"] > a["high"]:
+            bull_fvg = (a["high"], c["low"], i)
+            break
+    for i in range(len(bars) - 2, len(bars) - n - 2, -1):
+        if i < 1: break
+        a, b, c = bars[i-1], bars[i], bars[i+1]
+        # Bearish FVG: c.high < a.low
+        if c["high"] < a["low"]:
+            bear_fvg = (c["high"], a["low"], i)
+            break
+    return bull_fvg, bear_fvg
+
+
+def _detect_order_block(bars):
+    """Last opposite-color bar before a strong impulse. Returns (low, high, type)."""
+    if len(bars) < 5: return None
+    for i in range(len(bars) - 2, max(0, len(bars) - 10), -1):
+        cur, nxt = bars[i], bars[i+1]
+        cur_bull = cur["close"] > cur["open"]
+        nxt_body = abs(nxt["close"] - nxt["open"])
+        nxt_rng  = nxt["high"] - nxt["low"]
+        nxt_bull = nxt["close"] > nxt["open"]
+        # Strong impulse = body > 60% of range
+        strong = nxt_body / max(nxt_rng, 1e-9) > 0.6
+        if strong and cur_bull != nxt_bull:
+            ob_type = "BULL_OB" if nxt_bull else "BEAR_OB"
+            return (cur["low"], cur["high"], ob_type, i)
+    return None
+
+
+def _round_levels(price, step=5):
+    base = (price // step) * step
+    return [base - step, base, base + step, base + 2*step]
+
+
+def main(symbol: str = "XAUUSDm", poll: float = 1.0):
+    try:
+        import MetaTrader5 as mt5
+        if not mt5.initialize(): mt5.initialize()
+    except Exception as e:
+        _print(f"mt5 init err: {e}"); return
+
+    last_bar_time = 0
+    last_rsi_state = "neutral"
+    last_level_alert = {}     # {key: timestamp_of_last_alert}
+    tick_history = []         # rolling last-60s of ticks
+    last_spread_alert = 0
+    last_pressure_dir = "FLAT"
+    last_ob = None; last_bull_fvg = None; last_bear_fvg = None
+    last_mtf_align = "MIXED"
+    last_macd_cross = None
+    last_liq_grab_ts = 0
+
+    last_swing_emit = (None, 0)        # (price, ts) of last swing emitted
+    last_bos = None                      # "BULL_BOS" / "BEAR_BOS"
+    last_choch = None                    # "BULL_CHOCH" / "BEAR_CHOCH"
+    last_adx_regime = None               # "TRENDING" / "RANGING"
+    last_sr_alert = {}                   # key: cluster price → last alert ts
+    last_vol_trend = None
+
+    _print(f"📡 live_pulse v3.4 online · {symbol} · tick poll {poll}s")
+    _print(f"   sensors: M1 close+anatomy, RSI, engulf, OB, FVG, pressure, "
+            f"velocity, spread, levels, MTF align, liq grab, MACD, +S/R +BOS "
+            f"+CHoCH +ZigZag +ADX +Vol Trend")
+
+    while True:
+        try:
+            now_ts = time.time()
+            tick = mt5.symbol_info_tick(symbol)
+            if not tick: time.sleep(poll); continue
+
+            # ─── Tick stream collection ───
+            cur_mid = (tick.bid + tick.ask) / 2
+            spread = tick.ask - tick.bid
+            tick_history.append({"ts": now_ts, "bid": tick.bid, "ask": tick.ask, "mid": cur_mid})
+            tick_history = [t for t in tick_history if t["ts"] > now_ts - 60]    # 60s rolling
+
+            # Spread anomaly (event)
+            if spread > 0.50 and now_ts - last_spread_alert > 60:
+                _print(f"⚠ SPREAD widening · ${spread:.2f} (normal ~$0.30)")
+                last_spread_alert = now_ts
+
+            # ─── Bars fetch ───
+            m1 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M1, 0, 60)
+            m5 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M5, 0, 60)
+            m15= mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 60)
+            h1 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H1, 0, 50)
+            d1 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_D1, 0, 5)
+            if any(x is None or len(x) < 20 for x in (m1, m5, m15, h1)):
+                time.sleep(poll); continue
+
+            cur_bar = m1[-1]; prev_bar = m1[-2]
+
+            # ─── EVENT: M1 close ───
+            if int(prev_bar["time"]) != last_bar_time:
+                if last_bar_time != 0:
+                    a = _candle_anatomy(prev_bar)
+                    arrow = "🟢" if a["bullish"] else "🔴"
+                    tv = int(prev_bar["tick_volume"])
+                    # Volume vs 20-bar mean
+                    vols = [int(b["tick_volume"]) for b in m1[-21:-1]]
+                    vmean = sum(vols)/max(1,len(vols))
+                    vstr = f"v{tv}({tv/max(vmean,1)*100:.0f}%)"
+                    _print(f"M1 {arrow} {a['kind']:14} body={a['body_pct']:.0f}% "
+                            f"U={a['upper_$']:.2f} L={a['lower_$']:.2f} {vstr} "
+                            f"C={prev_bar['close']:.2f}")
+
+                    # Engulfing
+                    if len(m1) >= 3:
+                        aa, bb = m1[-3], m1[-2]
+                        if (aa["close"] < aa["open"] and bb["close"] > bb["open"]
+                                and bb["close"] > aa["open"] and bb["open"] < aa["close"]):
+                            _print(f"🟢🟢 BULLISH ENGULFING · close {bb['close']:.2f}")
+                        if (aa["close"] > aa["open"] and bb["close"] < bb["open"]
+                                and bb["close"] < aa["open"] and bb["open"] > aa["close"]):
+                            _print(f"🔴🔴 BEARISH ENGULFING · close {bb['close']:.2f}")
+
+                    # Volume spike (>2× mean)
+                    if tv > vmean * 2 and vmean > 0:
+                        _print(f"📊 VOLUME SPIKE · {tv} ticks ({tv/vmean*100:.0f}% of mean)")
+
+                last_bar_time = int(prev_bar["time"])
+
+                # ─── Buyer/seller pressure (last 10 closed M1 bars) ───
+                last10 = m1[-11:-1]
+                bull_body = sum(b["close"]-b["open"] for b in last10 if b["close"]>b["open"])
+                bear_body = sum(b["open"]-b["close"] for b in last10 if b["close"]<b["open"])
+                net = bull_body - bear_body
+                dir_ = "BUY+" if net > 1.5 else ("SELL+" if net < -1.5 else "FLAT")
+                if dir_ != last_pressure_dir:
+                    _print(f"⚖ pressure 10M1: net=${net:+.2f} BULL=${bull_body:.2f} "
+                           f"BEAR=${bear_body:.2f} → {dir_}")
+                    last_pressure_dir = dir_
+
+                # ─── SMC: detect new OB and FVG ───
+                ob = _detect_order_block(list(m5))
+                if ob and ob != last_ob:
+                    _print(f"🔷 OB detected M5: {ob[2]} zone {ob[0]:.2f}-{ob[1]:.2f}")
+                    last_ob = ob
+                bull_fvg, bear_fvg = _detect_fvg(list(m5))
+                if bull_fvg and bull_fvg != last_bull_fvg:
+                    _print(f"🟦 BULL FVG M5: ${bull_fvg[0]:.2f}-${bull_fvg[1]:.2f} "
+                            f"(gap ${bull_fvg[1]-bull_fvg[0]:.2f})")
+                    last_bull_fvg = bull_fvg
+                if bear_fvg and bear_fvg != last_bear_fvg:
+                    _print(f"🟥 BEAR FVG M5: ${bear_fvg[0]:.2f}-${bear_fvg[1]:.2f}")
+                    last_bear_fvg = bear_fvg
+
+            # ─── RSI w/ hysteresis (CLOSED bars only — the forming bar's
+            # close ticks with every quote and used to flip OS/OB state
+            # several times per minute. Exclude bars[-1]). ───
+            closes = [b["close"] for b in m1[:-1]]
+            rsi = _rsi(closes, 14)
+            if last_rsi_state == "OVERBOUGHT":
+                if rsi < 65: last_rsi_state = "neutral"
+            elif last_rsi_state == "OVERSOLD":
+                if rsi > 35: last_rsi_state = "neutral"
+            else:
+                if rsi > 70:
+                    _print(f"⚡ M1 RSI = {rsi} → OVERBOUGHT (after run-up)"); last_rsi_state = "OVERBOUGHT"
+                elif rsi < 30:
+                    _print(f"⚡ M1 RSI = {rsi} → OVERSOLD (after sell-off)"); last_rsi_state = "OVERSOLD"
+
+            # ─── NEW: MTF Pressure Alignment ───
+            # When M1+M5+M15 ALL show same direction = high-prob trend
+            def _net_body(bars_arr, n=10):
+                if len(bars_arr) < n+1: return 0
+                last = bars_arr[-(n+1):-1]
+                bull = sum(b["close"]-b["open"] for b in last if b["close"]>b["open"])
+                bear = sum(b["open"]-b["close"] for b in last if b["close"]<b["open"])
+                return bull - bear
+            try:
+                m1_arr  = [dict(b._asdict()) if hasattr(b, "_asdict") else {k: b[k] for k in b.dtype.names} for b in m1] if hasattr(m1, "__iter__") else list(m1)
+                m5_arr  = [dict(b._asdict()) if hasattr(b, "_asdict") else {k: b[k] for k in b.dtype.names} for b in m5] if hasattr(m5, "__iter__") else list(m5)
+                m15_arr = [dict(b._asdict()) if hasattr(b, "_asdict") else {k: b[k] for k in b.dtype.names} for b in m15] if hasattr(m15, "__iter__") else list(m15)
+                n1 = _net_body(m1_arr, 10); n5 = _net_body(m5_arr, 6); n15 = _net_body(m15_arr, 4)
+                if n1 > 1 and n5 > 1 and n15 > 0: align = "BUY+ALL"
+                elif n1 < -1 and n5 < -1 and n15 < 0: align = "SELL+ALL"
+                else: align = "MIXED"
+                if align != last_mtf_align and align != "MIXED":
+                    _print(f"🎯🎯 MTF ALIGN {align} · M1=${n1:+.1f} M5=${n5:+.1f} M15=${n15:+.1f}")
+                    last_mtf_align = align
+                elif align == "MIXED":
+                    last_mtf_align = "MIXED"
+            except Exception: pass
+
+            # ─── NEW: Liquidity-Grab Detector ───
+            # Last M1 wick > 2× ATR beyond recent 20-bar extreme + close back inside
+            try:
+                bar_now = bars[-1]
+                bars_window = bars[-21:-1]
+                hi20 = max(b["high"] for b in bars_window)
+                lo20 = min(b["low"]  for b in bars_window)
+                atr14 = sum(max(b["high"]-b["low"], abs(b["high"]-bars[i+1]["close"]),
+                                  abs(b["low"]-bars[i+1]["close"]))
+                              for i,b in enumerate(bars[-15:-1])) / 14
+                # Bull grab: low went below lo20 by > 0.5×ATR but close back above lo20
+                if (bar_now["low"] < lo20 - 0.3 * atr14
+                        and bar_now["close"] > lo20
+                        and now_ts - last_liq_grab_ts > 30):
+                    _print(f"🪤 BULL LIQ GRAB · low {bar_now['low']:.2f} swept "
+                            f"below {lo20:.2f} then reclaimed (close {bar_now['close']:.2f})")
+                    last_liq_grab_ts = now_ts
+                elif (bar_now["high"] > hi20 + 0.3 * atr14
+                        and bar_now["close"] < hi20
+                        and now_ts - last_liq_grab_ts > 30):
+                    _print(f"🪤 BEAR LIQ GRAB · high {bar_now['high']:.2f} swept "
+                            f"above {hi20:.2f} then rejected (close {bar_now['close']:.2f})")
+                    last_liq_grab_ts = now_ts
+            except Exception: pass
+
+            # ─── NEW v3.4: ZigZag swings + BOS + CHoCH (M5) ───
+            try:
+                m5_arr_zz = m5_arr if 'm5_arr' in dir() else [dict(b._asdict()) if hasattr(b,'_asdict') else {k:b[k] for k in b.dtype.names} for b in m5]
+                # Find swing highs/lows (5-bar fractal)
+                sw_highs, sw_lows = [], []
+                for i in range(2, len(m5_arr_zz)-2):
+                    w_h = [b["high"] for b in m5_arr_zz[i-2:i+3]]
+                    w_l = [b["low"]  for b in m5_arr_zz[i-2:i+3]]
+                    if m5_arr_zz[i]["high"] == max(w_h):
+                        sw_highs.append({"i": i, "price": m5_arr_zz[i]["high"], "t": int(m5_arr_zz[i]["time"])})
+                    if m5_arr_zz[i]["low"] == min(w_l):
+                        sw_lows.append({"i": i, "price": m5_arr_zz[i]["low"],  "t": int(m5_arr_zz[i]["time"])})
+                # Emit newest swing pivot on first detection
+                if sw_highs:
+                    sh_last = sw_highs[-1]
+                    if last_swing_emit[1] < sh_last["t"]:
+                        _print(f"📐 ZigZag swing HIGH @ {sh_last['price']:.2f}")
+                        last_swing_emit = (sh_last["price"], sh_last["t"])
+                if sw_lows:
+                    sl_last = sw_lows[-1]
+                    if last_swing_emit[1] < sl_last["t"]:
+                        _print(f"📐 ZigZag swing LOW @ {sl_last['price']:.2f}")
+                        last_swing_emit = (sl_last["price"], sl_last["t"])
+
+                # BOS: current close breaks LAST swing high (bull BOS) or low (bear BOS)
+                last_bar_close = m5_arr_zz[-1]["close"]
+                if sw_highs:
+                    prev_swing_high = sw_highs[-1]["price"]
+                    if last_bar_close > prev_swing_high and last_bos != "BULL_BOS":
+                        _print(f"🚀 BULL BOS · M5 close {last_bar_close:.2f} broke swing-H {prev_swing_high:.2f}")
+                        last_bos = "BULL_BOS"
+                if sw_lows:
+                    prev_swing_low = sw_lows[-1]["price"]
+                    if last_bar_close < prev_swing_low and last_bos != "BEAR_BOS":
+                        _print(f"💥 BEAR BOS · M5 close {last_bar_close:.2f} broke swing-L {prev_swing_low:.2f}")
+                        last_bos = "BEAR_BOS"
+
+                # CHoCH: in downtrend (LH series), bullish break of LAST LH = trend change
+                if len(sw_highs) >= 2 and len(sw_lows) >= 2:
+                    # Downtrend if last LH < prior LH
+                    dn_trend = sw_highs[-1]["price"] < sw_highs[-2]["price"]
+                    up_trend = sw_lows[-1]["price"] > sw_lows[-2]["price"]
+                    if dn_trend and last_bar_close > sw_highs[-1]["price"] and last_choch != "BULL_CHOCH":
+                        _print(f"🔄 BULL CHoCH · downtrend broken, close {last_bar_close:.2f} > LH {sw_highs[-1]['price']:.2f}")
+                        last_choch = "BULL_CHOCH"
+                    elif up_trend and last_bar_close < sw_lows[-1]["price"] and last_choch != "BEAR_CHOCH":
+                        _print(f"🔄 BEAR CHoCH · uptrend broken, close {last_bar_close:.2f} < LL {sw_lows[-1]['price']:.2f}")
+                        last_choch = "BEAR_CHOCH"
+            except Exception: pass
+
+            # ─── NEW v3.4: ADX(14) M5 — trend strength regime ───
+            try:
+                m5_arr_adx = m5_arr if 'm5_arr' in dir() else [dict(b._asdict()) if hasattr(b,'_asdict') else {k:b[k] for k in b.dtype.names} for b in m5]
+                if len(m5_arr_adx) >= 30:
+                    plus_dm, minus_dm, trs = [], [], []
+                    for j in range(1, len(m5_arr_adx)):
+                        h, l = m5_arr_adx[j]["high"], m5_arr_adx[j]["low"]
+                        ph, pl, pc = m5_arr_adx[j-1]["high"], m5_arr_adx[j-1]["low"], m5_arr_adx[j-1]["close"]
+                        up = h - ph; dn = pl - l
+                        plus_dm.append(up if up > dn and up > 0 else 0)
+                        minus_dm.append(dn if dn > up and dn > 0 else 0)
+                        trs.append(max(h-l, abs(h-pc), abs(l-pc)))
+                    p = 14
+                    if len(trs) >= p+1:
+                        atr_w   = sum(trs[:p])/p
+                        plus_w  = sum(plus_dm[:p])/p
+                        minus_w = sum(minus_dm[:p])/p
+                        for j in range(p, len(trs)):
+                            atr_w   = (atr_w*(p-1)+trs[j])/p
+                            plus_w  = (plus_w*(p-1)+plus_dm[j])/p
+                            minus_w = (minus_w*(p-1)+minus_dm[j])/p
+                        plus_di  = (plus_w  / atr_w * 100) if atr_w > 0 else 0
+                        minus_di = (minus_w / atr_w * 100) if atr_w > 0 else 0
+                        dx = (abs(plus_di - minus_di) / max(plus_di + minus_di, 1e-9)) * 100
+                        adx_val = round(dx, 1)
+                        regime = "TRENDING" if adx_val >= 25 else ("RANGING" if adx_val < 20 else None)
+                        if regime and regime != last_adx_regime:
+                            dirn = "↑" if plus_di > minus_di else "↓"
+                            _print(f"⚡ ADX M5 = {adx_val} → {regime} {dirn}  (+DI={plus_di:.0f} -DI={minus_di:.0f})")
+                            last_adx_regime = regime
+            except Exception: pass
+
+            # ─── NEW v3.4: S/R clusters auto-detected from swing density ───
+            try:
+                if 'sw_highs' in dir() and 'sw_lows' in dir() and (sw_highs or sw_lows):
+                    all_pivots = [s["price"] for s in sw_highs] + [s["price"] for s in sw_lows]
+                    # Cluster: group pivots within $1.0 of each other
+                    clusters = []
+                    for p in sorted(all_pivots):
+                        if clusters and abs(p - clusters[-1]["center"]) < 1.0:
+                            clusters[-1]["pts"].append(p)
+                            clusters[-1]["center"] = sum(clusters[-1]["pts"]) / len(clusters[-1]["pts"])
+                        else:
+                            clusters.append({"center": p, "pts": [p]})
+                    # Significant cluster = ≥2 pivots in same zone
+                    sr_levels = [round(c["center"], 2) for c in clusters if len(c["pts"]) >= 2]
+                    for sr in sr_levels:
+                        if abs(cur - sr) < 0.40:
+                            key = f"SR-{int(sr*10)}"
+                            if last_sr_alert.get(key, 0) < now_ts - 600:
+                                count = sum(1 for c in clusters if abs(c["center"] - sr) < 1.0 for _ in c["pts"])
+                                _print(f"🎯 S/R cluster @ {sr:.2f} ({count}x pivots) — price testing")
+                                last_sr_alert[key] = now_ts
+            except Exception: pass
+
+            # ─── NEW v3.4: Volume Trend (M5 vs recent average + direction) ───
+            try:
+                m5_arr_v = m5_arr if 'm5_arr' in dir() else [dict(b._asdict()) if hasattr(b,'_asdict') else {k:b[k] for k in b.dtype.names} for b in m5]
+                if len(m5_arr_v) >= 10:
+                    cur_v = int(m5_arr_v[-1]["tick_volume"])
+                    prev_vs = [int(b["tick_volume"]) for b in m5_arr_v[-11:-1]]
+                    avg_v = sum(prev_vs) / len(prev_vs)
+                    vol_pct = (cur_v / max(avg_v, 1)) * 100
+                    # Direction by last 3 closes
+                    closes_3 = [b["close"] for b in m5_arr_v[-3:]]
+                    rising = closes_3[-1] > closes_3[0]
+                    if vol_pct >= 200:
+                        trend = f"BURST {vol_pct:.0f}% {'↑BULL' if rising else '↓BEAR'}"
+                        if trend != last_vol_trend:
+                            _print(f"📊 VOL TREND M5 · {trend}")
+                            last_vol_trend = trend
+                    elif vol_pct < 60:
+                        if last_vol_trend != "DRY":
+                            _print(f"💨 VOL TREND M5 · DRY {vol_pct:.0f}% (consolidation)")
+                            last_vol_trend = "DRY"
+                    else:
+                        last_vol_trend = "NORMAL"
+            except Exception: pass
+
+            # ─── NEW: MACD M5 Cross ───
+            # 12/26/9 MACD on M5. Print on bullish/bearish crossover.
+            try:
+                m5_closes = [b["close"] for b in m5]
+                ema12 = _ema(m5_closes, 12); ema26 = _ema(m5_closes, 26)
+                # Compute MACD line history (last 5) for cross detection
+                def _ema_series(vals, p):
+                    if not vals: return []
+                    k = 2/(p+1); out = [vals[0]]
+                    for v in vals[1:]:
+                        out.append(v*k + out[-1]*(1-k))
+                    return out
+                e12s = _ema_series(m5_closes, 12)
+                e26s = _ema_series(m5_closes, 26)
+                if len(e12s) >= 2 and len(e26s) >= 2:
+                    macd_now = e12s[-1] - e26s[-1]
+                    macd_prev = e12s[-2] - e26s[-2]
+                    cross = None
+                    if macd_prev <= 0 < macd_now: cross = "BULL"
+                    elif macd_prev >= 0 > macd_now: cross = "BEAR"
+                    if cross and cross != last_macd_cross:
+                        _print(f"📈 MACD M5 {cross} CROSS · macd={macd_now:+.2f} (was {macd_prev:+.2f})")
+                        last_macd_cross = cross
+            except Exception: pass
+
+            # ─── Tick velocity (momentum/news) ───
+            if len(tick_history) > 10:
+                ticks_per_sec = len(tick_history) / 60
+                if ticks_per_sec > 5:    # >5 ticks/sec sustained = burst
+                    key = "BURST"
+                    if last_level_alert.get(key, 0) < now_ts - 60:
+                        _print(f"🌊 tick BURST · {ticks_per_sec:.1f} ticks/sec (60s window)")
+                        last_level_alert[key] = now_ts
+
+            # ─── Levels watch (price near key) ───
+            cur = tick.bid
+            # M5 EMA21
+            m5_closes = [b["close"] for b in m5]
+            ema21_m5 = _ema(m5_closes, 21)
+            # H1 EMA50
+            h1_closes = [b["close"] for b in h1]
+            ema50_h1 = _ema(h1_closes, 50)
+            # Prior day H/L/close (d1[-2] = yesterday since d1[-1] is today forming)
+            if len(d1) >= 2:
+                pdh = d1[-2]["high"]; pdl = d1[-2]["low"]; pdc = d1[-2]["close"]
+                today_open = d1[-1]["open"]
+                # Daily pivot
+                pp = (pdh + pdl + pdc) / 3
+                r1 = 2*pp - pdl; s1 = 2*pp - pdh
+                r2 = pp + (pdh - pdl); s2 = pp - (pdh - pdl)
+            else: pdh=pdl=pdc=today_open=pp=r1=s1=r2=s2=None
+            # Asian session high/low (last 0-8 UTC)
+            now_utc = datetime.now(timezone.utc)
+            asia_start = now_utc.replace(hour=0, minute=0, second=0, microsecond=0)
+            if now_utc.hour >= 8:
+                # Asian session has closed today — use today's 0-8
+                pass
+            asian_bars = [b for b in m15 if asia_start.timestamp() <= int(b["time"]) < (asia_start + timedelta(hours=8)).timestamp()]
+            asia_h = max((b["high"] for b in asian_bars), default=None)
+            asia_l = min((b["low"]  for b in asian_bars), default=None)
+
+            levels_to_watch = [
+                ("M5 EMA21", ema21_m5, 0.15),
+                ("H1 EMA50", ema50_h1, 0.30),
+                ("Prior Day HIGH", pdh, 0.50),
+                ("Prior Day LOW",  pdl, 0.50),
+                ("Prior Day Close", pdc, 0.30),
+                ("Daily Pivot",   pp, 0.30),
+                ("R1", r1, 0.30), ("S1", s1, 0.30),
+                ("R2", r2, 0.50), ("S2", s2, 0.50),
+                ("Asian HIGH", asia_h, 0.40),
+                ("Asian LOW",  asia_l, 0.40),
+            ]
+            for name, level, tol in levels_to_watch:
+                if level is None: continue
+                if abs(cur - level) < tol:
+                    # Dedup by NAME only (was name+price → price changes
+                    # by cents tick-to-tick → key changes → spam)
+                    key = name
+                    if last_level_alert.get(key, 0) < now_ts - 300:
+                        side = "above" if cur > level else "below"
+                        _print(f"📍 price {cur:.2f} testing {name} {level:.2f} (cur {side})")
+                        last_level_alert[key] = now_ts
+
+            # Round numbers — dedup by integer round value (not float)
+            for rn in _round_levels(cur, 5):
+                if abs(cur - rn) < 0.30:
+                    key = f"RN-{int(rn)}"
+                    if last_level_alert.get(key, 0) < now_ts - 600:
+                        _print(f"🔢 round number {rn:.0f} in play (price {cur:.2f})")
+                        last_level_alert[key] = now_ts
+
+            time.sleep(poll)
+        except KeyboardInterrupt:
+            _print("stopped"); break
+        except Exception as e:
+            _print(f"loop err: {e}")
+            time.sleep(poll)
+
+
+if __name__ == "__main__":
+    sym = sys.argv[1] if len(sys.argv) > 1 else "XAUUSDm"
+    poll = float(sys.argv[2]) if len(sys.argv) > 2 else 1.0
+    main(sym, poll)

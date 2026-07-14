@@ -1,0 +1,9 @@
+{
+  "generated": 1782832624.7552836,
+  "launchers": [
+    "start_friday_all.ps1",
+    "start_friday_trading_full.ps1",
+    "start_friday_voice.ps1",
+    "launchers\\start_plutobrain_swarm.ps1"
+  ]
+}

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FRIDAY Live Insight</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- ══════════  TOP BAR  ══════════ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <div>
+      <h1>⚡ FRIDAY Live</h1>
+      <p id="subtitle">Connecting…</p>
+    </div>
+  </div>
+
+  <div class="hud">
+    <div class="hud-card"><span>Symbol</span><strong id="hSymbol">--</strong></div>
+    <div class="hud-card"><span>Price</span><strong id="hPrice">--</strong></div>
+    <div class="hud-card amber"><span>Spread</span><strong id="hSpread">--</strong></div>
+    <div class="hud-card"><span>Balance</span><strong id="hBalance">--</strong></div>
+    <div class="hud-card" id="hEquityCard"><span>Equity</span><strong id="hEquity">--</strong></div>
+    <div class="hud-card" id="hPnlCard"><span>Open P/L</span><strong id="hPnl">--</strong></div>
+    <div class="hud-card"><span>Profile</span><strong id="hProfile">--</strong></div>
+  </div>
+</header>
+
+<!-- ══════════  MAIN LAYOUT  ══════════ -->
+<main class="layout">
+
+  <!-- CHART -->
+  <section class="chart-wrap">
+    <div class="chart-hdr">
+      <div>
+        <h2 id="chartTitle">M1 — XAUUSD</h2>
+        <div class="chart-meta" id="chartMeta">Loading…</div>
+      </div>
+      <div class="legend">
+        <span><b class="l-buy"></b>Bull</span>
+        <span><b class="l-sell"></b>Bear</span>
+        <span><b class="l-fvg"></b>FVG</span>
+        <span><b class="l-ob"></b>OB</span>
+        <span><b class="l-liq"></b>Liq</span>
+        <span><b class="l-sl"></b>SL</span>
+        <span><b class="l-tp"></b>TP</span>
+      </div>
+    </div>
+
+    <!-- Main price canvas -->
+    <canvas id="priceChart"></canvas>
+    <!-- RSI sub-chart -->
+    <canvas id="rsiChart"></canvas>
+
+    <!-- Oscillator strip -->
+    <div class="osc-strip">
+      <div class="osc-cell"><div class="ol">RSI</div><div class="ov" id="oscRsi">--</div></div>
+      <div class="osc-cell"><div class="ol">ADX</div><div class="ov" id="oscAdx">--</div></div>
+      <div class="osc-cell"><div class="ol">ATR</div><div class="ov" id="oscAtr">--</div></div>
+      <div class="osc-cell"><div class="ol">Trend</div><div class="ov" id="oscTrend">--</div></div>
+    </div>
+  </section>
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+
+    <!-- Decision -->
+    <div class="panel">
+      <div class="panel-title">🧠 Current Decision</div>
+      <div class="dec-badge flat" id="decBadge">--</div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kl">Probability</div><div class="kv" id="kProb">--</div></div>
+        <div class="kpi"><div class="kl">Confidence</div><div class="kv" id="kConf">--</div></div>
+        <div class="kpi"><div class="kl">SMC Bias</div><div class="kv" id="kBias">--</div></div>
+        <div class="kpi"><div class="kl">Context</div><div class="kv" id="kCtx">--</div></div>
+      </div>
+      <div class="reason-box" id="decReason">--</div>
+    </div>
+
+    <!-- MTF -->
+    <div class="panel">
+      <div class="panel-title">📊 Multi-Timeframe</div>
+      <div id="mtfGrid"></div>
+    </div>
+
+    <!-- SMC Snapshot -->
+    <div class="panel">
+      <div class="panel-title">🔍 SMC Snapshot</div>
+      <div class="flags" id="smcFlags"></div>
+    </div>
+
+  </aside>
+
+  <!-- BOTTOM ROW -->
+  <div class="bottom">
+
+    <!-- Open Positions -->
+    <div class="tbl-block">
+      <div class="tbl-title">📋 Open MT5 Positions</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Ticket</th><th>Side</th><th>Vol</th>
+              <th>Entry</th><th>SL</th><th>TP</th>
+              <th>Profit</th>
+            </tr>
+          </thead>
+          <tbody id="posBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Automation -->
+    <div class="tbl-block">
+      <div class="tbl-title">⚡ Recent Automation</div>
+      <div class="feed" id="actFeed"></div>
+    </div>
+
+    <!-- OB / Zone Info -->
+    <div class="tbl-block">
+      <div class="tbl-title">🟣 Active Zones</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Type</th><th>High</th><th>Low</th><th>Status</th></tr>
+          </thead>
+          <tbody id="zonesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

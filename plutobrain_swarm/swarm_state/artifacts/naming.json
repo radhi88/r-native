@@ -1,0 +1,765 @@
+{
+  "generated": 1782832562.9872134,
+  "non_standard_inputs": [
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EnableTrading"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MagicNumber"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MaxPositions"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MinSecondsBetweenTrades"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EMA_Fast"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EMA_Slow"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "RSI_Period"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "RSI_Overbought"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "RSI_Oversold"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "ATR_Period"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "BaseRiskPercent"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MaxLot"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MinLot"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "SL_ATR_Mult"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "TP_ATR_Mult"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EnableBE"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "BE_ATR"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EnableTrail"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "Trail_ATR"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "TrailStep_ATR"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "UseTrendFilter"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "UseRSIFilter"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "ForceResetDNA"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MaxDailyLossPct"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "CooldownMinutes"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EnableLogs"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "EnableTrading"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MagicBase"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "NumGenes"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxPositions"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxSpreadPoints"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MinSecondsBetween"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxEntriesPerMinute"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxEntriesPerBar"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "BaseRiskPercent"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxLot"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MinLot"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "BlockNight"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "NightStartHour"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "NightEndHour"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "UseRejectionWick"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "WickBodyRatio"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "WickRangeFrac"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxGeneDailyLoss"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxDailyLossPct"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "CooldownMinutes"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "ForceResetGenes"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "EnableLogs"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "EnableTrading"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "MagicNumber"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "MaxPositions"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "MinSecondsBetweenTrades"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "EMA_Fast"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "EMA_Slow"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "RSI_Period"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "RSI_Overbought"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "RSI_Oversold"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "ATR_Period"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "RiskPercent"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "MaxTradeLossPct"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "MaxLotHard"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "MaxMarginPctPerTrade"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "SL_ATR_Mult"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "TP_ATR_Mult"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "EnableBE"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "BE_ATR"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "EnableTrail"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "Trail_ATR"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "TrailStep_ATR"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "UseTrendFilter"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "UseRSIFilter"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "PullbackATR"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "MaxSpreadPoints"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "UseSessionFilter"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "NoTradeStartUTC"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "NoTradeEndUTC"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "MaxDailyLossPct"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "CooldownMinutes"
+    },
+    {
+      "file": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "var": "EnableLogs"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EnableTrading"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MagicNumber"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MaxPositions"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MinSecondsBetweenTrades"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EMA_Fast"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EMA_Slow"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "RSI_Period"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "RSI_Overbought"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "RSI_Oversold"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "ATR_Period"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "BaseRiskPercent"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MaxLot"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MinLot"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "SL_ATR_Mult"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "TP_ATR_Mult"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EnableBE"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "BE_ATR"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EnableTrail"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "Trail_ATR"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "TrailStep_ATR"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "UseTrendFilter"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "UseRSIFilter"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "ForceResetDNA"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "MaxDailyLossPct"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "CooldownMinutes"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "var": "EnableLogs"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "EnableTrading"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MagicBase"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "NumGenes"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxPositions"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxSpreadPoints"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MinSecondsBetween"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxEntriesPerMinute"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxEntriesPerBar"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "BaseRiskPercent"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxLot"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MinLot"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "BlockNight"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "NightStartHour"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "NightEndHour"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "UseRejectionWick"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "WickBodyRatio"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "WickRangeFrac"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxGeneDailyLoss"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "MaxDailyLossPct"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "CooldownMinutes"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "ForceResetGenes"
+    },
+    {
+      "file": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "var": "EnableLogs"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "EnableTrading"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "MagicNumber"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "MaxPositions"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "MinSecondsBetweenTrades"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "EMA_Fast"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "EMA_Slow"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "RSI_Period"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "RSI_Overbought"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "RSI_Oversold"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "ATR_Period"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "RiskPercent"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "MaxTradeLossPct"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "MaxLotHard"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "MaxMarginPctPerTrade"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "SL_ATR_Mult"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "TP_ATR_Mult"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "EnableBE"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "BE_ATR"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "EnableTrail"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "Trail_ATR"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "TrailStep_ATR"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "UseTrendFilter"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "UseRSIFilter"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "PullbackATR"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "MaxSpreadPoints"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "UseSessionFilter"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "NoTradeStartUTC"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "NoTradeEndUTC"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "MaxDailyLossPct"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "CooldownMinutes"
+    },
+    {
+      "file": "QuantumShark_Safe_v9.mq5",
+      "var": "EnableLogs"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "SL_ATR_MULT"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "TP_ATR_MULT"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "START_HOUR"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "END_HOUR"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "RSI_PERIOD"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "EMA_FAST"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "EMA_SLOW"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "ATR_PERIOD"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "BREAKOUT_LOOKBACK"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "LOT_SIZE"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "MAGIC"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "MAX_POSITIONS"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "USE_BREAKEVEN"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "USE_FRIDAY_CLOSE"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "FRIDAY_CLOSE_HOUR"
+    },
+    {
+      "file": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "var": "ENABLE_TRADING"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "SL_ATR_MULT"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "TP_ATR_MULT"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "START_HOUR"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "END_HOUR"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "RSI_PERIOD"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "EMA_FAST"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "EMA_SLOW"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "ATR_PERIOD"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "BREAKOUT_LOOKBACK"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "LOT_SIZE"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "MAGIC"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "MAX_POSITIONS"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "USE_BREAKEVEN"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "USE_FRIDAY_CLOSE"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "FRIDAY_CLOSE_HOUR"
+    },
+    {
+      "file": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "var": "ENABLE_TRADING"
+    }
+  ]
+}

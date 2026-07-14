@@ -1,0 +1,26 @@
+{
+  "system_takeover": {
+    "status": "OK",
+    "evidence": "process/status/report coordinator active"
+  },
+  "voice": {
+    "status": "OK",
+    "evidence": "voice runtime status sink installed"
+  },
+  "brain": {
+    "status": "OK",
+    "evidence": "Ollama + router/brain checks"
+  },
+  "mt5": {
+    "status": "BLOCKED",
+    "evidence": "MT5 terminal/account/tick/bars check"
+  },
+  "diagnostics": {
+    "status": "OK",
+    "evidence": "system_status_report.py"
+  },
+  "qader": {
+    "status": "BLOCKED",
+    "evidence": "Qader loop state/log checks"
+  }
+}

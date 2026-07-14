@@ -1,0 +1,12 @@
+{
+  "strategy": "scalping",
+  "trades": 53,
+  "wins": 34,
+  "losses": 19,
+  "win_rate": 0.6415094339622641,
+  "net_points": 62.20151171875,
+  "avg_points": 1.1736134286556603,
+  "max_drawdown_points": -50.342082031249674,
+  "final_equity": 1062.2015117187502,
+  "chart": "C:\\Users\\Radhi\\MT5\\reports\\smc_scalping_test.png"
+}

@@ -1,0 +1,361 @@
+:root {
+  color-scheme: dark;
+  --bg: #05070b;
+  --panel: #101722;
+  --panel-2: #151f2d;
+  --line: #2a3545;
+  --text: #e7edf5;
+  --muted: #94a3b8;
+  --blue: #38bdf8;
+  --green: #34d399;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --steel: #cbd5e1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+a,
+button {
+  font: inherit;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 76px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(5, 7, 11, 0.96);
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.1;
+}
+
+.nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.nav-actions button,
+.surface-tab,
+.frame-toolbar a,
+.health-card a {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-actions button {
+  padding: 0 12px;
+  font-weight: 700;
+}
+
+.nav-actions button:hover,
+.nav-actions button.active,
+.surface-tab:hover,
+.surface-tab.active,
+.frame-toolbar a:hover,
+.health-card a:hover {
+  border-color: var(--blue);
+  background: #132233;
+}
+
+.console {
+  width: min(1680px, calc(100vw - 24px));
+  margin: 0 auto;
+  padding: 14px 0 24px;
+}
+
+.status-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.status-card,
+.health-card,
+.workspace,
+.frame-toolbar {
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.status-card {
+  min-height: 92px;
+  padding: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.status-card.primary {
+  border-color: rgba(56, 189, 248, 0.55);
+}
+
+.label,
+.status-card small,
+.health-card small,
+.surface-tab span,
+.frame-toolbar small {
+  color: var(--muted);
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.status-card strong {
+  display: block;
+  min-width: 0;
+  margin-bottom: 6px;
+  font-size: 19px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-card small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.health-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 76px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.health-card div {
+  min-width: 0;
+}
+
+.health-card strong,
+.health-card small {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.health-card a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.health-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+}
+
+.health-card.online .health-dot {
+  background: var(--green);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.14);
+}
+
+.health-card.offline .health-dot {
+  background: var(--red);
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.14);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: calc(100vh - 255px);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.surface-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border-right: 1px solid var(--line);
+  background: #0b111a;
+}
+
+.surface-tab {
+  display: block;
+  width: 100%;
+  min-height: 70px;
+  padding: 12px;
+  text-align: left;
+}
+
+.surface-tab strong,
+.surface-tab span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.surface-tab strong {
+  margin-bottom: 5px;
+}
+
+.frame-area {
+  display: grid;
+  grid-template-rows: auto minmax(520px, 1fr);
+  min-width: 0;
+}
+
+.frame-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 9px 12px;
+  border-width: 0 0 1px;
+  background: var(--panel-2);
+}
+
+.frame-toolbar div {
+  min-width: 0;
+}
+
+.frame-toolbar span,
+.frame-toolbar small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.frame-toolbar span {
+  font-weight: 900;
+}
+
+.frame-toolbar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 0 12px;
+  font-weight: 900;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  border: 0;
+  background: #070b11;
+}
+
+.tone-ok {
+  color: var(--green);
+}
+
+.tone-warn {
+  color: var(--amber);
+}
+
+.tone-bad {
+  color: var(--red);
+}
+
+@media (max-width: 1180px) {
+  .status-strip,
+  .health-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .workspace {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    position: static;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nav-actions {
+    justify-content: flex-start;
+  }
+
+  .status-strip,
+  .health-grid,
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .surface-list {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .frame-area {
+    grid-template-rows: auto 70vh;
+  }
+}

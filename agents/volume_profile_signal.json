@@ -1,0 +1,18 @@
+{
+  "agent": "volume_profile",
+  "time": "2026-05-21T19:41:05.117895",
+  "status": "ok",
+  "poc": 4504.999,
+  "vah": 4510.73,
+  "val": 4495.831,
+  "price": 4516.234,
+  "bias": "BULLISH",
+  "in_value_area": false,
+  "trade_signal": "SELL_ZONE",
+  "dist_poc": 11.24,
+  "source": "mt5_bar_history",
+  "bars": 200,
+  "avg_spread_points": 308.0,
+  "vote": 1,
+  "direction": "SELL"
+}

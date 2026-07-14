@@ -1,0 +1,107 @@
+{
+  "time": "2026-05-21T19:41:13.776325",
+  "approved": true,
+  "swing_approved": false,
+  "scalp_approved": true,
+  "votes": 5,
+  "dir_agreement": 2,
+  "total": 8,
+  "scalp_required": 1,
+  "swing_required": 2,
+  "direction": "SELL",
+  "swing_direction": "NONE",
+  "scalp_direction": "SELL",
+  "llm_score": 6,
+  "mode": "SCALP",
+  "agent_votes": {
+    "smc": {
+      "vote": 0,
+      "dir": "SELL"
+    },
+    "volume_profile": {
+      "vote": 1,
+      "dir": "SELL"
+    },
+    "risk": {
+      "vote": 0,
+      "dir": "RISK_WARN"
+    },
+    "guard": {
+      "vote": 0,
+      "dir": "RISK_WARN"
+    },
+    "llm": {
+      "vote": 1,
+      "dir": "LLM_OK"
+    },
+    "experience": {
+      "vote": 1,
+      "dir": "EXP_OK"
+    },
+    "analyst": {
+      "vote": 1,
+      "dir": "PATTERN_OK"
+    },
+    "multi_tf": {
+      "vote": 1,
+      "dir": "BUY"
+    }
+  },
+  "smc": {
+    "bias": "SELL",
+    "bos": false,
+    "choch": false,
+    "ob": 0,
+    "fvg": 0,
+    "ema": "NEUTRAL",
+    "rsi": 50.0,
+    "confluence": "",
+    "sr_near": "NEAR_SWING_H",
+    "swing_high": 4520.52,
+    "swing_low": 4514.54,
+    "pdh": 4552.98,
+    "pdl": 4453.4
+  },
+  "sr_analysis": {
+    "smc_confluence": "",
+    "sr_near": "NEAR_SWING_H",
+    "ob_bos_alert": false,
+    "choch_alert": false,
+    "mtf_sr_bonus": false,
+    "swing_high": 4520.52,
+    "swing_low": 4514.54,
+    "pdh": 4552.98,
+    "pdl": 4453.4,
+    "pp": 4503.19,
+    "r1": 4552.98,
+    "s1": 4453.4,
+    "r2": 4602.77,
+    "s2": 4403.61
+  },
+  "approval_stats": {
+    "scalp": 606,
+    "swing": 149,
+    "rejected": 1
+  },
+  "pending_count": 4,
+  "pending_0_type": "BUY_LIMIT",
+  "pending_0_price": 4453.6,
+  "pending_0_reason": "PDL_SUP",
+  "pending_0_conf": 82,
+  "pending_0_expiry": 4,
+  "pending_1_type": "SELL_LIMIT",
+  "pending_1_price": 4552.78,
+  "pending_1_reason": "PDH_RES",
+  "pending_1_conf": 82,
+  "pending_1_expiry": 4,
+  "pending_2_type": "BUY_LIMIT",
+  "pending_2_price": 4496.13,
+  "pending_2_reason": "VAL_SUP",
+  "pending_2_conf": 80,
+  "pending_2_expiry": 4,
+  "pending_3_type": "SELL_LIMIT",
+  "pending_3_price": 4520.37,
+  "pending_3_reason": "SWING_HIGH",
+  "pending_3_conf": 78,
+  "pending_3_expiry": 4
+}

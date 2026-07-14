@@ -1,0 +1,116 @@
+{
+  "generated": 1782832743.1182137,
+  "tree": {
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5": [
+      "Trade/Trade.mqh",
+      "GridDNA_Common.mqh"
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_BRAIN_EA_v1.mq5": [
+      "Trade/Trade.mqh"
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v1.mq5": [],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v3.mq5": [],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v4.mq5": [],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\FRIDAY_Gold_EA.mq5": [],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE_TESTER.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5": [
+      "Trade/Trade.mqh",
+      "GridDNA_Common.mqh"
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Stoch_Reversion_M3.mq5": [
+      "Trade\\Trade.mqh",
+      "Indicators\\Trend.mqh"
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\mql5_shared\\GridDNA_Common.mqh": [],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    "active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5": [
+      "Trade/Trade.mqh",
+      "GridDNA_Common.mqh"
+    ],
+    "active_ea\\CLAUDE_BRAIN_EA_v1.mq5": [
+      "Trade/Trade.mqh"
+    ],
+    "active_ea\\CLAUDE_FOOTPRINT_v1.mq5": [],
+    "active_ea\\CLAUDE_FOOTPRINT_v3.mq5": [],
+    "active_ea\\CLAUDE_FOOTPRINT_v4.mq5": [],
+    "active_ea\\QuantumShark_Learner_v8_2.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    "active_ea\\QuantumShark_Learner_v8_3.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    "ea\\FRIDAY_Gold_EA.mq5": [],
+    "ea\\v7_2_DNA_EVOLVE.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    "ea\\v7_2_DNA_EVOLVE_TESTER.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    "live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5": [
+      "Trade/Trade.mqh",
+      "GridDNA_Common.mqh"
+    ],
+    "live_ea\\Stoch_Reversion_M3.mq5": [
+      "Trade\\Trade.mqh",
+      "Indicators\\Trend.mqh"
+    ],
+    "mql5_shared\\GridDNA_Common.mqh": [],
+    "QuantumShark_Safe_v9.mq5": [
+      "Trade\\Trade.mqh",
+      "Trade\\PositionInfo.mqh"
+    ],
+    "r-native-pipflow\\mql5_templates\\DrawingRenderer.mqh": [
+      "JAson.mqh"
+    ],
+    "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5": [
+      "Trade\\Trade.mqh"
+    ],
+    "r-native-pipflow\\mql5_templates\\Stoch_Reversion_M3.mq5": [
+      "Trade\\Trade.mqh",
+      "Indicators\\Trend.mqh"
+    ],
+    "r_native\\mql5_templates\\r_strategy_template.mq5": [
+      "Trade\\Trade.mqh"
+    ],
+    "r_native\\v2\\mql5_experts\\FRIDAY_Brain_Executor.mq5": [
+      "Trade/Trade.mqh",
+      "Trade/PositionInfo.mqh",
+      "Trade/OrderInfo.mqh",
+      "Trade/SymbolInfo.mqh"
+    ]
+  },
+  "missing_local": [],
+  "library_includes": [
+    "GridDNA_Common.mqh",
+    "Indicators\\Trend.mqh",
+    "JAson.mqh",
+    "Trade/OrderInfo.mqh",
+    "Trade/PositionInfo.mqh",
+    "Trade/SymbolInfo.mqh",
+    "Trade/Trade.mqh",
+    "Trade\\PositionInfo.mqh",
+    "Trade\\Trade.mqh"
+  ]
+}

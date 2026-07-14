@@ -1,0 +1,6625 @@
+{
+  "trace_version": "0.1",
+  "project": "FRIDAY MT5",
+  "generated_at": "2026-05-04T02:25:54.529054",
+  "rules": {
+    "read_only": true,
+    "no_mt5_execution": true,
+    "no_live_trading": true,
+    "no_demo_or_paper_execution": true
+  },
+  "files": [
+    {
+      "path": "src/mt5_ai/execution.py",
+      "exists": true,
+      "risk": "Medium",
+      "defs": [
+        {
+          "type": "class",
+          "name": "ExecutionResult",
+          "line": 9
+        },
+        {
+          "type": "function",
+          "name": "to_dict",
+          "line": 20
+        },
+        {
+          "type": "class",
+          "name": "PaperExecutor",
+          "line": 24
+        },
+        {
+          "type": "function",
+          "name": "execute",
+          "line": 25
+        },
+        {
+          "type": "function",
+          "name": "execute_pending",
+          "line": 42
+        },
+        {
+          "type": "class",
+          "name": "SafeMT5Executor",
+          "line": 58
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "line": 59
+        },
+        {
+          "type": "function",
+          "name": "execute",
+          "line": 63
+        },
+        {
+          "type": "class",
+          "name": "DemoMT5Executor",
+          "line": 75
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "line": 76
+        },
+        {
+          "type": "function",
+          "name": "execute",
+          "line": 79
+        },
+        {
+          "type": "function",
+          "name": "execute_pending",
+          "line": 96
+        },
+        {
+          "type": "function",
+          "name": "modify_position",
+          "line": 113
+        }
+      ],
+      "decision_matches": [
+        {
+          "line": 11,
+          "keyword": "action",
+          "text": "action: str"
+        },
+        {
+          "line": 28,
+          "keyword": "action",
+          "text": "action=\"OPEN\","
+        },
+        {
+          "line": 46,
+          "keyword": "action",
+          "text": "\"action\": \"PENDING\","
+        }
+      ],
+      "execution_matches": [
+        {
+          "line": 24,
+          "keyword": "paper",
+          "text": "class PaperExecutor:"
+        },
+        {
+          "line": 27,
+          "keyword": "paper",
+          "text": "mode=\"paper\","
+        },
+        {
+          "line": 34,
+          "keyword": "paper",
+          "text": "reason=\"paper_trade_logged\","
+        },
+        {
+          "line": 45,
+          "keyword": "paper",
+          "text": "\"mode\": \"paper_pending\","
+        },
+        {
+          "line": 54,
+          "keyword": "paper",
+          "text": "\"reason\": \"paper_pending_logged\","
+        },
+        {
+          "line": 59,
+          "keyword": "allow_live",
+          "text": "def __init__(self, gateway, allow_live=False):"
+        },
+        {
+          "line": 59,
+          "keyword": "live",
+          "text": "def __init__(self, gateway, allow_live=False):"
+        },
+        {
+          "line": 61,
+          "keyword": "allow_live",
+          "text": "self.allow_live = allow_live"
+        },
+        {
+          "line": 61,
+          "keyword": "live",
+          "text": "self.allow_live = allow_live"
+        },
+        {
+          "line": 65,
+          "keyword": "send_market_order",
+          "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+        },
+        {
+          "line": 65,
+          "keyword": "allow_live",
+          "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+        },
+        {
+          "line": 65,
+          "keyword": "live",
+          "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+        },
+        {
+          "line": 68,
+          "keyword": "live",
+          "text": "\"mode\": \"live_blocked\","
+        },
+        {
+          "line": 69,
+          "keyword": "live",
+          "text": "\"requested_mode\": \"live\","
+        },
+        {
+          "line": 75,
+          "keyword": "demo",
+          "text": "class DemoMT5Executor:"
+        },
+        {
+          "line": 86,
+          "keyword": "demo",
+          "text": "comment=\"friday-demo-only\","
+        },
+        {
+          "line": 88,
+          "keyword": "send_demo_market_order",
+          "text": "result = self.gateway.send_demo_market_order(plan)"
+        },
+        {
+          "line": 88,
+          "keyword": "demo",
+          "text": "result = self.gateway.send_demo_market_order(plan)"
+        },
+        {
+          "line": 91,
+          "keyword": "demo",
+          "text": "\"mode\": \"demo_mt5\","
+        },
+        {
+          "line": 105,
+          "keyword": "send_demo_pending_order",
+          "text": "result = self.gateway.send_demo_pending_order(plan, limit_price=limit_price)"
+        },
+        {
+          "line": 105,
+          "keyword": "demo",
+          "text": "result = self.gateway.send_demo_pending_order(plan, limit_price=limit_price)"
+        },
+        {
+          "line": 108,
+          "keyword": "demo",
+          "text": "\"mode\": \"demo_pending\","
+        },
+        {
+          "line": 114,
+          "keyword": "demo",
+          "text": "result = self.gateway.modify_demo_position_sl_tp("
+        }
+      ],
+      "risk_matches": [
+        {
+          "line": 59,
+          "keyword": "live",
+          "text": "def __init__(self, gateway, allow_live=False):"
+        },
+        {
+          "line": 61,
+          "keyword": "live",
+          "text": "self.allow_live = allow_live"
+        },
+        {
+          "line": 65,
+          "keyword": "live",
+          "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+        },
+        {
+          "line": 68,
+          "keyword": "live",
+          "text": "\"mode\": \"live_blocked\","
+        },
+        {
+          "line": 69,
+          "keyword": "live",
+          "text": "\"requested_mode\": \"live\","
+        }
+      ]
+    },
+    {
+      "path": "src/mt5_ai/mt5_gateway.py",
+      "exists": true,
+      "risk": "High",
+      "defs": [
+        {
+          "type": "class",
+          "name": "OrderPlan",
+          "line": 36
+        },
+        {
+          "type": "function",
+          "name": "normalized_side",
+          "line": 44
+        },
+        {
+          "type": "function",
+          "name": "to_dict",
+          "line": 47
+        },
+        {
+          "type": "class",
+          "name": "MT5Gateway",
+          "line": 51
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "line": 62
+        },
+        {
+          "type": "function",
+          "name": "initialize",
+          "line": 71
+        },
+        {
+          "type": "function",
+          "name": "reconnect",
+          "line": 83
+        },
+        {
+          "type": "function",
+          "name": "shutdown",
+          "line": 94
+        },
+        {
+          "type": "function",
+          "name": "_last_error_is_ipc",
+          "line": 100
+        },
+        {
+          "type": "function",
+          "name": "_retry_if_ipc",
+          "line": 109
+        },
+        {
+          "type": "function",
+          "name": "ensure_symbol",
+          "line": 120
+        },
+        {
+          "type": "function",
+          "name": "fetch_rates",
+          "line": 133
+        },
+        {
+          "type": "function",
+          "name": "symbols",
+          "line": 161
+        },
+        {
+          "type": "function",
+          "name": "get_open_positions",
+          "line": 196
+        },
+        {
+          "type": "function",
+          "name": "symbol_snapshot",
+          "line": 218
+        },
+        {
+          "type": "function",
+          "name": "account_snapshot",
+          "line": 247
+        },
+        {
+          "type": "function",
+          "name": "is_demo_account",
+          "line": 266
+        },
+        {
+          "type": "function",
+          "name": "ensure_demo_account",
+          "line": 271
+        },
+        {
+          "type": "function",
+          "name": "send_market_order",
+          "line": 295
+        },
+        {
+          "type": "function",
+          "name": "send_demo_pending_order",
+          "line": 311
+        },
+        {
+          "type": "function",
+          "name": "send_demo_market_order",
+          "line": 379
+        },
+        {
+          "type": "function",
+          "name": "_min_stop_dist",
+          "line": 456
+        },
+        {
+          "type": "function",
+          "name": "modify_demo_position_sl_tp",
+          "line": 466
+        },
+        {
+          "type": "function",
+          "name": "_clean_symbol",
+          "line": 555
+        },
+        {
+          "type": "function",
+          "name": "_normalize_lot",
+          "line": 562
+        },
+        {
+          "type": "function",
+          "name": "_validate_plan",
+          "line": 568
+        }
+      ],
+      "decision_matches": [
+        {
+          "line": 30,
+          "keyword": "BUY",
+          "text": "VALID_SIDES = {\"BUY\", \"SELL\"}"
+        },
+        {
+          "line": 30,
+          "keyword": "SELL",
+          "text": "VALID_SIDES = {\"BUY\", \"SELL\"}"
+        },
+        {
+          "line": 38,
+          "keyword": "BUY",
+          "text": "side: Literal[\"BUY\", \"SELL\"] | str"
+        },
+        {
+          "line": 38,
+          "keyword": "SELL",
+          "text": "side: Literal[\"BUY\", \"SELL\"] | str"
+        },
+        {
+          "line": 109,
+          "keyword": "action",
+          "text": "def _retry_if_ipc(self, action, *args, **kwargs):"
+        },
+        {
+          "line": 110,
+          "keyword": "action",
+          "text": "\"\"\"Run an MT5 action and retry once if the last error looks like IPC failure.\"\"\""
+        },
+        {
+          "line": 111,
+          "keyword": "action",
+          "text": "result = action(*args, **kwargs)"
+        },
+        {
+          "line": 114,
+          "keyword": "action",
+          "text": "result = action(*args, **kwargs)"
+        },
+        {
+          "line": 209,
+          "keyword": "BUY",
+          "text": "\"side\":   \"BUY\" if int(d[\"type\"]) == 0 else \"SELL\","
+        },
+        {
+          "line": 209,
+          "keyword": "SELL",
+          "text": "\"side\":   \"BUY\" if int(d[\"type\"]) == 0 else \"SELL\","
+        },
+        {
+          "line": 312,
+          "keyword": "BUY",
+          "text": "\"\"\"Place a pending limit order (BUY_LIMIT or SELL_LIMIT) on a demo account.\"\"\""
+        },
+        {
+          "line": 312,
+          "keyword": "SELL",
+          "text": "\"\"\"Place a pending limit order (BUY_LIMIT or SELL_LIMIT) on a demo account.\"\"\""
+        },
+        {
+          "line": 336,
+          "keyword": "BUY",
+          "text": "if side == \"BUY\":"
+        },
+        {
+          "line": 337,
+          "keyword": "BUY",
+          "text": "order_type = self.mt5.ORDER_TYPE_BUY_LIMIT"
+        },
+        {
+          "line": 338,
+          "keyword": "SELL",
+          "text": "elif side == \"SELL\":"
+        },
+        {
+          "line": 339,
+          "keyword": "SELL",
+          "text": "order_type = self.mt5.ORDER_TYPE_SELL_LIMIT"
+        },
+        {
+          "line": 344,
+          "keyword": "action",
+          "text": "\"action\":       self.mt5.TRADE_ACTION_PENDING,"
+        },
+        {
+          "line": 410,
+          "keyword": "BUY",
+          "text": "if side == \"BUY\":"
+        },
+        {
+          "line": 411,
+          "keyword": "BUY",
+          "text": "order_type = self.mt5.ORDER_TYPE_BUY"
+        },
+        {
+          "line": 413,
+          "keyword": "SELL",
+          "text": "elif side == \"SELL\":"
+        },
+        {
+          "line": 414,
+          "keyword": "SELL",
+          "text": "order_type = self.mt5.ORDER_TYPE_SELL"
+        },
+        {
+          "line": 420,
+          "keyword": "action",
+          "text": "\"action\": self.mt5.TRADE_ACTION_DEAL,"
+        },
+        {
+          "line": 500,
+          "keyword": "BUY",
+          "text": "pos_type  = int(pos_list[0].type)   # 0=BUY, 1=SELL"
+        },
+        {
+          "line": 500,
+          "keyword": "SELL",
+          "text": "pos_type  = int(pos_list[0].type)   # 0=BUY, 1=SELL"
+        },
+        {
+          "line": 505,
+          "keyword": "BUY",
+          "text": "if pos_type == 0:   # BUY — SL must be below bid"
+        },
+        {
+          "line": 507,
+          "keyword": "SELL",
+          "text": "else:               # SELL — SL must be above ask"
+        },
+        {
+          "line": 522,
+          "keyword": "action",
+          "text": "\"action\": self.mt5.TRADE_ACTION_SLTP,"
+        }
+      ],
+      "execution_matches": [
+        {
+          "line": 13,
+          "keyword": "demo",
+          "text": "DEMO_SERVER_KEYWORDS,"
+        },
+        {
+          "line": 14,
+          "keyword": "demo",
+          "text": "DEMO_TRADING_ENABLED,"
+        },
+        {
+          "line": 56,
+          "keyword": "send_market_order",
+          "text": "- Live trading is permanently blocked by send_market_order()."
+        },
+        {
+          "line": 56,
+          "keyword": "live",
+          "text": "- Live trading is permanently blocked by send_market_order()."
+        },
+        {
+          "line": 57,
+          "keyword": "send_demo_market_order",
+          "text": "- Only demo execution is allowed through send_demo_market_order()."
+        },
+        {
+          "line": 57,
+          "keyword": "demo",
+          "text": "- Only demo execution is allowed through send_demo_market_order()."
+        },
+        {
+          "line": 58,
+          "keyword": "demo",
+          "text": "- Demo execution is additionally blocked unless the connected account server"
+        },
+        {
+          "line": 59,
+          "keyword": "demo",
+          "text": "contains one of DEMO_SERVER_KEYWORDS."
+        },
+        {
+          "line": 263,
+          "keyword": "demo",
+          "text": "snapshot[\"demo_detected\"] = self.is_demo_account(snapshot)"
+        },
+        {
+          "line": 266,
+          "keyword": "demo",
+          "text": "def is_demo_account(self, snapshot: dict[str, Any] | None = None) -> bool:"
+        },
+        {
+          "line": 269,
+          "keyword": "demo",
+          "text": "return any(str(keyword).lower() in server for keyword in DEMO_SERVER_KEYWORDS)"
+        },
+        {
+          "line": 271,
+          "keyword": "demo",
+          "text": "def ensure_demo_account(self) -> tuple[bool, dict[str, Any]]:"
+        },
+        {
+          "line": 282,
+          "keyword": "demo",
+          "text": "if not self.is_demo_account(snapshot):"
+        },
+        {
+          "line": 286,
+          "keyword": "demo",
+          "text": "\"reason\": \"blocked_not_demo_account\","
+        },
+        {
+          "line": 295,
+          "keyword": "send_market_order",
+          "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+        },
+        {
+          "line": 295,
+          "keyword": "allow_live",
+          "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+        },
+        {
+          "line": 295,
+          "keyword": "live",
+          "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+        },
+        {
+          "line": 297,
+          "keyword": "live",
+          "text": "Live trading endpoint."
+        },
+        {
+          "line": 306,
+          "keyword": "live",
+          "text": "\"reason\": \"live_trading_permanently_disabled\","
+        },
+        {
+          "line": 307,
+          "keyword": "allow_live",
+          "text": "\"allow_live_requested\": bool(allow_live),"
+        },
+        {
+          "line": 307,
+          "keyword": "live",
+          "text": "\"allow_live_requested\": bool(allow_live),"
+        },
+        {
+          "line": 311,
+          "keyword": "send_demo_pending_order",
+          "text": "def send_demo_pending_order(self, plan: OrderPlan, limit_price: float) -> dict[str, Any]:"
+        },
+        {
+          "line": 311,
+          "keyword": "demo",
+          "text": "def send_demo_pending_order(self, plan: OrderPlan, limit_price: float) -> dict[str, Any]:"
+        },
+        {
+          "line": 312,
+          "keyword": "demo",
+          "text": "\"\"\"Place a pending limit order (BUY_LIMIT or SELL_LIMIT) on a demo account.\"\"\""
+        },
+        {
+          "line": 315,
+          "keyword": "demo",
+          "text": "if not DEMO_TRADING_ENABLED:"
+        },
+        {
+          "line": 319,
+          "keyword": "demo",
+          "text": "\"reason\": \"demo_trading_disabled\","
+        },
+        {
+          "line": 323,
+          "keyword": "demo",
+          "text": "ok, account_or_error = self.ensure_demo_account()"
+        },
+        {
+          "line": 344,
+          "keyword": "TRADE_ACTION_PENDING",
+          "text": "\"action\":       self.mt5.TRADE_ACTION_PENDING,"
+        },
+        {
+          "line": 360,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 363,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 371,
+          "keyword": "demo",
+          "text": "\"mode\":       \"demo_pending\","
+        },
+        {
+          "line": 379,
+          "keyword": "send_demo_market_order",
+          "text": "def send_demo_market_order(self, plan: OrderPlan) -> dict[str, Any]:"
+        },
+        {
+          "line": 379,
+          "keyword": "demo",
+          "text": "def send_demo_market_order(self, plan: OrderPlan) -> dict[str, Any]:"
+        },
+        {
+          "line": 380,
+          "keyword": "demo",
+          "text": "\"\"\"Send a market order only if connected account is detected as demo.\"\"\""
+        },
+        {
+          "line": 383,
+          "keyword": "demo",
+          "text": "if not DEMO_TRADING_ENABLED:"
+        },
+        {
+          "line": 387,
+          "keyword": "demo",
+          "text": "\"reason\": \"demo_trading_disabled\","
+        },
+        {
+          "line": 391,
+          "keyword": "demo",
+          "text": "ok, account_or_error = self.ensure_demo_account()"
+        },
+        {
+          "line": 420,
+          "keyword": "TRADE_ACTION_DEAL",
+          "text": "\"action\": self.mt5.TRADE_ACTION_DEAL,"
+        },
+        {
+          "line": 437,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 440,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 448,
+          "keyword": "demo",
+          "text": "\"mode\": \"demo_mt5\","
+        },
+        {
+          "line": 466,
+          "keyword": "demo",
+          "text": "def modify_demo_position_sl_tp("
+        },
+        {
+          "line": 473,
+          "keyword": "demo",
+          "text": "\"\"\"Modify SL/TP for an existing position on a demo account only.\"\"\""
+        },
+        {
+          "line": 474,
+          "keyword": "demo",
+          "text": "if not DEMO_TRADING_ENABLED:"
+        },
+        {
+          "line": 478,
+          "keyword": "demo",
+          "text": "\"reason\": \"demo_trading_disabled\","
+        },
+        {
+          "line": 482,
+          "keyword": "demo",
+          "text": "ok, account_or_error = self.ensure_demo_account()"
+        },
+        {
+          "line": 532,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 535,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 543,
+          "keyword": "demo",
+          "text": "\"mode\": \"demo_modify_sltp\","
+        }
+      ],
+      "risk_matches": [
+        {
+          "line": 56,
+          "keyword": "live",
+          "text": "- Live trading is permanently blocked by send_market_order()."
+        },
+        {
+          "line": 295,
+          "keyword": "live",
+          "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+        },
+        {
+          "line": 297,
+          "keyword": "live",
+          "text": "Live trading endpoint."
+        },
+        {
+          "line": 306,
+          "keyword": "live",
+          "text": "\"reason\": \"live_trading_permanently_disabled\","
+        },
+        {
+          "line": 307,
+          "keyword": "live",
+          "text": "\"allow_live_requested\": bool(allow_live),"
+        },
+        {
+          "line": 344,
+          "keyword": "TRADE_ACTION_PENDING",
+          "text": "\"action\":       self.mt5.TRADE_ACTION_PENDING,"
+        },
+        {
+          "line": 360,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 363,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 420,
+          "keyword": "TRADE_ACTION_DEAL",
+          "text": "\"action\": self.mt5.TRADE_ACTION_DEAL,"
+        },
+        {
+          "line": 437,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 440,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 532,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        },
+        {
+          "line": 535,
+          "keyword": "order_send",
+          "text": "result = self.mt5.order_send(request)"
+        }
+      ]
+    },
+    {
+      "path": "scripts/friday_auto_trader.py",
+      "exists": true,
+      "risk": "Medium",
+      "defs": [
+        {
+          "type": "class",
+          "name": "SymbolContext",
+          "line": 133
+        },
+        {
+          "type": "function",
+          "name": "_json_default",
+          "line": 153
+        },
+        {
+          "type": "function",
+          "name": "_safe_symbol_for_path",
+          "line": 165
+        },
+        {
+          "type": "function",
+          "name": "_parse_symbols",
+          "line": 169
+        },
+        {
+          "type": "class",
+          "name": "TrailingSLThread",
+          "line": 186
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "line": 189
+        },
+        {
+          "type": "function",
+          "name": "stop",
+          "line": 195
+        },
+        {
+          "type": "function",
+          "name": "run",
+          "line": 198
+        },
+        {
+          "type": "function",
+          "name": "_cfg",
+          "line": 206
+        },
+        {
+          "type": "function",
+          "name": "_round_price",
+          "line": 212
+        },
+        {
+          "type": "function",
+          "name": "_trail_all",
+          "line": 220
+        },
+        {
+          "type": "function",
+          "name": "send",
+          "line": 266
+        },
+        {
+          "type": "class",
+          "name": "AutoTrader",
+          "line": 317
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "line": 318
+        },
+        {
+          "type": "function",
+          "name": "_build_symbol_contexts",
+          "line": 393
+        },
+        {
+          "type": "function",
+          "name": "_load_symbol_memory",
+          "line": 451
+        },
+        {
+          "type": "function",
+          "name": "_save_symbol_memory",
+          "line": 459
+        },
+        {
+          "type": "function",
+          "name": "_calculate_max_positions_from_margin",
+          "line": 466
+        },
+        {
+          "type": "function",
+          "name": "_ensure_symbol_state",
+          "line": 488
+        },
+        {
+          "type": "function",
+          "name": "_append_recent_event",
+          "line": 537
+        },
+        {
+          "type": "function",
+          "name": "log",
+          "line": 543
+        },
+        {
+          "type": "function",
+          "name": "fetch_data",
+          "line": 555
+        },
+        {
+          "type": "function",
+          "name": "_market_is_recent",
+          "line": 558
+        },
+        {
+          "type": "function",
+          "name": "_is_temporarily_closed",
+          "line": 574
+        },
+        {
+          "type": "function",
+          "name": "_loss_guard_reason",
+          "line": 577
+        },
+        {
+          "type": "function",
+          "name": "_symbol_performance",
+          "line": 602
+        },
+        {
+          "type": "function",
+          "name": "_performance_allows_trade",
+          "line": 630
+        },
+        {
+          "type": "function",
+          "name": "_get_symbol_scaler",
+          "line": 671
+        },
+        {
+          "type": "function",
+          "name": "analyze",
+          "line": 681
+        },
+        {
+          "type": "function",
+          "name": "_scan_markets",
+          "line": 816
+        },
+        {
+          "type": "function",
+          "name": "_rank_trade_candidates",
+          "line": 841
+        },
+        {
+          "type": "function",
+          "name": "_flip_position",
+          "line": 876
+        },
+        {
+          "type": "function",
+          "name": "execute",
+          "line": 944
+        },
+        {
+          "type": "function",
+          "name": "_normalize_lot_for_symbol",
+          "line": 1009
+        },
+        {
+          "type": "function",
+          "name": "_wrap_execution_result",
+          "line": 1017
+        },
+        {
+          "type": "function",
+          "name": "_nested_broker_result",
+          "line": 1030
+        },
+        {
+          "type": "function",
+          "name": "_is_market_closed_result",
+          "line": 1038
+        },
+        {
+          "type": "function",
+          "name": "_failure_reason",
+          "line": 1044
+        },
+        {
+          "type": "function",
+          "name": "_record_execution_result",
+          "line": 1057
+        },
+        {
+          "type": "function",
+          "name": "_update_closed_trade_memory",
+          "line": 1097
+        },
+        {
+          "type": "function",
+          "name": "_find_closed_trade",
+          "line": 1216
+        },
+        {
+          "type": "function",
+          "name": "_print_decision",
+          "line": 1253
+        },
+        {
+          "type": "function",
+          "name": "run",
+          "line": 1286
+        },
+        {
+          "type": "function",
+          "name": "shutdown",
+          "line": 1372
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "line": 1384
+        }
+      ],
+      "decision_matches": [
+        {
+          "line": 8,
+          "keyword": "confidence",
+          "text": "- Each symbol has its own brain, pivot cache, confidence score, cooldown,"
+        },
+        {
+          "line": 15,
+          "keyword": "signal",
+          "text": "- Direction flip: reverses position when strong opposing signal appears"
+        },
+        {
+          "line": 15,
+          "keyword": "direction",
+          "text": "- Direction flip: reverses position when strong opposing signal appears"
+        },
+        {
+          "line": 16,
+          "keyword": "direction",
+          "text": "- Trend filter: only trades in direction of trend + smc_bias"
+        },
+        {
+          "line": 57,
+          "keyword": "confidence",
+          "text": "from mt5_ai.confidence_engine import ConfidenceEngine"
+        },
+        {
+          "line": 109,
+          "keyword": "direction",
+          "text": "# Direction flip. Disabled by default because this Exness demo account is"
+        },
+        {
+          "line": 112,
+          "keyword": "direction",
+          "text": "ENABLE_DIRECTION_FLIP = False"
+        },
+        {
+          "line": 113,
+          "keyword": "BUY",
+          "text": "FLIP_PROB_BUY_MIN   = 0.72   # prob above this + holding SELL → flip to BUY"
+        },
+        {
+          "line": 113,
+          "keyword": "SELL",
+          "text": "FLIP_PROB_BUY_MIN   = 0.72   # prob above this + holding SELL → flip to BUY"
+        },
+        {
+          "line": 113,
+          "keyword": "HOLD",
+          "text": "FLIP_PROB_BUY_MIN   = 0.72   # prob above this + holding SELL → flip to BUY"
+        },
+        {
+          "line": 114,
+          "keyword": "BUY",
+          "text": "FLIP_PROB_SELL_MAX  = 0.28   # prob below this + holding BUY → flip to SELL"
+        },
+        {
+          "line": 114,
+          "keyword": "SELL",
+          "text": "FLIP_PROB_SELL_MAX  = 0.28   # prob below this + holding BUY → flip to SELL"
+        },
+        {
+          "line": 114,
+          "keyword": "HOLD",
+          "text": "FLIP_PROB_SELL_MAX  = 0.28   # prob below this + holding BUY → flip to SELL"
+        },
+        {
+          "line": 127,
+          "keyword": "confidence",
+          "text": "SYMBOL_WEAK_MIN_CONFIDENCE = 0.22"
+        },
+        {
+          "line": 128,
+          "keyword": "confidence",
+          "text": "SYMBOL_SEVERE_MIN_CONFIDENCE = 0.35"
+        },
+        {
+          "line": 137,
+          "keyword": "confidence",
+          "text": "confidence: ConfidenceEngine"
+        },
+        {
+          "line": 233,
+          "keyword": "BUY",
+          "text": "side     = str(pos.get(\"side\") or \"BUY\")"
+        },
+        {
+          "line": 287,
+          "keyword": "BUY",
+          "text": "if side == \"BUY\":"
+        },
+        {
+          "line": 299,
+          "keyword": "SELL",
+          "text": "else:  # SELL"
+        },
+        {
+          "line": 430,
+          "keyword": "confidence",
+          "text": "confidence=ConfidenceEngine(symbol),"
+        },
+        {
+          "line": 630,
+          "keyword": "decision",
+          "text": "def _performance_allows_trade(self, decision: dict) -> tuple[bool, str | None]:"
+        },
+        {
+          "line": 631,
+          "keyword": "decision",
+          "text": "symbol = str(decision.get(\"symbol\") or \"\")"
+        },
+        {
+          "line": 633,
+          "keyword": "decision",
+          "text": "decision[\"symbol_performance\"] = perf"
+        },
+        {
+          "line": 638,
+          "keyword": "confidence",
+          "text": "confidence = float(decision.get(\"confidence\") or 0.0)"
+        },
+        {
+          "line": 638,
+          "keyword": "decision",
+          "text": "confidence = float(decision.get(\"confidence\") or 0.0)"
+        },
+        {
+          "line": 655,
+          "keyword": "confidence",
+          "text": "if severe and confidence < SYMBOL_SEVERE_MIN_CONFIDENCE:"
+        },
+        {
+          "line": 660,
+          "keyword": "confidence",
+          "text": "f\"wr={perf['win_rate']:.1%},conf={confidence:.2f})\","
+        },
+        {
+          "line": 662,
+          "keyword": "confidence",
+          "text": "if weak and confidence < SYMBOL_WEAK_MIN_CONFIDENCE:"
+        },
+        {
+          "line": 667,
+          "keyword": "confidence",
+          "text": "f\"conf={confidence:.2f})\","
+        },
+        {
+          "line": 683,
+          "keyword": "decision",
+          "text": "Returns a decision dict, or None if no new bar has closed."
+        },
+        {
+          "line": 686,
+          "keyword": "BUY",
+          "text": "- Trend filter (BUY only when trend > 0, SELL only when trend < 0)"
+        },
+        {
+          "line": 686,
+          "keyword": "SELL",
+          "text": "- Trend filter (BUY only when trend > 0, SELL only when trend < 0)"
+        },
+        {
+          "line": 687,
+          "keyword": "HOLD",
+          "text": "- Consecutive-loss guard (HOLD if >= MAX_CONSECUTIVE_LOSSES)"
+        },
+        {
+          "line": 694,
+          "keyword": "HOLD",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 694,
+          "keyword": "action",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 697,
+          "keyword": "probability",
+          "text": "\"probability\": 0.5,"
+        },
+        {
+          "line": 698,
+          "keyword": "confidence",
+          "text": "\"confidence\": 0.0,"
+        },
+        {
+          "line": 709,
+          "keyword": "HOLD",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 709,
+          "keyword": "action",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 712,
+          "keyword": "probability",
+          "text": "\"probability\": 0.5,"
+        },
+        {
+          "line": 713,
+          "keyword": "confidence",
+          "text": "\"confidence\": 0.0,"
+        },
+        {
+          "line": 728,
+          "keyword": "HOLD",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 728,
+          "keyword": "action",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 731,
+          "keyword": "probability",
+          "text": "\"probability\": 0.5,"
+        },
+        {
+          "line": 732,
+          "keyword": "confidence",
+          "text": "\"confidence\": 0.0,"
+        },
+        {
+          "line": 741,
+          "keyword": "HOLD",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 741,
+          "keyword": "action",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 744,
+          "keyword": "probability",
+          "text": "\"probability\": 0.5,"
+        },
+        {
+          "line": 745,
+          "keyword": "confidence",
+          "text": "\"confidence\": 0.0,"
+        },
+        {
+          "line": 755,
+          "keyword": "probability",
+          "text": "probability = float(np.asarray(self.model.predict(sequence, verbose=0)).squeeze())"
+        },
+        {
+          "line": 758,
+          "keyword": "decision",
+          "text": "decision = context.brain.decide("
+        },
+        {
+          "line": 761,
+          "keyword": "probability",
+          "text": "probability=probability,"
+        },
+        {
+          "line": 766,
+          "keyword": "decision",
+          "text": "decision[\"close\"] = float(enriched[\"close\"].iloc[-1])"
+        },
+        {
+          "line": 767,
+          "keyword": "decision",
+          "text": "decision[\"symbol\"] = symbol"
+        },
+        {
+          "line": 768,
+          "keyword": "decision",
+          "text": "decision[\"market_open\"] = True"
+        },
+        {
+          "line": 769,
+          "keyword": "decision",
+          "text": "decision[\"learning_memory\"] = str(context.journal.path)"
+        },
+        {
+          "line": 770,
+          "keyword": "confidence",
+          "text": "decision[\"confidence_memory\"] = context.confidence.status()"
+        },
+        {
+          "line": 770,
+          "keyword": "decision",
+          "text": "decision[\"confidence_memory\"] = context.confidence.status()"
+        },
+        {
+          "line": 776,
+          "keyword": "decision",
+          "text": "decision[\"trend\"]    = trend"
+        },
+        {
+          "line": 777,
+          "keyword": "decision",
+          "text": "decision[\"smc_bias\"] = smc_bias"
+        },
+        {
+          "line": 780,
+          "keyword": "HOLD",
+          "text": "action = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 780,
+          "keyword": "action",
+          "text": "action = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 780,
+          "keyword": "decision",
+          "text": "action = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 781,
+          "keyword": "BUY",
+          "text": "if action == \"BUY\" and trend < 0 and smc_bias < -0.3:"
+        },
+        {
+          "line": 781,
+          "keyword": "action",
+          "text": "if action == \"BUY\" and trend < 0 and smc_bias < -0.3:"
+        },
+        {
+          "line": 782,
+          "keyword": "HOLD",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 782,
+          "keyword": "action",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 782,
+          "keyword": "decision",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 783,
+          "keyword": "decision",
+          "text": "decision[\"reason\"] = f\"trend_filter:bearish(trend={trend:.2f},bias={smc_bias:.2f})\""
+        },
+        {
+          "line": 784,
+          "keyword": "SELL",
+          "text": "elif action == \"SELL\" and trend > 0 and smc_bias > 0.3:"
+        },
+        {
+          "line": 784,
+          "keyword": "action",
+          "text": "elif action == \"SELL\" and trend > 0 and smc_bias > 0.3:"
+        },
+        {
+          "line": 785,
+          "keyword": "HOLD",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 785,
+          "keyword": "action",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 785,
+          "keyword": "decision",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 786,
+          "keyword": "decision",
+          "text": "decision[\"reason\"] = f\"trend_filter:bullish(trend={trend:.2f},bias={smc_bias:.2f})\""
+        },
+        {
+          "line": 789,
+          "keyword": "HOLD",
+          "text": "signal=decision.get(\"action\", \"HOLD\"),"
+        },
+        {
+          "line": 789,
+          "keyword": "signal",
+          "text": "signal=decision.get(\"action\", \"HOLD\"),"
+        },
+        {
+          "line": 789,
+          "keyword": "action",
+          "text": "signal=decision.get(\"action\", \"HOLD\"),"
+        },
+        {
+          "line": 789,
+          "keyword": "decision",
+          "text": "signal=decision.get(\"action\", \"HOLD\"),"
+        },
+        {
+          "line": 790,
+          "keyword": "confidence",
+          "text": "confidence=float(decision.get(\"confidence\", 0.0)),"
+        },
+        {
+          "line": 790,
+          "keyword": "decision",
+          "text": "confidence=float(decision.get(\"confidence\", 0.0)),"
+        },
+        {
+          "line": 791,
+          "keyword": "decision",
+          "text": "price=decision[\"close\"],"
+        },
+        {
+          "line": 793,
+          "keyword": "decision",
+          "text": "decision[\"pivot\"] = pivot_result"
+        },
+        {
+          "line": 794,
+          "keyword": "HOLD",
+          "text": "decision[\"signal\"] = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 794,
+          "keyword": "signal",
+          "text": "decision[\"signal\"] = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 794,
+          "keyword": "action",
+          "text": "decision[\"signal\"] = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 794,
+          "keyword": "decision",
+          "text": "decision[\"signal\"] = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 795,
+          "keyword": "confidence",
+          "text": "decision[\"confidence\"] = pivot_result[\"confidence\"]"
+        },
+        {
+          "line": 795,
+          "keyword": "decision",
+          "text": "decision[\"confidence\"] = pivot_result[\"confidence\"]"
+        },
+        {
+          "line": 804,
+          "keyword": "decision",
+          "text": "decision[key] = pivot_result.get(key)"
+        },
+        {
+          "line": 808,
+          "keyword": "signal",
+          "text": "\"no_existing_trade_signal\","
+        },
+        {
+          "line": 812,
+          "keyword": "decision",
+          "text": "decision[\"reason\"] = f\"{decision.get('reason', '')}+{pivot_result['pivot_reason']}\""
+        },
+        {
+          "line": 814,
+          "keyword": "decision",
+          "text": "return decision"
+        },
+        {
+          "line": 817,
+          "keyword": "decision",
+          "text": "decisions: list[dict] = []"
+        },
+        {
+          "line": 820,
+          "keyword": "decision",
+          "text": "decision = self.analyze(context)"
+        },
+        {
+          "line": 821,
+          "keyword": "decision",
+          "text": "if decision is None:"
+        },
+        {
+          "line": 823,
+          "keyword": "decision",
+          "text": "decisions.append(decision)"
+        },
+        {
+          "line": 824,
+          "keyword": "decision",
+          "text": "self._print_decision(decision, context)"
+        },
+        {
+          "line": 827,
+          "keyword": "decision",
+          "text": "error_decision = {"
+        },
+        {
+          "line": 828,
+          "keyword": "HOLD",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 828,
+          "keyword": "action",
+          "text": "\"action\": \"HOLD\","
+        },
+        {
+          "line": 831,
+          "keyword": "probability",
+          "text": "\"probability\": 0.5,"
+        },
+        {
+          "line": 832,
+          "keyword": "confidence",
+          "text": "\"confidence\": 0.0,"
+        },
+        {
+          "line": 836,
+          "keyword": "decision",
+          "text": "decisions.append(error_decision)"
+        },
+        {
+          "line": 839,
+          "keyword": "decision",
+          "text": "return decisions"
+        },
+        {
+          "line": 841,
+          "keyword": "decision",
+          "text": "def _rank_trade_candidates(self, decisions: list[dict]) -> list[dict]:"
+        },
+        {
+          "line": 843,
+          "keyword": "decision",
+          "text": "for decision in decisions:"
+        },
+        {
+          "line": 844,
+          "keyword": "decision",
+          "text": "symbol = str(decision.get(\"symbol\") or \"\")"
+        },
+        {
+          "line": 846,
+          "keyword": "BUY",
+          "text": "if decision.get(\"action\") not in {\"BUY\", \"SELL\"}:"
+        },
+        {
+          "line": 846,
+          "keyword": "SELL",
+          "text": "if decision.get(\"action\") not in {\"BUY\", \"SELL\"}:"
+        },
+        {
+          "line": 846,
+          "keyword": "action",
+          "text": "if decision.get(\"action\") not in {\"BUY\", \"SELL\"}:"
+        },
+        {
+          "line": 846,
+          "keyword": "decision",
+          "text": "if decision.get(\"action\") not in {\"BUY\", \"SELL\"}:"
+        },
+        {
+          "line": 848,
+          "keyword": "decision",
+          "text": "if not decision.get(\"market_open\", True):"
+        },
+        {
+          "line": 854,
+          "keyword": "decision",
+          "text": "allowed, reason = self._performance_allows_trade(decision)"
+        },
+        {
+          "line": 856,
+          "keyword": "HOLD",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 856,
+          "keyword": "action",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 856,
+          "keyword": "decision",
+          "text": "decision[\"action\"] = \"HOLD\""
+        },
+        {
+          "line": 857,
+          "keyword": "decision",
+          "text": "decision[\"reason\"] = reason or \"performance_guard\""
+        },
+        {
+          "line": 858,
+          "keyword": "decision",
+          "text": "self._append_recent_event(symbol, {\"event\": \"performance_skip\", \"reason\": decision[\"reason\"]})"
+        },
+        {
+          "line": 860,
+          "keyword": "decision",
+          "text": "candidates.append(decision)"
+        },
+        {
+          "line": 865,
+          "keyword": "confidence",
+          "text": "float(d.get(\"confidence\") or 0.0),"
+        },
+        {
+          "line": 866,
+          "keyword": "probability",
+          "text": "abs(float(d.get(\"probability\") or 0.5) - 0.5),"
+        },
+        {
+          "line": 874,
+          "keyword": "direction",
+          "text": "# Direction flip"
+        },
+        {
+          "line": 876,
+          "keyword": "decision",
+          "text": "def _flip_position(self, pos: dict, decision: dict, context: SymbolContext) -> None:"
+        },
+        {
+          "line": 878,
+          "keyword": "direction",
+          "text": "Close opposing position and open the new direction."
+        },
+        {
+          "line": 882,
+          "keyword": "action",
+          "text": "new_side = decision[\"action\"]"
+        },
+        {
+          "line": 882,
+          "keyword": "decision",
+          "text": "new_side = decision[\"action\"]"
+        },
+        {
+          "line": 885,
+          "keyword": "decision",
+          "text": "price    = float(decision[\"close\"])"
+        },
+        {
+          "line": 886,
+          "keyword": "confidence",
+          "text": "lot      = self._normalize_lot_for_symbol(context, context.confidence.apply_lot(DEFAULT_LOT))"
+        },
+        {
+          "line": 893,
+          "keyword": "decision",
+          "text": "allowed, guard_reason = self._performance_allows_trade(decision)"
+        },
+        {
+          "line": 903,
+          "keyword": "probability",
+          "text": "f\"@ {price:.5f}  prob={decision.get('probability', 0.5):.2%}\""
+        },
+        {
+          "line": 903,
+          "keyword": "decision",
+          "text": "f\"@ {price:.5f}  prob={decision.get('probability', 0.5):.2%}\""
+        },
+        {
+          "line": 908,
+          "keyword": "BUY",
+          "text": "sl = price * (1 - context.sl_pct) if new_side == \"BUY\" else price * (1 + context.sl_pct)"
+        },
+        {
+          "line": 909,
+          "keyword": "BUY",
+          "text": "tp = price * (1 + context.tp_pct) if new_side == \"BUY\" else price * (1 - context.tp_pct)"
+        },
+        {
+          "line": 920,
+          "keyword": "direction",
+          "text": "\"direction_flip\","
+        },
+        {
+          "line": 929,
+          "keyword": "probability",
+          "text": "\"prob\": decision.get(\"probability\"),"
+        },
+        {
+          "line": 929,
+          "keyword": "decision",
+          "text": "\"prob\": decision.get(\"probability\"),"
+        },
+        {
+          "line": 944,
+          "keyword": "decision",
+          "text": "def execute(self, decision):"
+        },
+        {
+          "line": 945,
+          "keyword": "action",
+          "text": "action = decision.get(\"action\")"
+        },
+        {
+          "line": 945,
+          "keyword": "decision",
+          "text": "action = decision.get(\"action\")"
+        },
+        {
+          "line": 946,
+          "keyword": "BUY",
+          "text": "if action not in {\"BUY\", \"SELL\"}:"
+        },
+        {
+          "line": 946,
+          "keyword": "SELL",
+          "text": "if action not in {\"BUY\", \"SELL\"}:"
+        },
+        {
+          "line": 946,
+          "keyword": "action",
+          "text": "if action not in {\"BUY\", \"SELL\"}:"
+        },
+        {
+          "line": 949,
+          "keyword": "decision",
+          "text": "symbol = decision.get(\"symbol\", self.primary_symbol)"
+        },
+        {
+          "line": 951,
+          "keyword": "action",
+          "text": "side = action"
+        },
+        {
+          "line": 952,
+          "keyword": "decision",
+          "text": "price = float(decision[\"close\"])"
+        },
+        {
+          "line": 953,
+          "keyword": "confidence",
+          "text": "lot = self._normalize_lot_for_symbol(context, context.confidence.apply_lot(DEFAULT_LOT))"
+        },
+        {
+          "line": 964,
+          "keyword": "action",
+          "text": "wrapped = self._wrap_execution_result(\"BLOCKED\", action, symbol, price, lot, result, decision)"
+        },
+        {
+          "line": 964,
+          "keyword": "decision",
+          "text": "wrapped = self._wrap_execution_result(\"BLOCKED\", action, symbol, price, lot, result, decision)"
+        },
+        {
+          "line": 973,
+          "keyword": "action",
+          "text": "wrapped = self._wrap_execution_result(\"BLOCKED\", action, symbol, price, lot, result, decision)"
+        },
+        {
+          "line": 973,
+          "keyword": "decision",
+          "text": "wrapped = self._wrap_execution_result(\"BLOCKED\", action, symbol, price, lot, result, decision)"
+        },
+        {
+          "line": 977,
+          "keyword": "BUY",
+          "text": "if side == \"BUY\":"
+        },
+        {
+          "line": 998,
+          "keyword": "action",
+          "text": "wrapped = self._wrap_execution_result(mode, action, symbol, price, lot, result, decision)"
+        },
+        {
+          "line": 998,
+          "keyword": "decision",
+          "text": "wrapped = self._wrap_execution_result(mode, action, symbol, price, lot, result, decision)"
+        },
+        {
+          "line": 1017,
+          "keyword": "action",
+          "text": "def _wrap_execution_result(mode, action, symbol, price, lot, result, decision) -> dict:"
+        },
+        {
+          "line": 1017,
+          "keyword": "decision",
+          "text": "def _wrap_execution_result(mode, action, symbol, price, lot, result, decision) -> dict:"
+        },
+        {
+          "line": 1021,
+          "keyword": "action",
+          "text": "\"action\": action,"
+        },
+        {
+          "line": 1026,
+          "keyword": "decision",
+          "text": "\"decision\": decision,"
+        },
+        {
+          "line": 1078,
+          "keyword": "action",
+          "text": "\"side\": wrapped[\"action\"],"
+        },
+        {
+          "line": 1080,
+          "keyword": "signal",
+          "text": "\"signal_price\": float(wrapped[\"price\"]),"
+        },
+        {
+          "line": 1083,
+          "keyword": "probability",
+          "text": "\"probability\": float(wrapped[\"decision\"].get(\"probability\") or 0.5),"
+        },
+        {
+          "line": 1083,
+          "keyword": "decision",
+          "text": "\"probability\": float(wrapped[\"decision\"].get(\"probability\") or 0.5),"
+        },
+        {
+          "line": 1084,
+          "keyword": "BUY",
+          "text": "\"smc_buy_score\": float(wrapped[\"decision\"].get(\"smc_buy_score\") or 0.0),"
+        },
+        {
+          "line": 1084,
+          "keyword": "decision",
+          "text": "\"smc_buy_score\": float(wrapped[\"decision\"].get(\"smc_buy_score\") or 0.0),"
+        },
+        {
+          "line": 1085,
+          "keyword": "SELL",
+          "text": "\"smc_sell_score\": float(wrapped[\"decision\"].get(\"smc_sell_score\") or 0.0),"
+        },
+        {
+          "line": 1085,
+          "keyword": "decision",
+          "text": "\"smc_sell_score\": float(wrapped[\"decision\"].get(\"smc_sell_score\") or 0.0),"
+        },
+        {
+          "line": 1086,
+          "keyword": "decision",
+          "text": "\"reason\": wrapped[\"decision\"].get(\"reason\", \"\"),"
+        },
+        {
+          "line": 1088,
+          "keyword": "action",
+          "text": "self._append_recent_event(symbol, {\"event\": \"sent\", \"side\": wrapped[\"action\"], \"price\": actual_entry})"
+        },
+        {
+          "line": 1122,
+          "keyword": "signal",
+          "text": "\"signal_price\": float(position.get(\"entry\") or 0.0),"
+        },
+        {
+          "line": 1125,
+          "keyword": "probability",
+          "text": "\"probability\": 0.5,"
+        },
+        {
+          "line": 1126,
+          "keyword": "BUY",
+          "text": "\"smc_buy_score\": 0.0,"
+        },
+        {
+          "line": 1127,
+          "keyword": "SELL",
+          "text": "\"smc_sell_score\": 0.0,"
+        },
+        {
+          "line": 1160,
+          "keyword": "BUY",
+          "text": "points = exit_price - entry if side == \"BUY\" else entry - exit_price"
+        },
+        {
+          "line": 1167,
+          "keyword": "probability",
+          "text": "probability=float(trade.get(\"probability\") or 0.5),"
+        },
+        {
+          "line": 1168,
+          "keyword": "BUY",
+          "text": "smc_buy_score=float(trade.get(\"smc_buy_score\") or 0.0),"
+        },
+        {
+          "line": 1169,
+          "keyword": "SELL",
+          "text": "smc_sell_score=float(trade.get(\"smc_sell_score\") or 0.0),"
+        },
+        {
+          "line": 1173,
+          "keyword": "signal",
+          "text": "signal_type=str(trade.get(\"reason\") or \"auto\"),"
+        },
+        {
+          "line": 1176,
+          "keyword": "confidence",
+          "text": "context.confidence.on_win(points)"
+        },
+        {
+          "line": 1181,
+          "keyword": "confidence",
+          "text": "context.confidence.on_loss(points)"
+        },
+        {
+          "line": 1253,
+          "keyword": "decision",
+          "text": "def _print_decision(self, decision: dict, context: SymbolContext) -> None:"
+        },
+        {
+          "line": 1254,
+          "keyword": "HOLD",
+          "text": "action = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 1254,
+          "keyword": "action",
+          "text": "action = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 1254,
+          "keyword": "decision",
+          "text": "action = decision.get(\"action\", \"HOLD\")"
+        },
+        {
+          "line": 1255,
+          "keyword": "decision",
+          "text": "symbol = decision.get(\"symbol\", context.symbol)"
+        },
+        {
+          "line": 1256,
+          "keyword": "decision",
+          "text": "price = float(decision.get(\"close\") or 0.0)"
+        },
+        {
+          "line": 1257,
+          "keyword": "probability",
+          "text": "prob = float(decision.get(\"probability\") or 0.5)"
+        },
+        {
+          "line": 1257,
+          "keyword": "decision",
+          "text": "prob = float(decision.get(\"probability\") or 0.5)"
+        },
+        {
+          "line": 1258,
+          "keyword": "confidence",
+          "text": "conf = float(decision.get(\"confidence\") or 0.0)"
+        },
+        {
+          "line": 1258,
+          "keyword": "decision",
+          "text": "conf = float(decision.get(\"confidence\") or 0.0)"
+        },
+        {
+          "line": 1259,
+          "keyword": "decision",
+          "text": "reason = decision.get(\"reason\", \"\")"
+        },
+        {
+          "line": 1260,
+          "keyword": "decision",
+          "text": "trend = decision.get(\"trend\", 0)"
+        },
+        {
+          "line": 1262,
+          "keyword": "decision",
+          "text": "perf = decision.get(\"symbol_performance\") or self._symbol_performance(symbol)"
+        },
+        {
+          "line": 1274,
+          "keyword": "action",
+          "text": "f\"{action:5s} {symbol:9s} @ {price:>10.5f} \""
+        },
+        {
+          "line": 1278,
+          "keyword": "decision",
+          "text": "rec = decision.get(\"recommended_order\")"
+        },
+        {
+          "line": 1279,
+          "keyword": "decision",
+          "text": "entry = decision.get(\"recommended_entry_price\")"
+        },
+        {
+          "line": 1299,
+          "keyword": "BUY",
+          "text": "f\"enabled prob<{FLIP_PROB_SELL_MAX} (BUY→SELL) | prob>{FLIP_PROB_BUY_MIN} (SELL→BUY)\""
+        },
+        {
+          "line": 1299,
+          "keyword": "SELL",
+          "text": "f\"enabled prob<{FLIP_PROB_SELL_MAX} (BUY→SELL) | prob>{FLIP_PROB_BUY_MIN} (SELL→BUY)\""
+        },
+        {
+          "line": 1300,
+          "keyword": "direction",
+          "text": "if ENABLE_DIRECTION_FLIP else"
+        },
+        {
+          "line": 1303,
+          "keyword": "direction",
+          "text": "print(f\"   Direction flip: {flip_status}\")"
+        },
+        {
+          "line": 1305,
+          "keyword": "confidence",
+          "text": "print(f\"   Performance guard: memory-ranked symbols, weak markets need conf≥{SYMBOL_WEAK_MIN_CONFIDENCE:.2f}\")"
+        },
+        {
+          "line": 1314,
+          "keyword": "decision",
+          "text": "decisions = self._scan_markets()"
+        },
+        {
+          "line": 1316,
+          "keyword": "direction",
+          "text": "# ── Direction flip check ───────────────────────────────────"
+        },
+        {
+          "line": 1317,
+          "keyword": "direction",
+          "text": "if ENABLE_DIRECTION_FLIP and decisions:"
+        },
+        {
+          "line": 1317,
+          "keyword": "decision",
+          "text": "if ENABLE_DIRECTION_FLIP and decisions:"
+        },
+        {
+          "line": 1323,
+          "keyword": "decision",
+          "text": "for decision in decisions:"
+        },
+        {
+          "line": 1324,
+          "keyword": "decision",
+          "text": "dsym = decision.get(\"symbol\", \"\")"
+        },
+        {
+          "line": 1325,
+          "keyword": "action",
+          "text": "dact = decision.get(\"action\")"
+        },
+        {
+          "line": 1325,
+          "keyword": "decision",
+          "text": "dact = decision.get(\"action\")"
+        },
+        {
+          "line": 1326,
+          "keyword": "BUY",
+          "text": "if dact not in {\"BUY\", \"SELL\"} or dsym not in self.contexts:"
+        },
+        {
+          "line": 1326,
+          "keyword": "SELL",
+          "text": "if dact not in {\"BUY\", \"SELL\"} or dsym not in self.contexts:"
+        },
+        {
+          "line": 1328,
+          "keyword": "probability",
+          "text": "dprob = float(decision.get(\"probability\") or 0.5)"
+        },
+        {
+          "line": 1328,
+          "keyword": "decision",
+          "text": "dprob = float(decision.get(\"probability\") or 0.5)"
+        },
+        {
+          "line": 1334,
+          "keyword": "signal",
+          "text": "# Flip only on strong opposing signal"
+        },
+        {
+          "line": 1335,
+          "keyword": "BUY",
+          "text": "if pos_side == \"BUY\" and dact == \"SELL\" and dprob < FLIP_PROB_SELL_MAX:"
+        },
+        {
+          "line": 1335,
+          "keyword": "SELL",
+          "text": "if pos_side == \"BUY\" and dact == \"SELL\" and dprob < FLIP_PROB_SELL_MAX:"
+        },
+        {
+          "line": 1336,
+          "keyword": "decision",
+          "text": "self._flip_position(pos, decision, ctx)"
+        },
+        {
+          "line": 1337,
+          "keyword": "BUY",
+          "text": "elif pos_side == \"SELL\" and dact == \"BUY\" and dprob > FLIP_PROB_BUY_MIN:"
+        },
+        {
+          "line": 1337,
+          "keyword": "SELL",
+          "text": "elif pos_side == \"SELL\" and dact == \"BUY\" and dprob > FLIP_PROB_BUY_MIN:"
+        },
+        {
+          "line": 1338,
+          "keyword": "decision",
+          "text": "self._flip_position(pos, decision, ctx)"
+        },
+        {
+          "line": 1341,
+          "keyword": "decision",
+          "text": "candidates = self._rank_trade_candidates(decisions)"
+        },
+        {
+          "line": 1344,
+          "keyword": "decision",
+          "text": "if not candidates and decisions:"
+        },
+        {
+          "line": 1345,
+          "keyword": "HOLD",
+          "text": "pass  # HOLD decisions, no print spam"
+        },
+        {
+          "line": 1345,
+          "keyword": "decision",
+          "text": "pass  # HOLD decisions, no print spam"
+        },
+        {
+          "line": 1346,
+          "keyword": "decision",
+          "text": "for decision in candidates:"
+        },
+        {
+          "line": 1349,
+          "keyword": "decision",
+          "text": "result = self.execute(decision)"
+        },
+        {
+          "line": 1352,
+          "keyword": "action",
+          "text": "print(f\"   ✅ Executed: {result['mode']} {result['action']} {result['symbol']}\")"
+        },
+        {
+          "line": 1400,
+          "keyword": "action",
+          "text": "parser.add_argument(\"--once\", action=\"store_true\", help=\"Run one scan cycle and exit\")"
+        },
+        {
+          "line": 1401,
+          "keyword": "action",
+          "text": "parser.add_argument(\"--no-auto-live\", action=\"store_true\", help=\"Ignored; live trading is always disabled\")"
+        },
+        {
+          "line": 1402,
+          "keyword": "action",
+          "text": "parser.add_argument(\"--auto-live\", action=\"store_true\", help=\"Ignored; live trading is blocked\")"
+        }
+      ],
+      "execution_matches": [
+        {
+          "line": 5,
+          "keyword": "demo",
+          "text": "- Demo account: may send demo MT5 orders."
+        },
+        {
+          "line": 6,
+          "keyword": "live",
+          "text": "- Live account: analysis only; broker execution is blocked and paper logged."
+        },
+        {
+          "line": 6,
+          "keyword": "paper",
+          "text": "- Live account: analysis only; broker execution is blocked and paper logged."
+        },
+        {
+          "line": 58,
+          "keyword": "demo",
+          "text": "from mt5_ai.execution import DemoMT5Executor, PaperExecutor, SafeMT5Executor"
+        },
+        {
+          "line": 58,
+          "keyword": "paper",
+          "text": "from mt5_ai.execution import DemoMT5Executor, PaperExecutor, SafeMT5Executor"
+        },
+        {
+          "line": 109,
+          "keyword": "demo",
+          "text": "# Direction flip. Disabled by default because this Exness demo account is"
+        },
+        {
+          "line": 268,
+          "keyword": "demo",
+          "text": "result = trader.gateway.modify_demo_position_sl_tp(ticket, symbol, sl=new_sl, tp=tp_now)"
+        },
+        {
+          "line": 324,
+          "keyword": "live",
+          "text": "auto_live=False,"
+        },
+        {
+          "line": 341,
+          "keyword": "live",
+          "text": "self.auto_live = False"
+        },
+        {
+          "line": 352,
+          "keyword": "demo",
+          "text": "self.is_demo = self.gateway.is_demo_account(self.account)"
+        },
+        {
+          "line": 353,
+          "keyword": "live",
+          "text": "self.account_type = \"DEMO\" if self.is_demo else \"LIVE\""
+        },
+        {
+          "line": 353,
+          "keyword": "demo",
+          "text": "self.account_type = \"DEMO\" if self.is_demo else \"LIVE\""
+        },
+        {
+          "line": 358,
+          "keyword": "paper",
+          "text": "self.paper_executor = PaperExecutor()"
+        },
+        {
+          "line": 359,
+          "keyword": "demo",
+          "text": "self.demo_executor = DemoMT5Executor(gateway=self.gateway)"
+        },
+        {
+          "line": 360,
+          "keyword": "allow_live",
+          "text": "self.live_executor = SafeMT5Executor(gateway=self.gateway, allow_live=False)"
+        },
+        {
+          "line": 360,
+          "keyword": "live",
+          "text": "self.live_executor = SafeMT5Executor(gateway=self.gateway, allow_live=False)"
+        },
+        {
+          "line": 907,
+          "keyword": "demo",
+          "text": "if self.is_demo:"
+        },
+        {
+          "line": 910,
+          "keyword": "demo",
+          "text": "result = self.demo_executor.execute("
+        },
+        {
+          "line": 915,
+          "keyword": "live",
+          "text": "result = {\"sent\": False, \"reason\": \"live_account_flip_blocked\"}"
+        },
+        {
+          "line": 984,
+          "keyword": "demo",
+          "text": "if self.is_demo:"
+        },
+        {
+          "line": 985,
+          "keyword": "demo",
+          "text": "result = self.demo_executor.execute("
+        },
+        {
+          "line": 988,
+          "keyword": "demo",
+          "text": "mode = \"DEMO\""
+        },
+        {
+          "line": 990,
+          "keyword": "paper",
+          "text": "result = self.paper_executor.execute(symbol=symbol, side=side, price=price, lot=lot, sl=sl, tp=tp)"
+        },
+        {
+          "line": 991,
+          "keyword": "live",
+          "text": "mode = \"PAPER (LIVE account detected; broker execution blocked)\""
+        },
+        {
+          "line": 991,
+          "keyword": "paper",
+          "text": "mode = \"PAPER (LIVE account detected; broker execution blocked)\""
+        },
+        {
+          "line": 1306,
+          "keyword": "live",
+          "text": "print(\"   Auto Live: DISABLED / BLOCKED\")"
+        },
+        {
+          "line": 1401,
+          "keyword": "live",
+          "text": "parser.add_argument(\"--no-auto-live\", action=\"store_true\", help=\"Ignored; live trading is always disabled\")"
+        },
+        {
+          "line": 1402,
+          "keyword": "live",
+          "text": "parser.add_argument(\"--auto-live\", action=\"store_true\", help=\"Ignored; live trading is blocked\")"
+        },
+        {
+          "line": 1414,
+          "keyword": "live",
+          "text": "auto_live=False,"
+        }
+      ],
+      "risk_matches": [
+        {
+          "line": 6,
+          "keyword": "live",
+          "text": "- Live account: analysis only; broker execution is blocked and paper logged."
+        },
+        {
+          "line": 324,
+          "keyword": "live",
+          "text": "auto_live=False,"
+        },
+        {
+          "line": 341,
+          "keyword": "live",
+          "text": "self.auto_live = False"
+        },
+        {
+          "line": 353,
+          "keyword": "live",
+          "text": "self.account_type = \"DEMO\" if self.is_demo else \"LIVE\""
+        },
+        {
+          "line": 360,
+          "keyword": "live",
+          "text": "self.live_executor = SafeMT5Executor(gateway=self.gateway, allow_live=False)"
+        },
+        {
+          "line": 915,
+          "keyword": "live",
+          "text": "result = {\"sent\": False, \"reason\": \"live_account_flip_blocked\"}"
+        },
+        {
+          "line": 991,
+          "keyword": "live",
+          "text": "mode = \"PAPER (LIVE account detected; broker execution blocked)\""
+        },
+        {
+          "line": 1306,
+          "keyword": "live",
+          "text": "print(\"   Auto Live: DISABLED / BLOCKED\")"
+        },
+        {
+          "line": 1401,
+          "keyword": "live",
+          "text": "parser.add_argument(\"--no-auto-live\", action=\"store_true\", help=\"Ignored; live trading is always disabled\")"
+        },
+        {
+          "line": 1402,
+          "keyword": "live",
+          "text": "parser.add_argument(\"--auto-live\", action=\"store_true\", help=\"Ignored; live trading is blocked\")"
+        },
+        {
+          "line": 1414,
+          "keyword": "live",
+          "text": "auto_live=False,"
+        }
+      ]
+    },
+    {
+      "path": "scripts/live_paper_trader.py",
+      "exists": true,
+      "risk": "Low",
+      "defs": [
+        {
+          "type": "class",
+          "name": "PaperPosition",
+          "line": 57
+        },
+        {
+          "type": "function",
+          "name": "check",
+          "line": 71
+        },
+        {
+          "type": "function",
+          "name": "points",
+          "line": 87
+        },
+        {
+          "type": "function",
+          "name": "init_mt5",
+          "line": 95
+        },
+        {
+          "type": "function",
+          "name": "fetch_rates",
+          "line": 105
+        },
+        {
+          "type": "function",
+          "name": "make_sequence",
+          "line": 115
+        },
+        {
+          "type": "class",
+          "name": "PaperTracker",
+          "line": 126
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "line": 127
+        },
+        {
+          "type": "function",
+          "name": "has_position",
+          "line": 133
+        },
+        {
+          "type": "function",
+          "name": "open",
+          "line": 136
+        },
+        {
+          "type": "function",
+          "name": "update",
+          "line": 164
+        },
+        {
+          "type": "function",
+          "name": "_close",
+          "line": 173
+        },
+        {
+          "type": "function",
+          "name": "_log",
+          "line": 205
+        },
+        {
+          "type": "function",
+          "name": "print_summary",
+          "line": 210
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "line": 222
+        }
+      ],
+      "decision_matches": [
+        {
+          "line": 2,
+          "keyword": "decision",
+          "text": "Live paper trader — executes model decisions as tracked paper positions."
+        },
+        {
+          "line": 51,
+          "keyword": "HOLD",
+          "text": "MAX_HOLD_BARS = 30  # close by time after this many polls regardless"
+        },
+        {
+          "line": 59,
+          "keyword": "BUY",
+          "text": "side: str          # \"BUY\" or \"SELL\""
+        },
+        {
+          "line": 59,
+          "keyword": "SELL",
+          "text": "side: str          # \"BUY\" or \"SELL\""
+        },
+        {
+          "line": 64,
+          "keyword": "probability",
+          "text": "probability: float"
+        },
+        {
+          "line": 65,
+          "keyword": "BUY",
+          "text": "smc_buy_score: float"
+        },
+        {
+          "line": 66,
+          "keyword": "SELL",
+          "text": "smc_sell_score: float"
+        },
+        {
+          "line": 73,
+          "keyword": "BUY",
+          "text": "if self.side == \"BUY\":"
+        },
+        {
+          "line": 83,
+          "keyword": "HOLD",
+          "text": "if self.bars_held >= MAX_HOLD_BARS:"
+        },
+        {
+          "line": 88,
+          "keyword": "BUY",
+          "text": "if self.side == \"BUY\":"
+        },
+        {
+          "line": 136,
+          "keyword": "probability",
+          "text": "def open(self, symbol, side, entry, atr_ratio, strategy, probability,"
+        },
+        {
+          "line": 137,
+          "keyword": "BUY",
+          "text": "smc_buy, smc_sell):"
+        },
+        {
+          "line": 137,
+          "keyword": "SELL",
+          "text": "smc_buy, smc_sell):"
+        },
+        {
+          "line": 139,
+          "keyword": "BUY",
+          "text": "if side == \"BUY\":"
+        },
+        {
+          "line": 153,
+          "keyword": "probability",
+          "text": "probability=probability,"
+        },
+        {
+          "line": 154,
+          "keyword": "BUY",
+          "text": "smc_buy_score=smc_buy,"
+        },
+        {
+          "line": 155,
+          "keyword": "SELL",
+          "text": "smc_sell_score=smc_sell,"
+        },
+        {
+          "line": 160,
+          "keyword": "BUY",
+          "text": "self._log(\"OPEN\", {**asdict(pos), \"tp_pts\": round(tp - entry if side == \"BUY\" else entry - tp, 4)})"
+        },
+        {
+          "line": 190,
+          "keyword": "probability",
+          "text": "probability=pos.probability,"
+        },
+        {
+          "line": 191,
+          "keyword": "BUY",
+          "text": "smc_buy_score=pos.smc_buy_score,"
+        },
+        {
+          "line": 192,
+          "keyword": "SELL",
+          "text": "smc_sell_score=pos.smc_sell_score,"
+        },
+        {
+          "line": 196,
+          "keyword": "signal",
+          "text": "signal_type=\"strict_signal\","
+        },
+        {
+          "line": 229,
+          "keyword": "action",
+          "text": "parser.add_argument(\"--once\",        action=\"store_true\","
+        },
+        {
+          "line": 240,
+          "keyword": "decision",
+          "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+        },
+        {
+          "line": 247,
+          "keyword": "HOLD",
+          "text": "print(f\"  Max hold: {MAX_HOLD_BARS} bars\")"
+        },
+        {
+          "line": 274,
+          "keyword": "decision",
+          "text": "decision = brain.decide("
+        },
+        {
+          "line": 279,
+          "keyword": "decision",
+          "text": "d = decision.to_dict()"
+        },
+        {
+          "line": 288,
+          "keyword": "decision",
+          "text": "# Log decision"
+        },
+        {
+          "line": 289,
+          "keyword": "decision",
+          "text": "with open(decision_log, \"a\", encoding=\"utf-8\") as f:"
+        },
+        {
+          "line": 292,
+          "keyword": "action",
+          "text": "action = d[\"action\"]"
+        },
+        {
+          "line": 295,
+          "keyword": "probability",
+          "text": "f\"prob={d['probability']:.3f}  smc_bias={d['smc_bias']:+.0f}  \""
+        },
+        {
+          "line": 296,
+          "keyword": "action",
+          "text": "f\"ctx={ctx}  → {action}  ({d['reason']})\")"
+        },
+        {
+          "line": 298,
+          "keyword": "signal",
+          "text": "# Open position if signal and no existing position for this symbol"
+        },
+        {
+          "line": 299,
+          "keyword": "BUY",
+          "text": "if action in (\"BUY\", \"SELL\") and not tracker.has_position(args.symbol):"
+        },
+        {
+          "line": 299,
+          "keyword": "SELL",
+          "text": "if action in (\"BUY\", \"SELL\") and not tracker.has_position(args.symbol):"
+        },
+        {
+          "line": 299,
+          "keyword": "action",
+          "text": "if action in (\"BUY\", \"SELL\") and not tracker.has_position(args.symbol):"
+        },
+        {
+          "line": 302,
+          "keyword": "action",
+          "text": "side=action,"
+        },
+        {
+          "line": 306,
+          "keyword": "probability",
+          "text": "probability=d[\"probability\"],"
+        },
+        {
+          "line": 307,
+          "keyword": "BUY",
+          "text": "smc_buy=d[\"smc_buy_score\"],"
+        },
+        {
+          "line": 308,
+          "keyword": "SELL",
+          "text": "smc_sell=d[\"smc_sell_score\"],"
+        }
+      ],
+      "execution_matches": [
+        {
+          "line": 2,
+          "keyword": "live",
+          "text": "Live paper trader — executes model decisions as tracked paper positions."
+        },
+        {
+          "line": 2,
+          "keyword": "paper",
+          "text": "Live paper trader — executes model decisions as tracked paper positions."
+        },
+        {
+          "line": 4,
+          "keyword": "live",
+          "text": "Connects to MT5 for live bars, runs the model every poll, opens/closes"
+        },
+        {
+          "line": 5,
+          "keyword": "paper",
+          "text": "paper positions with ATR-based TP/SL, and records results to LearningJournal."
+        },
+        {
+          "line": 9,
+          "keyword": "live",
+          "text": "python live_paper_trader.py --profile sk --poll-seconds 15"
+        },
+        {
+          "line": 9,
+          "keyword": "paper",
+          "text": "python live_paper_trader.py --profile sk --poll-seconds 15"
+        },
+        {
+          "line": 10,
+          "keyword": "live",
+          "text": "python live_paper_trader.py --profile sb --once"
+        },
+        {
+          "line": 10,
+          "keyword": "paper",
+          "text": "python live_paper_trader.py --profile sb --once"
+        },
+        {
+          "line": 54,
+          "keyword": "paper",
+          "text": "# ─── Paper position ────────────────────────────────────────────────────────────"
+        },
+        {
+          "line": 57,
+          "keyword": "paper",
+          "text": "class PaperPosition:"
+        },
+        {
+          "line": 126,
+          "keyword": "paper",
+          "text": "class PaperTracker:"
+        },
+        {
+          "line": 130,
+          "keyword": "paper",
+          "text": "self.positions: list[PaperPosition] = []"
+        },
+        {
+          "line": 146,
+          "keyword": "paper",
+          "text": "pos = PaperPosition("
+        },
+        {
+          "line": 238,
+          "keyword": "paper",
+          "text": "tracker = PaperTracker(journal=journal,"
+        },
+        {
+          "line": 239,
+          "keyword": "live",
+          "text": "log_path=LOG_DIR / \"live_paper_trades.jsonl\")"
+        },
+        {
+          "line": 239,
+          "keyword": "paper",
+          "text": "log_path=LOG_DIR / \"live_paper_trades.jsonl\")"
+        },
+        {
+          "line": 240,
+          "keyword": "live",
+          "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+        },
+        {
+          "line": 240,
+          "keyword": "paper",
+          "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+        },
+        {
+          "line": 243,
+          "keyword": "live",
+          "text": "print(f\"  FRIDAY Live Paper Trader\")"
+        },
+        {
+          "line": 243,
+          "keyword": "paper",
+          "text": "print(f\"  FRIDAY Live Paper Trader\")"
+        },
+        {
+          "line": 249,
+          "keyword": "paper",
+          "text": "print(\"  No real orders. Paper only.\")"
+        }
+      ],
+      "risk_matches": [
+        {
+          "line": 2,
+          "keyword": "live",
+          "text": "Live paper trader — executes model decisions as tracked paper positions."
+        },
+        {
+          "line": 4,
+          "keyword": "live",
+          "text": "Connects to MT5 for live bars, runs the model every poll, opens/closes"
+        },
+        {
+          "line": 9,
+          "keyword": "live",
+          "text": "python live_paper_trader.py --profile sk --poll-seconds 15"
+        },
+        {
+          "line": 10,
+          "keyword": "live",
+          "text": "python live_paper_trader.py --profile sb --once"
+        },
+        {
+          "line": 239,
+          "keyword": "live",
+          "text": "log_path=LOG_DIR / \"live_paper_trades.jsonl\")"
+        },
+        {
+          "line": 240,
+          "keyword": "live",
+          "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+        },
+        {
+          "line": 243,
+          "keyword": "live",
+          "text": "print(f\"  FRIDAY Live Paper Trader\")"
+        }
+      ]
+    },
+    {
+      "path": "src/mt5_ai/config.py",
+      "exists": true,
+      "risk": "Low",
+      "defs": [
+        {
+          "type": "function",
+          "name": "_env_flag",
+          "line": 5
+        },
+        {
+          "type": "function",
+          "name": "_env_int",
+          "line": 12
+        },
+        {
+          "type": "function",
+          "name": "_env_float",
+          "line": 19
+        }
+      ],
+      "decision_matches": [
+        {
+          "line": 84,
+          "keyword": "BUY",
+          "text": "\"buy_side_liquidity_sweep\","
+        },
+        {
+          "line": 85,
+          "keyword": "SELL",
+          "text": "\"sell_side_liquidity_sweep\","
+        },
+        {
+          "line": 90,
+          "keyword": "BUY",
+          "text": "\"smc_buy_score\","
+        },
+        {
+          "line": 91,
+          "keyword": "SELL",
+          "text": "\"smc_sell_score\","
+        },
+        {
+          "line": 134,
+          "keyword": "BUY",
+          "text": "BUY_THRESHOLD = 0.60"
+        },
+        {
+          "line": 134,
+          "keyword": "HOLD",
+          "text": "BUY_THRESHOLD = 0.60"
+        },
+        {
+          "line": 135,
+          "keyword": "SELL",
+          "text": "SELL_THRESHOLD = 0.40"
+        },
+        {
+          "line": 135,
+          "keyword": "HOLD",
+          "text": "SELL_THRESHOLD = 0.40"
+        },
+        {
+          "line": 149,
+          "keyword": "confidence",
+          "text": "USE_PIVOT_CONFIDENCE_BOOST = _env_flag(\"USE_PIVOT_CONFIDENCE_BOOST\", True)"
+        },
+        {
+          "line": 151,
+          "keyword": "confidence",
+          "text": "PIVOT_CONFIDENCE_BOOST = _env_float(\"PIVOT_CONFIDENCE_BOOST\", 0.15)"
+        },
+        {
+          "line": 159,
+          "keyword": "BUY",
+          "text": "SMC_ENTRY_BUY_PROB   = _env_float(\"FRIDAY_BUY_PROB\",  0.60)   # عتبة الشراء للـEntryAgent"
+        },
+        {
+          "line": 160,
+          "keyword": "SELL",
+          "text": "SMC_ENTRY_SELL_PROB  = _env_float(\"FRIDAY_SELL_PROB\", 0.40)   # عتبة البيع"
+        },
+        {
+          "line": 172,
+          "keyword": "confidence",
+          "text": "CLAUDE_COMMITTEE_MIN_CONFIDENCE = _env_float(\"MT5_AI_CLAUDE_MIN_CONFIDENCE\", 0.35)"
+        }
+      ],
+      "execution_matches": [
+        {
+          "line": 125,
+          "keyword": "demo",
+          "text": "DEMO_MODE = True"
+        },
+        {
+          "line": 126,
+          "keyword": "demo",
+          "text": "DEMO_TRADING_ENABLED = True"
+        },
+        {
+          "line": 127,
+          "keyword": "demo",
+          "text": "DEMO_SERVER_KEYWORDS = (\"demo\", \"trial\", \"practice\", \"contest\")"
+        },
+        {
+          "line": 128,
+          "keyword": "live",
+          "text": "LIVE_MODE_ALLOWED = False"
+        },
+        {
+          "line": 129,
+          "keyword": "live",
+          "text": "LIVE_TRADING_ENABLED = False"
+        },
+        {
+          "line": 131,
+          "keyword": "paper",
+          "text": "AUTO_LEARNING_MODE = \"paper\""
+        },
+        {
+          "line": 138,
+          "keyword": "demo",
+          "text": "MAX_DEMO_OPEN_ORDERS = 3"
+        },
+        {
+          "line": 141,
+          "keyword": "live",
+          "text": "LIVE_CONFIRM_ENV = \"MT5_AI_LIVE_TRADING\""
+        },
+        {
+          "line": 142,
+          "keyword": "live",
+          "text": "LIVE_CONFIRM_VALUE = \"YES_I_ACCEPT_RISK\""
+        },
+        {
+          "line": 144,
+          "keyword": "paper",
+          "text": "MAX_PAPER_SCAN_ORDERS = 3"
+        }
+      ],
+      "risk_matches": [
+        {
+          "line": 128,
+          "keyword": "live",
+          "text": "LIVE_MODE_ALLOWED = False"
+        },
+        {
+          "line": 129,
+          "keyword": "live",
+          "text": "LIVE_TRADING_ENABLED = False"
+        },
+        {
+          "line": 141,
+          "keyword": "live",
+          "text": "LIVE_CONFIRM_ENV = \"MT5_AI_LIVE_TRADING\""
+        },
+        {
+          "line": 142,
+          "keyword": "live",
+          "text": "LIVE_CONFIRM_VALUE = \"YES_I_ACCEPT_RISK\""
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "decision_locations": [
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 11,
+        "keyword": "action",
+        "text": "action: str"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 28,
+        "keyword": "action",
+        "text": "action=\"OPEN\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 46,
+        "keyword": "action",
+        "text": "\"action\": \"PENDING\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 30,
+        "keyword": "BUY",
+        "text": "VALID_SIDES = {\"BUY\", \"SELL\"}"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 30,
+        "keyword": "SELL",
+        "text": "VALID_SIDES = {\"BUY\", \"SELL\"}"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 38,
+        "keyword": "BUY",
+        "text": "side: Literal[\"BUY\", \"SELL\"] | str"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 38,
+        "keyword": "SELL",
+        "text": "side: Literal[\"BUY\", \"SELL\"] | str"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 109,
+        "keyword": "action",
+        "text": "def _retry_if_ipc(self, action, *args, **kwargs):"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 110,
+        "keyword": "action",
+        "text": "\"\"\"Run an MT5 action and retry once if the last error looks like IPC failure.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 111,
+        "keyword": "action",
+        "text": "result = action(*args, **kwargs)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 114,
+        "keyword": "action",
+        "text": "result = action(*args, **kwargs)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 209,
+        "keyword": "BUY",
+        "text": "\"side\":   \"BUY\" if int(d[\"type\"]) == 0 else \"SELL\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 209,
+        "keyword": "SELL",
+        "text": "\"side\":   \"BUY\" if int(d[\"type\"]) == 0 else \"SELL\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 312,
+        "keyword": "BUY",
+        "text": "\"\"\"Place a pending limit order (BUY_LIMIT or SELL_LIMIT) on a demo account.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 312,
+        "keyword": "SELL",
+        "text": "\"\"\"Place a pending limit order (BUY_LIMIT or SELL_LIMIT) on a demo account.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 336,
+        "keyword": "BUY",
+        "text": "if side == \"BUY\":"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 337,
+        "keyword": "BUY",
+        "text": "order_type = self.mt5.ORDER_TYPE_BUY_LIMIT"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 338,
+        "keyword": "SELL",
+        "text": "elif side == \"SELL\":"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 339,
+        "keyword": "SELL",
+        "text": "order_type = self.mt5.ORDER_TYPE_SELL_LIMIT"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 344,
+        "keyword": "action",
+        "text": "\"action\":       self.mt5.TRADE_ACTION_PENDING,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 410,
+        "keyword": "BUY",
+        "text": "if side == \"BUY\":"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 411,
+        "keyword": "BUY",
+        "text": "order_type = self.mt5.ORDER_TYPE_BUY"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 413,
+        "keyword": "SELL",
+        "text": "elif side == \"SELL\":"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 414,
+        "keyword": "SELL",
+        "text": "order_type = self.mt5.ORDER_TYPE_SELL"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 420,
+        "keyword": "action",
+        "text": "\"action\": self.mt5.TRADE_ACTION_DEAL,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 500,
+        "keyword": "BUY",
+        "text": "pos_type  = int(pos_list[0].type)   # 0=BUY, 1=SELL"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 500,
+        "keyword": "SELL",
+        "text": "pos_type  = int(pos_list[0].type)   # 0=BUY, 1=SELL"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 505,
+        "keyword": "BUY",
+        "text": "if pos_type == 0:   # BUY — SL must be below bid"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 507,
+        "keyword": "SELL",
+        "text": "else:               # SELL — SL must be above ask"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 522,
+        "keyword": "action",
+        "text": "\"action\": self.mt5.TRADE_ACTION_SLTP,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 8,
+        "keyword": "confidence",
+        "text": "- Each symbol has its own brain, pivot cache, confidence score, cooldown,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 15,
+        "keyword": "signal",
+        "text": "- Direction flip: reverses position when strong opposing signal appears"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 15,
+        "keyword": "direction",
+        "text": "- Direction flip: reverses position when strong opposing signal appears"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 16,
+        "keyword": "direction",
+        "text": "- Trend filter: only trades in direction of trend + smc_bias"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 57,
+        "keyword": "confidence",
+        "text": "from mt5_ai.confidence_engine import ConfidenceEngine"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 109,
+        "keyword": "direction",
+        "text": "# Direction flip. Disabled by default because this Exness demo account is"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 112,
+        "keyword": "direction",
+        "text": "ENABLE_DIRECTION_FLIP = False"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 113,
+        "keyword": "BUY",
+        "text": "FLIP_PROB_BUY_MIN   = 0.72   # prob above this + holding SELL → flip to BUY"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 113,
+        "keyword": "SELL",
+        "text": "FLIP_PROB_BUY_MIN   = 0.72   # prob above this + holding SELL → flip to BUY"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 113,
+        "keyword": "HOLD",
+        "text": "FLIP_PROB_BUY_MIN   = 0.72   # prob above this + holding SELL → flip to BUY"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 114,
+        "keyword": "BUY",
+        "text": "FLIP_PROB_SELL_MAX  = 0.28   # prob below this + holding BUY → flip to SELL"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 114,
+        "keyword": "SELL",
+        "text": "FLIP_PROB_SELL_MAX  = 0.28   # prob below this + holding BUY → flip to SELL"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 114,
+        "keyword": "HOLD",
+        "text": "FLIP_PROB_SELL_MAX  = 0.28   # prob below this + holding BUY → flip to SELL"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 127,
+        "keyword": "confidence",
+        "text": "SYMBOL_WEAK_MIN_CONFIDENCE = 0.22"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 128,
+        "keyword": "confidence",
+        "text": "SYMBOL_SEVERE_MIN_CONFIDENCE = 0.35"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 137,
+        "keyword": "confidence",
+        "text": "confidence: ConfidenceEngine"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 233,
+        "keyword": "BUY",
+        "text": "side     = str(pos.get(\"side\") or \"BUY\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 287,
+        "keyword": "BUY",
+        "text": "if side == \"BUY\":"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 299,
+        "keyword": "SELL",
+        "text": "else:  # SELL"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 430,
+        "keyword": "confidence",
+        "text": "confidence=ConfidenceEngine(symbol),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 630,
+        "keyword": "decision",
+        "text": "def _performance_allows_trade(self, decision: dict) -> tuple[bool, str | None]:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 631,
+        "keyword": "decision",
+        "text": "symbol = str(decision.get(\"symbol\") or \"\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 633,
+        "keyword": "decision",
+        "text": "decision[\"symbol_performance\"] = perf"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 638,
+        "keyword": "confidence",
+        "text": "confidence = float(decision.get(\"confidence\") or 0.0)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 638,
+        "keyword": "decision",
+        "text": "confidence = float(decision.get(\"confidence\") or 0.0)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 655,
+        "keyword": "confidence",
+        "text": "if severe and confidence < SYMBOL_SEVERE_MIN_CONFIDENCE:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 660,
+        "keyword": "confidence",
+        "text": "f\"wr={perf['win_rate']:.1%},conf={confidence:.2f})\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 662,
+        "keyword": "confidence",
+        "text": "if weak and confidence < SYMBOL_WEAK_MIN_CONFIDENCE:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 667,
+        "keyword": "confidence",
+        "text": "f\"conf={confidence:.2f})\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 683,
+        "keyword": "decision",
+        "text": "Returns a decision dict, or None if no new bar has closed."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 686,
+        "keyword": "BUY",
+        "text": "- Trend filter (BUY only when trend > 0, SELL only when trend < 0)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 686,
+        "keyword": "SELL",
+        "text": "- Trend filter (BUY only when trend > 0, SELL only when trend < 0)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 687,
+        "keyword": "HOLD",
+        "text": "- Consecutive-loss guard (HOLD if >= MAX_CONSECUTIVE_LOSSES)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 694,
+        "keyword": "HOLD",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 694,
+        "keyword": "action",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 697,
+        "keyword": "probability",
+        "text": "\"probability\": 0.5,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 698,
+        "keyword": "confidence",
+        "text": "\"confidence\": 0.0,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 709,
+        "keyword": "HOLD",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 709,
+        "keyword": "action",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 712,
+        "keyword": "probability",
+        "text": "\"probability\": 0.5,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 713,
+        "keyword": "confidence",
+        "text": "\"confidence\": 0.0,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 728,
+        "keyword": "HOLD",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 728,
+        "keyword": "action",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 731,
+        "keyword": "probability",
+        "text": "\"probability\": 0.5,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 732,
+        "keyword": "confidence",
+        "text": "\"confidence\": 0.0,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 741,
+        "keyword": "HOLD",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 741,
+        "keyword": "action",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 744,
+        "keyword": "probability",
+        "text": "\"probability\": 0.5,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 745,
+        "keyword": "confidence",
+        "text": "\"confidence\": 0.0,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 755,
+        "keyword": "probability",
+        "text": "probability = float(np.asarray(self.model.predict(sequence, verbose=0)).squeeze())"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 758,
+        "keyword": "decision",
+        "text": "decision = context.brain.decide("
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 761,
+        "keyword": "probability",
+        "text": "probability=probability,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 766,
+        "keyword": "decision",
+        "text": "decision[\"close\"] = float(enriched[\"close\"].iloc[-1])"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 767,
+        "keyword": "decision",
+        "text": "decision[\"symbol\"] = symbol"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 768,
+        "keyword": "decision",
+        "text": "decision[\"market_open\"] = True"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 769,
+        "keyword": "decision",
+        "text": "decision[\"learning_memory\"] = str(context.journal.path)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 770,
+        "keyword": "confidence",
+        "text": "decision[\"confidence_memory\"] = context.confidence.status()"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 770,
+        "keyword": "decision",
+        "text": "decision[\"confidence_memory\"] = context.confidence.status()"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 776,
+        "keyword": "decision",
+        "text": "decision[\"trend\"]    = trend"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 777,
+        "keyword": "decision",
+        "text": "decision[\"smc_bias\"] = smc_bias"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 780,
+        "keyword": "HOLD",
+        "text": "action = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 780,
+        "keyword": "action",
+        "text": "action = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 780,
+        "keyword": "decision",
+        "text": "action = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 781,
+        "keyword": "BUY",
+        "text": "if action == \"BUY\" and trend < 0 and smc_bias < -0.3:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 781,
+        "keyword": "action",
+        "text": "if action == \"BUY\" and trend < 0 and smc_bias < -0.3:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 782,
+        "keyword": "HOLD",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 782,
+        "keyword": "action",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 782,
+        "keyword": "decision",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 783,
+        "keyword": "decision",
+        "text": "decision[\"reason\"] = f\"trend_filter:bearish(trend={trend:.2f},bias={smc_bias:.2f})\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 784,
+        "keyword": "SELL",
+        "text": "elif action == \"SELL\" and trend > 0 and smc_bias > 0.3:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 784,
+        "keyword": "action",
+        "text": "elif action == \"SELL\" and trend > 0 and smc_bias > 0.3:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 785,
+        "keyword": "HOLD",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 785,
+        "keyword": "action",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 785,
+        "keyword": "decision",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 786,
+        "keyword": "decision",
+        "text": "decision[\"reason\"] = f\"trend_filter:bullish(trend={trend:.2f},bias={smc_bias:.2f})\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 789,
+        "keyword": "HOLD",
+        "text": "signal=decision.get(\"action\", \"HOLD\"),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 789,
+        "keyword": "signal",
+        "text": "signal=decision.get(\"action\", \"HOLD\"),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 789,
+        "keyword": "action",
+        "text": "signal=decision.get(\"action\", \"HOLD\"),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 789,
+        "keyword": "decision",
+        "text": "signal=decision.get(\"action\", \"HOLD\"),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 790,
+        "keyword": "confidence",
+        "text": "confidence=float(decision.get(\"confidence\", 0.0)),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 790,
+        "keyword": "decision",
+        "text": "confidence=float(decision.get(\"confidence\", 0.0)),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 791,
+        "keyword": "decision",
+        "text": "price=decision[\"close\"],"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 793,
+        "keyword": "decision",
+        "text": "decision[\"pivot\"] = pivot_result"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 794,
+        "keyword": "HOLD",
+        "text": "decision[\"signal\"] = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 794,
+        "keyword": "signal",
+        "text": "decision[\"signal\"] = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 794,
+        "keyword": "action",
+        "text": "decision[\"signal\"] = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 794,
+        "keyword": "decision",
+        "text": "decision[\"signal\"] = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 795,
+        "keyword": "confidence",
+        "text": "decision[\"confidence\"] = pivot_result[\"confidence\"]"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 795,
+        "keyword": "decision",
+        "text": "decision[\"confidence\"] = pivot_result[\"confidence\"]"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 804,
+        "keyword": "decision",
+        "text": "decision[key] = pivot_result.get(key)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 808,
+        "keyword": "signal",
+        "text": "\"no_existing_trade_signal\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 812,
+        "keyword": "decision",
+        "text": "decision[\"reason\"] = f\"{decision.get('reason', '')}+{pivot_result['pivot_reason']}\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 814,
+        "keyword": "decision",
+        "text": "return decision"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 817,
+        "keyword": "decision",
+        "text": "decisions: list[dict] = []"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 820,
+        "keyword": "decision",
+        "text": "decision = self.analyze(context)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 821,
+        "keyword": "decision",
+        "text": "if decision is None:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 823,
+        "keyword": "decision",
+        "text": "decisions.append(decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 824,
+        "keyword": "decision",
+        "text": "self._print_decision(decision, context)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 827,
+        "keyword": "decision",
+        "text": "error_decision = {"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 828,
+        "keyword": "HOLD",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 828,
+        "keyword": "action",
+        "text": "\"action\": \"HOLD\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 831,
+        "keyword": "probability",
+        "text": "\"probability\": 0.5,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 832,
+        "keyword": "confidence",
+        "text": "\"confidence\": 0.0,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 836,
+        "keyword": "decision",
+        "text": "decisions.append(error_decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 839,
+        "keyword": "decision",
+        "text": "return decisions"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 841,
+        "keyword": "decision",
+        "text": "def _rank_trade_candidates(self, decisions: list[dict]) -> list[dict]:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 843,
+        "keyword": "decision",
+        "text": "for decision in decisions:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 844,
+        "keyword": "decision",
+        "text": "symbol = str(decision.get(\"symbol\") or \"\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 846,
+        "keyword": "BUY",
+        "text": "if decision.get(\"action\") not in {\"BUY\", \"SELL\"}:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 846,
+        "keyword": "SELL",
+        "text": "if decision.get(\"action\") not in {\"BUY\", \"SELL\"}:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 846,
+        "keyword": "action",
+        "text": "if decision.get(\"action\") not in {\"BUY\", \"SELL\"}:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 846,
+        "keyword": "decision",
+        "text": "if decision.get(\"action\") not in {\"BUY\", \"SELL\"}:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 848,
+        "keyword": "decision",
+        "text": "if not decision.get(\"market_open\", True):"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 854,
+        "keyword": "decision",
+        "text": "allowed, reason = self._performance_allows_trade(decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 856,
+        "keyword": "HOLD",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 856,
+        "keyword": "action",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 856,
+        "keyword": "decision",
+        "text": "decision[\"action\"] = \"HOLD\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 857,
+        "keyword": "decision",
+        "text": "decision[\"reason\"] = reason or \"performance_guard\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 858,
+        "keyword": "decision",
+        "text": "self._append_recent_event(symbol, {\"event\": \"performance_skip\", \"reason\": decision[\"reason\"]})"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 860,
+        "keyword": "decision",
+        "text": "candidates.append(decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 865,
+        "keyword": "confidence",
+        "text": "float(d.get(\"confidence\") or 0.0),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 866,
+        "keyword": "probability",
+        "text": "abs(float(d.get(\"probability\") or 0.5) - 0.5),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 874,
+        "keyword": "direction",
+        "text": "# Direction flip"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 876,
+        "keyword": "decision",
+        "text": "def _flip_position(self, pos: dict, decision: dict, context: SymbolContext) -> None:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 878,
+        "keyword": "direction",
+        "text": "Close opposing position and open the new direction."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 882,
+        "keyword": "action",
+        "text": "new_side = decision[\"action\"]"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 882,
+        "keyword": "decision",
+        "text": "new_side = decision[\"action\"]"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 885,
+        "keyword": "decision",
+        "text": "price    = float(decision[\"close\"])"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 886,
+        "keyword": "confidence",
+        "text": "lot      = self._normalize_lot_for_symbol(context, context.confidence.apply_lot(DEFAULT_LOT))"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 893,
+        "keyword": "decision",
+        "text": "allowed, guard_reason = self._performance_allows_trade(decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 903,
+        "keyword": "probability",
+        "text": "f\"@ {price:.5f}  prob={decision.get('probability', 0.5):.2%}\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 903,
+        "keyword": "decision",
+        "text": "f\"@ {price:.5f}  prob={decision.get('probability', 0.5):.2%}\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 908,
+        "keyword": "BUY",
+        "text": "sl = price * (1 - context.sl_pct) if new_side == \"BUY\" else price * (1 + context.sl_pct)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 909,
+        "keyword": "BUY",
+        "text": "tp = price * (1 + context.tp_pct) if new_side == \"BUY\" else price * (1 - context.tp_pct)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 920,
+        "keyword": "direction",
+        "text": "\"direction_flip\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 929,
+        "keyword": "probability",
+        "text": "\"prob\": decision.get(\"probability\"),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 929,
+        "keyword": "decision",
+        "text": "\"prob\": decision.get(\"probability\"),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 944,
+        "keyword": "decision",
+        "text": "def execute(self, decision):"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 945,
+        "keyword": "action",
+        "text": "action = decision.get(\"action\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 945,
+        "keyword": "decision",
+        "text": "action = decision.get(\"action\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 946,
+        "keyword": "BUY",
+        "text": "if action not in {\"BUY\", \"SELL\"}:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 946,
+        "keyword": "SELL",
+        "text": "if action not in {\"BUY\", \"SELL\"}:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 946,
+        "keyword": "action",
+        "text": "if action not in {\"BUY\", \"SELL\"}:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 949,
+        "keyword": "decision",
+        "text": "symbol = decision.get(\"symbol\", self.primary_symbol)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 951,
+        "keyword": "action",
+        "text": "side = action"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 952,
+        "keyword": "decision",
+        "text": "price = float(decision[\"close\"])"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 953,
+        "keyword": "confidence",
+        "text": "lot = self._normalize_lot_for_symbol(context, context.confidence.apply_lot(DEFAULT_LOT))"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 964,
+        "keyword": "action",
+        "text": "wrapped = self._wrap_execution_result(\"BLOCKED\", action, symbol, price, lot, result, decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 964,
+        "keyword": "decision",
+        "text": "wrapped = self._wrap_execution_result(\"BLOCKED\", action, symbol, price, lot, result, decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 973,
+        "keyword": "action",
+        "text": "wrapped = self._wrap_execution_result(\"BLOCKED\", action, symbol, price, lot, result, decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 973,
+        "keyword": "decision",
+        "text": "wrapped = self._wrap_execution_result(\"BLOCKED\", action, symbol, price, lot, result, decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 977,
+        "keyword": "BUY",
+        "text": "if side == \"BUY\":"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 998,
+        "keyword": "action",
+        "text": "wrapped = self._wrap_execution_result(mode, action, symbol, price, lot, result, decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 998,
+        "keyword": "decision",
+        "text": "wrapped = self._wrap_execution_result(mode, action, symbol, price, lot, result, decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1017,
+        "keyword": "action",
+        "text": "def _wrap_execution_result(mode, action, symbol, price, lot, result, decision) -> dict:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1017,
+        "keyword": "decision",
+        "text": "def _wrap_execution_result(mode, action, symbol, price, lot, result, decision) -> dict:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1021,
+        "keyword": "action",
+        "text": "\"action\": action,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1026,
+        "keyword": "decision",
+        "text": "\"decision\": decision,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1078,
+        "keyword": "action",
+        "text": "\"side\": wrapped[\"action\"],"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1080,
+        "keyword": "signal",
+        "text": "\"signal_price\": float(wrapped[\"price\"]),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1083,
+        "keyword": "probability",
+        "text": "\"probability\": float(wrapped[\"decision\"].get(\"probability\") or 0.5),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1083,
+        "keyword": "decision",
+        "text": "\"probability\": float(wrapped[\"decision\"].get(\"probability\") or 0.5),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1084,
+        "keyword": "BUY",
+        "text": "\"smc_buy_score\": float(wrapped[\"decision\"].get(\"smc_buy_score\") or 0.0),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1084,
+        "keyword": "decision",
+        "text": "\"smc_buy_score\": float(wrapped[\"decision\"].get(\"smc_buy_score\") or 0.0),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1085,
+        "keyword": "SELL",
+        "text": "\"smc_sell_score\": float(wrapped[\"decision\"].get(\"smc_sell_score\") or 0.0),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1085,
+        "keyword": "decision",
+        "text": "\"smc_sell_score\": float(wrapped[\"decision\"].get(\"smc_sell_score\") or 0.0),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1086,
+        "keyword": "decision",
+        "text": "\"reason\": wrapped[\"decision\"].get(\"reason\", \"\"),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1088,
+        "keyword": "action",
+        "text": "self._append_recent_event(symbol, {\"event\": \"sent\", \"side\": wrapped[\"action\"], \"price\": actual_entry})"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1122,
+        "keyword": "signal",
+        "text": "\"signal_price\": float(position.get(\"entry\") or 0.0),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1125,
+        "keyword": "probability",
+        "text": "\"probability\": 0.5,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1126,
+        "keyword": "BUY",
+        "text": "\"smc_buy_score\": 0.0,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1127,
+        "keyword": "SELL",
+        "text": "\"smc_sell_score\": 0.0,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1160,
+        "keyword": "BUY",
+        "text": "points = exit_price - entry if side == \"BUY\" else entry - exit_price"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1167,
+        "keyword": "probability",
+        "text": "probability=float(trade.get(\"probability\") or 0.5),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1168,
+        "keyword": "BUY",
+        "text": "smc_buy_score=float(trade.get(\"smc_buy_score\") or 0.0),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1169,
+        "keyword": "SELL",
+        "text": "smc_sell_score=float(trade.get(\"smc_sell_score\") or 0.0),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1173,
+        "keyword": "signal",
+        "text": "signal_type=str(trade.get(\"reason\") or \"auto\"),"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1176,
+        "keyword": "confidence",
+        "text": "context.confidence.on_win(points)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1181,
+        "keyword": "confidence",
+        "text": "context.confidence.on_loss(points)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1253,
+        "keyword": "decision",
+        "text": "def _print_decision(self, decision: dict, context: SymbolContext) -> None:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1254,
+        "keyword": "HOLD",
+        "text": "action = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1254,
+        "keyword": "action",
+        "text": "action = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1254,
+        "keyword": "decision",
+        "text": "action = decision.get(\"action\", \"HOLD\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1255,
+        "keyword": "decision",
+        "text": "symbol = decision.get(\"symbol\", context.symbol)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1256,
+        "keyword": "decision",
+        "text": "price = float(decision.get(\"close\") or 0.0)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1257,
+        "keyword": "probability",
+        "text": "prob = float(decision.get(\"probability\") or 0.5)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1257,
+        "keyword": "decision",
+        "text": "prob = float(decision.get(\"probability\") or 0.5)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1258,
+        "keyword": "confidence",
+        "text": "conf = float(decision.get(\"confidence\") or 0.0)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1258,
+        "keyword": "decision",
+        "text": "conf = float(decision.get(\"confidence\") or 0.0)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1259,
+        "keyword": "decision",
+        "text": "reason = decision.get(\"reason\", \"\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1260,
+        "keyword": "decision",
+        "text": "trend = decision.get(\"trend\", 0)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1262,
+        "keyword": "decision",
+        "text": "perf = decision.get(\"symbol_performance\") or self._symbol_performance(symbol)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1274,
+        "keyword": "action",
+        "text": "f\"{action:5s} {symbol:9s} @ {price:>10.5f} \""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1278,
+        "keyword": "decision",
+        "text": "rec = decision.get(\"recommended_order\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1279,
+        "keyword": "decision",
+        "text": "entry = decision.get(\"recommended_entry_price\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1299,
+        "keyword": "BUY",
+        "text": "f\"enabled prob<{FLIP_PROB_SELL_MAX} (BUY→SELL) | prob>{FLIP_PROB_BUY_MIN} (SELL→BUY)\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1299,
+        "keyword": "SELL",
+        "text": "f\"enabled prob<{FLIP_PROB_SELL_MAX} (BUY→SELL) | prob>{FLIP_PROB_BUY_MIN} (SELL→BUY)\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1300,
+        "keyword": "direction",
+        "text": "if ENABLE_DIRECTION_FLIP else"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1303,
+        "keyword": "direction",
+        "text": "print(f\"   Direction flip: {flip_status}\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1305,
+        "keyword": "confidence",
+        "text": "print(f\"   Performance guard: memory-ranked symbols, weak markets need conf≥{SYMBOL_WEAK_MIN_CONFIDENCE:.2f}\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1314,
+        "keyword": "decision",
+        "text": "decisions = self._scan_markets()"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1316,
+        "keyword": "direction",
+        "text": "# ── Direction flip check ───────────────────────────────────"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1317,
+        "keyword": "direction",
+        "text": "if ENABLE_DIRECTION_FLIP and decisions:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1317,
+        "keyword": "decision",
+        "text": "if ENABLE_DIRECTION_FLIP and decisions:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1323,
+        "keyword": "decision",
+        "text": "for decision in decisions:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1324,
+        "keyword": "decision",
+        "text": "dsym = decision.get(\"symbol\", \"\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1325,
+        "keyword": "action",
+        "text": "dact = decision.get(\"action\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1325,
+        "keyword": "decision",
+        "text": "dact = decision.get(\"action\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1326,
+        "keyword": "BUY",
+        "text": "if dact not in {\"BUY\", \"SELL\"} or dsym not in self.contexts:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1326,
+        "keyword": "SELL",
+        "text": "if dact not in {\"BUY\", \"SELL\"} or dsym not in self.contexts:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1328,
+        "keyword": "probability",
+        "text": "dprob = float(decision.get(\"probability\") or 0.5)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1328,
+        "keyword": "decision",
+        "text": "dprob = float(decision.get(\"probability\") or 0.5)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1334,
+        "keyword": "signal",
+        "text": "# Flip only on strong opposing signal"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1335,
+        "keyword": "BUY",
+        "text": "if pos_side == \"BUY\" and dact == \"SELL\" and dprob < FLIP_PROB_SELL_MAX:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1335,
+        "keyword": "SELL",
+        "text": "if pos_side == \"BUY\" and dact == \"SELL\" and dprob < FLIP_PROB_SELL_MAX:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1336,
+        "keyword": "decision",
+        "text": "self._flip_position(pos, decision, ctx)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1337,
+        "keyword": "BUY",
+        "text": "elif pos_side == \"SELL\" and dact == \"BUY\" and dprob > FLIP_PROB_BUY_MIN:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1337,
+        "keyword": "SELL",
+        "text": "elif pos_side == \"SELL\" and dact == \"BUY\" and dprob > FLIP_PROB_BUY_MIN:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1338,
+        "keyword": "decision",
+        "text": "self._flip_position(pos, decision, ctx)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1341,
+        "keyword": "decision",
+        "text": "candidates = self._rank_trade_candidates(decisions)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1344,
+        "keyword": "decision",
+        "text": "if not candidates and decisions:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1345,
+        "keyword": "HOLD",
+        "text": "pass  # HOLD decisions, no print spam"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1345,
+        "keyword": "decision",
+        "text": "pass  # HOLD decisions, no print spam"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1346,
+        "keyword": "decision",
+        "text": "for decision in candidates:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1349,
+        "keyword": "decision",
+        "text": "result = self.execute(decision)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1352,
+        "keyword": "action",
+        "text": "print(f\"   ✅ Executed: {result['mode']} {result['action']} {result['symbol']}\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1400,
+        "keyword": "action",
+        "text": "parser.add_argument(\"--once\", action=\"store_true\", help=\"Run one scan cycle and exit\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1401,
+        "keyword": "action",
+        "text": "parser.add_argument(\"--no-auto-live\", action=\"store_true\", help=\"Ignored; live trading is always disabled\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1402,
+        "keyword": "action",
+        "text": "parser.add_argument(\"--auto-live\", action=\"store_true\", help=\"Ignored; live trading is blocked\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 2,
+        "keyword": "decision",
+        "text": "Live paper trader — executes model decisions as tracked paper positions."
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 51,
+        "keyword": "HOLD",
+        "text": "MAX_HOLD_BARS = 30  # close by time after this many polls regardless"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 59,
+        "keyword": "BUY",
+        "text": "side: str          # \"BUY\" or \"SELL\""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 59,
+        "keyword": "SELL",
+        "text": "side: str          # \"BUY\" or \"SELL\""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 64,
+        "keyword": "probability",
+        "text": "probability: float"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 65,
+        "keyword": "BUY",
+        "text": "smc_buy_score: float"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 66,
+        "keyword": "SELL",
+        "text": "smc_sell_score: float"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 73,
+        "keyword": "BUY",
+        "text": "if self.side == \"BUY\":"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 83,
+        "keyword": "HOLD",
+        "text": "if self.bars_held >= MAX_HOLD_BARS:"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 88,
+        "keyword": "BUY",
+        "text": "if self.side == \"BUY\":"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 136,
+        "keyword": "probability",
+        "text": "def open(self, symbol, side, entry, atr_ratio, strategy, probability,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 137,
+        "keyword": "BUY",
+        "text": "smc_buy, smc_sell):"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 137,
+        "keyword": "SELL",
+        "text": "smc_buy, smc_sell):"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 139,
+        "keyword": "BUY",
+        "text": "if side == \"BUY\":"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 153,
+        "keyword": "probability",
+        "text": "probability=probability,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 154,
+        "keyword": "BUY",
+        "text": "smc_buy_score=smc_buy,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 155,
+        "keyword": "SELL",
+        "text": "smc_sell_score=smc_sell,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 160,
+        "keyword": "BUY",
+        "text": "self._log(\"OPEN\", {**asdict(pos), \"tp_pts\": round(tp - entry if side == \"BUY\" else entry - tp, 4)})"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 190,
+        "keyword": "probability",
+        "text": "probability=pos.probability,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 191,
+        "keyword": "BUY",
+        "text": "smc_buy_score=pos.smc_buy_score,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 192,
+        "keyword": "SELL",
+        "text": "smc_sell_score=pos.smc_sell_score,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 196,
+        "keyword": "signal",
+        "text": "signal_type=\"strict_signal\","
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 229,
+        "keyword": "action",
+        "text": "parser.add_argument(\"--once\",        action=\"store_true\","
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 240,
+        "keyword": "decision",
+        "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 247,
+        "keyword": "HOLD",
+        "text": "print(f\"  Max hold: {MAX_HOLD_BARS} bars\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 274,
+        "keyword": "decision",
+        "text": "decision = brain.decide("
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 279,
+        "keyword": "decision",
+        "text": "d = decision.to_dict()"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 288,
+        "keyword": "decision",
+        "text": "# Log decision"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 289,
+        "keyword": "decision",
+        "text": "with open(decision_log, \"a\", encoding=\"utf-8\") as f:"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 292,
+        "keyword": "action",
+        "text": "action = d[\"action\"]"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 295,
+        "keyword": "probability",
+        "text": "f\"prob={d['probability']:.3f}  smc_bias={d['smc_bias']:+.0f}  \""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 296,
+        "keyword": "action",
+        "text": "f\"ctx={ctx}  → {action}  ({d['reason']})\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 298,
+        "keyword": "signal",
+        "text": "# Open position if signal and no existing position for this symbol"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 299,
+        "keyword": "BUY",
+        "text": "if action in (\"BUY\", \"SELL\") and not tracker.has_position(args.symbol):"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 299,
+        "keyword": "SELL",
+        "text": "if action in (\"BUY\", \"SELL\") and not tracker.has_position(args.symbol):"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 299,
+        "keyword": "action",
+        "text": "if action in (\"BUY\", \"SELL\") and not tracker.has_position(args.symbol):"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 302,
+        "keyword": "action",
+        "text": "side=action,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 306,
+        "keyword": "probability",
+        "text": "probability=d[\"probability\"],"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 307,
+        "keyword": "BUY",
+        "text": "smc_buy=d[\"smc_buy_score\"],"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 308,
+        "keyword": "SELL",
+        "text": "smc_sell=d[\"smc_sell_score\"],"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 84,
+        "keyword": "BUY",
+        "text": "\"buy_side_liquidity_sweep\","
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 85,
+        "keyword": "SELL",
+        "text": "\"sell_side_liquidity_sweep\","
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 90,
+        "keyword": "BUY",
+        "text": "\"smc_buy_score\","
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 91,
+        "keyword": "SELL",
+        "text": "\"smc_sell_score\","
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 134,
+        "keyword": "BUY",
+        "text": "BUY_THRESHOLD = 0.60"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 134,
+        "keyword": "HOLD",
+        "text": "BUY_THRESHOLD = 0.60"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 135,
+        "keyword": "SELL",
+        "text": "SELL_THRESHOLD = 0.40"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 135,
+        "keyword": "HOLD",
+        "text": "SELL_THRESHOLD = 0.40"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 149,
+        "keyword": "confidence",
+        "text": "USE_PIVOT_CONFIDENCE_BOOST = _env_flag(\"USE_PIVOT_CONFIDENCE_BOOST\", True)"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 151,
+        "keyword": "confidence",
+        "text": "PIVOT_CONFIDENCE_BOOST = _env_float(\"PIVOT_CONFIDENCE_BOOST\", 0.15)"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 159,
+        "keyword": "BUY",
+        "text": "SMC_ENTRY_BUY_PROB   = _env_float(\"FRIDAY_BUY_PROB\",  0.60)   # عتبة الشراء للـEntryAgent"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 160,
+        "keyword": "SELL",
+        "text": "SMC_ENTRY_SELL_PROB  = _env_float(\"FRIDAY_SELL_PROB\", 0.40)   # عتبة البيع"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 172,
+        "keyword": "confidence",
+        "text": "CLAUDE_COMMITTEE_MIN_CONFIDENCE = _env_float(\"MT5_AI_CLAUDE_MIN_CONFIDENCE\", 0.35)"
+      }
+    ],
+    "execution_locations": [
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 24,
+        "keyword": "paper",
+        "text": "class PaperExecutor:"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 27,
+        "keyword": "paper",
+        "text": "mode=\"paper\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 34,
+        "keyword": "paper",
+        "text": "reason=\"paper_trade_logged\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 45,
+        "keyword": "paper",
+        "text": "\"mode\": \"paper_pending\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 54,
+        "keyword": "paper",
+        "text": "\"reason\": \"paper_pending_logged\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 59,
+        "keyword": "allow_live",
+        "text": "def __init__(self, gateway, allow_live=False):"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 59,
+        "keyword": "live",
+        "text": "def __init__(self, gateway, allow_live=False):"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 61,
+        "keyword": "allow_live",
+        "text": "self.allow_live = allow_live"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 61,
+        "keyword": "live",
+        "text": "self.allow_live = allow_live"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 65,
+        "keyword": "send_market_order",
+        "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 65,
+        "keyword": "allow_live",
+        "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 65,
+        "keyword": "live",
+        "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 68,
+        "keyword": "live",
+        "text": "\"mode\": \"live_blocked\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 69,
+        "keyword": "live",
+        "text": "\"requested_mode\": \"live\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 75,
+        "keyword": "demo",
+        "text": "class DemoMT5Executor:"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 86,
+        "keyword": "demo",
+        "text": "comment=\"friday-demo-only\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 88,
+        "keyword": "send_demo_market_order",
+        "text": "result = self.gateway.send_demo_market_order(plan)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 88,
+        "keyword": "demo",
+        "text": "result = self.gateway.send_demo_market_order(plan)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 91,
+        "keyword": "demo",
+        "text": "\"mode\": \"demo_mt5\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 105,
+        "keyword": "send_demo_pending_order",
+        "text": "result = self.gateway.send_demo_pending_order(plan, limit_price=limit_price)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 105,
+        "keyword": "demo",
+        "text": "result = self.gateway.send_demo_pending_order(plan, limit_price=limit_price)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 108,
+        "keyword": "demo",
+        "text": "\"mode\": \"demo_pending\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 114,
+        "keyword": "demo",
+        "text": "result = self.gateway.modify_demo_position_sl_tp("
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 13,
+        "keyword": "demo",
+        "text": "DEMO_SERVER_KEYWORDS,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 14,
+        "keyword": "demo",
+        "text": "DEMO_TRADING_ENABLED,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 56,
+        "keyword": "send_market_order",
+        "text": "- Live trading is permanently blocked by send_market_order()."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 56,
+        "keyword": "live",
+        "text": "- Live trading is permanently blocked by send_market_order()."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 57,
+        "keyword": "send_demo_market_order",
+        "text": "- Only demo execution is allowed through send_demo_market_order()."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 57,
+        "keyword": "demo",
+        "text": "- Only demo execution is allowed through send_demo_market_order()."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 58,
+        "keyword": "demo",
+        "text": "- Demo execution is additionally blocked unless the connected account server"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 59,
+        "keyword": "demo",
+        "text": "contains one of DEMO_SERVER_KEYWORDS."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 263,
+        "keyword": "demo",
+        "text": "snapshot[\"demo_detected\"] = self.is_demo_account(snapshot)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 266,
+        "keyword": "demo",
+        "text": "def is_demo_account(self, snapshot: dict[str, Any] | None = None) -> bool:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 269,
+        "keyword": "demo",
+        "text": "return any(str(keyword).lower() in server for keyword in DEMO_SERVER_KEYWORDS)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 271,
+        "keyword": "demo",
+        "text": "def ensure_demo_account(self) -> tuple[bool, dict[str, Any]]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 282,
+        "keyword": "demo",
+        "text": "if not self.is_demo_account(snapshot):"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 286,
+        "keyword": "demo",
+        "text": "\"reason\": \"blocked_not_demo_account\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 295,
+        "keyword": "send_market_order",
+        "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 295,
+        "keyword": "allow_live",
+        "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 295,
+        "keyword": "live",
+        "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 297,
+        "keyword": "live",
+        "text": "Live trading endpoint."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 306,
+        "keyword": "live",
+        "text": "\"reason\": \"live_trading_permanently_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 307,
+        "keyword": "allow_live",
+        "text": "\"allow_live_requested\": bool(allow_live),"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 307,
+        "keyword": "live",
+        "text": "\"allow_live_requested\": bool(allow_live),"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 311,
+        "keyword": "send_demo_pending_order",
+        "text": "def send_demo_pending_order(self, plan: OrderPlan, limit_price: float) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 311,
+        "keyword": "demo",
+        "text": "def send_demo_pending_order(self, plan: OrderPlan, limit_price: float) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 312,
+        "keyword": "demo",
+        "text": "\"\"\"Place a pending limit order (BUY_LIMIT or SELL_LIMIT) on a demo account.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 315,
+        "keyword": "demo",
+        "text": "if not DEMO_TRADING_ENABLED:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 319,
+        "keyword": "demo",
+        "text": "\"reason\": \"demo_trading_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 323,
+        "keyword": "demo",
+        "text": "ok, account_or_error = self.ensure_demo_account()"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 344,
+        "keyword": "TRADE_ACTION_PENDING",
+        "text": "\"action\":       self.mt5.TRADE_ACTION_PENDING,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 360,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 363,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 371,
+        "keyword": "demo",
+        "text": "\"mode\":       \"demo_pending\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 379,
+        "keyword": "send_demo_market_order",
+        "text": "def send_demo_market_order(self, plan: OrderPlan) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 379,
+        "keyword": "demo",
+        "text": "def send_demo_market_order(self, plan: OrderPlan) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 380,
+        "keyword": "demo",
+        "text": "\"\"\"Send a market order only if connected account is detected as demo.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 383,
+        "keyword": "demo",
+        "text": "if not DEMO_TRADING_ENABLED:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 387,
+        "keyword": "demo",
+        "text": "\"reason\": \"demo_trading_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 391,
+        "keyword": "demo",
+        "text": "ok, account_or_error = self.ensure_demo_account()"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 420,
+        "keyword": "TRADE_ACTION_DEAL",
+        "text": "\"action\": self.mt5.TRADE_ACTION_DEAL,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 437,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 440,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 448,
+        "keyword": "demo",
+        "text": "\"mode\": \"demo_mt5\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 466,
+        "keyword": "demo",
+        "text": "def modify_demo_position_sl_tp("
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 473,
+        "keyword": "demo",
+        "text": "\"\"\"Modify SL/TP for an existing position on a demo account only.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 474,
+        "keyword": "demo",
+        "text": "if not DEMO_TRADING_ENABLED:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 478,
+        "keyword": "demo",
+        "text": "\"reason\": \"demo_trading_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 482,
+        "keyword": "demo",
+        "text": "ok, account_or_error = self.ensure_demo_account()"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 532,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 535,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 543,
+        "keyword": "demo",
+        "text": "\"mode\": \"demo_modify_sltp\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 5,
+        "keyword": "demo",
+        "text": "- Demo account: may send demo MT5 orders."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 6,
+        "keyword": "live",
+        "text": "- Live account: analysis only; broker execution is blocked and paper logged."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 6,
+        "keyword": "paper",
+        "text": "- Live account: analysis only; broker execution is blocked and paper logged."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 58,
+        "keyword": "demo",
+        "text": "from mt5_ai.execution import DemoMT5Executor, PaperExecutor, SafeMT5Executor"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 58,
+        "keyword": "paper",
+        "text": "from mt5_ai.execution import DemoMT5Executor, PaperExecutor, SafeMT5Executor"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 109,
+        "keyword": "demo",
+        "text": "# Direction flip. Disabled by default because this Exness demo account is"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 268,
+        "keyword": "demo",
+        "text": "result = trader.gateway.modify_demo_position_sl_tp(ticket, symbol, sl=new_sl, tp=tp_now)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 324,
+        "keyword": "live",
+        "text": "auto_live=False,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 341,
+        "keyword": "live",
+        "text": "self.auto_live = False"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 352,
+        "keyword": "demo",
+        "text": "self.is_demo = self.gateway.is_demo_account(self.account)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 353,
+        "keyword": "live",
+        "text": "self.account_type = \"DEMO\" if self.is_demo else \"LIVE\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 353,
+        "keyword": "demo",
+        "text": "self.account_type = \"DEMO\" if self.is_demo else \"LIVE\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 358,
+        "keyword": "paper",
+        "text": "self.paper_executor = PaperExecutor()"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 359,
+        "keyword": "demo",
+        "text": "self.demo_executor = DemoMT5Executor(gateway=self.gateway)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 360,
+        "keyword": "allow_live",
+        "text": "self.live_executor = SafeMT5Executor(gateway=self.gateway, allow_live=False)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 360,
+        "keyword": "live",
+        "text": "self.live_executor = SafeMT5Executor(gateway=self.gateway, allow_live=False)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 907,
+        "keyword": "demo",
+        "text": "if self.is_demo:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 910,
+        "keyword": "demo",
+        "text": "result = self.demo_executor.execute("
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 915,
+        "keyword": "live",
+        "text": "result = {\"sent\": False, \"reason\": \"live_account_flip_blocked\"}"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 984,
+        "keyword": "demo",
+        "text": "if self.is_demo:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 985,
+        "keyword": "demo",
+        "text": "result = self.demo_executor.execute("
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 988,
+        "keyword": "demo",
+        "text": "mode = \"DEMO\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 990,
+        "keyword": "paper",
+        "text": "result = self.paper_executor.execute(symbol=symbol, side=side, price=price, lot=lot, sl=sl, tp=tp)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 991,
+        "keyword": "live",
+        "text": "mode = \"PAPER (LIVE account detected; broker execution blocked)\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 991,
+        "keyword": "paper",
+        "text": "mode = \"PAPER (LIVE account detected; broker execution blocked)\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1306,
+        "keyword": "live",
+        "text": "print(\"   Auto Live: DISABLED / BLOCKED\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1401,
+        "keyword": "live",
+        "text": "parser.add_argument(\"--no-auto-live\", action=\"store_true\", help=\"Ignored; live trading is always disabled\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1402,
+        "keyword": "live",
+        "text": "parser.add_argument(\"--auto-live\", action=\"store_true\", help=\"Ignored; live trading is blocked\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1414,
+        "keyword": "live",
+        "text": "auto_live=False,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 2,
+        "keyword": "live",
+        "text": "Live paper trader — executes model decisions as tracked paper positions."
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 2,
+        "keyword": "paper",
+        "text": "Live paper trader — executes model decisions as tracked paper positions."
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 4,
+        "keyword": "live",
+        "text": "Connects to MT5 for live bars, runs the model every poll, opens/closes"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 5,
+        "keyword": "paper",
+        "text": "paper positions with ATR-based TP/SL, and records results to LearningJournal."
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 9,
+        "keyword": "live",
+        "text": "python live_paper_trader.py --profile sk --poll-seconds 15"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 9,
+        "keyword": "paper",
+        "text": "python live_paper_trader.py --profile sk --poll-seconds 15"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 10,
+        "keyword": "live",
+        "text": "python live_paper_trader.py --profile sb --once"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 10,
+        "keyword": "paper",
+        "text": "python live_paper_trader.py --profile sb --once"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 54,
+        "keyword": "paper",
+        "text": "# ─── Paper position ────────────────────────────────────────────────────────────"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 57,
+        "keyword": "paper",
+        "text": "class PaperPosition:"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 126,
+        "keyword": "paper",
+        "text": "class PaperTracker:"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 130,
+        "keyword": "paper",
+        "text": "self.positions: list[PaperPosition] = []"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 146,
+        "keyword": "paper",
+        "text": "pos = PaperPosition("
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 238,
+        "keyword": "paper",
+        "text": "tracker = PaperTracker(journal=journal,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 239,
+        "keyword": "live",
+        "text": "log_path=LOG_DIR / \"live_paper_trades.jsonl\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 239,
+        "keyword": "paper",
+        "text": "log_path=LOG_DIR / \"live_paper_trades.jsonl\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 240,
+        "keyword": "live",
+        "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 240,
+        "keyword": "paper",
+        "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 243,
+        "keyword": "live",
+        "text": "print(f\"  FRIDAY Live Paper Trader\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 243,
+        "keyword": "paper",
+        "text": "print(f\"  FRIDAY Live Paper Trader\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 249,
+        "keyword": "paper",
+        "text": "print(\"  No real orders. Paper only.\")"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 125,
+        "keyword": "demo",
+        "text": "DEMO_MODE = True"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 126,
+        "keyword": "demo",
+        "text": "DEMO_TRADING_ENABLED = True"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 127,
+        "keyword": "demo",
+        "text": "DEMO_SERVER_KEYWORDS = (\"demo\", \"trial\", \"practice\", \"contest\")"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 128,
+        "keyword": "live",
+        "text": "LIVE_MODE_ALLOWED = False"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 129,
+        "keyword": "live",
+        "text": "LIVE_TRADING_ENABLED = False"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 131,
+        "keyword": "paper",
+        "text": "AUTO_LEARNING_MODE = \"paper\""
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 138,
+        "keyword": "demo",
+        "text": "MAX_DEMO_OPEN_ORDERS = 3"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 141,
+        "keyword": "live",
+        "text": "LIVE_CONFIRM_ENV = \"MT5_AI_LIVE_TRADING\""
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 142,
+        "keyword": "live",
+        "text": "LIVE_CONFIRM_VALUE = \"YES_I_ACCEPT_RISK\""
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 144,
+        "keyword": "paper",
+        "text": "MAX_PAPER_SCAN_ORDERS = 3"
+      }
+    ],
+    "high_risk_locations": [
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 59,
+        "keyword": "live",
+        "text": "def __init__(self, gateway, allow_live=False):"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 61,
+        "keyword": "live",
+        "text": "self.allow_live = allow_live"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 65,
+        "keyword": "live",
+        "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 68,
+        "keyword": "live",
+        "text": "\"mode\": \"live_blocked\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 69,
+        "keyword": "live",
+        "text": "\"requested_mode\": \"live\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 56,
+        "keyword": "live",
+        "text": "- Live trading is permanently blocked by send_market_order()."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 295,
+        "keyword": "live",
+        "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 297,
+        "keyword": "live",
+        "text": "Live trading endpoint."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 306,
+        "keyword": "live",
+        "text": "\"reason\": \"live_trading_permanently_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 307,
+        "keyword": "live",
+        "text": "\"allow_live_requested\": bool(allow_live),"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 344,
+        "keyword": "TRADE_ACTION_PENDING",
+        "text": "\"action\":       self.mt5.TRADE_ACTION_PENDING,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 360,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 363,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 420,
+        "keyword": "TRADE_ACTION_DEAL",
+        "text": "\"action\": self.mt5.TRADE_ACTION_DEAL,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 437,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 440,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 532,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 535,
+        "keyword": "order_send",
+        "text": "result = self.mt5.order_send(request)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 6,
+        "keyword": "live",
+        "text": "- Live account: analysis only; broker execution is blocked and paper logged."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 324,
+        "keyword": "live",
+        "text": "auto_live=False,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 341,
+        "keyword": "live",
+        "text": "self.auto_live = False"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 353,
+        "keyword": "live",
+        "text": "self.account_type = \"DEMO\" if self.is_demo else \"LIVE\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 360,
+        "keyword": "live",
+        "text": "self.live_executor = SafeMT5Executor(gateway=self.gateway, allow_live=False)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 915,
+        "keyword": "live",
+        "text": "result = {\"sent\": False, \"reason\": \"live_account_flip_blocked\"}"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 991,
+        "keyword": "live",
+        "text": "mode = \"PAPER (LIVE account detected; broker execution blocked)\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1306,
+        "keyword": "live",
+        "text": "print(\"   Auto Live: DISABLED / BLOCKED\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1401,
+        "keyword": "live",
+        "text": "parser.add_argument(\"--no-auto-live\", action=\"store_true\", help=\"Ignored; live trading is always disabled\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1402,
+        "keyword": "live",
+        "text": "parser.add_argument(\"--auto-live\", action=\"store_true\", help=\"Ignored; live trading is blocked\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1414,
+        "keyword": "live",
+        "text": "auto_live=False,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 2,
+        "keyword": "live",
+        "text": "Live paper trader — executes model decisions as tracked paper positions."
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 4,
+        "keyword": "live",
+        "text": "Connects to MT5 for live bars, runs the model every poll, opens/closes"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 9,
+        "keyword": "live",
+        "text": "python live_paper_trader.py --profile sk --poll-seconds 15"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 10,
+        "keyword": "live",
+        "text": "python live_paper_trader.py --profile sb --once"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 239,
+        "keyword": "live",
+        "text": "log_path=LOG_DIR / \"live_paper_trades.jsonl\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 240,
+        "keyword": "live",
+        "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 243,
+        "keyword": "live",
+        "text": "print(f\"  FRIDAY Live Paper Trader\")"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 128,
+        "keyword": "live",
+        "text": "LIVE_MODE_ALLOWED = False"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 129,
+        "keyword": "live",
+        "text": "LIVE_TRADING_ENABLED = False"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 141,
+        "keyword": "live",
+        "text": "LIVE_CONFIRM_ENV = \"MT5_AI_LIVE_TRADING\""
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 142,
+        "keyword": "live",
+        "text": "LIVE_CONFIRM_VALUE = \"YES_I_ACCEPT_RISK\""
+      }
+    ],
+    "paper_demo_live_terms": [
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 24,
+        "keyword": "paper",
+        "text": "class PaperExecutor:"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 27,
+        "keyword": "paper",
+        "text": "mode=\"paper\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 34,
+        "keyword": "paper",
+        "text": "reason=\"paper_trade_logged\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 45,
+        "keyword": "paper",
+        "text": "\"mode\": \"paper_pending\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 54,
+        "keyword": "paper",
+        "text": "\"reason\": \"paper_pending_logged\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 59,
+        "keyword": "allow_live",
+        "text": "def __init__(self, gateway, allow_live=False):"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 59,
+        "keyword": "live",
+        "text": "def __init__(self, gateway, allow_live=False):"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 61,
+        "keyword": "allow_live",
+        "text": "self.allow_live = allow_live"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 61,
+        "keyword": "live",
+        "text": "self.allow_live = allow_live"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 65,
+        "keyword": "allow_live",
+        "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 65,
+        "keyword": "live",
+        "text": "result = self.gateway.send_market_order(plan, allow_live=self.allow_live)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 68,
+        "keyword": "live",
+        "text": "\"mode\": \"live_blocked\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 69,
+        "keyword": "live",
+        "text": "\"requested_mode\": \"live\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 75,
+        "keyword": "demo",
+        "text": "class DemoMT5Executor:"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 86,
+        "keyword": "demo",
+        "text": "comment=\"friday-demo-only\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 88,
+        "keyword": "demo",
+        "text": "result = self.gateway.send_demo_market_order(plan)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 91,
+        "keyword": "demo",
+        "text": "\"mode\": \"demo_mt5\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 105,
+        "keyword": "demo",
+        "text": "result = self.gateway.send_demo_pending_order(plan, limit_price=limit_price)"
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 108,
+        "keyword": "demo",
+        "text": "\"mode\": \"demo_pending\","
+      },
+      {
+        "file": "src/mt5_ai/execution.py",
+        "line": 114,
+        "keyword": "demo",
+        "text": "result = self.gateway.modify_demo_position_sl_tp("
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 13,
+        "keyword": "demo",
+        "text": "DEMO_SERVER_KEYWORDS,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 14,
+        "keyword": "demo",
+        "text": "DEMO_TRADING_ENABLED,"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 56,
+        "keyword": "live",
+        "text": "- Live trading is permanently blocked by send_market_order()."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 57,
+        "keyword": "demo",
+        "text": "- Only demo execution is allowed through send_demo_market_order()."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 58,
+        "keyword": "demo",
+        "text": "- Demo execution is additionally blocked unless the connected account server"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 59,
+        "keyword": "demo",
+        "text": "contains one of DEMO_SERVER_KEYWORDS."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 263,
+        "keyword": "demo",
+        "text": "snapshot[\"demo_detected\"] = self.is_demo_account(snapshot)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 266,
+        "keyword": "demo",
+        "text": "def is_demo_account(self, snapshot: dict[str, Any] | None = None) -> bool:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 269,
+        "keyword": "demo",
+        "text": "return any(str(keyword).lower() in server for keyword in DEMO_SERVER_KEYWORDS)"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 271,
+        "keyword": "demo",
+        "text": "def ensure_demo_account(self) -> tuple[bool, dict[str, Any]]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 282,
+        "keyword": "demo",
+        "text": "if not self.is_demo_account(snapshot):"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 286,
+        "keyword": "demo",
+        "text": "\"reason\": \"blocked_not_demo_account\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 295,
+        "keyword": "allow_live",
+        "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 295,
+        "keyword": "live",
+        "text": "def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 297,
+        "keyword": "live",
+        "text": "Live trading endpoint."
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 306,
+        "keyword": "live",
+        "text": "\"reason\": \"live_trading_permanently_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 307,
+        "keyword": "allow_live",
+        "text": "\"allow_live_requested\": bool(allow_live),"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 307,
+        "keyword": "live",
+        "text": "\"allow_live_requested\": bool(allow_live),"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 311,
+        "keyword": "demo",
+        "text": "def send_demo_pending_order(self, plan: OrderPlan, limit_price: float) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 312,
+        "keyword": "demo",
+        "text": "\"\"\"Place a pending limit order (BUY_LIMIT or SELL_LIMIT) on a demo account.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 315,
+        "keyword": "demo",
+        "text": "if not DEMO_TRADING_ENABLED:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 319,
+        "keyword": "demo",
+        "text": "\"reason\": \"demo_trading_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 323,
+        "keyword": "demo",
+        "text": "ok, account_or_error = self.ensure_demo_account()"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 371,
+        "keyword": "demo",
+        "text": "\"mode\":       \"demo_pending\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 379,
+        "keyword": "demo",
+        "text": "def send_demo_market_order(self, plan: OrderPlan) -> dict[str, Any]:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 380,
+        "keyword": "demo",
+        "text": "\"\"\"Send a market order only if connected account is detected as demo.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 383,
+        "keyword": "demo",
+        "text": "if not DEMO_TRADING_ENABLED:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 387,
+        "keyword": "demo",
+        "text": "\"reason\": \"demo_trading_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 391,
+        "keyword": "demo",
+        "text": "ok, account_or_error = self.ensure_demo_account()"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 448,
+        "keyword": "demo",
+        "text": "\"mode\": \"demo_mt5\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 466,
+        "keyword": "demo",
+        "text": "def modify_demo_position_sl_tp("
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 473,
+        "keyword": "demo",
+        "text": "\"\"\"Modify SL/TP for an existing position on a demo account only.\"\"\""
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 474,
+        "keyword": "demo",
+        "text": "if not DEMO_TRADING_ENABLED:"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 478,
+        "keyword": "demo",
+        "text": "\"reason\": \"demo_trading_disabled\","
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 482,
+        "keyword": "demo",
+        "text": "ok, account_or_error = self.ensure_demo_account()"
+      },
+      {
+        "file": "src/mt5_ai/mt5_gateway.py",
+        "line": 543,
+        "keyword": "demo",
+        "text": "\"mode\": \"demo_modify_sltp\","
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 5,
+        "keyword": "demo",
+        "text": "- Demo account: may send demo MT5 orders."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 6,
+        "keyword": "live",
+        "text": "- Live account: analysis only; broker execution is blocked and paper logged."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 6,
+        "keyword": "paper",
+        "text": "- Live account: analysis only; broker execution is blocked and paper logged."
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 58,
+        "keyword": "demo",
+        "text": "from mt5_ai.execution import DemoMT5Executor, PaperExecutor, SafeMT5Executor"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 58,
+        "keyword": "paper",
+        "text": "from mt5_ai.execution import DemoMT5Executor, PaperExecutor, SafeMT5Executor"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 109,
+        "keyword": "demo",
+        "text": "# Direction flip. Disabled by default because this Exness demo account is"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 268,
+        "keyword": "demo",
+        "text": "result = trader.gateway.modify_demo_position_sl_tp(ticket, symbol, sl=new_sl, tp=tp_now)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 324,
+        "keyword": "live",
+        "text": "auto_live=False,"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 341,
+        "keyword": "live",
+        "text": "self.auto_live = False"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 352,
+        "keyword": "demo",
+        "text": "self.is_demo = self.gateway.is_demo_account(self.account)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 353,
+        "keyword": "live",
+        "text": "self.account_type = \"DEMO\" if self.is_demo else \"LIVE\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 353,
+        "keyword": "demo",
+        "text": "self.account_type = \"DEMO\" if self.is_demo else \"LIVE\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 358,
+        "keyword": "paper",
+        "text": "self.paper_executor = PaperExecutor()"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 359,
+        "keyword": "demo",
+        "text": "self.demo_executor = DemoMT5Executor(gateway=self.gateway)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 360,
+        "keyword": "allow_live",
+        "text": "self.live_executor = SafeMT5Executor(gateway=self.gateway, allow_live=False)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 360,
+        "keyword": "live",
+        "text": "self.live_executor = SafeMT5Executor(gateway=self.gateway, allow_live=False)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 907,
+        "keyword": "demo",
+        "text": "if self.is_demo:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 910,
+        "keyword": "demo",
+        "text": "result = self.demo_executor.execute("
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 915,
+        "keyword": "live",
+        "text": "result = {\"sent\": False, \"reason\": \"live_account_flip_blocked\"}"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 984,
+        "keyword": "demo",
+        "text": "if self.is_demo:"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 985,
+        "keyword": "demo",
+        "text": "result = self.demo_executor.execute("
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 988,
+        "keyword": "demo",
+        "text": "mode = \"DEMO\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 990,
+        "keyword": "paper",
+        "text": "result = self.paper_executor.execute(symbol=symbol, side=side, price=price, lot=lot, sl=sl, tp=tp)"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 991,
+        "keyword": "live",
+        "text": "mode = \"PAPER (LIVE account detected; broker execution blocked)\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 991,
+        "keyword": "paper",
+        "text": "mode = \"PAPER (LIVE account detected; broker execution blocked)\""
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1306,
+        "keyword": "live",
+        "text": "print(\"   Auto Live: DISABLED / BLOCKED\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1401,
+        "keyword": "live",
+        "text": "parser.add_argument(\"--no-auto-live\", action=\"store_true\", help=\"Ignored; live trading is always disabled\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1402,
+        "keyword": "live",
+        "text": "parser.add_argument(\"--auto-live\", action=\"store_true\", help=\"Ignored; live trading is blocked\")"
+      },
+      {
+        "file": "scripts/friday_auto_trader.py",
+        "line": 1414,
+        "keyword": "live",
+        "text": "auto_live=False,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 2,
+        "keyword": "live",
+        "text": "Live paper trader — executes model decisions as tracked paper positions."
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 2,
+        "keyword": "paper",
+        "text": "Live paper trader — executes model decisions as tracked paper positions."
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 4,
+        "keyword": "live",
+        "text": "Connects to MT5 for live bars, runs the model every poll, opens/closes"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 5,
+        "keyword": "paper",
+        "text": "paper positions with ATR-based TP/SL, and records results to LearningJournal."
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 9,
+        "keyword": "live",
+        "text": "python live_paper_trader.py --profile sk --poll-seconds 15"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 9,
+        "keyword": "paper",
+        "text": "python live_paper_trader.py --profile sk --poll-seconds 15"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 10,
+        "keyword": "live",
+        "text": "python live_paper_trader.py --profile sb --once"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 10,
+        "keyword": "paper",
+        "text": "python live_paper_trader.py --profile sb --once"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 54,
+        "keyword": "paper",
+        "text": "# ─── Paper position ────────────────────────────────────────────────────────────"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 57,
+        "keyword": "paper",
+        "text": "class PaperPosition:"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 126,
+        "keyword": "paper",
+        "text": "class PaperTracker:"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 130,
+        "keyword": "paper",
+        "text": "self.positions: list[PaperPosition] = []"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 146,
+        "keyword": "paper",
+        "text": "pos = PaperPosition("
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 238,
+        "keyword": "paper",
+        "text": "tracker = PaperTracker(journal=journal,"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 239,
+        "keyword": "live",
+        "text": "log_path=LOG_DIR / \"live_paper_trades.jsonl\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 239,
+        "keyword": "paper",
+        "text": "log_path=LOG_DIR / \"live_paper_trades.jsonl\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 240,
+        "keyword": "live",
+        "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 240,
+        "keyword": "paper",
+        "text": "decision_log = LOG_DIR / \"live_paper_decisions.jsonl\""
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 243,
+        "keyword": "live",
+        "text": "print(f\"  FRIDAY Live Paper Trader\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 243,
+        "keyword": "paper",
+        "text": "print(f\"  FRIDAY Live Paper Trader\")"
+      },
+      {
+        "file": "scripts/live_paper_trader.py",
+        "line": 249,
+        "keyword": "paper",
+        "text": "print(\"  No real orders. Paper only.\")"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 125,
+        "keyword": "demo",
+        "text": "DEMO_MODE = True"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 126,
+        "keyword": "demo",
+        "text": "DEMO_TRADING_ENABLED = True"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 127,
+        "keyword": "demo",
+        "text": "DEMO_SERVER_KEYWORDS = (\"demo\", \"trial\", \"practice\", \"contest\")"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 128,
+        "keyword": "live",
+        "text": "LIVE_MODE_ALLOWED = False"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 129,
+        "keyword": "live",
+        "text": "LIVE_TRADING_ENABLED = False"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 131,
+        "keyword": "paper",
+        "text": "AUTO_LEARNING_MODE = \"paper\""
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 138,
+        "keyword": "demo",
+        "text": "MAX_DEMO_OPEN_ORDERS = 3"
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 141,
+        "keyword": "live",
+        "text": "LIVE_CONFIRM_ENV = \"MT5_AI_LIVE_TRADING\""
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 142,
+        "keyword": "live",
+        "text": "LIVE_CONFIRM_VALUE = \"YES_I_ACCEPT_RISK\""
+      },
+      {
+        "file": "src/mt5_ai/config.py",
+        "line": 144,
+        "keyword": "paper",
+        "text": "MAX_PAPER_SCAN_ORDERS = 3"
+      }
+    ]
+  },
+  "safe_test_plan": [
+    "python -m py_compile src/mt5_ai/execution.py",
+    "python -m py_compile src/mt5_ai/mt5_gateway.py",
+    "python -m py_compile scripts/friday_auto_trader.py",
+    "python -m py_compile scripts/live_paper_trader.py",
+    "python -m py_compile src/mt5_ai/config.py"
+  ]
+}

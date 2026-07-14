@@ -1,0 +1,18 @@
+{
+  "generated": 1782832563.1165643,
+  "no_spread_filter": [
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\FRIDAY_Gold_EA.mq5",
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE.mq5",
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE_TESTER.mq5",
+    ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Stoch_Reversion_M3.mq5",
+    "active_ea\\QuantumShark_Learner_v8_2.mq5",
+    "ea\\FRIDAY_Gold_EA.mq5",
+    "ea\\v7_2_DNA_EVOLVE.mq5",
+    "ea\\v7_2_DNA_EVOLVE_TESTER.mq5",
+    "live_ea\\Stoch_Reversion_M3.mq5",
+    "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+    "r-native-pipflow\\mql5_templates\\Stoch_Reversion_M3.mq5",
+    "r_native\\mql5_templates\\r_strategy_template.mq5"
+  ]
+}

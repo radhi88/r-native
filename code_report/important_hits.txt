@@ -1,0 +1,71 @@
+C:\Users\Radhi\MT5\scripts\extract_video_refs.py:37: pattern = out_dir / "friday_ref_%02d.png"
+C:\Users\Radhi\MT5\scripts\friday_auto_trader.py:2: FRIDAY Auto Trader - التشغيل التلقائي عند 连接 MT5
+C:\Users\Radhi\MT5\scripts\friday_auto_trader.py:10: python friday_auto_trader.py                    # تشغيل تلقائي
+C:\Users\Radhi\MT5\scripts\friday_auto_trader.py:11: python friday_auto_trader.py --profile scalping  # تحديد الاستراتيجية
+C:\Users\Radhi\MT5\scripts\friday_auto_trader.py:12: python friday_auto_trader.py --poll-seconds 30   # تحديد الفترة
+C:\Users\Radhi\MT5\scripts\friday_auto_trader.py:188: print(f"   Auto Live: {self.auto_live}")
+C:\Users\Radhi\MT5\scripts\friday_auto_trader.py:232: parser = argparse.ArgumentParser(description="FRIDAY Auto Trader")
+C:\Users\Radhi\MT5\scripts\friday_auto_trader.py:236: parser.add_argument("--no-auto-live", action="store_true", help="Disable auto live trading")
+C:\Users\Radhi\MT5\scripts\friday_auto_trader.py:240: print("🤖 FRIDAY AUTO TRADER")
+C:\Users\Radhi\MT5\scripts\jarvis.py:37: print("🤖 FRIDAY MT5 Trading System")
+C:\Users\Radhi\MT5\scripts\jarvis_ui.py:565: parser.add_argument("--port", type=int, default=8765)
+C:\Users\Radhi\MT5\scripts\live_paper_trader.py:243: print(f"  FRIDAY Live Paper Trader")
+C:\Users\Radhi\MT5\scripts\run_agents.py:2: run_agents.py — FRIDAY Multi-Agent Runner (paper/demo mode only).
+C:\Users\Radhi\MT5\scripts\run_agents.py:9: 2. Builds a market_state dict each bar from live MT5 data + signal pipeline
+C:\Users\Radhi\MT5\scripts\run_agents.py:39: log = logging.getLogger("friday.runner")
+C:\Users\Radhi\MT5\scripts\run_agents.py:69: log.info("FRIDAY Multi-Agent System starting — PAPER mode")
+C:\Users\Radhi\MT5\scripts\test_phase0.py:309: print("  FRIDAY Phase 0 — Validation Tests")
+C:\Users\Radhi\MT5\src\mt5_ai\auto_paper_trader.py:34: It never sends live MT5 orders. It scans MT5 symbols, opens simulated
+C:\Users\Radhi\MT5\src\mt5_ai\capabilities.py:18: """Central permission gate for FRIDAY tools.
+C:\Users\Radhi\MT5\src\mt5_ai\execution.py:46: result = self.gateway.send_market_order(plan, allow_live=self.allow_live)
+C:\Users\Radhi\MT5\src\mt5_ai\execution.py:66: comment="friday-demo-only",
+C:\Users\Radhi\MT5\src\mt5_ai\execution.py:68: result = self.gateway.send_demo_market_order(plan)
+C:\Users\Radhi\MT5\src\mt5_ai\local_mind.py:67: "identity": "FRIDAY Private Local Neural Assistant",
+C:\Users\Radhi\MT5\src\mt5_ai\local_mind.py:99: self.memory.remember("friday", answer, tags=["chat"], importance=0.8)
+C:\Users\Radhi\MT5\src\mt5_ai\local_mind.py:250: أنت FRIDAY — مساعد تداول محلي خاص. تعمل دون إنترنت. تتحدث العربية بشكل مختصر ودقيق.
+C:\Users\Radhi\MT5\src\mt5_ai\local_mind.py:295: "أنا FRIDAY المحلي الخاص بك: ذاكرة عصبية SQLite، عقل تداول، "
+C:\Users\Radhi\MT5\src\mt5_ai\local_mind.py:309: "أنا FRIDAY شغالة محليًا بذاكرة وأدوات تداول. نموذج llama.cpp غير متصل بعد، "
+C:\Users\Radhi\MT5\src\mt5_ai\local_speaker.py:14: self.rate = int(rate if rate is not None else os.environ.get("FRIDAY_TTS_RATE", "-1"))
+C:\Users\Radhi\MT5\src\mt5_ai\local_speaker.py:15: self.volume = int(volume if volume is not None else os.environ.get("FRIDAY_TTS_VOLUME", "100"))
+C:\Users\Radhi\MT5\src\mt5_ai\local_voice.py:8: DEFAULT_WAKE_WORDS = ["friday", "فرايدي", "جارفيس", "jarvis"]
+C:\Users\Radhi\MT5\src\mt5_ai\local_voice.py:24: self.sample_rate = int(os.environ.get("FRIDAY_VOICE_SAMPLE_RATE", "16000"))
+C:\Users\Radhi\MT5\src\mt5_ai\lot_sizer.py:22: log = logging.getLogger("friday.lot_sizer")
+C:\Users\Radhi\MT5\src\mt5_ai\mt5_gateway.py:54: - Live trading is permanently blocked by send_market_order().
+C:\Users\Radhi\MT5\src\mt5_ai\mt5_gateway.py:55: - Only demo execution is allowed through send_demo_market_order().
+C:\Users\Radhi\MT5\src\mt5_ai\mt5_gateway.py:271: def send_market_order(self, plan: OrderPlan, allow_live: bool = True) -> dict[str, Any]:
+C:\Users\Radhi\MT5\src\mt5_ai\mt5_gateway.py:287: def send_demo_market_order(self, plan: OrderPlan) -> dict[str, Any]:
+C:\Users\Radhi\MT5\src\mt5_ai\mt5_gateway.py:345: result = self.mt5.order_send(request)
+C:\Users\Radhi\MT5\src\mt5_ai\mt5_gateway.py:348: result = self.mt5.order_send(request)
+C:\Users\Radhi\MT5\src\mt5_ai\mt5_live_feed.py:32: log = logging.getLogger("friday.mt5_live_feed")
+C:\Users\Radhi\MT5\src\mt5_ai\polymarket.py:17: log = logging.getLogger("friday.sentiment")
+C:\Users\Radhi\MT5\src\mt5_ai\trailing_sl.py:16: log = logging.getLogger("friday.trailing_sl")
+C:\Users\Radhi\MT5\src\mt5_ai\agents\agent_runner.py:26: log = logging.getLogger("friday.agent_runner")
+C:\Users\Radhi\MT5\src\mt5_ai\agents\agent_runner.py:54: # Try to connect a live MT5 feed; fall back to assistant/dummy
+C:\Users\Radhi\MT5\src\mt5_ai\agents\agent_runner.py:294: # 1. Live MT5 feed (best) — cached 5 seconds
+C:\Users\Radhi\MT5\src\mt5_ai\agents\base_agent.py:1: """Base class shared by all FRIDAY trading agents."""
+C:\Users\Radhi\MT5\src\mt5_ai\agents\base_agent.py:35: self.log = logging.getLogger(f"friday.agent.{self.name}")
+C:\Users\Radhi\MT5\src\mt5_ai\agents\claude_committee.py:2: Claude multi-agent trading committee for FRIDAY.
+C:\Users\Radhi\MT5\src\mt5_ai\agents\claude_committee.py:30: log = logging.getLogger("friday.committee")
+C:\Users\Radhi\MT5\src\mt5_ai\agents\claude_committee.py:155: You are the portfolio manager making the final trade decision for FRIDAY,
+C:\Users\Radhi\MT5\src\mt5_ai\agents\coordinator.py:2: AgentCoordinator — master orchestrator for all FRIDAY trading agents.
+C:\Users\Radhi\MT5\src\mt5_ai\agents\coordinator.py:38: self.log       = logging.getLogger("friday.coordinator")
+C:\Users\Radhi\MT5\tools\ffmpeg\ffmpeg-8.1-essentials_build\doc\git-howto.html:528: <code class="command">git log -p 1234567..987654</code>. The <code class="command">git status</code> command
+C:\Users\Radhi\MT5\web\jarvis\app.js:554: coreSub.textContent = sub || "كلمة التنبيه: Friday / فرايدي / جارفيس";
+C:\Users\Radhi\MT5\web\jarvis\app.js:595: const thinking = addMessage("friday", "processing...");
+C:\Users\Radhi\MT5\web\jarvis\app.js:647: addMessage("friday", `FRIDAY online. ${voiceText}`);
+C:\Users\Radhi\MT5\web\jarvis\app.js:663: if (!pendingChat && data.payload?.answer) addMessage("friday", data.payload.answer);
+C:\Users\Radhi\MT5\web\jarvis\app.js:687: addMessage("friday", `AUTO PAPER OPEN: ${data.payload?.position?.symbol} ${data.payload?.position?.side}`);
+C:\Users\Radhi\MT5\web\jarvis\app.js:695: addMessage("friday", `DEMO MT5 ORDER: ${position.symbol} ${position.side} sent=${broker.executed || broker.result?.sent || false}`);
+C:\Users\Radhi\MT5\web\jarvis\app.js:702: addMessage("friday", `AUTO PAPER CLOSE: ${position.symbol} ${position.side} points=${position.points}`);
+C:\Users\Radhi\MT5\web\jarvis\app.js:785: addMessage("friday", `offline voice unavailable: ${JSON.stringify(data.payload.dependencies || data.payload)}`);
+C:\Users\Radhi\MT5\web\jarvis\app.js:799: if (data.payload?.answer) addMessage("friday", data.payload.answer);
+C:\Users\Radhi\MT5\web\jarvis\app.js:858: addMessage("friday", data.reason || "voice service did not start");
+C:\Users\Radhi\MT5\web\jarvis\app.js:865: addMessage("friday", data.message);
+C:\Users\Radhi\MT5\web\jarvis\app.js:871: addMessage("friday", data.message);
+C:\Users\Radhi\MT5\web\jarvis\index.html:6: <title>FRIDAY Local AI</title>
+C:\Users\Radhi\MT5\web\jarvis\index.html:15: <h1>FRIDAY</h1>
+C:\Users\Radhi\MT5\web\jarvis\index.html:25: <button id="autoLiveBtn" class="live-btn">AUTO LIVE</button>
+C:\Users\Radhi\MT5\web\jarvis\index.html:27: <button id="liveMt5Btn" class="live-btn">LIVE MT5</button>
+C:\Users\Radhi\MT5\web\jarvis\index.html:93: <div class="scanner-head"><span>▲ BUY SETUPS</span><span id="scanBuyCount">0</span></div>
+C:\Users\Radhi\MT5\web\jarvis\index.html:97: <div class="scanner-head"><span>▼ SELL SETUPS</span><span id="scanSellCount">0</span></div>
+C:\Users\Radhi\MT5\web\jarvis\style.css:326: .msg.friday {

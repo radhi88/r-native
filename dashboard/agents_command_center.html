@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FRIDAY — Agent Command Center</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #020617;
+  --surface:  #0f1b2d;
+  --border:   rgba(148,163,184,0.12);
+  --text:     #dbeafe;
+  --muted:    #64748b;
+  --accent:   #22d3ee;
+  --gold:     #f59e0b;
+  --green:    #34d399;
+  --red:      #ef4444;
+  --purple:   #a78bfa;
+}
+
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, monospace; overflow-x: hidden; }
+
+/* ─── HEADER ─── */
+header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
+  height: 50px;
+}
+.logo { font-size: 15px; font-weight: 800; letter-spacing: 3px; color: var(--gold); }
+.header-stats { display: flex; gap: 24px; font-size: 12px; color: var(--muted); }
+.header-stats span { color: var(--text); font-weight: 700; }
+#clock { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ─── LAYOUT ─── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  grid-template-rows: 1fr;
+  height: calc(100vh - 50px - 200px);
+}
+
+/* ─── FORCE GRAPH ─── */
+#graph-panel {
+  position: relative;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+#graph-title {
+  position: absolute; top: 12px; left: 16px;
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+}
+#legend {
+  position: absolute; bottom: 10px; left: 12px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+svg#force-graph { width: 100%; height: 100%; }
+
+/* ─── TOOLTIP ─── */
+#tooltip {
+  position: fixed; pointer-events: none;
+  background: #0f1b2d; border: 1px solid rgba(148,163,184,0.25);
+  border-radius: 8px; padding: 10px 14px; font-size: 12px;
+  max-width: 240px; z-index: 9999; opacity: 0; transition: opacity 0.15s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+#tooltip .t-name { font-weight: 800; font-size: 14px; margin-bottom: 4px; }
+#tooltip .t-row  { color: var(--muted); margin-bottom: 2px; }
+#tooltip .t-row span { color: var(--text); }
+
+/* ─── BUBBLE CHART ─── */
+#bubble-panel {
+  background: var(--surface);
+  display: flex; flex-direction: column;
+  border-left: 1px solid var(--border);
+}
+#bubble-title {
+  padding: 10px 14px; font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+svg#bubble-chart { flex: 1; width: 100%; }
+
+/* ─── QADER STATUS BAR ─── */
+#qader-bar {
+  height: 36px; background: var(--surface); border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 20px; padding: 0 20px;
+  font-size: 12px;
+}
+.qb-label { color: var(--muted); }
+.qb-val { font-weight: 700; color: var(--accent); }
+.qb-val.red { color: var(--red); }
+.qb-val.green { color: var(--green); }
+.qb-val.gold { color: var(--gold); }
+
+/* ─── FEED ─── */
+#feed-panel {
+  height: 164px; background: var(--bg); border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+#feed-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 16px; background: var(--surface); border-bottom: 1px solid var(--border);
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+  flex-shrink: 0;
+}
+#feed-header .feed-badges { display: flex; gap: 8px; }
+.feed-badge {
+  background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.3);
+  color: var(--accent); font-size: 10px; padding: 2px 7px; border-radius: 3px;
+}
+#feed-list {
+  flex: 1; overflow-y: auto; padding: 4px 0;
+  scroll-behavior: smooth;
+}
+#feed-list::-webkit-scrollbar { width: 4px; }
+#feed-list::-webkit-scrollbar-track { background: transparent; }
+#feed-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.feed-row {
+  display: grid;
+  grid-template-columns: 60px 130px 90px 1fr;
+  align-items: center; gap: 0 10px;
+  padding: 3px 16px; font-size: 11.5px;
+  border-bottom: 1px solid rgba(148,163,184,0.05);
+  transition: background 0.3s;
+}
+.feed-row.new-row { background: rgba(34,211,238,0.06); }
+.feed-time { color: var(--muted); font-variant-numeric: tabular-nums; }
+.feed-agent { font-weight: 700; }
+.feed-type { font-size: 10px; padding: 1px 5px; border-radius: 3px; text-align: center; }
+.feed-type.directive { background: rgba(245,158,11,0.15); color: var(--gold); }
+.feed-type.commit    { background: rgba(52,211,153,0.15); color: var(--green); }
+.feed-type.trade     { background: rgba(239,68,68,0.15);  color: var(--red); }
+.feed-type.ack       { background: rgba(167,139,250,0.15); color: var(--purple); }
+.feed-type.vote      { background: rgba(34,211,238,0.15); color: var(--accent); }
+.feed-type.info      { background: rgba(148,163,184,0.1); color: var(--muted); }
+.feed-type.review    { background: rgba(245,158,11,0.12); color: var(--gold); }
+.feed-type.analysis  { background: rgba(52,211,153,0.12); color: var(--green); }
+.feed-type.gate      { background: rgba(167,139,250,0.12); color: var(--purple); }
+.feed-type.learning  { background: rgba(96,165,250,0.12); color: #60a5fa; }
+.feed-type.query     { background: rgba(251,146,60,0.12); color: #fb923c; }
+.feed-msg { color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⬡ FRIDAY · AGENT COMMAND CENTER</div>
+  <div class="header-stats">
+    <div class="qb-label">AGENTS <span id="hdr-active">—</span></div>
+    <div class="qb-label">ACTIVE <span id="hdr-count">—</span></div>
+    <div class="qb-label">TASKS DONE <span id="hdr-tasks">—</span></div>
+    <div class="qb-label">QADER CYCLE <span id="hdr-cycle" class="qb-val">—</span></div>
+  </div>
+  <div id="clock">—</div>
+</header>
+
+<div class="main-grid">
+  <div id="graph-panel">
+    <div id="graph-title">Force-Directed Agent Network</div>
+    <svg id="force-graph"></svg>
+    <div id="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Trading Core</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#22d3ee"></div>Primary Agents</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Secondary Agents</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>Cloud Skills</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#facc15"></div>Local System</div>
+    </div>
+  </div>
+  <div id="bubble-panel">
+    <div id="bubble-title">Activity Levels</div>
+    <svg id="bubble-chart"></svg>
+  </div>
+</div>
+
+<div id="qader-bar">
+  <div><span class="qb-label">Loop </span><span class="qb-val" id="qb-loop">—</span></div>
+  <div><span class="qb-label">Cycle </span><span class="qb-val" id="qb-cycle">—</span></div>
+  <div><span class="qb-label">Signal </span><span class="qb-val" id="qb-signal">—</span></div>
+  <div><span class="qb-label">Confidence </span><span class="qb-val" id="qb-conf">—</span></div>
+  <div><span class="qb-label">Spread </span><span class="qb-val" id="qb-spread">—</span></div>
+  <div><span class="qb-label">Trades </span><span class="qb-val green" id="qb-trades">—</span></div>
+  <div><span class="qb-label">Execution </span><span class="qb-val" id="qb-exec">—</span></div>
+  <div><span class="qb-label">Allow Entries </span><span class="qb-val" id="qb-entries">—</span></div>
+</div>
+
+<div id="feed-panel">
+  <div id="feed-header">
+    Agent Discussion Board
+    <div class="feed-badges">
+      <span class="feed-badge" id="feed-badge-live">LIVE</span>
+      <span class="feed-badge" id="feed-msg-count">0 messages</span>
+    </div>
+  </div>
+  <div id="feed-list"></div>
+</div>
+
+<div id="tooltip">
+  <div class="t-name" id="tt-name"></div>
+  <div class="t-row">Role: <span id="tt-role"></span></div>
+  <div class="t-row">Platform: <span id="tt-platform"></span></div>
+  <div class="t-row">Status: <span id="tt-status"></span></div>
+  <div class="t-row">Tasks done: <span id="tt-tasks"></span></div>
+  <div class="t-row">Activity: <span id="tt-activity"></span></div>
+  <div class="t-row">Current: <span id="tt-current"></span></div>
+</div>
+
+<script>
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let agentData   = null;
+let qaderState  = null;
+let simulation  = null;
+let feedSeenCount = 0;
+
+// ─── CLOCK ─────────────────────────────────────────────────────────────────
+function updateClock() {
+  document.getElementById("clock").textContent = new Date().toLocaleTimeString("en-GB", {hour12: false});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── TOOLTIP ───────────────────────────────────────────────────────────────
+const tooltip = document.getElementById("tooltip");
+function showTooltip(event, d) {
+  document.getElementById("tt-name").textContent     = d.name;
+  document.getElementById("tt-role").textContent     = d.role;
+  document.getElementById("tt-platform").textContent = d.platform;
+  document.getElementById("tt-status").textContent   = d.status;
+  document.getElementById("tt-tasks").textContent    = d.tasks_done;
+  document.getElementById("tt-activity").textContent = (d.activity * 100).toFixed(0) + "%";
+  document.getElementById("tt-current").textContent  = d.current_task;
+  tooltip.style.opacity = "1";
+  moveTooltip(event);
+}
+function moveTooltip(event) {
+  let x = event.clientX + 14;
+  let y = event.clientY + 14;
+  if (x + 250 > window.innerWidth)  x = event.clientX - 254;
+  if (y + 160 > window.innerHeight) y = event.clientY - 164;
+  tooltip.style.left = x + "px";
+  tooltip.style.top  = y + "px";
+}
+function hideTooltip() { tooltip.style.opacity = "0"; }
+
+// ─── FORCE GRAPH ───────────────────────────────────────────────────────────
+function buildForceGraph(data) {
+  const el     = document.getElementById("force-graph");
+  const width  = el.parentElement.clientWidth;
+  const height = el.parentElement.clientHeight;
+  el.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+  const svg = d3.select("#force-graph");
+  svg.selectAll("*").remove();
+
+  const defs = svg.append("defs");
+  defs.append("marker")
+    .attr("id", "arrowhead")
+    .attr("viewBox", "-0 -5 10 10")
+    .attr("refX", 20).attr("refY", 0)
+    .attr("orient", "auto").attr("markerWidth", 6).attr("markerHeight", 6)
+    .append("path")
+    .attr("d", "M 0,-5 L 10,0 L 0,5")
+    .attr("fill", "rgba(148,163,184,0.3)");
+
+  // nodes = deep copy so d3 can mutate
+  const nodes = data.agents.map(a => ({ ...a }));
+  const nodeById = Object.fromEntries(nodes.map(n => [n.id, n]));
+  const links  = data.links.map(l => ({
+    source: nodeById[l.source] || l.source,
+    target: nodeById[l.target] || l.target,
+    type: l.type,
+    strength: l.strength
+  })).filter(l => l.source && l.target);
+
+  // radius based on activity
+  const rScale = d3.scaleSqrt().domain([0, 1]).range([8, 28]);
+  nodes.forEach(n => { n.r = rScale(n.activity); });
+
+  simulation = d3.forceSimulation(nodes)
+    .force("link",    d3.forceLink(links).id(d => d.id).distance(d => 80 + (1 - d.strength) * 60).strength(d => d.strength * 0.6))
+    .force("charge",  d3.forceManyBody().strength(-220))
+    .force("center",  d3.forceCenter(width / 2, height / 2))
+    .force("collide", d3.forceCollide().radius(d => d.r + 6))
+    .alphaDecay(0.03);
+
+  // links
+  const link = svg.append("g")
+    .selectAll("line")
+    .data(links).join("line")
+    .attr("stroke", "rgba(148,163,184,0.18)")
+    .attr("stroke-width", d => d.strength * 1.8)
+    .attr("marker-end", "url(#arrowhead)");
+
+  // groups
+  const node = svg.append("g")
+    .selectAll("g")
+    .data(nodes).join("g")
+    .attr("cursor", "pointer")
+    .call(d3.drag()
+      .on("start", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x; d.fy = d.y;
+      })
+      .on("drag", (event, d) => { d.fx = event.x; d.fy = event.y; })
+      .on("end", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null; d.fy = null;
+      })
+    )
+    .on("mouseover", (event, d) => showTooltip(event, d))
+    .on("mousemove", (event) => moveTooltip(event))
+    .on("mouseout", hideTooltip);
+
+  // glow filter per group
+  const groupGlow = { primary:"#22d3ee", secondary:"#a78bfa", cloud:"#34d399", local:"#facc15", trading:"#ef4444" };
+
+  node.append("circle")
+    .attr("r", d => d.r + 4)
+    .attr("fill", "none")
+    .attr("stroke", d => d.color || "#64748b")
+    .attr("stroke-width", 1)
+    .attr("opacity", 0.25);
+
+  node.append("circle")
+    .attr("r", d => d.r)
+    .attr("fill", d => d.color || "#64748b")
+    .attr("fill-opacity", d => d.status === "active" ? 0.85 : 0.30)
+    .attr("stroke", d => d.color || "#64748b")
+    .attr("stroke-width", d => d.status === "active" ? 2 : 0.5)
+    .attr("stroke-opacity", 0.8);
+
+  // activity pulse ring (active only)
+  const activeNodes = node.filter(d => d.status === "active");
+  activeNodes.append("circle")
+    .attr("class", "pulse")
+    .attr("r", d => d.r + 2)
+    .attr("fill", "none")
+    .attr("stroke", d => d.color || "#22d3ee")
+    .attr("stroke-width", 1.5)
+    .attr("opacity", 0.6);
+
+  // animate pulses
+  function pulseTick() {
+    svg.selectAll(".pulse")
+      .attr("r", function(d) {
+        const base = d.r + 2;
+        const t = Date.now() / 1000;
+        return base + Math.sin(t * 2 + d.activity * 10) * 3;
+      })
+      .attr("opacity", function(d) {
+        const t = Date.now() / 1000;
+        return 0.3 + Math.abs(Math.sin(t * 2 + d.activity * 10)) * 0.5;
+      });
+    requestAnimationFrame(pulseTick);
+  }
+  pulseTick();
+
+  // labels
+  node.append("text")
+    .text(d => d.name)
+    .attr("text-anchor", "middle")
+    .attr("dy", d => d.r + 12)
+    .attr("font-size", "9.5px")
+    .attr("font-weight", "700")
+    .attr("fill", d => d.color || "#94a3b8")
+    .attr("pointer-events", "none");
+
+  // icon letters
+  node.append("text")
+    .text(d => d.name[0])
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .attr("font-size", d => Math.max(8, d.r * 0.9) + "px")
+    .attr("font-weight", "900")
+    .attr("fill", "#fff")
+    .attr("fill-opacity", 0.9)
+    .attr("pointer-events", "none");
+
+  simulation.on("tick", () => {
+    link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
+    node.attr("transform", d => `translate(${
+      Math.max(d.r + 2, Math.min(width - d.r - 2, d.x))
+    },${
+      Math.max(d.r + 2, Math.min(height - d.r - 2, d.y))
+    })`);
+  });
+}
+
+// ─── BUBBLE CHART ──────────────────────────────────────────────────────────
+function buildBubbleChart(data) {
+  const el     = document.getElementById("bubble-chart");
+  const width  = el.parentElement.clientWidth;
+  const height = el.parentElement.clientHeight;
+  el.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+  const svg = d3.select("#bubble-chart");
+  svg.selectAll("*").remove();
+
+  const pack = d3.pack()
+    .size([width - 4, height - 4])
+    .padding(4);
+
+  const root = d3.hierarchy({ children: data.agents.filter(a => a.activity > 0) })
+    .sum(d => Math.max(0.01, d.activity || 0));
+
+  const packed = pack(root).leaves();
+
+  const g = svg.append("g").attr("transform", "translate(2,2)");
+
+  const node = g.selectAll("g")
+    .data(packed).join("g")
+    .attr("transform", d => `translate(${d.x},${d.y})`)
+    .attr("cursor", "pointer")
+    .on("mouseover", (event, d) => showTooltip(event, d.data))
+    .on("mousemove", (event) => moveTooltip(event))
+    .on("mouseout", hideTooltip);
+
+  node.append("circle")
+    .attr("r", d => d.r)
+    .attr("fill", d => d.data.color || "#64748b")
+    .attr("fill-opacity", d => d.data.status === "active" ? 0.75 : 0.20)
+    .attr("stroke", d => d.data.color || "#64748b")
+    .attr("stroke-width", 1.5)
+    .attr("stroke-opacity", 0.6);
+
+  node.filter(d => d.r > 14)
+    .append("text")
+    .text(d => d.r > 18 ? d.data.name.split(" ")[0] : d.data.name[0])
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .attr("font-size", d => Math.max(8, Math.min(d.r * 0.55, 13)) + "px")
+    .attr("font-weight", "700")
+    .attr("fill", "#fff")
+    .attr("fill-opacity", 0.85)
+    .attr("pointer-events", "none");
+
+  // activity % label under large bubbles
+  node.filter(d => d.r > 22)
+    .append("text")
+    .text(d => (d.data.activity * 100).toFixed(0) + "%")
+    .attr("text-anchor", "middle")
+    .attr("dy", d => d.r * 0.55)
+    .attr("font-size", "8px")
+    .attr("fill", "#fff")
+    .attr("fill-opacity", 0.55)
+    .attr("pointer-events", "none");
+}
+
+// ─── FEED ──────────────────────────────────────────────────────────────────
+function renderFeed(feed) {
+  const list = document.getElementById("feed-list");
+  const isAtBottom = list.scrollHeight - list.scrollTop <= list.clientHeight + 40;
+
+  // add only new messages
+  const newItems = feed.slice(feedSeenCount);
+  newItems.forEach(item => {
+    const row = document.createElement("div");
+    row.className = "feed-row new-row";
+    row.innerHTML = `
+      <span class="feed-time">${item.time}</span>
+      <span class="feed-agent" style="color:${agentColorByName(item.agent)}">${item.agent}</span>
+      <span class="feed-type ${item.type}">${item.type}</span>
+      <span class="feed-msg">${item.msg}</span>
+    `;
+    list.appendChild(row);
+    setTimeout(() => row.classList.remove("new-row"), 800);
+  });
+
+  feedSeenCount = feed.length;
+  document.getElementById("feed-msg-count").textContent = feedSeenCount + " messages";
+
+  if (isAtBottom) list.scrollTop = list.scrollHeight;
+}
+
+function agentColorByName(name) {
+  if (!agentData) return "#94a3b8";
+  const found = agentData.agents.find(a => a.name === name);
+  return found ? found.color : "#94a3b8";
+}
+
+// ─── HEADER STATS ──────────────────────────────────────────────────────────
+function updateHeaderStats(data) {
+  const active = data.agents.filter(a => a.status === "active").length;
+  const tasks  = data.agents.reduce((s, a) => s + (a.tasks_done || 0), 0);
+  document.getElementById("hdr-active").textContent = data.agents.length;
+  document.getElementById("hdr-count").textContent  = active;
+  document.getElementById("hdr-tasks").textContent  = tasks.toLocaleString();
+}
+
+// ─── QADER BAR ─────────────────────────────────────────────────────────────
+function updateQaderBar(state) {
+  if (!state) return;
+  const loop   = state.loop   || {};
+  const latest = state.latest_record || {};
+  const entries = loop.allow_new_entries;
+
+  document.getElementById("qb-loop").textContent   = loop.state || "—";
+  document.getElementById("qb-cycle").textContent  = loop.cycle_count || latest.cycle_number || "—";
+  document.getElementById("qb-signal").textContent = latest.final_action || "—";
+  document.getElementById("qb-conf").textContent   = Number(latest.confidence || 0).toFixed(3);
+  document.getElementById("qb-spread").textContent = latest.spread || "—";
+  document.getElementById("qb-trades").textContent = loop.demo_trades_opened || 0;
+  document.getElementById("qb-exec").textContent   = latest.execution_status || "—";
+
+  const entriesEl = document.getElementById("qb-entries");
+  entriesEl.textContent = entries === true ? "YES" : entries === false ? "NO" : "—";
+  entriesEl.className = "qb-val " + (entries === true ? "green" : entries === false ? "red" : "");
+
+  // sync Qader agent activity in graph
+  if (agentData) {
+    const qaderNode = agentData.agents.find(a => a.id === "qader");
+    if (qaderNode && loop.cycle_count) {
+      qaderNode.tasks_done = loop.cycle_count;
+      qaderNode.current_task = `Scanning XAUUSDm M1, cycle ${loop.cycle_count}`;
+    }
+    const hdrCycle = document.getElementById("hdr-cycle");
+    hdrCycle.textContent = loop.cycle_count || "—";
+  }
+}
+
+// ─── LOAD DATA ─────────────────────────────────────────────────────────────
+let graphBuilt  = false;
+let bubbleBuilt = false;
+
+async function loadAgentState() {
+  try {
+    const res = await fetch(`agents_state.json?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) throw new Error(res.status);
+    agentData = await res.json();
+
+    updateHeaderStats(agentData);
+
+    if (!graphBuilt) {
+      buildForceGraph(agentData);
+      graphBuilt = true;
+    }
+    if (!bubbleBuilt) {
+      buildBubbleChart(agentData);
+      bubbleBuilt = true;
+    }
+    renderFeed(agentData.feed || []);
+  } catch (e) {
+    console.warn("agents_state.json:", e.message);
+  }
+}
+
+async function loadQaderState() {
+  try {
+    const res = await fetch(`qader_live_state.json?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) throw new Error(res.status);
+    qaderState = await res.json();
+    updateQaderBar(qaderState);
+  } catch (e) {
+    /* qader not running — silent */
+  }
+}
+
+async function tick() {
+  await Promise.all([loadAgentState(), loadQaderState()]);
+}
+
+tick();
+setInterval(tick, 2000);
+
+// ─── RESIZE ────────────────────────────────────────────────────────────────
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    graphBuilt = false;
+    bubbleBuilt = false;
+    if (agentData) {
+      buildForceGraph(agentData);
+      buildBubbleChart(agentData);
+      graphBuilt = true;
+      bubbleBuilt = true;
+    }
+  }, 300);
+});
+</script>
+</body>
+</html>

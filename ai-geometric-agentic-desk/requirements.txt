@@ -1,0 +1,7 @@
+# AI Geometric Agentic Desk — runtime dependencies
+MetaTrader5>=5.0.45
+numpy>=1.24
+matplotlib>=3.7
+# stdlib used elsewhere: sqlite3, dataclasses, argparse, json
+# optional dev:
+pytest>=7.0

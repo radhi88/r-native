@@ -1,0 +1,3795 @@
+{
+  "version": "0.1",
+  "project": "FRIDAY Unified Live Brain",
+  "generated_at": "2026-07-10T22:04:59",
+  "rules": {
+    "demo_only": true,
+    "live_blocked": true,
+    "no_file_delete": true,
+    "patch_review_before_apply": true,
+    "apply_requires_backup": true,
+    "apply_requires_test": true,
+    "trading_sensitive_files_read_only": true
+  },
+  "services": {
+    "gateway": {
+      "ok": true,
+      "sample": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FRIDAY Local Gateway\",\"version\":\"1.2.0\"},\"paths\":{\"/health\":{\"get\":{\"summary\":\"Health\",\"operationId\":\"health_health_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":true,\"type\":\"object\",\"title\":\"Response Health Health Get\"}}}}}}},\"/system/mesh\":{\"get\":{\"summary\":\"System Mesh\",\"operationId\":\"system_mesh_system_mesh_get\",\"parameters\":[{\"name\":\"refresh\",\"in\":\"query\",\"required\":false,\"schema\":{\"type\":\"boolean\",\"default\":false,\"title\":\"Refresh\"}}],\"responses\":{\"200\":{\"description\":\"Succes"
+    },
+    "chat": {
+      "ok": true,
+      "sample": "\n<!doctype html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n  <meta charset=\"utf-8\"/>\n  <title>FRIDAY Jarvis Chat</title>\n  <style>\n    body {\n      margin: 0;\n      font-family: Arial, sans-serif;\n      background: #0f1117;\n      color: #f5f5f5;\n    }\n\n    .wrap {\n      max-width: 1050px;\n      margin: auto;\n      height: 100vh;\n      display: flex;\n      flex-direction: column;\n    }\n\n    header {\n      padding: 18px;\n      border-bottom: 1px solid #2a2d38;\n      font-size: 22px;\n      font-weight: bold;\n    }\n\n    #chat {\n      flex: 1;\n      overflow-y: auto;\n      padding: 20px;\n    }\n\n    .msg {\n"
+    },
+    "tradingview_dashboard": {
+      "ok": false,
+      "error": "HTTP Error 500: Internal Server Error"
+    },
+    "agents_browser": {
+      "ok": true,
+      "sample": "{\"brain\":{\"version\":\"0.2\",\"generated_at\":\"2026-05-15T03:02:48.469185\",\"jobs_stored\":30,\"patches_stored\":51,\"agent_runs_stored\":100,\"latest_job\":{},\"patch_quality\":{\"good\":0,\"fair\":0,\"poor\":0},\"rules\":{\"no_live_trading\":true,\"no_file_delete\":true,\"patch_review_before_apply\":true,\"apply_requires_backup\":true,\"apply_requires_test\":true,\"reject_empty_or_generic_patches\":true,\"scope_lock_required\":true,\"agent_quality_gate_enabled\":true,\"apply_gate_enabled\":true},\"next_steps\":[],\"rejected_patches\":[],\"agent_scoreboard\":[{\"id\":4,\"name\":\"Delta\",\"role\":\"Tester\",\"status\":\"working\",\"level\":14,\"iq\":100,\"s"
+    }
+  },
+  "brain": {
+    "version": "0.2",
+    "generated_at": "2026-05-15T03:02:48.469185",
+    "jobs": 30,
+    "patches": 51,
+    "agent_runs": 100,
+    "rules": {
+      "no_live_trading": true,
+      "no_file_delete": true,
+      "patch_review_before_apply": true,
+      "apply_requires_backup": true,
+      "apply_requires_test": true,
+      "reject_empty_or_generic_patches": true,
+      "scope_lock_required": true,
+      "agent_quality_gate_enabled": true,
+      "apply_gate_enabled": true
+    }
+  },
+  "project_map": {
+    "generated_at": "2026-05-25T07:25:07.893995",
+    "summary": {
+      "total_files": 6568,
+      "categories": {
+        "agents_app": 21,
+        "ai_pipeline": 73,
+        "brain": 11,
+        "config": 333,
+        "control_layer": 4,
+        "docs": 1108,
+        "json": 3034,
+        "mql5": 7,
+        "mt5_related": 198,
+        "other": 1734,
+        "safe_control_file": 1,
+        "tests": 11,
+        "trading_sensitive": 33
+      },
+      "safe_edit_allowlist": [
+        "friday_brain.py",
+        "friday_chat_app.py",
+        "friday_local_gateway.py",
+        "friday_project_map.py",
+        "mnt/agents/output/app/scripts/agent-dispatch-v3.mjs"
+      ],
+      "sensitive_files": [
+        ".claude/get-shit-done/references/thinking-models-execution.md",
+        "OpenJarvis/src/openjarvis/evals/execution/__init__.py",
+        "OpenJarvis/src/openjarvis/evals/execution/pinchbench_env.py",
+        "OpenJarvis/src/openjarvis/evals/execution/taubench_env.py",
+        "OpenJarvis/src/openjarvis/evals/execution/terminalbench_env.py",
+        "OpenJarvis/src/openjarvis/evals/execution/terminalbench_v2_1_env.py",
+        "OpenJarvis/src/openjarvis/evals/execution/webchorearena_env.py",
+        "OpenJarvis/src/openjarvis/evals/execution/workarena_env.py",
+        "OpenJarvis/tests/learning/spec_search/test_execution_loop.py",
+        "reports/01_TRUE_EXECUTION_OWNERSHIP.md",
+        "reports/14_DRY_RUN_EXECUTION_SIMULATION.md",
+        "reports/30_EXECUTION_INCIDENT_LOCKDOWN.md",
+        "reports/77_DEMO_EXECUTION_MULTI_TRADE_RUN.md",
+        "reports/claude_review/21_QADER_REAL_EXECUTION_SAFETY_REVIEW.md",
+        "reports/claude_review/31_DEMO_EXECUTION_SAFETY_REVIEW.md",
+        "review_bridge_output/legacy_gate_final/execution_scan_after_stub.txt",
+        "review_bridge_output/manual_gate/execution_scan_manual.txt",
+        "review_bridge_output/review_pack_20260513_030607/command_outputs/execution_scan.txt",
+        "review_bridge_output/review_pack_20260513_030607/log_tails/execution_log.jsonl.tail.txt",
+        "review_bridge_output/review_pack_20260513_031214/command_outputs/execution_scan.txt",
+        "review_bridge_output/review_pack_20260513_031214/log_tails/execution_log.jsonl.tail.txt",
+        "scripts/friday_auto_trader.py",
+        "scripts/live_paper_trader.py",
+        "selected_code/scripts/friday_auto_trader.py",
+        "selected_code/src/mt5_ai/execution.py",
+        "selected_code/src/mt5_ai/mt5_gateway.py",
+        "src/mt5_ai/archive/mq5_ea_execution_disabled_20260513_075509/FRIDAY_Gold_EA_EXECUTION_VERSION.mq5",
+        "src/mt5_ai/archive/original_snapshot_20260513_002759/src/mt5_ai/mt5_gateway.py",
+        "src/mt5_ai/core/execution_manager.py",
+        "src/mt5_ai/execution.py",
+        "src/mt5_ai/mt5_gateway.py"
+      ]
+    }
+  },
+  "scalper": {
+    "log_path": "C:\\Users\\Radhi\\MT5\\realtime_scalper_logs\\realtime_demo_executor_20260512_183355.jsonl",
+    "latest_decision": {
+      "symbol": "PDDm",
+      "action": "HOLD",
+      "confidence": 0.0076,
+      "buy_score": 10.875,
+      "sell_score": 10.71,
+      "spread_points": 14.0,
+      "close": 95.83,
+      "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+      "time": "2026-05-12T18:37:05"
+    },
+    "latest_execution": null,
+    "executions": [],
+    "events_count": 500
+  },
+  "touch_brain": {
+    "log_path": "C:\\Users\\Radhi\\MT5\\touch_executor_logs\\touch_demo_executor_20260512_183355.jsonl",
+    "latest_plan": {
+      "symbol": "XAUUSDm",
+      "action": "BUY",
+      "order_kind": "BUY_LIMIT",
+      "entry": 4660.0,
+      "tp": 4664.096,
+      "sl": 4655.99,
+      "sl_mode": "protective",
+      "confidence": 0.914,
+      "level": 4660.0,
+      "timeframe": "M5",
+      "touches": 5,
+      "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+      "near_points": 2109.0,
+      "created_at": "2026-05-12T18:37:02"
+    },
+    "latest_execution": null,
+    "executions": [],
+    "events_count": 26
+  },
+  "governor": {
+    "log_path": "C:\\Users\\Radhi\\MT5\\position_governor_logs\\governor_v2_20260512_183355.jsonl",
+    "latest_decision": null,
+    "closes": [],
+    "reverses": [],
+    "events_count": 0
+  },
+  "touch_memory": {
+    "exists": true,
+    "updated_at": null,
+    "symbols": [],
+    "top_levels": [],
+    "live_results_count": 0
+  },
+  "genes": {
+    "file": "C:\\Users\\Radhi\\MT5\\friday_strategy_genes.json",
+    "global_stats": {
+      "events": 795,
+      "wins": 0,
+      "losses": 0,
+      "neutral": 795,
+      "genes_count": 4,
+      "realized_deals_checked": 0
+    },
+    "top_genes": [
+      {
+        "gene_id": "PDDm:HOLD:M1:discount|M5:bear_trend|M5:discount|M15:bear_trend|M15:bear_fvg_entry|M15:discount|H1:bear_trend|H1:BOS_SELL|H1:bear_fvg_chasing_below|H1:bull_sweep|H1:discount|H4:bear_trend",
+        "created_at": "2026-07-10T21:32:31",
+        "updated_at": "2026-07-10T22:04:56",
+        "sources": {
+          "scalper": 265
+        },
+        "seen": 265,
+        "wins": 0,
+        "losses": 0,
+        "neutral": 265,
+        "score": 1.0,
+        "confidence_boost": 0.0,
+        "last_result": {
+          "time": "2026-07-10T22:04:56",
+          "source": "scalper",
+          "symbol": "PDDm",
+          "action": "HOLD",
+          "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+          "confidence": 0.0076,
+          "result": "neutral",
+          "pnl_points": 0.0,
+          "meta": {
+            "symbol": "PDDm",
+            "buy_score": 10.875,
+            "sell_score": 10.71,
+            "spread_points": 14.0
+          }
+        },
+        "examples": [
+          {
+            "time": "2026-07-10T22:01:01",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:10",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:21",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:31",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:39",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:46",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:53",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:03",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:13",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:22",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:28",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:43",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:53",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:01",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:11",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:19",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:28",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:35",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:44",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:57",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:07",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:17",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:27",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:35",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:44",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:56",
+            "source": "scalper",
+            "symbol": "PDDm",
+            "action": "HOLD",
+            "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount",
+            "confidence": 0.0076,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "buy_score": 10.875,
+              "sell_score": 10.71,
+              "spread_points": 14.0
+            }
+          }
+        ]
+      },
+      {
+        "gene_id": "XAUUSDm:BUY:support_bounce_buy|level=4660.0|touches=5|tp=nearest_upper_touch_level_runner",
+        "created_at": "2026-07-10T21:32:31",
+        "updated_at": "2026-07-10T22:04:56",
+        "sources": {
+          "touch": 265
+        },
+        "seen": 265,
+        "wins": 0,
+        "losses": 0,
+        "neutral": 265,
+        "score": 1.0,
+        "confidence_boost": 0.0,
+        "last_result": {
+          "time": "2026-07-10T22:04:56",
+          "source": "touch",
+          "symbol": "XAUUSDm",
+          "action": "BUY",
+          "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+          "confidence": 0.914,
+          "result": "neutral",
+          "pnl_points": 0.0,
+          "meta": {
+            "symbol": "XAUUSDm",
+            "level": 4660.0,
+            "timeframe": "M5",
+            "sl_mode": "protective",
+            "order_kind": "BUY_LIMIT"
+          }
+        },
+        "examples": [
+          {
+            "time": "2026-07-10T22:01:01",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:10",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:21",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:31",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:39",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:46",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:53",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:03",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:13",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:22",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:28",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:43",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:53",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:01",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:11",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:19",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:28",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:35",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:44",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:57",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:07",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:17",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:27",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:35",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:44",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:56",
+            "source": "touch",
+            "symbol": "XAUUSDm",
+            "action": "BUY",
+            "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+            "confidence": 0.914,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "XAUUSDm",
+              "level": 4660.0,
+              "timeframe": "M5",
+              "sl_mode": "protective",
+              "order_kind": "BUY_LIMIT"
+            }
+          }
+        ]
+      },
+      {
+        "gene_id": "PDDm:PENDING_BUY:Touch Level Brain=PENDING_BUY",
+        "created_at": "2026-07-10T21:32:31",
+        "updated_at": "2026-07-10T22:04:44",
+        "sources": {
+          "council": 254
+        },
+        "seen": 254,
+        "wins": 0,
+        "losses": 0,
+        "neutral": 254,
+        "score": 1.0,
+        "confidence_boost": 0.0,
+        "last_result": {
+          "time": "2026-07-10T22:04:44",
+          "source": "council",
+          "symbol": "PDDm",
+          "action": "PENDING_BUY",
+          "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+          "confidence": 0.99,
+          "result": "neutral",
+          "pnl_points": 0.0,
+          "meta": {
+            "symbol": "PDDm",
+            "scoreboard": {
+              "buy": 0,
+              "sell": 0,
+              "pending_buy": 0.914,
+              "pending_sell": 0,
+              "hold_or_block": 0.0076
+            }
+          }
+        },
+        "examples": [
+          {
+            "time": "2026-07-10T22:00:03",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:00:10",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:00:18",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:00:45",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:00:54",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:01",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:10",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:21",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:31",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:39",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:46",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:01:53",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:13",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:22",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:28",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:43",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:53",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:01",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:11",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:19",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:28",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:35",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:44",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:17",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:35",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:44",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "PENDING_BUY",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=ALLOW",
+            "confidence": 0.99,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          }
+        ]
+      },
+      {
+        "gene_id": "PDDm:BLOCK:Touch Level Brain=PENDING_BUY",
+        "created_at": "2026-07-10T21:55:04",
+        "updated_at": "2026-07-10T22:04:56",
+        "sources": {
+          "council": 11
+        },
+        "seen": 11,
+        "wins": 0,
+        "losses": 0,
+        "neutral": 11,
+        "score": 1.0,
+        "confidence_boost": 0.0,
+        "last_result": {
+          "time": "2026-07-10T22:04:56",
+          "source": "council",
+          "symbol": "PDDm",
+          "action": "BLOCK",
+          "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+          "confidence": 0.0,
+          "result": "neutral",
+          "pnl_points": 0.0,
+          "meta": {
+            "symbol": "PDDm",
+            "scoreboard": {
+              "buy": 0,
+              "sell": 0,
+              "pending_buy": 0.914,
+              "pending_sell": 0,
+              "hold_or_block": 0.0076
+            }
+          }
+        },
+        "examples": [
+          {
+            "time": "2026-07-10T21:55:04",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T21:56:27",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T21:56:40",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T21:57:47",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T21:58:47",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:00:31",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:02:03",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:03:57",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:07",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:27",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          },
+          {
+            "time": "2026-07-10T22:04:56",
+            "source": "council",
+            "symbol": "PDDm",
+            "action": "BLOCK",
+            "reason": "Realtime Scalper=HOLD+Touch Level Brain=PENDING_BUY+Risk Manager=BLOCK",
+            "confidence": 0.0,
+            "result": "neutral",
+            "pnl_points": 0.0,
+            "meta": {
+              "symbol": "PDDm",
+              "scoreboard": {
+                "buy": 0,
+                "sell": 0,
+                "pending_buy": 0.914,
+                "pending_sell": 0,
+                "hold_or_block": 0.0076
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "council": {
+    "time": "2026-07-10T22:04:56",
+    "final_vote": "BLOCK",
+    "confidence": 0.0,
+    "scoreboard": {
+      "buy": 0,
+      "sell": 0,
+      "pending_buy": 0.914,
+      "pending_sell": 0,
+      "hold_or_block": 0.0076
+    },
+    "risk": {
+      "spread_blocked": false,
+      "risk_vote": "BLOCK",
+      "risk_reason": "missing_service_or_touch_memory"
+    },
+    "votes": [
+      {
+        "name": "Realtime Scalper",
+        "vote": "HOLD",
+        "confidence": 0.0076,
+        "reason": "M1:discount+M5:bear_trend+M5:discount+M15:bear_trend+M15:bear_fvg_entry+M15:discount+M15:near_bottom+H1:bear_trend+H1:BOS_SELL+H1:bear_fvg_chasing_below+H1:bull_sweep+H1:discount+H1:near_bottom+H4:bear_trend+H4:BOS_SELL+H4:discount+H4:near_bottom+D1:bear_trend+D1:BOS_SELL+D1:discount"
+      },
+      {
+        "name": "Touch Level Brain",
+        "vote": "PENDING_BUY",
+        "confidence": 0.914,
+        "reason": "support_bounce_buy|tf=M5|level=4660.0|touches=5|score=4.32|near=2109|sl_mode=protective|tp=nearest_upper_touch_level_runner|min_tp=924",
+        "order_kind": "BUY_LIMIT",
+        "near_points": 2109.0,
+        "entry": 4660.0,
+        "tp": 4664.096,
+        "sl_mode": "protective"
+      },
+      {
+        "name": "Risk Manager",
+        "vote": "BLOCK",
+        "confidence": 0.0,
+        "reason": "missing_service_or_touch_memory"
+      }
+    ]
+  },
+  "orderflow_advisor": {
+    "symbol": "XAUUSDm",
+    "orderflow_vote": "PENDING_SELL",
+    "council_action": "SELL",
+    "final_vote": "SELL",
+    "merged_confidence": 0.432,
+    "merge_note": "OF_NEUTRAL",
+    "of_buy_signals": 0,
+    "of_sell_signals": 1,
+    "reasons": [
+      "BELOW_VWAP"
+    ],
+    "updated_at": "2026-07-10T22:04:59"
+  },
+  "learning": {
+    "learned": [
+      {
+        "source": "scalper",
+        "gene_id": "PDDm:HOLD:M1:discount|M5:bear_trend|M5:discount|M15:bear_trend|M15:bear_fvg_entry|M15:discount|H1:bear_trend|H1:BOS_SELL|H1:bear_fvg_chasing_below|H1:bull_sweep|H1:discount|H4:bear_trend",
+        "score": 1.0
+      },
+      {
+        "source": "touch",
+        "gene_id": "XAUUSDm:BUY:support_bounce_buy|level=4660.0|touches=5|tp=nearest_upper_touch_level_runner",
+        "score": 1.0
+      },
+      {
+        "source": "council",
+        "gene_id": "PDDm:BLOCK:Touch Level Brain=PENDING_BUY",
+        "score": 1.0
+      }
+    ]
+  },
+  "agents": {
+    "active_runs": [],
+    "recent_runs": [
+      {
+        "id": 244,
+        "job_id": 70,
+        "agent_name": "Gamma",
+        "agent_role": "Debugger",
+        "status": "done",
+        "created_at": "2026-05-12T21:52:46"
+      },
+      {
+        "id": 243,
+        "job_id": 70,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "status": "done",
+        "created_at": "2026-05-12T21:52:34"
+      },
+      {
+        "id": 242,
+        "job_id": 70,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "status": "done",
+        "created_at": "2026-05-12T21:52:22"
+      },
+      {
+        "id": 241,
+        "job_id": 69,
+        "agent_name": "Gamma",
+        "agent_role": "Debugger",
+        "status": "done",
+        "created_at": "2026-05-11T03:21:45"
+      },
+      {
+        "id": 240,
+        "job_id": 69,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "status": "done",
+        "created_at": "2026-05-11T03:21:31"
+      },
+      {
+        "id": 239,
+        "job_id": 69,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "status": "done",
+        "created_at": "2026-05-11T03:21:17"
+      },
+      {
+        "id": 238,
+        "job_id": 68,
+        "agent_name": "Gamma",
+        "agent_role": "Debugger",
+        "status": "done",
+        "created_at": "2026-05-09T04:08:26"
+      },
+      {
+        "id": 237,
+        "job_id": 68,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "status": "failed",
+        "created_at": "2026-05-09T04:03:56"
+      },
+      {
+        "id": 236,
+        "job_id": 68,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "status": "failed",
+        "created_at": "2026-05-09T03:58:56"
+      },
+      {
+        "id": 235,
+        "job_id": 67,
+        "agent_name": "Gamma",
+        "agent_role": "Debugger",
+        "status": "failed",
+        "created_at": "2026-05-07T03:43:13"
+      },
+      {
+        "id": 234,
+        "job_id": 67,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "status": "failed",
+        "created_at": "2026-05-07T03:38:13"
+      },
+      {
+        "id": 233,
+        "job_id": 67,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "status": "failed",
+        "created_at": "2026-05-07T03:33:13"
+      },
+      {
+        "id": 232,
+        "job_id": 66,
+        "agent_name": "Gamma",
+        "agent_role": "Debugger",
+        "status": "failed",
+        "created_at": "2026-05-07T03:25:53"
+      },
+      {
+        "id": 231,
+        "job_id": 65,
+        "agent_name": "Gamma",
+        "agent_role": "Debugger",
+        "status": "failed",
+        "created_at": "2026-05-07T03:24:46"
+      },
+      {
+        "id": 230,
+        "job_id": 66,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "status": "failed",
+        "created_at": "2026-05-07T03:20:53"
+      },
+      {
+        "id": 229,
+        "job_id": 65,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "status": "failed",
+        "created_at": "2026-05-07T03:19:46"
+      },
+      {
+        "id": 228,
+        "job_id": 66,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "status": "failed",
+        "created_at": "2026-05-07T03:15:53"
+      },
+      {
+        "id": 227,
+        "job_id": 65,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "status": "done",
+        "created_at": "2026-05-07T03:14:46"
+      },
+      {
+        "id": 226,
+        "job_id": 64,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "status": "done",
+        "created_at": "2026-05-05T03:45:36"
+      },
+      {
+        "id": 225,
+        "job_id": 64,
+        "agent_name": "Upsilon",
+        "agent_role": "Backend",
+        "status": "done",
+        "created_at": "2026-05-05T03:45:31"
+      },
+      {
+        "id": 224,
+        "job_id": 63,
+        "agent_name": "Epsilon",
+        "agent_role": "Reviewer",
+        "status": "done",
+        "created_at": "2026-05-05T03:34:48"
+      },
+      {
+        "id": 223,
+        "job_id": 63,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "status": "done",
+        "created_at": "2026-05-05T03:34:45"
+      },
+      {
+        "id": 222,
+        "job_id": 63,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "status": "done",
+        "created_at": "2026-05-05T03:34:38"
+      },
+      {
+        "id": 221,
+        "job_id": 63,
+        "agent_name": "Upsilon",
+        "agent_role": "Backend",
+        "status": "done",
+        "created_at": "2026-05-05T03:34:35"
+      },
+      {
+        "id": 220,
+        "job_id": 62,
+        "agent_name": "Epsilon",
+        "agent_role": "Reviewer",
+        "status": "done",
+        "created_at": "2026-05-05T03:24:03"
+      },
+      {
+        "id": 219,
+        "job_id": 62,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "status": "done",
+        "created_at": "2026-05-05T03:23:56"
+      },
+      {
+        "id": 218,
+        "job_id": 62,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "status": "done",
+        "created_at": "2026-05-05T03:23:50"
+      },
+      {
+        "id": 217,
+        "job_id": 62,
+        "agent_name": "Upsilon",
+        "agent_role": "Backend",
+        "status": "done",
+        "created_at": "2026-05-05T03:23:44"
+      },
+      {
+        "id": 216,
+        "job_id": 61,
+        "agent_name": "Epsilon",
+        "agent_role": "Reviewer",
+        "status": "done",
+        "created_at": "2026-05-05T03:13:09"
+      },
+      {
+        "id": 215,
+        "job_id": 61,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "status": "done",
+        "created_at": "2026-05-05T03:13:00"
+      },
+      {
+        "id": 214,
+        "job_id": 61,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "status": "done",
+        "created_at": "2026-05-05T03:12:53"
+      },
+      {
+        "id": 213,
+        "job_id": 61,
+        "agent_name": "Upsilon",
+        "agent_role": "Backend",
+        "status": "done",
+        "created_at": "2026-05-05T03:12:51"
+      },
+      {
+        "id": 212,
+        "job_id": 60,
+        "agent_name": "Epsilon",
+        "agent_role": "Reviewer",
+        "status": "done",
+        "created_at": "2026-05-05T03:02:31"
+      },
+      {
+        "id": 211,
+        "job_id": 60,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "status": "done",
+        "created_at": "2026-05-05T03:02:21"
+      },
+      {
+        "id": 210,
+        "job_id": 60,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "status": "done",
+        "created_at": "2026-05-05T03:02:13"
+      },
+      {
+        "id": 209,
+        "job_id": 60,
+        "agent_name": "Upsilon",
+        "agent_role": "Backend",
+        "status": "done",
+        "created_at": "2026-05-05T03:01:58"
+      },
+      {
+        "id": 208,
+        "job_id": 59,
+        "agent_name": "Epsilon",
+        "agent_role": "Reviewer",
+        "status": "done",
+        "created_at": "2026-05-05T02:51:25"
+      },
+      {
+        "id": 207,
+        "job_id": 59,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "status": "done",
+        "created_at": "2026-05-05T02:51:16"
+      },
+      {
+        "id": 206,
+        "job_id": 59,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "status": "done",
+        "created_at": "2026-05-05T02:51:11"
+      },
+      {
+        "id": 205,
+        "job_id": 59,
+        "agent_name": "Upsilon",
+        "agent_role": "Backend",
+        "status": "done",
+        "created_at": "2026-05-05T02:51:01"
+      }
+    ],
+    "recent_jobs": [
+      {
+        "id": 70,
+        "status": "done",
+        "model": "qwen2.5:3b-instruct",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_70_2026-05-12T18-52-51-788Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_70_2026-05-12T18-52-51-788Z_patches.json",
+        "created_at": "2026-05-12T21:52:05",
+        "updated_at": "2026-05-12T21:52:51"
+      },
+      {
+        "id": 69,
+        "status": "done",
+        "model": "qwen2.5:3b-instruct",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_69_2026-05-11T00-22-00-583Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_69_2026-05-11T00-22-00-583Z_patches.json",
+        "created_at": "2026-05-11T03:21:05",
+        "updated_at": "2026-05-11T03:22:00"
+      },
+      {
+        "id": 68,
+        "status": "running",
+        "model": "qwen2.5:3b-instruct",
+        "report_path": null,
+        "patch_json_path": null,
+        "created_at": "2026-05-09T03:53:56",
+        "updated_at": "2026-05-09T03:53:56"
+      },
+      {
+        "id": 67,
+        "status": "running",
+        "model": "qwen2.5:3b-instruct",
+        "report_path": null,
+        "patch_json_path": null,
+        "created_at": "2026-05-07T03:28:13",
+        "updated_at": "2026-05-07T03:28:13"
+      },
+      {
+        "id": 66,
+        "status": "running",
+        "model": "qwen2.5:3b-instruct",
+        "report_path": null,
+        "patch_json_path": null,
+        "created_at": "2026-05-07T03:10:53",
+        "updated_at": "2026-05-07T03:10:53"
+      },
+      {
+        "id": 65,
+        "status": "running",
+        "model": "qwen2.5:3b-instruct",
+        "report_path": null,
+        "patch_json_path": null,
+        "created_at": "2026-05-07T03:10:23",
+        "updated_at": "2026-05-07T03:10:23"
+      },
+      {
+        "id": 64,
+        "status": "running",
+        "model": "llama3:latest",
+        "report_path": null,
+        "patch_json_path": null,
+        "created_at": "2026-05-05T03:45:21",
+        "updated_at": "2026-05-05T03:45:21"
+      },
+      {
+        "id": 63,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_63_2026-05-05T00-34-51-327Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_63_2026-05-05T00-34-51-327Z_patches.json",
+        "created_at": "2026-05-05T03:34:27",
+        "updated_at": "2026-05-05T03:34:51"
+      },
+      {
+        "id": 62,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_62_2026-05-05T00-24-14-164Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_62_2026-05-05T00-24-14-164Z_patches.json",
+        "created_at": "2026-05-05T03:23:33",
+        "updated_at": "2026-05-05T03:24:14"
+      },
+      {
+        "id": 61,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_61_2026-05-05T00-13-14-395Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_61_2026-05-05T00-13-14-395Z_patches.json",
+        "created_at": "2026-05-05T03:12:39",
+        "updated_at": "2026-05-05T03:13:14"
+      },
+      {
+        "id": 60,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_60_2026-05-05T00-02-36-268Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_60_2026-05-05T00-02-36-268Z_patches.json",
+        "created_at": "2026-05-05T03:01:46",
+        "updated_at": "2026-05-05T03:02:36"
+      },
+      {
+        "id": 59,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_59_2026-05-04T23-51-29-867Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_59_2026-05-04T23-51-29-867Z_patches.json",
+        "created_at": "2026-05-05T02:50:49",
+        "updated_at": "2026-05-05T02:51:29"
+      },
+      {
+        "id": 58,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_58_2026-05-04T23-39-18-879Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_58_2026-05-04T23-39-18-879Z_patches.json",
+        "created_at": "2026-05-05T02:39:01",
+        "updated_at": "2026-05-05T02:39:18"
+      },
+      {
+        "id": 57,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_57_2026-05-04T23-28-48-821Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_57_2026-05-04T23-28-48-821Z_patches.json",
+        "created_at": "2026-05-05T02:28:15",
+        "updated_at": "2026-05-05T02:28:48"
+      },
+      {
+        "id": 56,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_56_2026-05-04T23-17-49-703Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_56_2026-05-04T23-17-49-703Z_patches.json",
+        "created_at": "2026-05-05T02:17:12",
+        "updated_at": "2026-05-05T02:17:49"
+      },
+      {
+        "id": 55,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_55_2026-05-04T23-09-40-395Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_55_2026-05-04T23-09-40-395Z_patches.json",
+        "created_at": "2026-05-05T02:05:52",
+        "updated_at": "2026-05-05T02:09:40"
+      },
+      {
+        "id": 54,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_54_2026-05-04T22-55-43-421Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_54_2026-05-04T22-55-43-421Z_patches.json",
+        "created_at": "2026-05-05T01:54:51",
+        "updated_at": "2026-05-05T01:55:43"
+      },
+      {
+        "id": 53,
+        "status": "done",
+        "model": "qwen3-coder:30b",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_53_2026-05-04T22-50-59-649Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_53_2026-05-04T22-50-59-649Z_patches.json",
+        "created_at": "2026-05-05T01:44:39",
+        "updated_at": "2026-05-05T01:50:59"
+      },
+      {
+        "id": 52,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_52_2026-05-04T22-44-01-128Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_52_2026-05-04T22-44-01-128Z_patches.json",
+        "created_at": "2026-05-05T01:42:39",
+        "updated_at": "2026-05-05T01:44:01"
+      },
+      {
+        "id": 51,
+        "status": "done",
+        "model": "llama3:latest",
+        "report_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_reports\\dispatch_v3_job_51_2026-05-04T22-32-06-668Z.md",
+        "patch_json_path": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\agent_patches\\dispatch_v3_job_51_2026-05-04T22-32-06-668Z_patches.json",
+        "created_at": "2026-05-05T01:31:25",
+        "updated_at": "2026-05-05T01:32:06"
+      }
+    ],
+    "recent_patches": [
+      {
+        "id": 51,
+        "job_id": 53,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": ".claude/agents/gsd-advisor-researcher.md",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-05T01:48:07",
+        "reason_preview": "The documentation lookup section needs to be more explicit about how the fallback mechanism works in practice to ensure agents can reliably fetch documentation even when MCP tools are stripped."
+      },
+      {
+        "id": 50,
+        "job_id": 0,
+        "agent_name": "FRIDAY",
+        "agent_role": "Manual",
+        "target_file": "friday_brain.py",
+        "risk": "Low",
+        "approved": 1,
+        "applied": 1,
+        "created_at": "2026-05-03T04:32:55",
+        "reason_preview": "Update FRIDAY Brain version from 0.1 to 0.2"
+      },
+      {
+        "id": 49,
+        "job_id": 18,
+        "agent_name": "Upsilon",
+        "agent_role": "Backend",
+        "target_file": "friday_chat_app.py",
+        "risk": "Low",
+        "approved": 0,
+        "applied": 0,
+        "created_at": "2026-05-03T02:52:44",
+        "reason_preview": "No significant code changes were made to the assigned file."
+      },
+      {
+        "id": 48,
+        "job_id": 17,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "target_file": "friday_local_gateway.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-03T02:45:59",
+        "reason_preview": "Protect sensitive data and prevent unauthorized access"
+      },
+      {
+        "id": 47,
+        "job_id": 17,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "target_file": "friday_chat_app.py",
+        "risk": "Low",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-03T02:45:59",
+        "reason_preview": "Prevent potential SQL injection or XSS attacks"
+      },
+      {
+        "id": 46,
+        "job_id": 16,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "mnt/agents/output/app/scripts/agent-dispatch-v3.mjs",
+        "risk": "Low",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-03T02:40:36",
+        "reason_preview": "To ensure the security of environment variables, they should be validated before use."
+      },
+      {
+        "id": 45,
+        "job_id": 15,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": ".claude/settings.local.json",
+        "risk": "Low",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-03T02:38:58",
+        "reason_preview": "Restrict permissions to only necessary commands"
+      },
+      {
+        "id": 44,
+        "job_id": 14,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": "mt5_ai/jarvis_assistant.py",
+        "risk": "Medium",
+        "approved": 0,
+        "applied": 0,
+        "created_at": "2026-05-03T02:35:12",
+        "reason_preview": "To improve code readability and maintainability."
+      },
+      {
+        "id": 43,
+        "job_id": 14,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": "scripts/_bootstrap.py",
+        "risk": "Low",
+        "approved": 0,
+        "applied": 0,
+        "created_at": "2026-05-03T02:35:12",
+        "reason_preview": "To ensure the _bootstrap module is functioning correctly."
+      },
+      {
+        "id": 42,
+        "job_id": 12,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\scripts\\agent-dispatch-v3.mjs",
+        "risk": "Low",
+        "approved": 0,
+        "applied": 0,
+        "created_at": "2026-05-03T02:25:09",
+        "reason_preview": "To ensure code respects agent roles and target files strictly."
+      },
+      {
+        "id": 41,
+        "job_id": 12,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app\\scripts\\agent-dispatch-v3.mjs",
+        "risk": "Medium",
+        "approved": 0,
+        "applied": 0,
+        "created_at": "2026-05-03T02:25:02",
+        "reason_preview": "The script should be modified to adhere strictly to the DISPATCH_AGENT_ROLES and target files."
+      },
+      {
+        "id": 40,
+        "job_id": 11,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/agents/coordinator.py",
+        "risk": "Medium",
+        "approved": 0,
+        "applied": 0,
+        "created_at": "2026-05-03T02:18:02",
+        "reason_preview": "to improve the coordination logic"
+      },
+      {
+        "id": 39,
+        "job_id": 11,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "scripts/run_server.py",
+        "risk": "Low",
+        "approved": 0,
+        "applied": 0,
+        "created_at": "2026-05-03T02:18:02",
+        "reason_preview": "to ensure proper initialization of the server"
+      },
+      {
+        "id": 38,
+        "job_id": 9,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "selected_code/src/mt5_ai/config.py",
+        "risk": "Low",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-03T02:14:43",
+        "reason_preview": "تحسين إدارة البيانات من خلال تحسين استخدام متغيرات البيئة."
+      },
+      {
+        "id": 37,
+        "job_id": 9,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/agents/orchestrator.py",
+        "risk": "Low",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-03T02:14:43",
+        "reason_preview": "تحسين أداء تحليل السوق من خلال تقليل التكرار أو تحسين الخوارزميات."
+      },
+      {
+        "id": 36,
+        "job_id": 9,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/agents/coordinator.py",
+        "risk": "Low",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-03T02:14:43",
+        "reason_preview": "تحسين آلية التحكم في الصفقات المفتوحة لتجنب التداخل بين الوكلاء."
+      },
+      {
+        "id": 35,
+        "job_id": 9,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/agents/agent_runner.py",
+        "risk": "Low",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-03T02:14:43",
+        "reason_preview": "تحسين إدارة التكرار في تحليل السوق لتجنب الحمل الزائد على النظام."
+      },
+      {
+        "id": 34,
+        "job_id": 6,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": "src/mt5_ai/mt5_gateway.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T06:15:50",
+        "reason_preview": "الدالة send_demo_pending_order تحتاج لإكمال تنفيذها لإرسال الطلب إلى MT5"
+      },
+      {
+        "id": 33,
+        "job_id": 6,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/friday_auto_trader.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T06:13:45",
+        "reason_preview": "لتمرير ignore_spread=True عند استخدام scalping profile في الوضع الورقي/demo"
+      },
+      {
+        "id": 32,
+        "job_id": 6,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/entry_agent.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T06:13:45",
+        "reason_preview": "لتمكين scalping في الوضع الورقي/demo دون قيود السبريد"
+      },
+      {
+        "id": 31,
+        "job_id": 5,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "scripts/test_pivot_engine.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:59:54",
+        "reason_preview": "إضافة تحقق من صحة البيانات الواردة من ZMQ قبل معالجتها"
+      },
+      {
+        "id": 30,
+        "job_id": 5,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "scripts/test_send_real.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:59:54",
+        "reason_preview": "إضافة تحقق من صحة البيانات الواردة من ZMQ قبل معالجتها"
+      },
+      {
+        "id": 29,
+        "job_id": 5,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "scripts/test_client.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:59:54",
+        "reason_preview": "إضافة تحقق من صحة البيانات الواردة من ZMQ قبل معالجتها"
+      },
+      {
+        "id": 28,
+        "job_id": 5,
+        "agent_name": "Gamma",
+        "agent_role": "Debugger",
+        "target_file": "tests/test_send_real.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:54:57",
+        "reason_preview": "يجب إضافة تحقق من صحة البيانات المرسلة والمستلمة من الخادم ZMQ لضمان سلامة التفاعل مع النظام."
+      },
+      {
+        "id": 27,
+        "job_id": 5,
+        "agent_name": "Gamma",
+        "agent_role": "Debugger",
+        "target_file": "tests/test_client.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:54:57",
+        "reason_preview": "يجب إضافة تحقق من صحة البيانات المرسلة والمستلمة من الخادم ZMQ لضمان سلامة التفاعل مع النظام."
+      },
+      {
+        "id": 26,
+        "job_id": 5,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": "src/mt5_ai/execution.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:51:34",
+        "reason_preview": "تحتاج إلى تعديل تنفيذ الأوامر لضمان التوافق مع سياسات الأمان الجديدة"
+      },
+      {
+        "id": 25,
+        "job_id": 5,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/server.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:49:38",
+        "reason_preview": "إضافة تحقق من صحة بيانات الإدخال قبل معالجتها"
+      },
+      {
+        "id": 24,
+        "job_id": 5,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/server.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:49:38",
+        "reason_preview": "إضافة تحقق من صحة مسار النموذج وتحميله بشكل صحيح"
+      },
+      {
+        "id": 23,
+        "job_id": 3,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "target_file": "selected_code/src/mt5_ai/execution.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:36:35",
+        "reason_preview": "إضافة تحقق من صحة المدخلات لضمان سلامة تنفيذ الأوامر"
+      },
+      {
+        "id": 22,
+        "job_id": 3,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "target_file": "selected_code/src/mt5_ai/execution.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:36:35",
+        "reason_preview": "إضافة تحقق من صحة المدخلات لضمان سلامة تنفيذ الأوامر"
+      },
+      {
+        "id": 21,
+        "job_id": 3,
+        "agent_name": "Iota",
+        "agent_role": "Security",
+        "target_file": "selected_code/src/mt5_ai/execution.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:36:35",
+        "reason_preview": "إضافة تحقق من صحة المدخلات لضمان سلامة تنفيذ الأوامر"
+      },
+      {
+        "id": 20,
+        "job_id": 3,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "scripts/test_pipeline_features.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:31:34",
+        "reason_preview": "الوظيفة main غير مكتملة، مما يؤدي إلى خطأ في التشغيل"
+      },
+      {
+        "id": 19,
+        "job_id": 3,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "scripts/test_staging.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:31:34",
+        "reason_preview": "الوظيفة test_staged_artifacts_valid غير مكتملة، مما يؤدي إلى خطأ في التشغيل"
+      },
+      {
+        "id": 18,
+        "job_id": 3,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "scripts/visual_backtest.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:31:34",
+        "reason_preview": "الوظيفة backtest غير مكتملة، مما يؤدي إلى خطأ في التشغيل"
+      },
+      {
+        "id": 17,
+        "job_id": 3,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "scripts/smc_backtest.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:31:34",
+        "reason_preview": "الوظيفة context_score غير مكتملة، مما يؤدي إلى خطأ في التشغيل"
+      },
+      {
+        "id": 16,
+        "job_id": 3,
+        "agent_name": "Delta",
+        "agent_role": "Tester",
+        "target_file": "scripts/test_phase0.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:31:34",
+        "reason_preview": "الوظيفة test_adx غير مكتملة، مما يؤدي إلى خطأ في التشغيل"
+      },
+      {
+        "id": 15,
+        "job_id": 3,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": "selected_code/src/mt5_ai/execution.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:24:50",
+        "reason_preview": "تحتاج إلى تعديل لتحديد الأوامر الآمنة"
+      },
+      {
+        "id": 14,
+        "job_id": 3,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": "src/mt5_ai/agents/agent_runner.py",
+        "risk": "High",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:24:50",
+        "reason_preview": "تحتاج إلى تعديل لربط OpenJarvis مع Ollama"
+      },
+      {
+        "id": 13,
+        "job_id": 3,
+        "agent_name": "Beta",
+        "agent_role": "Coder",
+        "target_file": "scripts/run_server.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:24:50",
+        "reason_preview": "تحتاج إلى تعديل مسار البوتستراب لدعم OpenJarvis"
+      },
+      {
+        "id": 12,
+        "job_id": 3,
+        "agent_name": "Alpha",
+        "agent_role": "Architect",
+        "target_file": "src/mt5_ai/agents/orchestrator.py",
+        "risk": "Medium",
+        "approved": 1,
+        "applied": 0,
+        "created_at": "2026-05-02T05:19:49",
+        "reason_preview": "تحتاج إلى تعديلات لدعم اللغة العربية في الرسائل والواجهة."
+      }
+    ],
+    "accountability": {
+      "Epsilon/Reviewer": {
+        "agent": "Epsilon",
+        "role": "Reviewer",
+        "score": 1.3000000000000003,
+        "done": 10,
+        "failed": 0,
+        "running": 0,
+        "punishments": 0,
+        "rewards": 10,
+        "last_action": "reward_done_job_54",
+        "_seen_run_224": true,
+        "_seen_run_220": true,
+        "_seen_run_216": true,
+        "_seen_run_212": true,
+        "_seen_run_208": true,
+        "_seen_run_204": true,
+        "_seen_run_200": true,
+        "_seen_run_196": true,
+        "_seen_run_192": true,
+        "_seen_run_188": true
+      },
+      "Delta/Tester": {
+        "agent": "Delta",
+        "role": "Tester",
+        "score": 0.98,
+        "done": 10,
+        "failed": 0,
+        "running": 0,
+        "punishments": 8,
+        "rewards": 10,
+        "last_action": "punish_risky_patch_16",
+        "_seen_run_223": true,
+        "_seen_run_219": true,
+        "_seen_run_215": true,
+        "_seen_run_211": true,
+        "_seen_run_207": true,
+        "_seen_run_203": true,
+        "_seen_run_199": true,
+        "_seen_run_195": true,
+        "_seen_run_191": true,
+        "_seen_run_187": true,
+        "_seen_patch_46": true,
+        "_seen_patch_45": true,
+        "_seen_patch_31": true,
+        "_seen_patch_30": true,
+        "_seen_patch_29": true,
+        "_seen_patch_20": true,
+        "_seen_patch_19": true,
+        "_seen_patch_18": true,
+        "_seen_patch_17": true,
+        "_seen_patch_16": true
+      },
+      "Iota/Security": {
+        "agent": "Iota",
+        "role": "Security",
+        "score": 1.1400000000000001,
+        "done": 10,
+        "failed": 0,
+        "running": 0,
+        "punishments": 4,
+        "rewards": 10,
+        "last_action": "punish_risky_patch_21",
+        "_seen_run_222": true,
+        "_seen_run_218": true,
+        "_seen_run_214": true,
+        "_seen_run_210": true,
+        "_seen_run_206": true,
+        "_seen_run_202": true,
+        "_seen_run_198": true,
+        "_seen_run_194": true,
+        "_seen_run_190": true,
+        "_seen_run_186": true,
+        "_seen_patch_48": true,
+        "_seen_patch_47": true,
+        "_seen_patch_23": true,
+        "_seen_patch_22": true,
+        "_seen_patch_21": true
+      },
+      "Upsilon/Backend": {
+        "agent": "Upsilon",
+        "role": "Backend",
+        "score": 1.3000000000000003,
+        "done": 10,
+        "failed": 0,
+        "running": 0,
+        "punishments": 0,
+        "rewards": 10,
+        "last_action": "reward_done_job_54",
+        "_seen_run_221": true,
+        "_seen_run_217": true,
+        "_seen_run_213": true,
+        "_seen_run_209": true,
+        "_seen_run_205": true,
+        "_seen_run_201": true,
+        "_seen_run_197": true,
+        "_seen_run_193": true,
+        "_seen_run_189": true,
+        "_seen_run_185": true,
+        "_seen_patch_49": true
+      },
+      "Beta/Coder": {
+        "agent": "Beta",
+        "role": "Coder",
+        "score": 0.7199999999999998,
+        "done": 0,
+        "failed": 0,
+        "running": 0,
+        "punishments": 7,
+        "rewards": 0,
+        "last_action": "punish_risky_patch_13",
+        "_seen_patch_51": true,
+        "_seen_patch_44": true,
+        "_seen_patch_43": true,
+        "_seen_patch_42": true,
+        "_seen_patch_34": true,
+        "_seen_patch_26": true,
+        "_seen_patch_15": true,
+        "_seen_patch_14": true,
+        "_seen_patch_13": true
+      },
+      "FRIDAY/Manual": {
+        "agent": "FRIDAY",
+        "role": "Manual",
+        "score": 1.05,
+        "done": 0,
+        "failed": 0,
+        "running": 0,
+        "punishments": 0,
+        "rewards": 1,
+        "last_action": "reward_applied_patch_50",
+        "_seen_patch_50": true
+      },
+      "Alpha/Architect": {
+        "agent": "Alpha",
+        "role": "Architect",
+        "score": 0.7199999999999998,
+        "done": 0,
+        "failed": 0,
+        "running": 0,
+        "punishments": 7,
+        "rewards": 0,
+        "last_action": "punish_risky_patch_12",
+        "_seen_patch_41": true,
+        "_seen_patch_40": true,
+        "_seen_patch_39": true,
+        "_seen_patch_38": true,
+        "_seen_patch_37": true,
+        "_seen_patch_36": true,
+        "_seen_patch_35": true,
+        "_seen_patch_33": true,
+        "_seen_patch_32": true,
+        "_seen_patch_25": true,
+        "_seen_patch_24": true,
+        "_seen_patch_12": true
+      },
+      "Gamma/Debugger": {
+        "agent": "Gamma",
+        "role": "Debugger",
+        "score": 0.9199999999999999,
+        "done": 0,
+        "failed": 0,
+        "running": 0,
+        "punishments": 2,
+        "rewards": 0,
+        "last_action": "punish_risky_patch_27",
+        "_seen_patch_28": true,
+        "_seen_patch_27": true
+      }
+    }
+  },
+  "autopilot": {
+    "mode": "safe_autopilot",
+    "started_at": "2026-05-10T03:57:39",
+    "updated_at": "2026-07-10T22:00:03",
+    "cycles": 9831,
+    "last_health": {
+      "gateway": {
+        "ok": true,
+        "sample": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FRIDAY Local Gateway\",\"version\":\"1.2.0\"},\"paths\":{\"/health\":{\"get\":{\"summary\":\"Health\",\"operationId\":\"health_health_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":true,\"type\":\"object\",\"t"
+      },
+      "chat": {
+        "ok": true,
+        "sample": "\n<!doctype html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n  <meta charset=\"utf-8\"/>\n  <title>FRIDAY Jarvis Chat</title>\n  <style>\n    body {\n      margin: 0;\n      font-family: Arial, sans-serif;\n      background: #0f1117;\n      color: #f5f5f5;\n    }\n\n    .wrap {\n      max-width: 1050px;\n      margin: auto"
+      },
+      "scalper_dashboard": {
+        "ok": true,
+        "sample": "{\"ok\":true,\"cached\":false,\"candles\":{\"symbol\":\"XAUUSDm\",\"timeframe\":\"M1\",\"candles\":[{\"time\":1783707060,\"open\":4104.212,\"high\":4104.612,\"low\":4103.59,\"close\":4104.123},{\"time\":1783707120,\"open\":4104.036,\"high\":4104.996,\"low\":4103.696,\"close\":4103.91},{\"time\":1783707180,\"open\":4103.975,\"high\":4104.536"
+      },
+      "agents_browser": {
+        "ok": true,
+        "sample": "{\"brain\":{\"version\":\"0.2\",\"generated_at\":\"2026-05-15T03:02:48.469185\",\"jobs_stored\":30,\"patches_stored\":51,\"agent_runs_stored\":100,\"latest_job\":{},\"patch_quality\":{\"good\":0,\"fair\":0,\"poor\":0},\"rules\":{\"no_live_trading\":true,\"no_file_delete\":true,\"patch_review_before_apply\":true,\"apply_requires_backu"
+      }
+    },
+    "last_actions": [
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 44,
+        "ok": false,
+        "output": "{\"detail\":\"Patch #44 is empty and cannot be approved\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 43,
+        "ok": false,
+        "output": "{\"detail\":\"Patch #43 is empty and cannot be approved\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 42,
+        "ok": false,
+        "output": "{\"detail\":\"Patch #42 is empty and cannot be approved\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 41,
+        "ok": false,
+        "output": "{\"detail\":\"Patch #41 is empty and cannot be approved\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 40,
+        "ok": false,
+        "output": "{\"detail\":\"Patch #40 is empty and cannot be approved\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 39,
+        "ok": false,
+        "output": "{\"detail\":\"Patch #39 is empty and cannot be approved\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 38,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":38,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 38,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 37,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":37,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 37,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/orchestrator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 36,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":36,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 36,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/coordinator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 35,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":35,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 35,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/agent_runner.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 34,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":34,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 34,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/mt5_gateway.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 33,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":33,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 33,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/friday_auto_trader.py\",\"diff_path_not_allowed:src/mt5_ai/friday_auto_trader.py\"],\"touched\":[\"src/mt5_ai/friday_auto_trader.py\"]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 32,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":32,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 32,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/entry_agent.py\",\"diff_path_not_allowed:src/mt5_ai/entry_agent.py\"],\"touched\":[\"src/mt5_ai/entry_agent.py\"]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 31,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":31,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 31,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_pivot_engine.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 30,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":30,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 30,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_send_real.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "approve_patch",
+        "patch_id": 29,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":29,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:01",
+        "type": "apply_patch",
+        "patch_id": 29,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_client.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 28,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":28,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 28,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:tests/test_send_real.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 27,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":27,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 27,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:tests/test_client.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 26,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":26,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 26,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 25,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":25,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 25,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 24,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":24,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 24,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 23,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":23,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 23,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 22,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":22,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 22,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 21,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":21,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 21,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 20,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":20,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 20,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_pipeline_features.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 19,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":19,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 19,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_staging.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 18,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":18,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 18,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 17,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":17,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 17,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 16,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":16,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 16,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_phase0.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 15,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":15,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 15,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 14,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":14,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "apply_patch",
+        "patch_id": 14,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/agent_runner.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:02",
+        "type": "approve_patch",
+        "patch_id": 13,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":13,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 13,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/run_server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 12,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":12,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 12,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/orchestrator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 11,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":11,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 11,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 10,
+        "ok": false,
+        "output": "{\"detail\":\"Patch #10 is empty and cannot be approved\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 9,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":9,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 9,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"diff_path_not_allowed:scripts/smc_backtest.py\"],\"touched\":[\"scripts/smc_backtest.py\"]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 8,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":8,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 8,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"diff_path_not_allowed:scripts/visual_backtest.py\"],\"touched\":[\"scripts/visual_backtest.py\"]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 7,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":7,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 7,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 6,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":6,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 6,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 5,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":5,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 5,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 4,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":4,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 4,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 3,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":3,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 3,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "approve_patch",
+        "patch_id": 1,
+        "ok": true,
+        "output": "{\"status\":\"approved\",\"patch_id\":1,\"note\":\"Patch approved only. It was not applied.\"}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "apply_patch",
+        "patch_id": 1,
+        "ok": false,
+        "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/mt5_gateway.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+      },
+      {
+        "time": "2026-07-10T22:00:03",
+        "type": "dispatch_compile_repair",
+        "files": [
+          "friday_project_map.py",
+          "friday_evolution_memory.py"
+        ],
+        "ok": false,
+        "output": "dispatch_already_running"
+      }
+    ],
+    "auto_apply_enabled": true,
+    "safe_edit_allowlist": [
+      "friday_agents_browser.py",
+      "friday_brain.py",
+      "friday_chat_app.py",
+      "friday_evolution_memory.py",
+      "friday_genome_status_export.py",
+      "friday_local_gateway.py",
+      "friday_project_map.py",
+      "friday_scalper_live_dashboard.py",
+      "mnt/agents/output/app/scripts/agent-dispatch-v3.mjs"
+    ],
+    "blocked_auto_apply_keywords": [
+      "auto_trader",
+      "execution.py",
+      "live_paper_trader",
+      "mt5_gateway",
+      "order_send",
+      "send_demo_market_order",
+      "send_demo_pending_order",
+      "send_market_order"
+    ],
+    "last_compile": {
+      "friday_chat_app.py": {
+        "ok": true,
+        "output": ""
+      },
+      "friday_local_gateway.py": {
+        "ok": true,
+        "output": ""
+      },
+      "friday_brain.py": {
+        "ok": true,
+        "output": ""
+      },
+      "friday_project_map.py": {
+        "ok": false,
+        "output": "missing"
+      },
+      "friday_scalper_live_dashboard.py": {
+        "ok": true,
+        "output": ""
+      },
+      "friday_agents_browser.py": {
+        "ok": true,
+        "output": ""
+      },
+      "friday_evolution_memory.py": {
+        "ok": false,
+        "output": "missing"
+      },
+      "friday_genome_status_export.py": {
+        "ok": true,
+        "output": ""
+      }
+    }
+  },
+  "logs": {
+    "dispatch_tail": "\n> my-app@0.0.0 dispatch:v3\n> node scripts/agent-dispatch-v3.mjs AutoRepair service health failure: agents_browser. اقرأ فقط أولاً. لا تحذف. لا تلمس ملفات التداول أو MT5 الحساسة. إذا وجدت تعديلًا حقيقيًا، اقترح unified diff فقط على الملفات المحددة والآمنة. لا تقترح نصائح عامة. لا تقترح patch فارغ. اختبر py_compile فقط. الملفات المستهدفة: friday_agents_browser.py\n\nFRIDAY AGENT DISPATCH V3\n------------------------\nModel: llama3:latest\nContext: 4096\nMax agents: 4\nFiles per agent: 3\nChars per file: 5000\nMT5 path: C:\\Users\\Radhi\\MT5\nObjective: AutoRepair service health failure: agents_browser. اقرأ فقط أولاً. لا تحذف. لا تلمس ملفات التداول أو MT5 الحساسة. إذا وجدت تعديلًا حقيقيًا، اقترح unified diff فقط على الملفات المحددة والآمنة. لا تقترح نصائح عامة. لا تقترح patch فارغ. اختبر py_compile فقط. الملفات المستهدفة: friday_agents_browser.py\nRequested agent roles: Backend, Security, Tester, Reviewer\nRequested target files: friday_agents_browser.py\n\nError: connect ECONNREFUSED 127.0.0.1:3306\n    at main (file:///C:/Users/Radhi/MT5/mnt/agents/output/app/scripts/agent-dispatch-v3.mjs:763:26)\n    at file:///C:/Users/Radhi/MT5/mnt/agents/output/app/scripts/agent-dispatch-v3.mjs:832:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  errno: -4078,\n  code: 'ECONNREFUSED',\n  syscall: 'connect',\n  address: '127.0.0.1',\n  port: 3306,\n  fatal: true\n}",
+    "autopilot_tail": "[2026-07-10T22:00:01] AUTO PATCH: #40 src/mt5_ai/agents/coordinator.py\n[2026-07-10T22:00:01] Approve failed for patch #40: {\"detail\":\"Patch #40 is empty and cannot be approved\"}\n[2026-07-10T22:00:01] AUTO PATCH: #39 scripts/run_server.py\n[2026-07-10T22:00:01] Approve failed for patch #39: {\"detail\":\"Patch #39 is empty and cannot be approved\"}\n[2026-07-10T22:00:01] AUTO PATCH: #38 selected_code/src/mt5_ai/config.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #38: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:01] AUTO PATCH: #37 src/mt5_ai/agents/orchestrator.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #37: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/orchestrator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:01] AUTO PATCH: #36 src/mt5_ai/agents/coordinator.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #36: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/coordinator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:01] AUTO PATCH: #35 src/mt5_ai/agents/agent_runner.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #35: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/agent_runner.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:01] AUTO PATCH: #34 src/mt5_ai/mt5_gateway.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #34: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/mt5_gateway.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:01] AUTO PATCH: #33 src/mt5_ai/friday_auto_trader.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #33: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/friday_auto_trader.py\",\"diff_path_not_allowed:src/mt5_ai/friday_auto_trader.py\"],\"touched\":[\"src/mt5_ai/friday_auto_trader.py\"]}}\n[2026-07-10T22:00:01] AUTO PATCH: #32 src/mt5_ai/entry_agent.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #32: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/entry_agent.py\",\"diff_path_not_allowed:src/mt5_ai/entry_agent.py\"],\"touched\":[\"src/mt5_ai/entry_agent.py\"]}}\n[2026-07-10T22:00:01] AUTO PATCH: #31 scripts/test_pivot_engine.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #31: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_pivot_engine.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:01] AUTO PATCH: #30 scripts/test_send_real.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #30: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_send_real.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:01] AUTO PATCH: #29 scripts/test_client.py\n[2026-07-10T22:00:01] PATCH APPLY FAILED #29: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_client.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:01] AUTO PATCH: #28 tests/test_send_real.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #28: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:tests/test_send_real.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #27 tests/test_client.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #27: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:tests/test_client.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #26 src/mt5_ai/execution.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #26: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #25 src/mt5_ai/server.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #25: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #24 src/mt5_ai/server.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #24: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #23 selected_code/src/mt5_ai/execution.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #23: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #22 selected_code/src/mt5_ai/execution.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #22: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #21 selected_code/src/mt5_ai/execution.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #21: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #20 scripts/test_pipeline_features.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #20: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_pipeline_features.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #19 scripts/test_staging.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #19: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_staging.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #18 scripts/visual_backtest.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #18: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #17 scripts/smc_backtest.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #17: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #16 scripts/test_phase0.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #16: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_phase0.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #15 selected_code/src/mt5_ai/execution.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #15: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #14 src/mt5_ai/agents/agent_runner.py\n[2026-07-10T22:00:02] PATCH APPLY FAILED #14: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/agent_runner.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:02] AUTO PATCH: #13 scripts/run_server.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #13: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/run_server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] AUTO PATCH: #12 src/mt5_ai/agents/orchestrator.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #12: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/orchestrator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] AUTO PATCH: #11 src/mt5_ai/config.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #11: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] AUTO PATCH: #10 scripts/visual_backtest.py\n[2026-07-10T22:00:03] Approve failed for patch #10: {\"detail\":\"Patch #10 is empty and cannot be approved\"}\n[2026-07-10T22:00:03] AUTO PATCH: #9 scripts/smc_backtest.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #9: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"diff_path_not_allowed:scripts/smc_backtest.py\"],\"touched\":[\"scripts/smc_backtest.py\"]}}\n[2026-07-10T22:00:03] AUTO PATCH: #8 scripts/visual_backtest.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #8: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"diff_path_not_allowed:scripts/visual_backtest.py\"],\"touched\":[\"scripts/visual_backtest.py\"]}}\n[2026-07-10T22:00:03] AUTO PATCH: #7 scripts/visual_backtest.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #7: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] AUTO PATCH: #6 scripts/smc_backtest.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #6: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] AUTO PATCH: #5 selected_code/src/mt5_ai/config.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #5: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] AUTO PATCH: #4 scripts/smc_backtest.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #4: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] AUTO PATCH: #3 scripts/visual_backtest.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #3: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] AUTO PATCH: #1 selected_code/src/mt5_ai/mt5_gateway.py\n[2026-07-10T22:00:03] PATCH APPLY FAILED #1: {\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/mt5_gateway.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}\n[2026-07-10T22:00:03] compile repair dispatch: ok=False files=['friday_project_map.py', 'friday_evolution_memory.py']\n[2026-07-10T22:00:03] cycle=9831 health={'gateway': True, 'chat': True, 'scalper_dashboard': True, 'agents_browser': True}"
+  }
+}

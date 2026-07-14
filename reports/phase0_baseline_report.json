@@ -1,0 +1,89 @@
+{
+  "generated": "2026-04-27",
+  "phase": "Phase 0 baseline",
+  "bars": 33031,
+  "adx": {
+    "label": "ADX_old (range/close rolling)",
+    "min": 0.0001,
+    "max": 0.0077,
+    "mean": 0.0007,
+    "std": 0.0005,
+    "in_0_100_pct": 100.0,
+    "trending_old": 0,
+    "trending_new": 14189,
+    "new_mean": 25.1797,
+    "new_range": [
+      0.0,
+      71.7317
+    ]
+  },
+  "mfi": {
+    "old_max": 19537221.0895,
+    "new_mean": 49.6194,
+    "overbought_bars": 836,
+    "oversold_bars": 853
+  },
+  "current_backtest_test": [
+    {
+      "strategy": "sb",
+      "trades": 29,
+      "wins": 16,
+      "win_rate": 0.5517241379310345,
+      "net_points": 23.063441406249996,
+      "avg_points": 0.7952910829741376,
+      "avg_win": 4.79243505859375,
+      "avg_loss": -4.124270733173076,
+      "payoff": 1.1620078720939375
+    },
+    {
+      "strategy": "sk",
+      "trades": 38,
+      "wins": 20,
+      "win_rate": 0.5263157894736842,
+      "net_points": 25.194929687499997,
+      "avg_points": 0.663024465460526,
+      "avg_win": 4.722037109375,
+      "avg_loss": -3.8469895833333334,
+      "payoff": 1.2274629309714575
+    },
+    {
+      "strategy": "swing",
+      "trades": 65,
+      "wins": 32,
+      "win_rate": 0.49230769230769234,
+      "net_points": 10.723671874999992,
+      "avg_points": 0.16497956730769206,
+      "avg_win": 5.283844360351562,
+      "avg_loss": -4.7987681107954545,
+      "payoff": 1.1010834944211756
+    },
+    {
+      "strategy": "scalping",
+      "trades": 0,
+      "wins": 0,
+      "win_rate": 0.0,
+      "net_points": 0.0,
+      "avg_points": 0.0,
+      "avg_win": 0.0,
+      "avg_loss": 0.0,
+      "payoff": 0.0
+    },
+    {
+      "strategy": "ict",
+      "trades": 0,
+      "wins": 0,
+      "win_rate": 0.0,
+      "net_points": 0.0,
+      "avg_points": 0.0,
+      "avg_win": 0.0,
+      "avg_loss": 0.0,
+      "payoff": 0.0
+    }
+  ],
+  "overall": {
+    "trades": 190,
+    "win_rate": 0.542,
+    "net_points": 99.0,
+    "avg_pts": 0.52
+  }
+}

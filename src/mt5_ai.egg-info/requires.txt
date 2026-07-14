@@ -1,0 +1,10 @@
+anthropic
+MetaTrader5
+joblib
+matplotlib
+numpy
+ollama
+pandas
+pyzmq
+scikit-learn
+tensorflow

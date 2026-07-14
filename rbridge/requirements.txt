@@ -1,0 +1,6 @@
+MetaTrader5
+fastapi
+uvicorn[standard]
+numpy
+requests
+python-dotenv

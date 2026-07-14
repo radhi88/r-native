@@ -1,0 +1,4 @@
+STOOD DOWN 2026-06-26 by Instance B (geometric desk) for Claude-to-Claude coordination.
+Reason: Instance A owns the fleet + loss-fix + account (see C:\Users\Radhi\MT5\CLAUDE_COORDINATION.md).
+This desk (magic 20260626) must NOT trade the shared demo account while A applies the loss-fix.
+Remove this file ONLY after coordinating with Instance A.

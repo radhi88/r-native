@@ -1,0 +1,15 @@
+FRIDAY R Factory — End User License Agreement
+=================================================
+
+This software is provided "as-is" for personal trading research only.
+
+By installing FRIDAY R Factory you acknowledge:
+  • Trading financial instruments carries significant risk of loss.
+  • You are solely responsible for trades executed in your MT5 account.
+  • The software's authors accept no liability for financial loss.
+  • You must comply with your broker's terms of service and local
+    regulations governing algorithmic trading.
+
+For commercial use or redistribution, contact the publisher.
+
+Copyright (c) 2026 FRIDAY Labs. All rights reserved.

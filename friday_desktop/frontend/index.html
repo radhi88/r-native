@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FRIDAY</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== الشريط العلوي ===== -->
+  <header class="topbar">
+    <div class="brand"><span class="logo">F</span>FRIDAY<span class="sub">العقل العميق</span></div>
+    <div class="kpis">
+      <div class="kpi"><span class="l">الحقوق</span><span class="v mono" id="kEquity">—</span></div>
+      <div class="kpi"><span class="l">العائم</span><span class="v mono" id="kFloat">—</span></div>
+      <div class="kpi"><span class="l">المراكز</span><span class="v mono" id="kPos">—</span></div>
+      <div class="kpi"><span class="l">المحرّكات</span><span class="v mono" id="kEng">—</span></div>
+      <div class="kpi"><span class="l">فوق الأرضية</span><span class="v mono" id="kFloor">—</span></div>
+    </div>
+    <div class="ctrl">
+      <span class="sysbadge"><span id="sysdot" class="dot off"></span><span id="systext">…</span></span>
+      <button id="btnStart" class="btn start">▶ تشغيل</button>
+      <button id="btnStop" class="btn stop">■ إيقاف</button>
+    </div>
+  </header>
+
+  <!-- ===== الشريط الجانبي ===== -->
+  <nav class="side">
+    <div class="navitem active" data-tab="deep"><span class="ic">🧠</span>العقل العميق<span class="badge" id="bVerdict">⏳</span></div>
+    <div class="navitem" data-tab="overview"><span class="ic">📊</span>نظرة عامة</div>
+    <div class="navitem" data-tab="positions"><span class="ic">📈</span>الصفقات الحيّة<span class="badge" id="bPos">0</span></div>
+    <div class="navitem" data-tab="engines"><span class="ic">⚙️</span>المحرّكات<span class="badge" id="bEng">0</span></div>
+    <div class="navitem" data-tab="graph"><span class="ic">🕸️</span>الخريطة</div>
+    <div class="navitem" data-tab="chart"><span class="ic">📈</span>الشارت الحيّ</div>
+    <div class="navitem" data-tab="history"><span class="ic">🧾</span>السجل</div>
+    <div class="navitem" data-tab="projection"><span class="ic">🎯</span>تقدير $1000</div>
+    <div class="navitem" data-tab="about"><span class="ic">ℹ️</span>عن النظام</div>
+    <div class="spacer"></div>
+    <div class="note">العقل العميق: قراءة فقط، تعلّم ذاتي صادق (أفق 4 ساعات، تصحيح Bonferroni). يُبلّغك لحظة ظهور مرشّح مُثبت.</div>
+  </nav>
+
+  <!-- ===== المحتوى ===== -->
+  <main>
+
+    <!-- ============ العقل العميق (الرائد) ============ -->
+    <section id="deep" class="panel active">
+      <div class="phead"><h2>العقل العميق</h2><span class="hint">يقرأ كل العملات السائلة (M5–D1) ويتعلّم ذاتياً أي الشروط تسبق الربح فعلاً</span></div>
+
+      <!-- 🥇 الذهب مباشر -->
+      <div class="card flush gold">
+        <div class="card-h">🥇 الذهب — مباشر (مؤشرات لحظية tick/M1) <span class="pill" id="goldSig">…</span></div>
+        <div class="grid3" id="goldStats"></div>
+        <div id="goldMicro" class="micro"></div>
+      </div>
+
+      <!-- لافتة الحُكم -->
+      <div class="verdict" id="verdictBox">
+        <div class="vmain"><span id="verdictIcon">⏳</span> <span id="verdictText">يتعلّم…</span></div>
+        <div class="vsub" id="verdictSub">—</div>
+      </div>
+
+      <!-- 🧲 جسر القناعة: التعلّم المُثبت → قوّة الدخول -->
+      <div class="card flush">
+        <div class="card-h">🧲 جسر القناعة — التعلّم المُثبت يقود قوّة الدخول <span class="pill" id="convPill">…</span></div>
+        <div id="convBox"><span class="muted">…</span></div>
+      </div>
+
+      <!-- تقدّم التعلّم -->
+      <div class="card-h" style="margin:2px 0 8px">الحُكم عبر الآفاق (يمتلئ خلال دقائق)</div>
+      <div class="hzrow" id="hzRow"></div>
+      <div class="grid3" id="learnStats"></div>
+      <div class="grid2">
+        <div class="card flush">
+          <div class="card-h">منحنى التعلّم (التوقّع المجمّع عبر الزمن) <span class="pill" id="lcurveRange">—</span></div>
+          <svg class="spark" id="lcurve" viewBox="0 0 600 120" preserveAspectRatio="none"></svg>
+          <div class="foot" id="lcurveNote">يتراكم مع كل صفقة مُحكَّمة (أفق 4 ساعات).</div>
+        </div>
+        <div class="card flush">
+          <div class="card-h">🟢 المرشّحات المُثبتة <span class="pill" id="provenCount">0</span></div>
+          <div id="provenBox"><span class="muted">لا شيء بعد — أُبلّغك فوراً متى ظهر مرشّح يصمد لتصحيح Bonferroni.</span></div>
+        </div>
+      </div>
+
+      <!-- النداءات الحيّة -->
+      <div class="card flush">
+        <div class="card-h">نداءات عالية-الثقة الآن <span class="pill">الأقوى فقط</span></div>
+        <div id="hicalls" class="calls"><span class="muted">…</span></div>
+      </div>
+
+      <!-- شروط + تركيبات -->
+      <div class="grid2">
+        <div class="card flush"><div class="card-h">أقوى الشروط المفردة (مرتّبة حسب t)</div><div id="bestcond"><span class="muted">…</span></div></div>
+        <div class="card flush"><div class="card-h">أقوى التركيبات (هنا تختبئ الحافّة)</div><div id="bestcombo"><span class="muted">…</span></div></div>
+      </div>
+
+      <!-- تعلّم حسب الرمز -->
+      <div class="card flush"><div class="card-h">التعلّم حسب الرمز</div><div id="bysym"><span class="muted">…</span></div></div>
+
+      <!-- مصفوفة كل الرموز -->
+      <div class="card flush">
+        <div class="card-h">كل الرموز المقروءة <span class="pill" id="symCount">—</span> · <span class="muted">انقر رمزاً للتفصيل العميق</span></div>
+        <div id="allsyms" class="symgrid"><span class="muted">…يقرأ</span></div>
+      </div>
+    </section>
+
+    <!-- ============ نظرة عامة ============ -->
+    <section id="overview" class="panel">
+      <div class="phead"><h2>نظرة عامة</h2><span class="hint">تحديث لحظي (~0.5ث)</span></div>
+      <div class="grid3" id="statRow"></div>
+      <div class="card flush">
+        <div class="card-h">منحنى الحقوق <span class="pill" id="eqRange">—</span></div>
+        <svg class="spark" id="spark" viewBox="0 0 600 120" preserveAspectRatio="none"></svg>
+      </div>
+    </section>
+
+    <!-- ============ الصفقات ============ -->
+    <section id="positions" class="panel">
+      <div class="phead"><h2>الصفقات الحيّة</h2><span class="hint">مراكز بوتاتنا فقط (يدويّك و EA خارجيّتك محميّة، لا تُعرض)</span></div>
+      <div class="grid3" id="posStats"></div>
+      <div class="card flush"><div class="tblwrap"><table id="posTbl">
+        <thead><tr><th>الرمز</th><th>النوع</th><th>اللوت</th><th>دخول</th><th>الآن</th><th>ربح/خسارة</th><th>دقائق</th><th>Magic</th></tr></thead>
+        <tbody><tr><td colspan="8" class="muted">…</td></tr></tbody>
+      </table></div></div>
+    </section>
+
+    <!-- ============ المحرّكات ============ -->
+    <section id="engines" class="panel">
+      <div class="phead"><h2>المحرّكات</h2><span class="hint">الأسطول الذي يقرأ/يتعلّم/يتداول — حالة كل واحد حيّة</span></div>
+      <div class="card flush"><div class="card-h">الأسطول <span class="pill" id="engCount">—</span></div>
+        <div id="enggrid" class="enggrid"><span class="muted">…</span></div></div>
+    </section>
+
+    <!-- ============ الخريطة الحيّة ============ -->
+    <section id="graph" class="panel">
+      <div class="phead"><h2>🕸️ خريطة المنظومة</h2><span class="hint">رسم قوّة-موجّه حيّ — كل محرّك وتدفّق المعلومات/التنفيذ/الحوكمة، متّصل ومتحرّك (مُقال = حلقة حمراء)</span></div>
+      <iframe id="graphFrame" style="width:100%;height:calc(100vh - 150px);min-height:520px;border:0;border-radius:14px;background:#0a0e1a" title="خريطة المنظومة"></iframe>
+    </section>
+
+    <!-- ============ الشارت الحيّ ============ -->
+    <section id="chart" class="panel">
+      <div class="phead"><h2>📈 الشارت الحيّ</h2><span class="hint">شموع + كل المستويات الهندسيّة (أمس/بايفوت/فيبو/جان Sq9/نجمة داوود/فراكتل/VWAP/POC) + مناطق الالتقاء — تحديث لحظيّ، الذهب أوّلاً</span></div>
+      <iframe id="chartFrame" style="width:100%;height:calc(100vh - 150px);min-height:520px;border:0;border-radius:14px;background:#0a0e1a" title="الشارت الحيّ"></iframe>
+    </section>
+
+    <!-- ============ السجل ============ -->
+    <section id="history" class="panel">
+      <div class="phead"><h2>السجل</h2><span class="hint">آخر 7 أيام — صفقات بوتاتنا المُغلقة (محقّقة)</span></div>
+      <div class="grid3" id="histStats"></div>
+      <div class="card flush"><div class="tblwrap"><table id="histTbl">
+        <thead><tr><th>الرمز</th><th>الربح/الخسارة</th><th>Magic</th></tr></thead>
+        <tbody><tr><td colspan="3" class="muted">…</td></tr></tbody>
+      </table></div></div>
+    </section>
+
+    <!-- ============ التقدير ============ -->
+    <section id="projection" class="panel">
+      <div class="phead"><h2>تقدير مسار $1000</h2><span class="hint">مبني على الحافّة المقيسة فعلياً — صادق لا متفائل</span></div>
+      <div class="grid3" id="projStats"></div>
+      <div class="card flush">
+        <div class="card-h">المسار المتوقّع + نطاق ثقة 95% (30 يوماً)</div>
+        <svg class="spark" id="projspark" viewBox="0 0 600 160" preserveAspectRatio="none" style="height:200px"></svg>
+        <div class="honest" id="projHonest">…</div>
+      </div>
+    </section>
+
+    <!-- ============ عن النظام ============ -->
+    <section id="about" class="panel">
+      <div class="phead"><h2>عن النظام</h2></div>
+      <div class="card">
+        <div class="card-h">العقل العميق — كيف يتعلّم</div>
+        <p>يقرأ كل رمز سائل في 6 فريمات (M5–D1) عبر كل المؤشرات + الزخم + التذبذب + المستويات + الجلسة + اتجاه HTF.
+           لكل نداء عالي-الثقة يُسجّل النتيجة بعد <b>4 ساعات</b> (بوحدات R) ويُراكمها على: خصائص مفردة، <b>تركيبات</b> كاملة،
+           لكل رمز، ولكل اتجاه.</p>
+        <p>الصدق: <b>t حقيقي</b> بالانحراف المعياري (لا افتراض σ=1R) + نطاق ثقة 95% + <b>تصحيح Bonferroni</b>
+           على كل الخلايا المُختبَرة — فلا يظهر «مرشّح مُثبت» إلا إذا صمد للدلالة بعد التصحيح (يمنع حافّة وهمية من كثرة الاختبار).</p>
+      </div>
+      <div class="card">
+        <div class="card-h">المعمار</div>
+        <p>نافذة أصلية (WebView2) + واجهة JS/SVG + خلفية Python/FastAPI فوق محرّكاتك. REST + WebSocket لحظي (~0.5ث).
+           قراءة فقط للأرقام؛ التحكّم = تشغيل/إيقاف الأسطول. ديمو. لا توصيل لرصيد حقيقي قبل مرشّح مُثبت صامد.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== درج تفصيل الرمز ===== -->
+<div id="drawer" class="drawer">
+  <div class="drawer-inner">
+    <div class="drawer-h"><span id="dsym">—</span><button id="drawerClose" class="dclose">✕</button></div>
+    <div id="drawerBody"></div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+<script>
+(function(){
+  var nav=document.querySelector('[data-tab="graph"]');
+  if(nav) nav.addEventListener('click', function(){
+    var f=document.getElementById('graphFrame');
+    if(f && !f.getAttribute('src')) f.setAttribute('src', location.protocol+'//'+location.hostname+':8012/');
+  });
+  var navC=document.querySelector('[data-tab="chart"]');
+  if(navC) navC.addEventListener('click', function(){
+    var f=document.getElementById('chartFrame');
+    if(f && !f.getAttribute('src')) f.setAttribute('src', location.protocol+'//'+location.hostname+':8016/');
+  });
+})();
+</script>
+</body>
+</html>

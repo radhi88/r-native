@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>eDEX-UI // MT5 + Ollama AI Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<style>
+:root {
+  --c:  #00ffe1; --c2: #00b8ff; --c3: #0ff;
+  --bg: #020c10; --bg2: #041520; --bg3: #061a28;
+  --warn: #ff6b35; --ok: #00ff88; --err: #ff3333;
+  --dim: rgba(0,255,225,0.08); --border: rgba(0,255,225,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);
+  font-family:'Share Tech Mono',monospace;color:var(--c)}
+body::before{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.13) 2px,rgba(0,0,0,0.13) 4px);
+  pointer-events:none;z-index:9999}
+body::after{content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,0.7) 100%);
+  pointer-events:none;z-index:9998}
+
+#app{display:grid;width:100vw;height:100vh;
+  grid-template-columns:240px 1fr 260px;
+  grid-template-rows:44px 1fr 200px 32px;
+  gap:2px;padding:2px;background:#000}
+
+.panel{background:var(--bg2);border:1px solid var(--border);position:relative;overflow:hidden}
+.panel::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,255,225,0.03) 0%,transparent 60%);pointer-events:none}
+.panel::after{content:'';position:absolute;top:0;left:0;width:12px;height:12px;
+  border-top:1px solid var(--c);border-left:1px solid var(--c);pointer-events:none}
+.corner-br{position:absolute;bottom:0;right:0;width:12px;height:12px;
+  border-bottom:1px solid var(--c);border-right:1px solid var(--c)}
+
+/* TOPBAR */
+#topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.topbar-logo{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;letter-spacing:4px;
+  color:var(--c);text-shadow:0 0 10px var(--c),0 0 30px rgba(0,255,225,0.4)}
+.topbar-center{display:flex;gap:20px;font-size:10px;color:rgba(0,255,225,0.55);letter-spacing:1px}
+.topbar-right{display:flex;align-items:center;gap:16px;font-size:10px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:blink 2s infinite}
+.status-dot.off{background:var(--err);box-shadow:0 0 8px var(--err);animation:none}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* SIDEBARS */
+#left{grid-row:2/4;display:flex;flex-direction:column;gap:2px}
+#right{grid-row:2/4;display:flex;flex-direction:column;gap:2px}
+.sub-panel{background:var(--bg2);border:1px solid var(--border);padding:10px 12px;
+  position:relative;overflow:hidden;flex:1}
+.sub-panel::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,255,225,0.025) 0%,transparent 60%);pointer-events:none}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:3px;
+  color:rgba(0,255,225,0.5);margin-bottom:8px;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:6px}
+
+/* CHART AREA */
+#chart-panel{grid-row:2/3;display:flex;flex-direction:column;background:var(--bg);
+  border:1px solid var(--border)}
+#chart-header{padding:6px 14px;background:var(--bg3);border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;font-size:10px}
+#chart-header .price-big{font-family:'Orbitron';font-size:18px;color:var(--c);text-shadow:0 0 10px var(--c)}
+#chart-header .price-up{color:var(--ok)} #chart-header .price-down{color:var(--err)}
+#chart-canvas{flex:1;width:100%;display:block}
+
+/* AI PANEL */
+.ai-box{padding:8px;background:rgba(0,255,225,0.03);border:1px solid var(--border);margin-top:6px}
+.ai-decision{font-family:'Orbitron';font-size:14px;font-weight:700;text-align:center;padding:6px}
+.ai-decision.BUY{color:var(--ok);text-shadow:0 0 10px var(--ok)}
+.ai-decision.SELL{color:var(--err);text-shadow:0 0 10px var(--err)}
+.ai-decision.HOLD{color:var(--warn)}
+.ai-reason{font-size:9px;color:rgba(0,255,225,0.6);text-align:center;margin-top:4px}
+.ai-meta{display:flex;justify-content:space-between;font-size:9px;color:rgba(0,255,225,0.4);margin-top:6px}
+
+/* POSITIONS TABLE */
+.pos-table{width:100%;font-size:9px;border-collapse:collapse}
+.pos-table th{text-align:left;color:rgba(0,255,225,0.4);border-bottom:1px solid var(--border);padding:3px 2px}
+.pos-table td{padding:3px 2px;border-bottom:1px solid rgba(0,255,225,0.05);color:rgba(0,255,225,0.8)}
+.pos-table .profit{color:var(--ok)} .pos-table .loss{color:var(--err)}
+
+/* MANUAL BUTTONS */
+.btn-row{display:flex;gap:6px;margin-top:8px}
+.btn{flex:1;padding:8px 0;font-family:'Orbitron';font-size:10px;letter-spacing:1px;
+  border:1px solid var(--border);background:var(--dim);color:var(--c);cursor:pointer;
+  transition:all 0.2s;text-align:center}
+.btn:hover{background:rgba(0,255,225,0.15)}
+.btn.buy{border-color:var(--ok);color:var(--ok)}
+.btn.buy:hover{background:rgba(0,255,136,0.15);box-shadow:0 0 12px rgba(0,255,136,0.3)}
+.btn.sell{border-color:var(--err);color:var(--err)}
+.btn.sell:hover{background:rgba(255,51,51,0.15);box-shadow:0 0 12px rgba(255,51,51,0.3)}
+.btn.warn{border-color:var(--warn);color:var(--warn)}
+.btn.warn:hover{background:rgba(255,107,53,0.15)}
+
+/* LOGS */
+.log-row{font-size:9px;padding:2px 0;border-bottom:1px solid rgba(0,255,225,0.04);
+  color:rgba(0,255,225,0.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log-row .ts{color:rgba(0,255,225,0.25);margin-right:6px}
+.log-row.err{color:var(--err)} .log-row.warn{color:var(--warn)} .log-row.ok{color:var(--ok)}
+
+/* BOTTOM */
+#bottom{grid-column:1/-1;display:grid;grid-template-columns:240px 1fr 260px;gap:2px}
+.bottom-panel{background:var(--bg3);border:1px solid var(--border);padding:6px 14px;
+  display:flex;align-items:center;gap:12px;font-size:9px;color:rgba(0,255,225,0.5);letter-spacing:1px}
+.bottom-panel span.val{color:var(--c);letter-spacing:0}
+#statusbar{grid-column:1/-1;background:var(--bg3);border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 16px;
+  font-size:9px;color:rgba(0,255,225,0.4);letter-spacing:1px}
+
+/* BAR */
+.bar-row{margin:5px 0}
+.bar-label{display:flex;justify-content:space-between;font-size:9px;color:rgba(0,255,225,0.6);margin-bottom:3px}
+.bar-track{height:6px;background:rgba(0,255,225,0.07);border:1px solid var(--border);overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,#005a70,var(--c));position:relative;transition:width 0.8s ease}
+.bar-fill::after{content:'';position:absolute;top:0;right:0;width:2px;height:100%;background:#fff;box-shadow:0 0 8px var(--c)}
+
+/* INDICATORS */
+.ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:9px;margin-top:6px}
+.ind-item{background:rgba(0,255,225,0.03);border:1px solid var(--border);padding:4px 6px}
+.ind-label{color:rgba(0,255,225,0.35);font-size:8px;text-transform:uppercase;letter-spacing:1px}
+.ind-val{color:var(--c);font-size:11px;margin-top:2px}
+
+/* ANIM */
+@keyframes panelReveal{from{opacity:0;transform:scaleY(0.95)}to{opacity:1;transform:none}}
+.panel,.sub-panel{animation:panelReveal 0.4s ease both}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div id="topbar">
+    <div class="topbar-logo">eDEX-TRADER</div>
+    <div class="topbar-center">
+      <span id="tb-symbol">XAUUSDm</span>
+      <span id="tb-price" style="color:var(--c);font-weight:bold">---.---</span>
+      <span id="tb-spread">Spread: -- pts</span>
+      <span id="tb-balance">Balance: $---</span>
+      <span id="tb-equity">Equity: $---</span>
+      <span id="tb-pos">Positions: 0</span>
+    </div>
+    <div class="topbar-right">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="status-dot" id="dot-mt5"></div><span id="txt-mt5">MT5</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="status-dot off" id="dot-ollama"></div><span id="txt-ollama" style="color:var(--err)">OLLAMA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEFT -->
+  <div id="left">
+    <div class="sub-panel" style="flex:0 0 auto">
+      <div class="panel-title">Account Metrics</div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Margin Used</span><span id="margin-pct">0%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="margin-bar" style="width:0%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>Drawdown</span><span id="dd-pct">0%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="dd-bar" style="width:0%;background:linear-gradient(90deg,#550000,var(--err))"></div></div>
+      </div>
+      <div style="font-size:8px;color:rgba(0,255,225,0.35);margin-top:6px" id="acc-detail">Free Margin: $---</div>
+    </div>
+
+    <div class="sub-panel" style="flex:0 0 auto">
+      <div class="panel-title">Technical Indicators (M5)</div>
+      <div class="ind-grid">
+        <div class="ind-item"><div class="ind-label">EMA 20</div><div class="ind-val" id="ind-ema20">---</div></div>
+        <div class="ind-item"><div class="ind-label">EMA 9</div><div class="ind-val" id="ind-ema9">---</div></div>
+        <div class="ind-item"><div class="ind-label">RSI 14</div><div class="ind-val" id="ind-rsi">---</div></div>
+        <div class="ind-item"><div class="ind-label">ATR 14</div><div class="ind-val" id="ind-atr">---</div></div>
+      </div>
+      <div style="font-size:9px;color:rgba(0,255,225,0.4);margin-top:6px;text-align:center" id="ind-trend">TREND: ---</div>
+    </div>
+
+    <div class="sub-panel" style="flex:0 0 auto">
+      <div class="panel-title">AI Decision Engine</div>
+      <div class="ai-box">
+        <div class="ai-decision HOLD" id="ai-decision">WAITING</div>
+        <div class="ai-reason" id="ai-reason">Initializing Ollama connection...</div>
+        <div class="ai-meta">
+          <span>Conf: <b id="ai-conf">0%</b></span>
+          <span>Lot: <b id="ai-lot">--</b></span>
+          <span>SL/TP: <b id="ai-sltp">--/--</b></span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <div class="btn buy" onclick="sendCmd('BUY')">BUY</div>
+        <div class="btn sell" onclick="sendCmd('SELL')">SELL</div>
+        <div class="btn warn" onclick="sendCmd('CLOSE_ALL')">CLOSE</div>
+      </div>
+    </div>
+
+    <div class="sub-panel" style="flex:1;overflow:hidden">
+      <div class="panel-title">System Logs</div>
+      <div id="log-list" style="overflow:hidden;font-size:9px"></div>
+    </div>
+  </div>
+
+  <!-- CENTER CHART -->
+  <div id="chart-panel">
+    <div id="chart-header">
+      <div>
+        <span style="color:rgba(0,255,225,0.5);font-size:9px">XAUUSDm // M5 // REAL-TIME</span>
+        <div style="margin-top:2px">
+          <span class="price-big" id="big-price">---.---</span>
+          <span id="price-change" style="font-size:11px;margin-left:8px"></span>
+        </div>
+      </div>
+      <div style="text-align:right;font-size:9px;color:rgba(0,255,225,0.5)">
+        <div>Bid: <span id="hdr-bid" style="color:var(--c)">---</span></div>
+        <div>Ask: <span id="hdr-ask" style="color:var(--c)">---</span></div>
+        <div>Spread: <span id="hdr-spread" style="color:var(--warn)">--</span> pts</div>
+      </div>
+    </div>
+    <canvas id="chart-canvas"></canvas>
+  </div>
+
+  <!-- RIGHT -->
+  <div id="right">
+    <div class="sub-panel" id="clock-panel" style="flex:0 0 auto;text-align:center;padding:14px">
+      <div class="panel-title">System Time</div>
+      <div id="clock-time" style="font-family:'Orbitron';font-size:26px;font-weight:700;color:var(--c);text-shadow:0 0 20px rgba(0,255,225,0.5)">00:00:00</div>
+      <div id="clock-date" style="font-size:9px;color:rgba(0,255,225,0.45);margin-top:6px">---</div>
+    </div>
+
+    <div class="sub-panel" style="flex:0 0 auto">
+      <div class="panel-title">Open Positions</div>
+      <div style="font-size:9px;color:rgba(0,255,225,0.4);text-align:center;padding:8px 0" id="pos-empty">No open positions</div>
+      <div id="pos-list" style="display:none"></div>
+      <div style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px;display:flex;justify-content:space-between;font-size:9px">
+        <span style="color:rgba(0,255,225,0.4)">Total P&L</span>
+        <span id="pos-total-pnl" style="font-weight:bold">$0.00</span>
+      </div>
+    </div>
+
+    <div class="sub-panel" style="flex:0 0 auto">
+      <div class="panel-title">Trade History</div>
+      <table class="pos-table" id="hist-table">
+        <thead><tr><th>Time</th><th>Type</th><th>Price</th><th>P&L</th></tr></thead>
+        <tbody id="hist-body"></tbody>
+      </table>
+    </div>
+
+    <div class="sub-panel" style="flex:1;overflow:hidden">
+      <div class="panel-title">Connection Map</div>
+      <canvas id="map-canvas" style="width:100%;height:90px;display:block"></canvas>
+      <div style="font-size:8px;color:rgba(0,255,225,0.3);text-align:center;margin-top:4px">MT5 ←→ localhost ←→ Ollama</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+  <div id="bottom">
+    <div class="bottom-panel">
+      <span>HOST</span><span class="val">localhost</span>
+      <span>SYMBOL</span><span class="val" id="b-sym">XAUUSDm</span>
+    </div>
+    <div class="bottom-panel" style="justify-content:center;gap:20px">
+      <span class="kbd" style="background:var(--dim);border:1px solid var(--border);padding:2px 6px;border-radius:2px;color:var(--c);font-size:8px">F1</span><span>Help</span>
+      <span class="kbd" style="background:var(--dim);border:1px solid var(--border);padding:2px 6px;border-radius:2px;color:var(--c);font-size:8px">F5</span><span>Refresh</span>
+      <span style="color:rgba(0,255,225,0.3)">|</span>
+      <span style="color:var(--ok)">▲ LIVE DATA FROM METATRADER 5</span>
+      <span style="color:var(--c2)">▼ AI POWERED BY OLLAMA</span>
+    </div>
+    <div class="bottom-panel">
+      <span>UPTIME</span><span class="val" id="b-uptime">0:00:00</span>
+      <span>AI CYCLE</span><span class="val" id="b-ai-cycle">--s</span>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div id="statusbar">
+    <span>eDEX-TRADER v1.0 // <span class="ok" id="stat-sys">SYSTEM INITIALIZING</span></span>
+    <span id="stat-mid">Waiting for MT5 connection...</span>
+    <span>MODEL: <span class="ok">llama3</span> // LOCAL: 127.0.0.1:5000</span>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  WEBSOCKET + REAL-TIME ENGINE
+// ═══════════════════════════════════════════════════════════
+const socket = io();
+let candles = [];
+let lastPrice = 0;
+let uptimeSec = 0;
+
+socket.on('connect', () => {
+  log({t: timeNow(), m: 'WebSocket connected', l: 'ok'});
+  document.getElementById('stat-sys').textContent = 'SYSTEM NOMINAL';
+  document.getElementById('stat-sys').style.color = 'var(--ok)';
+});
+
+socket.on('disconnect', () => {
+  log({t: timeNow(), m: 'WebSocket disconnected', l: 'err'});
+  document.getElementById('stat-sys').textContent = 'OFFLINE';
+  document.getElementById('stat-sys').style.color = 'var(--err)';
+});
+
+socket.on('market_update', (d) => {
+  updateTopbar(d);
+  updateAccount(d);
+  updateIndicators(d);
+  updateAI(d);
+  updatePositions(d);
+  updateChart(d);
+  updateUptime(d.uptime);
+});
+
+socket.on('log', (entry) => {
+  log(entry);
+});
+
+function timeNow() {
+  const n = new Date();
+  return [n.getHours(),n.getMinutes(),n.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':');
+}
+
+function log(entry) {
+  const list = document.getElementById('log-list');
+  const row = document.createElement('div');
+  row.className = 'log-row ' + (entry.l || 'info');
+  row.innerHTML = `<span class="ts">${entry.t}</span>${entry.m}`;
+  list.insertBefore(row, list.firstChild);
+  if (list.children.length > 40) list.removeChild(list.lastChild);
+}
+
+// ─── TOPBAR ──────────────────────────────────────────────
+function updateTopbar(d) {
+  const t = d.tick || {};
+  const a = d.account || {};
+  const price = t.last || t.bid || 0;
+
+  document.getElementById('tb-price').textContent = price.toFixed(3);
+  document.getElementById('tb-spread').textContent = `Spread: ${t.spread || '--'} pts`;
+  document.getElementById('tb-balance').textContent = `Balance: $${(a.balance || 0).toFixed(2)}`;
+  document.getElementById('tb-equity').textContent = `Equity: $${(a.equity || 0).toFixed(2)}`;
+  document.getElementById('tb-pos').textContent = `Positions: ${(d.positions || []).length}`;
+
+  document.getElementById('big-price').textContent = price.toFixed(3);
+  document.getElementById('hdr-bid').textContent = (t.bid || 0).toFixed(3);
+  document.getElementById('hdr-ask').textContent = (t.ask || 0).toFixed(3);
+  document.getElementById('hdr-spread').textContent = t.spread || '--';
+
+  const change = document.getElementById('price-change');
+  if (lastPrice && price > lastPrice) {
+    change.textContent = '▲ ' + (price - lastPrice).toFixed(3);
+    change.className = 'price-up';
+  } else if (lastPrice && price < lastPrice) {
+    change.textContent = '▼ ' + (lastPrice - price).toFixed(3);
+    change.className = 'price-down';
+  }
+  lastPrice = price;
+
+  // Status dots
+  const mt5Dot = document.getElementById('dot-mt5');
+  const ollamaDot = document.getElementById('dot-ollama');
+  const ollamaTxt = document.getElementById('txt-ollama');
+
+  if (d.mt5_ok) { mt5Dot.classList.remove('off'); }
+  else { mt5Dot.classList.add('off'); }
+
+  if (d.ollama_ok) { ollamaDot.classList.remove('off'); ollamaTxt.style.color = 'var(--ok)'; ollamaTxt.textContent = 'OLLAMA'; }
+  else { ollamaDot.classList.add('off'); ollamaTxt.style.color = 'var(--err)'; ollamaTxt.textContent = 'OLLAMA OFF'; }
+
+  document.getElementById('stat-mid').textContent = d.mt5_ok 
+    ? `Bid:${t.bid} Ask:${t.ask} | Vol:${t.volume || 0} | ${d.ai?.decision || 'WAIT'}`
+    : 'Waiting for MT5 connection...';
+}
+
+// ─── ACCOUNT ─────────────────────────────────────────────
+function updateAccount(d) {
+  const a = d.account || {};
+  const balance = a.balance || 1;
+  const margin = a.margin || 0;
+  const equity = a.equity || balance;
+  const free = a.free_margin || 0;
+
+  const mPct = balance > 0 ? (margin / balance) * 100 : 0;
+  const ddPct = balance > 0 ? ((balance - equity) / balance) * 100 : 0;
+
+  document.getElementById('margin-pct').textContent = mPct.toFixed(1) + '%';
+  document.getElementById('margin-bar').style.width = Math.min(mPct, 100) + '%';
+  document.getElementById('dd-pct').textContent = ddPct.toFixed(2) + '%';
+  document.getElementById('dd-bar').style.width = Math.min(ddPct * 5, 100) + '%'; // scale up for visibility
+  document.getElementById('acc-detail').textContent = `Free Margin: $${free.toFixed(2)} | Leverage: ${a.leverage || '--'}:1`;
+}
+
+// ─── INDICATORS ──────────────────────────────────────────
+function updateIndicators(d) {
+  const i = d.indicators || {};
+  document.getElementById('ind-ema20').textContent = i.ema20?.toFixed(3) || '---';
+  document.getElementById('ind-ema9').textContent = i.ema9?.toFixed(3) || '---';
+  document.getElementById('ind-rsi').textContent = i.rsi?.toFixed(1) || '---';
+  document.getElementById('ind-atr').textContent = i.atr?.toFixed(5) || '---';
+  const trend = i.trend || '---';
+  const tEl = document.getElementById('ind-trend');
+  tEl.textContent = 'TREND: ' + trend;
+  tEl.style.color = trend === 'UP' ? 'var(--ok)' : trend === 'DOWN' ? 'var(--err)' : 'var(--warn)';
+}
+
+// ─── AI PANEL ────────────────────────────────────────────
+function updateAI(d) {
+  const ai = d.ai || {};
+  const dec = (ai.decision || 'WAIT').toUpperCase();
+  const decEl = document.getElementById('ai-decision');
+  decEl.textContent = dec;
+  decEl.className = 'ai-decision ' + dec;
+  document.getElementById('ai-reason').textContent = ai.reason || 'Analyzing market...';
+  document.getElementById('ai-conf').textContent = ((ai.confidence || 0) * 100).toFixed(0) + '%';
+  document.getElementById('ai-lot').textContent = ai.lot || '--';
+  document.getElementById('ai-sltp').textContent = `${ai.sl || '--'}/${ai.tp || '--'}`;
+}
+
+// ─── POSITIONS ───────────────────────────────────────────
+function updatePositions(d) {
+  const pos = d.positions || [];
+  const empty = document.getElementById('pos-empty');
+  const list = document.getElementById('pos-list');
+
+  if (pos.length === 0) {
+    empty.style.display = 'block';
+    list.style.display = 'none';
+    document.getElementById('pos-total-pnl').textContent = '$0.00';
+    document.getElementById('pos-total-pnl').style.color = 'var(--c)';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.style.display = 'block';
+  let total = 0;
+  let html = '';
+  pos.forEach(p => {
+    total += p.profit;
+    const cls = p.profit >= 0 ? 'profit' : 'loss';
+    const sign = p.profit >= 0 ? '+' : '';
+    html += `
+      <div style="font-size:9px;padding:4px 0;border-bottom:1px solid rgba(0,255,225,0.05)">
+        <div style="display:flex;justify-content:space-between">
+          <span style="color:${p.type==='BUY'?'var(--ok)':'var(--err)'};font-weight:bold">${p.type} ${p.volume}lot</span>
+          <span class="${cls}">${sign}$${p.profit.toFixed(2)}</span>
+        </div>
+        <div style="color:rgba(0,255,225,0.4);font-size:8px;margin-top:1px">
+          @${p.open} → ${p.current} | SL:${p.sl} TP:${p.tp} | #${p.ticket}
+        </div>
+      </div>`;
+  });
+  list.innerHTML = html;
+  const tEl = document.getElementById('pos-total-pnl');
+  tEl.textContent = (total >= 0 ? '+' : '') + '$' + total.toFixed(2);
+  tEl.style.color = total >= 0 ? 'var(--ok)' : 'var(--err)';
+}
+
+// ─── MANUAL CMD ──────────────────────────────────────────
+function sendCmd(cmd) {
+  socket.emit('manual_cmd', {cmd: cmd});
+  log({t: timeNow(), m: 'Manual command sent: ' + cmd, l: 'warn'});
+}
+
+// ─── CHART (Canvas Candlesticks) ─────────────────────────
+const chartC = document.getElementById('chart-canvas');
+const chartCtx = chartC.getContext('2d');
+
+function updateChart(d) {
+  if (d.candles_m5 && d.candles_m5.length > 0) {
+    candles = d.candles_m5;
+  }
+  if (candles.length < 5) return;
+  drawCandles();
+}
+
+function drawCandles() {
+  chartC.width = chartC.offsetWidth;
+  chartC.height = chartC.offsetHeight;
+  const w = chartC.width, h = chartC.height;
+  const pad = 20;
+  const chartH = h - pad * 2;
+  const n = candles.length;
+  const candleW = Math.max(2, (w - pad * 2) / n - 1);
+
+  // Find min/max
+  let minP = Infinity, maxP = -Infinity;
+  candles.forEach(c => { minP = Math.min(minP, c.l); maxP = Math.max(maxP, c.h); });
+  const range = maxP - minP || 1;
+  const toY = (p) => pad + chartH - ((p - minP) / range) * chartH;
+
+  chartCtx.clearRect(0, 0, w, h);
+
+  // Grid
+  chartCtx.strokeStyle = 'rgba(0,255,225,0.06)';
+  chartCtx.lineWidth = 1;
+  for (let i = 0; i < 5; i++) {
+    const y = pad + (chartH / 4) * i;
+    chartCtx.beginPath(); chartCtx.moveTo(0, y); chartCtx.lineTo(w, y); chartCtx.stroke();
+    const price = maxP - (range / 4) * i;
+    chartCtx.fillStyle = 'rgba(0,255,225,0.25)';
+    chartCtx.font = '8px Share Tech Mono';
+    chartCtx.fillText(price.toFixed(3), 4, y - 2);
+  }
+
+  // Candles
+  candles.forEach((c, i) => {
+    const x = pad + i * (candleW + 1);
+    const yO = toY(c.o), yC = toY(c.c), yH = toY(c.h), yL = toY(c.l);
+    const isBull = c.c >= c.o;
+    const color = isBull ? '#00ff88' : '#ff3333';
+
+    // Wick
+    chartCtx.strokeStyle = color;
+    chartCtx.lineWidth = 1;
+    chartCtx.beginPath();
+    chartCtx.moveTo(x + candleW / 2, yH);
+    chartCtx.lineTo(x + candleW / 2, yL);
+    chartCtx.stroke();
+
+    // Body
+    const bodyH = Math.max(1, Math.abs(yC - yO));
+    const bodyY = Math.min(yO, yC);
+    chartCtx.fillStyle = color;
+    chartCtx.fillRect(x, bodyY, candleW, bodyH);
+  });
+
+  // EMA line if we have enough
+  if (candles.length >= 20) {
+    const ema20 = candles.map((c, i, arr) => {
+      if (i < 19) return null;
+      let sum = 0;
+      for (let j = 0; j < 20; j++) sum += arr[i - j].c;
+      return sum / 20;
+    });
+    chartCtx.strokeStyle = 'rgba(0,184,255,0.8)';
+    chartCtx.lineWidth = 1.5;
+    chartCtx.beginPath();
+    let started = false;
+    ema20.forEach((v, i) => {
+      if (v === null) return;
+      const x = pad + i * (candleW + 1) + candleW / 2;
+      const y = toY(v);
+      if (!started) { chartCtx.moveTo(x, y); started = true; }
+      else chartCtx.lineTo(x, y);
+    });
+    chartCtx.stroke();
+  }
+}
+
+// ─── CLOCK ───────────────────────────────────────────────
+function updateClock() {
+  const n = new Date();
+  document.getElementById('clock-time').textContent =
+    [n.getHours(),n.getMinutes(),n.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':');
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  document.getElementById('clock-date').textContent =
+    `${days[n.getDay()]} ${String(n.getDate()).padStart(2,'0')} ${months[n.getMonth()]} ${n.getFullYear()}`;
+}
+setInterval(updateClock, 1000); updateClock();
+
+function updateUptime(s) {
+  if (!s) return;
+  const h = (s / 3600) | 0, m = (s % 3600 / 60) | 0, sc = s % 60;
+  document.getElementById('b-uptime').textContent = `${h}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;
+  document.getElementById('b-ai-cycle').textContent = (20 - (s % 20)) + 's';
+}
+
+// ─── CONNECTION MAP (decorative) ─────────────────────────
+const mapC = document.getElementById('map-canvas');
+const mapCtx = mapC.getContext('2d');
+let mapAng = 0;
+function drawMap() {
+  mapC.width = mapC.offsetWidth; mapC.height = mapC.offsetHeight;
+  const w = mapC.width, h = mapC.height, cx = w / 2, cy = h / 2;
+  mapCtx.clearRect(0, 0, w, h);
+
+  // Nodes
+  const nodes = [
+    {x: cx - 40, y: cy, label: 'MT5', color: '#00ff88'},
+    {x: cx, y: cy, label: 'BRIDGE', color: '#00ffe1'},
+    {x: cx + 40, y: cy, label: 'OLLAMA', color: '#00b8ff'},
+  ];
+
+  // Connections
+  mapCtx.strokeStyle = 'rgba(0,255,225,0.15)';
+  mapCtx.lineWidth = 1;
+  mapCtx.beginPath();
+  mapCtx.moveTo(nodes[0].x, nodes[0].y);
+  mapCtx.lineTo(nodes[1].x, nodes[1].y);
+  mapCtx.lineTo(nodes[2].x, nodes[2].y);
+  mapCtx.stroke();
+
+  // Data packets
+  const t = Date.now() / 1000;
+  nodes.forEach((n, i) => {
+    mapCtx.beginPath();
+    mapCtx.arc(n.x, n.y, 4, 0, Math.PI * 2);
+    mapCtx.fillStyle = n.color;
+    mapCtx.fill();
+    mapCtx.fillStyle = 'rgba(0,255,225,0.5)';
+    mapCtx.font = '7px Share Tech Mono';
+    mapCtx.textAlign = 'center';
+    mapCtx.fillText(n.label, n.x, n.y + 14);
+  });
+
+  // Animated packet
+  const pkt = (t * 0.5) % 2;
+  const px = nodes[0].x + (nodes[2].x - nodes[0].x) * (pkt > 1 ? 2 - pkt : pkt);
+  const py = nodes[0].y + Math.sin(t * 3) * 6;
+  mapCtx.beginPath();
+  mapCtx.arc(px, py, 2, 0, Math.PI * 2);
+  mapCtx.fillStyle = '#fff';
+  mapCtx.fill();
+}
+setInterval(drawMap, 50);
+
+// Resize
+window.addEventListener('resize', drawCandles);
+
+// Boot log
+log({t: timeNow(), m: 'eDEX-Trader UI loaded', l: 'ok'});
+log({t: timeNow(), m: 'Waiting for MT5 data stream...', l: 'info'});
+</script>
+</body>
+</html>

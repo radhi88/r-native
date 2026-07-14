@@ -1,0 +1,35 @@
+{
+  "generated": 1782832682.9341002,
+  "conflicts": [
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "kind": "bidirectional",
+      "note": "trades both directions \u2014 verify not a hedge/grid conflict"
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_BRAIN_EA_v1.mq5",
+      "kind": "bidirectional",
+      "note": "trades both directions \u2014 verify not a hedge/grid conflict"
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "kind": "bidirectional",
+      "note": "trades both directions \u2014 verify not a hedge/grid conflict"
+    },
+    {
+      "path": "active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "kind": "bidirectional",
+      "note": "trades both directions \u2014 verify not a hedge/grid conflict"
+    },
+    {
+      "path": "active_ea\\CLAUDE_BRAIN_EA_v1.mq5",
+      "kind": "bidirectional",
+      "note": "trades both directions \u2014 verify not a hedge/grid conflict"
+    },
+    {
+      "path": "live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "kind": "bidirectional",
+      "note": "trades both directions \u2014 verify not a hedge/grid conflict"
+    }
+  ]
+}

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QADER · Market Depth — Footprint + Order Flow</title>
+<style>
+:root{
+  --bg:#07090f;--panel:#0c1019;--panel2:#10141f;--border:#161f35;
+  --text:#c8d4f0;--muted:#3d4d70;--muted2:#5a6d90;
+  --green:#00e676;--red:#ff4545;--yellow:#ffd740;--blue:#4fc3f7;
+  --purple:#b39ddb;--cyan:#26c6da;--orange:#ffb74d;--teal:#4db6ac;
+  --green-bg:rgba(0,230,118,.12);--red-bg:rgba(255,69,69,.12);
+  --yellow-bg:rgba(255,215,64,.10);--blue-bg:rgba(79,195,247,.08);
+  --green-cell:rgba(0,230,118,.18);--red-cell:rgba(255,69,69,.18);
+  --green-cell-hi:rgba(0,230,118,.45);--red-cell-hi:rgba(255,69,69,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Consolas','Courier New',monospace;font-size:11px}
+
+/* ── HEADER ── */
+header{display:flex;align-items:center;gap:14px;padding:7px 16px;background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap;flex-shrink:0}
+.logo{font-size:12px;font-weight:700;letter-spacing:2px;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+.hstat{text-align:center;min-width:70px}
+.hstat-lbl{font-size:7px;color:var(--muted2);letter-spacing:1px;text-transform:uppercase}
+.hstat-val{font-size:15px;font-weight:700;letter-spacing:.5px}
+.divider{width:1px;height:30px;background:var(--border)}
+.tf-tabs{display:flex;gap:3px}
+.tf-tab{padding:3px 10px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--muted2);font-size:9px;font-family:inherit;cursor:pointer;letter-spacing:1px;transition:all .2s}
+.tf-tab.active{background:var(--blue-bg);border-color:var(--blue);color:var(--blue);font-weight:700}
+.view-tabs{display:flex;gap:3px}
+.view-tab{padding:3px 10px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--muted2);font-size:9px;font-family:inherit;cursor:pointer;transition:all .2s}
+.view-tab.active{background:rgba(179,157,219,.12);border-color:var(--purple);color:var(--purple);font-weight:700}
+.live-dot{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--muted2);margin-left:auto}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.top-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.nav-link,.service-link{color:var(--blue);text-decoration:none;font-size:9px;border:1px solid var(--border);border-radius:4px;padding:3px 7px;background:rgba(79,195,247,.05)}
+.service-link{color:var(--teal)}
+.state-pill{display:flex;align-items:center;gap:5px;border:1px solid rgba(0,230,118,.25);border-radius:4px;padding:3px 7px;background:var(--green-bg);color:var(--green);font-size:9px;font-weight:700}
+.state-pill.warn{border-color:rgba(255,215,64,.28);background:var(--yellow-bg);color:var(--yellow)}
+.state-pill.off{border-color:rgba(255,69,69,.28);background:var(--red-bg);color:var(--red)}
+a{color:var(--blue);text-decoration:none;font-size:9px}
+
+/* ── MAIN LAYOUT ── */
+.layout{display:grid;grid-template-columns:1fr 220px;grid-template-rows:1fr 110px 90px;height:calc(100vh - 52px)}
+
+/* ── FOOTPRINT CHART ── */
+.fp-wrap{grid-column:1;grid-row:1;overflow:hidden;position:relative;background:var(--bg)}
+.fp-scroll{width:100%;height:100%;overflow-x:auto;overflow-y:auto;display:flex;align-items:flex-start;padding:8px 0 0 50px}
+.fp-chart{display:flex;gap:2px;align-items:flex-end;position:relative;min-height:100%}
+.price-axis{position:absolute;left:0;top:0;width:50px;height:100%;pointer-events:none;z-index:10}
+
+/* Footprint bar (single candle column) */
+.fp-bar{display:flex;flex-direction:column;align-items:center;position:relative;flex-shrink:0;cursor:crosshair}
+.fp-bar-inner{display:flex;flex-direction:column;border:1px solid rgba(30,50,80,.6);border-radius:3px;overflow:hidden;position:relative}
+.fp-wick-top{width:1.5px;background:var(--muted);margin:0 auto;flex-shrink:0}
+.fp-wick-bot{width:1.5px;background:var(--muted);margin:0 auto;flex-shrink:0}
+.fp-time{font-size:7px;color:var(--muted2);margin-top:2px;text-align:center}
+
+/* Price level cell */
+.fp-cell{display:flex;align-items:center;justify-content:space-between;padding:0 3px;height:13px;font-size:8px;position:relative;white-space:nowrap;flex-shrink:0;border-bottom:1px solid rgba(22,31,53,.5)}
+.fp-cell:last-child{border-bottom:none}
+.fp-cell.poc{background:rgba(255,215,64,.2);border-left:2px solid var(--yellow)}
+.fp-cell.bull-hi{background:var(--green-cell-hi)}
+.fp-cell.bull-lo{background:var(--green-cell)}
+.fp-cell.bear-hi{background:var(--red-cell-hi)}
+.fp-cell.bear-lo{background:var(--red-cell)}
+.fp-cell.neutral{background:rgba(30,40,60,.3)}
+.fp-cell.imbalance-buy::after{content:'▲';position:absolute;right:1px;color:var(--green);font-size:6px;opacity:.8}
+.fp-cell.imbalance-sell::after{content:'▼';position:absolute;right:1px;color:var(--red);font-size:6px;opacity:.8}
+.fp-cell-up{color:var(--green);font-weight:700;min-width:24px;text-align:right}
+.fp-cell-dn{color:var(--red);min-width:24px;text-align:left}
+.fp-cell-sep{color:var(--muted);margin:0 1px}
+.fp-cell-price{color:var(--muted2);font-size:7px;min-width:36px}
+
+/* Bar delta badge */
+.fp-delta{font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px;margin-top:1px}
+
+/* ── VOLUME PROFILE (right) ── */
+.vp-wrap{grid-column:2;grid-row:1 / 3;background:var(--panel);border-left:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column}
+.vp-header{padding:7px 10px;border-bottom:1px solid var(--border);font-size:8px;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;display:flex;justify-content:space-between}
+.vp-canvas-wrap{flex:1;position:relative;overflow:hidden}
+canvas#vp-canvas{width:100%;height:100%;display:block}
+.vp-labels{position:absolute;right:4px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;font-size:7px;color:var(--muted2);padding:4px 0;pointer-events:none}
+.vp-stats{padding:6px 10px;border-top:1px solid var(--border);font-size:8px;display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.vp-stat{display:flex;justify-content:space-between}
+
+/* ── CUMULATIVE DELTA (bottom-main) ── */
+.delta-wrap{grid-column:1;grid-row:2;border-top:1px solid var(--border);background:var(--panel);overflow:hidden;position:relative}
+.delta-header{position:absolute;top:4px;left:8px;font-size:8px;color:var(--muted2);z-index:2;letter-spacing:1px}
+canvas#delta-canvas{width:100%;height:100%;display:block}
+
+/* ── BIG TRADES + STATS (bottom) ── */
+.stats-wrap{grid-column:1 / 3;grid-row:3;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-top:1px solid var(--border)}
+.stat-panel{padding:6px 10px;border-right:1px solid var(--border);overflow:hidden}
+.stat-panel:last-child{border-right:none}
+.sp-title{font-size:7px;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-bottom:6px}
+.big-trade-row{display:flex;justify-content:space-between;align-items:center;padding:2px 0;border-bottom:1px solid rgba(22,31,53,.5);font-size:8px}
+.big-trade-row:last-child{border-bottom:none}
+.bt-dir{padding:1px 5px;border-radius:2px;font-weight:700;font-size:8px}
+.flow-stat{display:flex;justify-content:space-between;font-size:9px;padding:1px 0}
+.flow-bar{height:3px;border-radius:1.5px;margin-top:3px;margin-bottom:4px}
+
+/* TOOLTIP */
+#fp-tooltip{position:fixed;background:rgba(7,9,15,.96);border:1px solid var(--border);border-radius:5px;padding:8px 12px;font-size:9px;pointer-events:none;z-index:999;display:none;line-height:1.6;min-width:150px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">⬡ QADER · ORDER FLOW</div>
+  <div class="divider"></div>
+  <div class="hstat">
+    <div class="hstat-lbl">Price</div>
+    <div class="hstat-val" id="h-price" style="color:var(--text)">—</div>
+  </div>
+  <div class="hstat">
+    <div class="hstat-lbl">Session Delta</div>
+    <div class="hstat-val" id="h-cumdelta" style="color:var(--blue)">—</div>
+  </div>
+  <div class="hstat">
+    <div class="hstat-lbl">POC</div>
+    <div class="hstat-val" id="h-poc" style="color:var(--yellow)">—</div>
+  </div>
+  <div class="hstat">
+    <div class="hstat-lbl">VAH / VAL</div>
+    <div class="hstat-val" id="h-va" style="font-size:11px;color:var(--muted2)">— / —</div>
+  </div>
+  <div class="hstat">
+    <div class="hstat-lbl">Signal</div>
+    <div class="hstat-val" id="h-signal">—</div>
+  </div>
+  <div class="divider"></div>
+  <div class="tf-tabs">
+    <button class="tf-tab active" onclick="setTF('M1',this)">M1</button>
+    <button class="tf-tab" onclick="setTF('M5',this)">M5</button>
+    <button class="tf-tab" onclick="setTF('M15',this)">M15</button>
+  </div>
+  <div class="view-tabs">
+    <button class="view-tab active" onclick="setView('both',this)">Full</button>
+    <button class="view-tab" onclick="setView('fp',this)">Footprint</button>
+    <button class="view-tab" onclick="setView('vp',this)">Vol Profile</button>
+  </div>
+  <div class="live-dot"><div class="dot"></div><span id="h-ts">—</span></div>
+  <div class="top-actions">
+    <div class="state-pill" id="h-live-state">STATE —</div>
+    <a class="nav-link" href="/qader_live_dashboard.html">Dashboard</a>
+    <a class="nav-link" href="/agent_flow_diagram.html">Agent Flow</a>
+    <a class="nav-link" href="/qader_unified_console.html">Unified</a>
+    <a class="service-link" href="http://127.0.0.1:8866/" target="_blank" rel="noopener">Service 8866</a>
+    <a class="service-link" href="http://127.0.0.1:8833/" target="_blank" rel="noopener">Service 8833</a>
+  </div>
+</header>
+
+<div class="layout" id="layout">
+
+  <!-- FOOTPRINT CHART -->
+  <div class="fp-wrap" id="fp-wrap">
+    <div class="price-axis" id="price-axis"></div>
+    <div class="fp-scroll" id="fp-scroll">
+      <div class="fp-chart" id="fp-chart">
+        <div style="color:var(--muted2);font-size:10px;padding:20px">Loading footprint data...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOLUME PROFILE -->
+  <div class="vp-wrap" id="vp-wrap">
+    <div class="vp-header">
+      <span>Volume Profile</span>
+      <span id="vp-session" style="color:var(--blue)">SESSION</span>
+    </div>
+    <div class="vp-canvas-wrap">
+      <canvas id="vp-canvas"></canvas>
+    </div>
+    <div class="vp-stats" id="vp-stats"></div>
+  </div>
+
+  <!-- CUMULATIVE DELTA -->
+  <div class="delta-wrap">
+    <div class="delta-header">CUMULATIVE DELTA</div>
+    <canvas id="delta-canvas"></canvas>
+  </div>
+
+  <!-- BOTTOM STATS -->
+  <div class="stats-wrap">
+    <!-- Big Trades -->
+    <div class="stat-panel">
+      <div class="sp-title">🐋 Big Trades (High Volume Bars)</div>
+      <div id="bt-list"></div>
+    </div>
+    <!-- Session Stats -->
+    <div class="stat-panel">
+      <div class="sp-title">📊 Session Order Flow</div>
+      <div id="session-stats"></div>
+    </div>
+    <!-- Imbalance Map -->
+    <div class="stat-panel">
+      <div class="sp-title">⚡ Imbalance Zones</div>
+      <div id="imbalance-list"></div>
+    </div>
+    <!-- Market Context -->
+    <div class="stat-panel">
+      <div class="sp-title">📡 Market Context</div>
+      <div id="market-ctx"></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="fp-tooltip"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let _fp = null;    // footprint data
+let _state = null; // live state
+let _tf = 'M1';
+let _barWidth = 90; // px per candle
+const FP_API   = 'http://localhost:8765/api/footprint';
+const ST_API   = 'http://localhost:8765/api/state';
+const SSE_API  = 'http://localhost:8765/api/stream';
+const TICK_API = 'http://localhost:8765/api/tick';
+const LOCAL_STATE_API = 'qader_live_state.json';
+
+function el(id){return document.getElementById(id)}
+function fmt(n,d=3){return n==null?'—':(+n).toFixed(d)}
+function liveRecord(state){return (state&&(state.display_record||state.latest_record))||{}}
+function updateLivePill(state) {
+  const pill=el('h-live-state');
+  if (!pill) return;
+  const loop=(state&&state.loop)||{};
+  const r=liveRecord(state);
+  const status=(loop.state||r.loop_state||'STATE —').toString().toUpperCase();
+  const cycle=loop.cycle_count||r.cycle_number;
+  const blocked=(r.risk_status&&r.risk_status!=='approved')||r.execution_status==='risk_blocked';
+  pill.textContent = status + (cycle!=null ? ' #' + cycle : '');
+  pill.title = r.risk_status || loop.reason || 'Live state';
+  pill.className = 'state-pill ' + (status==='RUNNING' ? (blocked?'warn':'') : 'off');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TF + VIEW CONTROLS
+// ═══════════════════════════════════════════════════════════════
+function setTF(tf, btn) {
+  _tf = tf;
+  document.querySelectorAll('.tf-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _barWidth = tf==='M1'?90:tf==='M5'?100:120;
+  fetchFootprint();
+}
+
+function setView(v, btn) {
+  document.querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FOOTPRINT RENDER
+// ═══════════════════════════════════════════════════════════════
+function renderFootprint(fp) {
+  if (!fp||!fp.bars||!fp.bars.length) return;
+  const chart = el('fp-chart');
+  chart.innerHTML = '';
+
+  // Collect all price levels across all bars for unified axis
+  const allPrices = new Set();
+  fp.bars.forEach(bar => bar.levels.forEach(l => allPrices.add(l.p)));
+  const pricesSorted = Array.from(allPrices).sort((a,b)=>b-a);
+  const tickSize = fp.tick_size || 0.1;
+  const minP = Math.min(...pricesSorted);
+  const maxP = Math.max(...pricesSorted);
+
+  // Find max up/dn for color scaling
+  let maxVol = 1;
+  fp.bars.forEach(bar => bar.levels.forEach(l => { maxVol = Math.max(maxVol, l.u, l.d) }));
+
+  fp.bars.forEach((bar, bi) => {
+    const bull = bar.bullish;
+    const delta = bar.delta;
+    const poc = bar.poc;
+
+    // Build level lookup for this bar
+    const levelMap = {};
+    bar.levels.forEach(l => { levelMap[l.p] = l });
+    const imbSet = new Set((bar.imbalances||[]).map(im=>im.price+'_'+im.type));
+
+    // Column wrapper
+    const col = document.createElement('div');
+    col.className = 'fp-bar';
+    col.style.width = _barWidth + 'px';
+
+    // Inner cells container
+    const inner = document.createElement('div');
+    inner.className = 'fp-bar-inner';
+    inner.style.width = _barWidth + 'px';
+    inner.style.border = '1px solid ' + (bull?'rgba(0,230,118,.3)':'rgba(255,69,69,.3)');
+
+    // Render all price levels for this bar (align with global price axis)
+    pricesSorted.forEach(price => {
+      const cell = document.createElement('div');
+      cell.className = 'fp-cell';
+      cell.style.height = '14px';
+
+      const lvl = levelMap[price];
+      const isPOC = (poc != null && Math.abs(price - poc) < tickSize * 0.5);
+
+      if (isPOC) cell.classList.add('poc');
+
+      if (lvl) {
+        const total = lvl.u + lvl.d;
+        const ratio = total > 0 ? lvl.u / total : 0.5;
+
+        if (ratio >= 0.75) {
+          cell.classList.add(ratio >= 0.88 ? 'bull-hi' : 'bull-lo');
+          if (imbSet.has(price+'_buy')) cell.classList.add('imbalance-buy');
+        } else if (ratio <= 0.25) {
+          cell.classList.add(ratio <= 0.12 ? 'bear-hi' : 'bear-lo');
+          if (imbSet.has(price+'_sell')) cell.classList.add('imbalance-sell');
+        } else {
+          cell.classList.add('neutral');
+        }
+
+        // Intensity background based on volume
+        const intensity = Math.min(1, (total / maxVol));
+        if (!isPOC) cell.style.background = ratio >= 0.5
+          ? `rgba(0,230,118,${intensity * 0.25})`
+          : `rgba(255,69,69,${intensity * 0.25})`;
+
+        cell.innerHTML =
+          `<span class="fp-cell-price">${price.toFixed(3)}</span>` +
+          `<span class="fp-cell-up">${Math.round(lvl.u)}</span>` +
+          `<span class="fp-cell-sep">×</span>` +
+          `<span class="fp-cell-dn">${Math.round(lvl.d)}</span>`;
+
+        // Tooltip
+        cell.title = `${price.toFixed(3)} | Up:${lvl.u} Dn:${lvl.d} Delta:${(lvl.u-lvl.d).toFixed(0)} Cnt:${lvl.c}${isPOC?' ★POC':''}`;
+      } else {
+        cell.classList.add('neutral');
+        cell.style.opacity = '0.2';
+        cell.innerHTML = `<span class="fp-cell-price" style="color:var(--muted)">${price.toFixed(3)}</span>`;
+      }
+
+      inner.appendChild(cell);
+    });
+
+    col.appendChild(inner);
+
+    // Delta badge below candle
+    const dbadge = document.createElement('div');
+    dbadge.className = 'fp-delta';
+    dbadge.style.background = delta > 0 ? 'rgba(0,230,118,.15)' : delta < 0 ? 'rgba(255,69,69,.15)' : 'rgba(30,40,60,.3)';
+    dbadge.style.color = delta > 0 ? '#00e676' : delta < 0 ? '#ff4545' : '#5a6d90';
+    dbadge.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(0);
+    col.appendChild(dbadge);
+
+    // ── Big Trade marker (triangle above/below bar) ──
+    const bigTrades = fp.big_trades||[];
+    const barBT = bigTrades.filter(bt=>Math.abs(bt.time - bar.time) < 65);
+    if (barBT.length > 0) {
+      const btEl = document.createElement('div');
+      const bt = barBT[0];
+      btEl.style.cssText = `text-align:center;font-size:14px;line-height:1;margin-bottom:1px;` +
+        `color:${bt.direction==='BUY'?'#00e676':'#ff4545'};` +
+        `text-shadow:0 0 6px ${bt.direction==='BUY'?'rgba(0,230,118,.8)':'rgba(255,69,69,.8)'}`;
+      btEl.title = `Big Trade: ${bt.direction} ${bt.volume} ticks (${bt.multiple}×avg) Δ${bt.delta>=0?'+':''}${bt.delta}`;
+      btEl.textContent = bt.direction==='BUY' ? '▲' : '▼';
+      col.insertBefore(btEl, inner);
+    }
+
+    // ── Trade entry/exit markers ──
+    const markers = fp.trade_markers||[];
+    const barMarkers = markers.filter(m=>Math.abs(m.time - bar.time) < 65);
+    if (barMarkers.length > 0) {
+      const mEl = document.createElement('div');
+      mEl.style.cssText = 'display:flex;justify-content:center;gap:2px;margin-bottom:1px;font-size:9px';
+      barMarkers.forEach(m => {
+        const badge = document.createElement('span');
+        if (m.type==='entry') {
+          badge.style.cssText = `background:${m.direction==='BUY'?'rgba(0,230,118,.25)':'rgba(255,69,69,.25)'};` +
+            `color:${m.direction==='BUY'?'#00e676':'#ff4545'};padding:1px 3px;border-radius:2px;font-size:8px;font-weight:700;` +
+            `border:1px solid ${m.direction==='BUY'?'rgba(0,230,118,.5)':'rgba(255,69,69,.5)'}`;
+          badge.textContent = m.direction==='BUY'?'▶B':'▶S';
+          badge.title = `Entry ${m.direction} | SL:${m.sl} TP:${m.tp} Lot:${m.lot}`;
+        } else {
+          const won = m.won||m.profit>0;
+          badge.style.cssText = `background:${won?'rgba(0,230,118,.2)':'rgba(255,69,69,.2)'};` +
+            `color:${won?'#00e676':'#ff4545'};padding:1px 3px;border-radius:2px;font-size:8px;` +
+            `border:1px solid ${won?'rgba(0,230,118,.4)':'rgba(255,69,69,.4)'}`;
+          badge.textContent = won?'✓':'✗';
+          badge.title = `Exit ${m.direction} | P&L: ${m.profit>=0?'+':''}${m.profit}`;
+        }
+        mEl.appendChild(badge);
+      });
+      col.insertBefore(mEl, inner);
+    }
+
+    // Time label
+    const tlbl = document.createElement('div');
+    tlbl.className = 'fp-time';
+    const d = new Date(bar.time * 1000);
+    tlbl.textContent = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+    col.appendChild(tlbl);
+
+    // Hover tooltip
+    const btInfo = barBT.length>0 ? `<div style="color:var(--orange);margin-top:3px">🐋 Big Trade: ${barBT[0].direction} ${barBT[0].volume} ticks (${barBT[0].multiple}×)</div>` : '';
+    const mInfo = barMarkers.map(m=>m.type==='entry'
+      ? `<div style="color:${m.direction==='BUY'?'#00e676':'#ff4545'}">▶ ENTRY ${m.direction} | SL:${(m.sl||0).toFixed(3)} TP:${(m.tp||0).toFixed(3)}</div>`
+      : `<div style="color:${m.won?'#00e676':'#ff4545'}">${m.won?'✓ WIN':'✗ LOSS'} ${m.direction} | P&L: ${m.profit>=0?'+':''}${(m.profit||0).toFixed(2)}</div>`
+    ).join('');
+
+    col.addEventListener('mouseenter', e => {
+      const tt = el('fp-tooltip');
+      tt.style.display = 'block';
+      const bull2 = bar.bullish;
+      tt.innerHTML = `
+        <div style="color:var(--muted2);font-size:8px;margin-bottom:4px">${new Date(bar.time*1000).toLocaleTimeString()} — ${_tf}</div>
+        <div>O <b style="color:${bull2?'#00e676':'#ff4545'}">${bar.open}</b>
+             H <b style="color:#00e676">${bar.high}</b>
+             L <b style="color:#ff4545">${bar.low}</b>
+             C <b style="color:${bull2?'#00e676':'#ff4545'}">${bar.close}</b></div>
+        <div style="margin-top:4px">Ticks: <b>${bar.tick_volume}</b></div>
+        <div>↑ <b style="color:#00e676">${bar.up}</b> ↓ <b style="color:#ff4545">${bar.dn}</b>
+             Δ <b style="color:${bar.delta>=0?'#00e676':'#ff4545'}">${bar.delta>=0?'+':''}${bar.delta}</b></div>
+        <div>Cum Δ: <b style="color:var(--blue)">${bar.cum_delta>=0?'+':''}${bar.cum_delta}</b></div>
+        ${poc?`<div style="color:var(--yellow);margin-top:2px">★ POC: ${poc}</div>`:''}
+        ${bar.imbalances&&bar.imbalances.length?`<div style="color:var(--orange);margin-top:2px">⚡ Imbalances: ${bar.imbalances.length}</div>`:''}
+        ${btInfo}${mInfo}
+      `;
+    });
+    col.addEventListener('mousemove', e => {
+      const tt = el('fp-tooltip');
+      tt.style.left = (e.clientX + 12) + 'px';
+      tt.style.top  = Math.min(e.clientY - 10, window.innerHeight - 180) + 'px';
+    });
+    col.addEventListener('mouseleave', () => { el('fp-tooltip').style.display='none' });
+
+    chart.appendChild(col);
+  });
+
+  // Scroll to right (latest bar)
+  setTimeout(() => {
+    const scroll = el('fp-scroll');
+    scroll.scrollLeft = scroll.scrollWidth;
+  }, 50);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VOLUME PROFILE CANVAS
+// ═══════════════════════════════════════════════════════════════
+function drawVolumeProfile(fp, state) {
+  const cvs = el('vp-canvas');
+  if (!cvs||!fp||!fp.volume_profile||!fp.volume_profile.length) return;
+  const wrap = cvs.parentElement;
+  const dpr = window.devicePixelRatio||1;
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  cvs.width = W*dpr; cvs.height = H*dpr;
+  cvs.style.width = W+'px'; cvs.style.height = H+'px';
+  const ctx = cvs.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const vp = fp.volume_profile;
+  const maxVol = Math.max(...vp.map(l=>l.vol), 1);
+  const minP = vp[0].price;
+  const maxP = vp[vp.length-1].price;
+  const priceRange = maxP - minP || 1;
+  const PAD_L = 44, PAD_R = 4, PAD_T = 4, PAD_B = 4;
+  const chartW = W - PAD_L - PAD_R;
+  const chartH = H - PAD_T - PAD_B;
+
+  ctx.fillStyle = '#0c1019';
+  ctx.fillRect(0, 0, W, H);
+
+  const barH = Math.max(1, chartH / vp.length);
+
+  // Draw bars
+  vp.forEach((level, i) => {
+    const y = PAD_T + (1 - (level.price - minP) / priceRange) * chartH;
+    const barW = (level.vol / maxVol) * chartW;
+    const isPOC = Math.abs(level.price - fp.poc) < (fp.tick_size||0.1) * 0.5;
+    const isVA = level.va;
+
+    if (isPOC) {
+      ctx.fillStyle = 'rgba(255,215,64,0.6)';
+    } else if (isVA) {
+      ctx.fillStyle = 'rgba(79,195,247,0.25)';
+    } else {
+      ctx.fillStyle = 'rgba(79,195,247,0.12)';
+    }
+    ctx.fillRect(PAD_L, y - barH/2, barW, barH);
+
+    // POC border
+    if (isPOC) {
+      ctx.strokeStyle = '#ffd740';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(PAD_L, y - barH/2, barW, barH);
+    }
+
+    // Price labels (every few levels)
+    if (i % Math.max(1, Math.floor(vp.length/12)) === 0 || isPOC) {
+      ctx.fillStyle = isPOC ? '#ffd740' : '#3d4d70';
+      ctx.font = '8px Consolas';
+      ctx.textAlign = 'right';
+      ctx.fillText(level.price.toFixed(2), PAD_L - 2, y + 3);
+    }
+  });
+
+  // POC line
+  const pocY = PAD_T + (1 - (fp.poc - minP) / priceRange) * chartH;
+  ctx.strokeStyle = 'rgba(255,215,64,0.8)'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(PAD_L, pocY); ctx.lineTo(W-PAD_R, pocY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#ffd740'; ctx.font = 'bold 8px Consolas'; ctx.textAlign = 'left';
+  ctx.fillText('POC ' + fp.poc.toFixed(2), W-PAD_R-55, pocY - 2);
+
+  // VAH line
+  const vahY = PAD_T + (1 - (fp.vah - minP) / priceRange) * chartH;
+  ctx.strokeStyle = 'rgba(0,230,118,0.5)'; ctx.lineWidth = 1; ctx.setLineDash([2,4]);
+  ctx.beginPath(); ctx.moveTo(PAD_L, vahY); ctx.lineTo(W-PAD_R, vahY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(0,230,118,0.7)'; ctx.font = '8px Consolas';
+  ctx.fillText('VAH', W-PAD_R-30, vahY - 2);
+
+  // VAL line
+  const valY = PAD_T + (1 - (fp.val - minP) / priceRange) * chartH;
+  ctx.strokeStyle = 'rgba(255,69,69,0.5)'; ctx.lineWidth = 1; ctx.setLineDash([2,4]);
+  ctx.beginPath(); ctx.moveTo(PAD_L, valY); ctx.lineTo(W-PAD_R, valY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,69,69,0.7)'; ctx.font = '8px Consolas';
+  ctx.fillText('VAL', W-PAD_R-30, valY + 9);
+
+  // Current price line
+  if (state && state.tick && state.tick.bid) {
+    const curP = state.tick.bid;
+    const curY = PAD_T + (1 - (curP - minP) / priceRange) * chartH;
+    if (curY >= PAD_T && curY <= H-PAD_B) {
+      ctx.strokeStyle = '#c8d4f0'; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(PAD_L, curY); ctx.lineTo(W-PAD_R, curY); ctx.stroke();
+      ctx.fillStyle = '#c8d4f0'; ctx.font = 'bold 8px Consolas';
+      ctx.fillText(curP.toFixed(3), W-PAD_R-55, curY + 9);
+    }
+  }
+
+  // VP Stats
+  const r = liveRecord(state);
+  el('vp-stats').innerHTML = [
+    {l:'POC', v:fp.poc.toFixed(3), c:'var(--yellow)'},
+    {l:'VAH', v:fp.vah.toFixed(3), c:'var(--green)'},
+    {l:'VAL', v:fp.val.toFixed(3), c:'var(--red)'},
+    {l:'Range', v:(fp.vah-fp.val).toFixed(3), c:'var(--muted2)'},
+    {l:'Total V', v:Math.round(fp.total_vol), c:'var(--blue)'},
+    {l:'Bid', v:state&&state.tick?state.tick.bid.toFixed(3):'—', c:'var(--text)'},
+  ].map(x=>`<div class="vp-stat"><span style="color:var(--muted2)">${x.l}</span><span style="color:${x.c};font-weight:700">${x.v}</span></div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CUMULATIVE DELTA CHART
+// ═══════════════════════════════════════════════════════════════
+function drawDeltaChart(fp) {
+  const cvs = el('delta-canvas');
+  if (!cvs||!fp||!fp.cumulative_delta||!fp.cumulative_delta.length) return;
+  const wrap = cvs.parentElement;
+  const dpr = window.devicePixelRatio||1;
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  cvs.width = W*dpr; cvs.height = H*dpr;
+  cvs.style.width = W+'px'; cvs.style.height = H+'px';
+  const ctx = cvs.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const data = fp.cumulative_delta;
+  const deltas = data.map(d=>d.delta);
+  const cums   = data.map(d=>d.cum);
+  const PAD = {l:50,r:8,t:12,b:18};
+  const chartW = W-PAD.l-PAD.r;
+  const chartH = H-PAD.t-PAD.b;
+
+  ctx.fillStyle='#0c1019'; ctx.fillRect(0,0,W,H);
+
+  // Grid
+  const maxC = Math.max(...cums.map(Math.abs),1);
+  ctx.strokeStyle='rgba(22,31,53,0.8)'; ctx.lineWidth=0.5;
+  [0.5,0,-0.5].forEach(f=>{
+    const y=PAD.t+chartH*(0.5-f*0.45);
+    ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(W-PAD.r,y); ctx.stroke();
+    ctx.fillStyle='#3d4d70'; ctx.font='8px Consolas'; ctx.textAlign='right';
+    ctx.fillText((maxC*f*2).toFixed(0), PAD.l-3, y+3);
+  });
+  // Zero line
+  const y0=PAD.t+chartH*0.5;
+  ctx.strokeStyle='rgba(90,109,144,0.5)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(PAD.l,y0); ctx.lineTo(W-PAD.r,y0); ctx.stroke();
+  ctx.fillStyle='#3d4d70'; ctx.font='8px Consolas'; ctx.textAlign='right';
+  ctx.fillText('0', PAD.l-3, y0+3);
+
+  const barW2 = chartW / Math.max(data.length,1);
+
+  // Bar delta (per-bar)
+  deltas.forEach((d,i)=>{
+    const x=PAD.l+i*barW2;
+    const barH2=Math.abs(d)/maxC*(chartH*0.45);
+    ctx.fillStyle=d>=0?'rgba(0,230,118,0.3)':'rgba(255,69,69,0.3)';
+    ctx.fillRect(x,d>=0?y0-barH2:y0,barW2-1,barH2);
+  });
+
+  // Cumulative delta line
+  ctx.beginPath();
+  cums.forEach((c,i)=>{
+    const x=PAD.l+(i+0.5)*barW2;
+    const y=PAD.t+chartH*(0.5-(c/maxC)*0.45);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle='#4fc3f7'; ctx.lineWidth=2; ctx.stroke();
+
+  // Fill under curve
+  ctx.lineTo(PAD.l+(cums.length-0.5)*barW2,y0);
+  ctx.lineTo(PAD.l+0.5*barW2,y0);
+  ctx.closePath();
+  ctx.fillStyle='rgba(79,195,247,0.06)'; ctx.fill();
+
+  // Last value label
+  if (cums.length>0) {
+    const lastC=cums[cums.length-1];
+    const lastY=PAD.t+chartH*(0.5-(lastC/maxC)*0.45);
+    ctx.fillStyle=lastC>=0?'#00e676':'#ff4545';
+    ctx.font='bold 9px Consolas'; ctx.textAlign='left';
+    ctx.fillText((lastC>=0?'+':'')+lastC.toFixed(0), W-PAD.r-50, lastY-3);
+  }
+
+  // X axis time labels
+  const step=Math.max(1,Math.floor(data.length/5));
+  ctx.fillStyle='#3d4d70'; ctx.font='8px Consolas'; ctx.textAlign='center';
+  data.forEach((d,i)=>{
+    if(i%step===0){
+      const x=PAD.l+(i+0.5)*barW2;
+      const t=new Date(d.time*1000);
+      ctx.fillText(t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0'), x, H-PAD.b+12);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BOTTOM PANELS
+// ═══════════════════════════════════════════════════════════════
+function updateBottomPanels(fp, state) {
+  const r=liveRecord(state);
+  const arb=(state&&state.arbitration)||{};
+  const ind=(r.indicator_pack)||{};
+  const cl=ind.classic||{};
+
+  // Big Trades
+  const bt=fp.big_trades||[];
+  el('bt-list').innerHTML=bt.length===0
+    ?'<div style="color:var(--muted);font-size:9px">No big trades detected this session</div>'
+    :bt.reverse().slice(0,6).map(t=>`
+      <div class="big-trade-row">
+        <span style="color:var(--muted2);font-size:7px">${new Date(t.time*1000).toLocaleTimeString()}</span>
+        <span style="color:${t.direction==='BUY'?'var(--green)':'var(--red)'};font-weight:700;font-size:9px">${t.direction}</span>
+        <span style="color:var(--text)">${t.price.toFixed(3)}</span>
+        <span style="color:var(--yellow)">${t.volume} tks</span>
+        <span style="color:var(--orange);font-size:8px">${t.multiple}×</span>
+      </div>`).join('');
+
+  // Session stats
+  const totalUp=fp.bars?fp.bars.reduce((s,b)=>s+b.up,0):0;
+  const totalDn=fp.bars?fp.bars.reduce((s,b)=>s+b.dn,0):0;
+  const totalDelta=totalUp-totalDn;
+  const total=totalUp+totalDn||1;
+  const buyPct=Math.round(totalUp/total*100);
+  el('session-stats').innerHTML=`
+    <div class="flow-stat"><span style="color:var(--muted2)">Total Up Ticks</span><span style="color:var(--green);font-weight:700">${Math.round(totalUp)}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">Total Down Ticks</span><span style="color:var(--red);font-weight:700">${Math.round(totalDn)}</span></div>
+    <div class="flow-bar" style="background:linear-gradient(90deg,var(--green) ${buyPct}%,var(--red) ${buyPct}%)"></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">Session Delta</span><span style="color:${totalDelta>=0?'var(--green)':'var(--red)'};font-weight:700">${totalDelta>=0?'+':''}${Math.round(totalDelta)}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">Buy%</span><span style="color:${buyPct>=50?'var(--green)':'var(--red)'};">${buyPct}%</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">Bars</span><span style="color:var(--blue)">${fp.bars?fp.bars.length:0}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">Signal Bias</span><span style="color:${totalDelta>5?'var(--green)':totalDelta<-5?'var(--red)':'var(--yellow)'}">${totalDelta>5?'↑ BULLISH':totalDelta<-5?'↓ BEARISH':'⟷ NEUTRAL'}</span></div>`;
+
+  // Imbalances
+  const imbs=[];
+  if(fp.bars) fp.bars.forEach(bar=>{
+    if(bar.imbalances&&bar.imbalances.length) {
+      bar.imbalances.forEach(im=>imbs.push({...im, time:bar.time}));
+    }
+  });
+  const recentImbs=imbs.slice(-8).reverse();
+  el('imbalance-list').innerHTML=recentImbs.length===0
+    ?'<div style="color:var(--muted);font-size:9px">No imbalances detected</div>'
+    :recentImbs.map(im=>`
+      <div class="big-trade-row">
+        <span style="color:var(--muted2);font-size:7px">${new Date(im.time*1000).toLocaleTimeString()}</span>
+        <span style="font-size:8px">${im.price.toFixed(3)}</span>
+        <span style="color:${im.type==='buy'?'var(--green)':'var(--red)'};font-weight:700;font-size:8px">${im.type==='buy'?'BUY IMB':'SELL IMB'}</span>
+        <span style="color:var(--orange);font-size:8px">${(im.ratio*100).toFixed(0)}%</span>
+      </div>`).join('');
+
+  // Market context
+  const fDir=(arb.fractal&&arb.fractal.direction)||r.fractal_result||'—';
+  const smc=(arb.smc&&arb.smc.state)||r.smc_result||'—';
+  const spread=r.spread||0;
+  const bos=(r.structure_map&&r.structure_map.bos)||'—';
+  const pred=(r.structure_map&&r.structure_map.prediction)||{};
+  function dc(d){return d==='BUY'?'var(--green)':d==='SELL'?'var(--red)':'var(--muted2)'}
+  el('market-ctx').innerHTML=`
+    <div class="flow-stat"><span style="color:var(--muted2)">Fractal</span><span style="color:${dc(fDir)};font-weight:700">${fDir}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">SMC</span><span style="color:var(--muted2)">${smc==='no_confirmation'?'NONE':smc.toUpperCase()}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">BOS</span><span style="color:${bos.includes('BULL')?'var(--green)':bos.includes('BEAR')?'var(--red)':'var(--muted)'}">${bos}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">Prediction</span><span style="color:${dc(pred.bias)}">${pred.bias||'—'} ${pred.confidence!=null?pred.confidence.toFixed(2):''}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">ADX</span><span style="color:${cl.adx&&cl.adx>25?'var(--green)':cl.adx&&cl.adx<15?'var(--red)':'var(--yellow)'}">${cl.adx!=null?cl.adx.toFixed(1):'—'}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">RSI</span><span style="color:${cl.rsi>65?'var(--green)':cl.rsi<35?'var(--red)':'var(--muted2)'}">${cl.rsi!=null?cl.rsi.toFixed(1):'—'}</span></div>
+    <div class="flow-stat"><span style="color:var(--muted2)">Spread</span><span style="color:${spread>300?'var(--red)':spread>150?'var(--yellow)':'var(--green)'}">${spread} pts</span></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HEADER UPDATE
+// ═══════════════════════════════════════════════════════════════
+function updateHeader(fp, state) {
+  const r=liveRecord(state);
+  const tick=(state&&state.tick)||{bid:r.bid,ask:r.ask,spread:r.spread};
+  const arb=(state&&state.arbitration)||{};
+
+  el('h-price').textContent = tick.bid ? tick.bid.toFixed(3) : '—';
+  if (fp) {
+    const lastCum = fp.cumulative_delta.length>0?fp.cumulative_delta[fp.cumulative_delta.length-1].cum:0;
+    el('h-cumdelta').textContent = (lastCum>=0?'+':'')+lastCum.toFixed(0);
+    el('h-cumdelta').style.color = lastCum>=0?'var(--green)':'var(--red)';
+    el('h-poc').textContent = fp.poc ? fp.poc.toFixed(3) : '—';
+    el('h-va').textContent = (fp.vah||0).toFixed(3)+' / '+(fp.val||0).toFixed(3);
+  }
+  const sig=arb.final_direction||r.arbiter_result||'—';
+  el('h-signal').textContent=sig;
+  el('h-signal').style.color=sig==='BUY'?'var(--green)':sig==='SELL'?'var(--red)':'var(--muted2)';
+  const ts=r.timestamp||'';
+  el('h-ts').textContent=ts?new Date(ts).toLocaleTimeString():'—';
+  el('vp-session').textContent=(r.session||(state&&state.session_info&&state.session_info.current)||'').toUpperCase()||'SESSION';
+  updateLivePill(state);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FETCH + RENDER
+// ═══════════════════════════════════════════════════════════════
+async function fetchFootprint() {
+  try {
+    const n = _tf==='M1'?20:_tf==='M5'?18:15;
+    const fpRes = await fetch(`${FP_API}?tf=${_tf}&n=${n}`, {cache:'no-store'});
+    _fp = await fpRes.json();
+    if (!_state) {
+      try {
+        const stRes = await fetch(ST_API, {cache:'no-store'});
+        _state = await stRes.json();
+      } catch(_) {
+        const stRes = await fetch(LOCAL_STATE_API, {cache:'no-store'});
+        _state = await stRes.json();
+      }
+    }
+
+    if (_fp.error) {
+      el('fp-chart').innerHTML=`<div style="color:var(--red);padding:20px">Error: ${_fp.error}</div>`;
+      return;
+    }
+
+    updateHeader(_fp, _state);
+    renderFootprint(_fp);
+    drawVolumeProfile(_fp, _state);
+    drawDeltaChart(_fp);
+    updateBottomPanels(_fp, _state);
+  } catch(e) {
+    el('h-ts').textContent='disconnected';
+  }
+  setTimeout(fetchFootprint, 1500); // footprint refresh 1.5s (heavy tick query)
+}
+
+// SSE for live state updates (header, price, positions)
+function connectStateSSE() {
+  const es = new EventSource(SSE_API);
+  es.addEventListener('state', e => {
+    try {
+      _state = JSON.parse(e.data);
+      if (_fp) {
+        updateHeader(_fp, _state);
+        drawVolumeProfile(_fp, _state);
+        updateBottomPanels(_fp, _state);
+      }
+    } catch(_) {}
+  });
+  es.onerror = () => { es.close(); setTimeout(connectStateSSE, 2000); };
+}
+
+// Fast price tick for header price line
+async function fastTick() {
+  try {
+    const r = await fetch(TICK_API, {cache:'no-store'});
+    const t = await r.json();
+    const ts = el('h-ts');
+    if (ts && t.bid) ts.textContent = `Bid: ${t.bid.toFixed(2)}  Ask: ${t.ask.toFixed(2)}  Spread: ${t.spread.toFixed(1)}pts  Cycle: ${t.cycle}`;
+  } catch(_) {}
+  setTimeout(fastTick, 150);
+}
+
+window.addEventListener('resize', ()=>{
+  if(_fp&&_state){
+    drawVolumeProfile(_fp,_state);
+    drawDeltaChart(_fp);
+  }
+});
+
+window.addEventListener('load', ()=>{ fetchFootprint(); connectStateSSE(); fastTick(); });
+</script>
+</body>
+</html>

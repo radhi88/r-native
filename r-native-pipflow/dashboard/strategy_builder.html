@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>R Native · بناء استراتيجية بالذكاء</title>
+<style>
+:root{
+  --bg-0:#060418; --bg-1:#0d0824; --bg-2:#14092e; --bg-3:#1c1142;
+  --gold-0:#fbbf24; --gold-1:#f59e0b; --gold-2:#b45309;
+  --violet:#8b5cf6; --green:#10b981; --red:#ef4444; --cyan:#22d3ee;
+  --text:#f1f5f9; --muted:#94a3b8; --border:#2d1b69;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(135deg,var(--bg-0),var(--bg-1) 50%,var(--bg-2));
+  color:var(--text);font-family:'Inter','Segoe UI',Tahoma,sans-serif;min-height:100vh;padding:18px}
+.nav{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.nav a{font-size:12px;color:var(--muted);text-decoration:none;padding:6px 10px;border:1px solid var(--border);border-radius:8px}
+.nav a:hover{color:var(--gold-0)}
+h1{font-size:20px;color:var(--gold-0);margin-bottom:4px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+.steps{display:flex;gap:6px;margin-bottom:18px}
+.steps .s{flex:1;text-align:center;font-size:11px;color:var(--muted);padding:8px;border-bottom:2px solid var(--border)}
+.steps .s.active{color:var(--gold-0);border-color:var(--gold-0)}
+.panel{background:rgba(28,17,66,.55);border:1px solid var(--border);border-radius:12px;padding:18px;backdrop-filter:blur(8px);max-width:880px}
+label{display:block;font-size:12px;color:var(--muted);margin:12px 0 6px}
+input,textarea,select{width:100%;background:var(--bg-3);color:var(--text);border:1px solid var(--border);
+  border-radius:8px;padding:10px;font-size:13px;font-family:inherit}
+textarea{min-height:110px;resize:vertical}
+button{cursor:pointer;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;font-family:inherit}
+.primary{background:linear-gradient(135deg,var(--gold-1),var(--gold-2));color:#1a1205}
+.ghost{background:var(--bg-3);color:var(--text);border:1px solid var(--border)}
+.violet{background:linear-gradient(135deg,var(--violet),#4c1d95);color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.tfgrid{display:flex;gap:6px;flex-wrap:wrap}
+.tfgrid .tf{padding:7px 13px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:12px}
+.tfgrid .tf.on{background:var(--gold-2);color:#1a1205;border-color:var(--gold-0)}
+.indlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-top:8px}
+.indrow{display:flex;justify-content:space-between;align-items:center;background:var(--bg-3);padding:8px 10px;border-radius:8px;font-size:12px}
+.cond{background:var(--bg-3);border-radius:8px;padding:10px;margin-top:8px;font-size:12px}
+.cond .conf{color:var(--gold-0);font-weight:700}
+.tag{display:inline-block;font-size:11px;color:var(--violet);background:rgba(139,92,246,.12);padding:2px 8px;border-radius:99px}
+.hidden{display:none}
+.err{color:var(--red);font-size:12px;margin-top:10px}
+.ok{color:var(--green);font-size:12px;margin-top:10px}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}
+td,th{padding:7px;border-bottom:1px solid var(--border);text-align:right}
+.spin{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/r/indicators">📊 المؤشرات</a>
+  <a href="/r/strategies">🧠 بناء استراتيجية</a>
+  <a href="/r/analyze">🔍 تحليل الشارت</a>
+  <a href="/r/monitor">📡 المتابعة المباشرة</a>
+</div>
+<h1>🧠 بناء استراتيجية بالذكاء (Prompt Trading)</h1>
+<div class="sub">اكتب فكرتك بكلام عادي ← الذكاء يحوّلها لقواعد منظَّمة + System Prompt</div>
+
+<div class="steps">
+  <div class="s active" data-step="1">١· التفاصيل</div>
+  <div class="s" data-step="2">٢· السياق</div>
+  <div class="s" data-step="3">٣· الذكاء</div>
+  <div class="s" data-step="4">٤· المراجعة</div>
+</div>
+
+<!-- STEP 1 -->
+<div class="panel" id="step1">
+  <label>اسم الاستراتيجية</label>
+  <input id="name" placeholder="مثال: قنّاص الذهب"/>
+  <label>صف استراتيجيتك بكلام طبيعي</label>
+  <textarea id="prompt" placeholder="اشترِ الذهب عند ارتداد OB صاعد بعد كسر سيولة، وأكّد بتوافق كل المؤشرات…"></textarea>
+  <div class="row">
+    <button class="violet" onclick="polish()">✨ صقل بالذكاء (Polish with AI)</button>
+    <span id="polishStatus" class="spin"></span>
+  </div>
+  <div id="polishErr" class="err"></div>
+  <div class="row"><button class="primary" onclick="go(2)">التالي ←</button></div>
+</div>
+
+<!-- STEP 2 -->
+<div class="panel hidden" id="step2">
+  <label>الأزواج (افصل بفاصلة)</label>
+  <input id="pairs" placeholder="XAUUSDm, XAGUSDm"/>
+  <label>الفريم</label>
+  <div class="tfgrid" id="tfgrid">
+    <span class="tf" data-tf="1m">1m</span><span class="tf" data-tf="5m">5m</span>
+    <span class="tf on" data-tf="15m">15m</span><span class="tf" data-tf="30m">30m</span>
+    <span class="tf" data-tf="1h">1h</span><span class="tf" data-tf="4h">4h</span>
+    <span class="tf" data-tf="1d">1d</span>
+  </div>
+  <div class="indlist" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+    <div><label>مخاطرة/صفقة %</label><input id="r_maxPerTrade" value="1"/></div>
+    <div><label>حد يومي %</label><input id="r_dailyLoss" value="5"/></div>
+    <div><label>أقصى صفقات</label><input id="r_maxOpen" value="1"/></div>
+    <div><label>SL × ATR</label><input id="r_sl" value="1"/></div>
+    <div><label>أدنى ثقة %</label><input id="r_minConf" value="70"/></div>
+  </div>
+  <div class="row"><button class="ghost" onclick="go(1)">→ السابق</button><button class="primary" onclick="go(3)">التالي ←</button></div>
+</div>
+
+<!-- STEP 3 -->
+<div class="panel hidden" id="step3">
+  <label>المنهجية</label>
+  <select id="methodology">
+    <option value="SMC">SMC</option><option value="HYBRID" selected>Hybrid</option>
+    <option value="TECHNICAL">Technical</option><option value="VOLATILITY">Volatility</option>
+  </select>
+  <label>المؤشرات المُفعّلة</label>
+  <div class="indlist" id="indtoggles"></div>
+  <div class="row"><button class="ghost" onclick="go(2)">→ السابق</button><button class="primary" onclick="go(4)">التالي ←</button></div>
+</div>
+
+<!-- STEP 4 -->
+<div class="panel hidden" id="step4">
+  <h1 style="font-size:16px" id="rvName">—</h1>
+  <div class="sub" id="rvMeta"></div>
+  <div><span class="tag" id="rvMethod"></span></div>
+  <label>System Prompt (مولّد)</label>
+  <textarea id="rvSysPrompt" readonly></textarea>
+  <label>شروط الدخول</label>
+  <div id="rvConds"></div>
+  <label>إدارة المخاطر</label>
+  <div id="rvRisk" class="cond"></div>
+  <div class="row">
+    <button class="ghost" onclick="go(3)">→ السابق</button>
+    <button class="primary" onclick="createStrategy()">✓ إنشاء</button>
+    <span id="createStatus" class="ok"></span>
+  </div>
+</div>
+
+<h1 style="margin-top:26px;font-size:16px">الاستراتيجيات المحفوظة</h1>
+<table id="stratTable"><thead><tr><th>الاسم</th><th>المنهجية</th><th>الفريم</th><th>الحالة</th><th></th></tr></thead><tbody></tbody></table>
+
+<script>
+let DRAFT=null;           // current Strategy dict
+let STEP=1;
+
+function go(n){
+  STEP=n;
+  for(let i=1;i<=4;i++) document.getElementById('step'+i).classList.toggle('hidden',i!==n);
+  document.querySelectorAll('.steps .s').forEach(s=>s.classList.toggle('active',+s.dataset.step===n));
+  if(n===2) syncStep2();
+  if(n===3) syncStep3();
+  if(n===4) syncReview();
+}
+
+document.getElementById('tfgrid').addEventListener('click',e=>{
+  if(!e.target.dataset.tf) return;
+  document.querySelectorAll('#tfgrid .tf').forEach(t=>t.classList.remove('on'));
+  e.target.classList.add('on');
+});
+
+async function safeFetch(url,opt){try{const r=await fetch(url,opt);return await r.json();}catch(e){return{_err:e.message};}}
+
+async function polish(){
+  const prompt=document.getElementById('prompt').value.trim();
+  const name=document.getElementById('name').value.trim();
+  document.getElementById('polishErr').textContent='';
+  document.getElementById('polishStatus').textContent='…يفكّر الذكاء';
+  const res=await safeFetch('/api/r/strategy/polish',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({rawPrompt:prompt,name:name})});
+  document.getElementById('polishStatus').textContent='';
+  if(res._err){document.getElementById('polishErr').textContent='خطأ شبكة: '+res._err;return;}
+  DRAFT=res.strategy;
+  if(res.fallback) document.getElementById('polishErr').textContent='⚠ الذكاء غير متاح — استُخدمت إعدادات افتراضية ('+(res.reason||'')+')';
+  else document.getElementById('polishStatus').textContent='✓ تم الصقل عبر '+(res.backend||'AI');
+  if(DRAFT.name) document.getElementById('name').value=DRAFT.name;
+}
+
+function ensureDraft(){
+  if(!DRAFT){
+    DRAFT={name:document.getElementById('name').value||'استراتيجية',rawPrompt:document.getElementById('prompt').value,
+      systemPrompt:'',methodology:'HYBRID',pairs:[],timeframe:'15m',
+      indicators:['sma_cross','ema_cross','macd','rsi','supertrend','stochastic','bollinger','ao','sar','cci','adx']
+        .map(k=>({key:k,label:k,enabled:true})),
+      entryConditions:[],risk:{maxPerTradePct:1,dailyLossLimitPct:5,maxOpenTrades:1,maxPerSymbol:1,
+        atrLength:14,slAtrMult:1,tpAtrMults:[1,2,3],trailAtrMult:null,minConfidence:70},status:'PAUSED'};
+  }
+}
+function syncStep2(){
+  ensureDraft();
+  if(DRAFT.pairs&&DRAFT.pairs.length) document.getElementById('pairs').value=DRAFT.pairs.join(', ');
+  if(DRAFT.timeframe){document.querySelectorAll('#tfgrid .tf').forEach(t=>t.classList.toggle('on',t.dataset.tf===DRAFT.timeframe));}
+  const r=DRAFT.risk||{};
+  document.getElementById('r_maxPerTrade').value=r.maxPerTradePct??1;
+  document.getElementById('r_dailyLoss').value=r.dailyLossLimitPct??5;
+  document.getElementById('r_maxOpen').value=r.maxOpenTrades??1;
+  document.getElementById('r_sl').value=r.slAtrMult??1;
+  document.getElementById('r_minConf').value=r.minConfidence??70;
+}
+function captureStep2(){
+  ensureDraft();
+  DRAFT.pairs=document.getElementById('pairs').value.split(',').map(s=>s.trim()).filter(Boolean);
+  DRAFT.timeframe=document.querySelector('#tfgrid .tf.on').dataset.tf;
+  DRAFT.risk=Object.assign(DRAFT.risk||{},{
+    maxPerTradePct:+document.getElementById('r_maxPerTrade').value,
+    dailyLossLimitPct:+document.getElementById('r_dailyLoss').value,
+    maxOpenTrades:+document.getElementById('r_maxOpen').value,
+    slAtrMult:+document.getElementById('r_sl').value,
+    minConfidence:+document.getElementById('r_minConf').value});
+}
+function syncStep3(){
+  captureStep2();
+  document.getElementById('methodology').value=DRAFT.methodology||'HYBRID';
+  const box=document.getElementById('indtoggles');box.innerHTML='';
+  (DRAFT.indicators||[]).forEach((ind,i)=>{
+    const row=document.createElement('div');row.className='indrow';
+    row.innerHTML=`<span>${ind.label||ind.key}</span>
+      <input type="checkbox" ${ind.enabled?'checked':''} data-i="${i}" style="width:auto"/>`;
+    box.appendChild(row);
+  });
+}
+function captureStep3(){
+  DRAFT.methodology=document.getElementById('methodology').value;
+  document.querySelectorAll('#indtoggles input[type=checkbox]').forEach(cb=>{
+    DRAFT.indicators[+cb.dataset.i].enabled=cb.checked;});
+}
+function syncReview(){
+  captureStep3();
+  document.getElementById('rvName').textContent=DRAFT.name;
+  document.getElementById('rvMeta').textContent=
+    `${(DRAFT.pairs||[]).join(', ')||'بدون أزواج'} · ${DRAFT.timeframe} · `
+    +`${(DRAFT.indicators||[]).filter(i=>i.enabled).length} مؤشّر مُفعّل`;
+  document.getElementById('rvMethod').textContent=DRAFT.methodology;
+  document.getElementById('rvSysPrompt').value=DRAFT.systemPrompt||'';
+  const cw=document.getElementById('rvConds');cw.innerHTML='';
+  (DRAFT.entryConditions||[]).forEach(c=>{
+    const d=document.createElement('div');d.className='cond';
+    d.innerHTML=`<b>${c.side}</b> — ${c.text} <span class="conf">${(c.confidence||0).toFixed(0)}%</span>`;
+    cw.appendChild(d);});
+  if(!(DRAFT.entryConditions||[]).length) cw.innerHTML='<div class="cond">—</div>';
+  const r=DRAFT.risk||{};
+  document.getElementById('rvRisk').innerHTML=
+    `مخاطرة ${r.maxPerTradePct}%/صفقة · حد يومي ${r.dailyLossLimitPct}% · أقصى ${r.maxOpenTrades} · `
+    +`SL ${r.slAtrMult}×ATR · أهداف ${(r.tpAtrMults||[1,2,3]).join('/')}×ATR · أدنى ثقة ${r.minConfidence}%`;
+}
+
+async function createStrategy(){
+  syncReview();
+  const res=await safeFetch('/api/r/strategy/create',{method:'POST',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({strategy:DRAFT})});
+  if(res.ok){document.getElementById('createStatus').textContent='✓ حُفظت';loadList();}
+  else document.getElementById('createStatus').textContent='✗ '+(res.reason||res._err);
+}
+
+async function loadList(){
+  const res=await safeFetch('/api/r/strategy/list?t='+Date.now());
+  const tb=document.querySelector('#stratTable tbody');tb.innerHTML='';
+  (res.strategies||[]).forEach(s=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.name}</td><td>${s.methodology}</td><td>${s.timeframe}</td>
+      <td>${s.status}</td>
+      <td><button class="ghost" onclick="setStatus('${s.id}','${s.status==='ACTIVE'?'PAUSED':'ACTIVE'}')">
+        ${s.status==='ACTIVE'?'⏸ إيقاف':'▶ تفعيل'}</button></td>`;
+    tb.appendChild(tr);});
+}
+async function setStatus(id,status){
+  await safeFetch('/api/r/strategy/'+id+'/status',{method:'POST',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+  loadList();
+}
+loadList();
+</script>
+</body>
+</html>

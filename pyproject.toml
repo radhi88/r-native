@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mt5-ai"
+version = "0.1.0"
+description = "MT5 AI trading data, training, and inference toolkit"
+requires-python = ">=3.10"
+dependencies = [
+  "anthropic",
+  "MetaTrader5",
+  "joblib",
+  "langchain",
+  "langchain-anthropic",
+  "langchain-community",
+  "langchain-openai",
+  "matplotlib",
+  "numpy",
+  "ollama",
+  "openai",
+  "pandas",
+  "pydantic",
+  "pyarrow",
+  "pyzmq",
+  "requests",
+  "scikit-learn",
+  "tenacity",
+  "tensorflow",
+]
+
+[project.optional-dependencies]
+voice = [
+  "sounddevice",
+  "faster-whisper",
+  "edge-tts",
+  "pyttsx3",
+  "webrtcvad-wheels",
+  "soundfile",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

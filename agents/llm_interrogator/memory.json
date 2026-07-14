@@ -1,0 +1,311 @@
+{
+  "agent": "محقق اللغة",
+  "name": "Muhaqqiq",
+  "role": "LLM Interrogator",
+  "runs": 1504,
+  "avg_coherence": 6.0,
+  "rejections_by_llm": 2,
+  "approvals_by_llm": 1502,
+  "interrogations": [
+    {
+      "t": "2026-05-21T19:26",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: في الوقت الحالي، مع الرصيد المنخفض (80.49$) وعدم وجود مؤشرات مثل EMA وRSI، فإن القرارات السابقة تشير إلى أن السوق غير مستقر وقد تكون هناك فرص لدخول السوق بشكل محدود. ومع ذلك، التوافق في التقاطع"
+    },
+    {
+      "t": "2026-05-21T19:26",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على القرارات السابقة التي اتخذتها، لم يتم تحقيق أي نجاحات في التداول. حيث تم إيقاف جميع الصفقات بسبب عناصر مثل العقدة التذبذبية و Candlestick ضعيف. الآن، مع وجود تقاطعات موافق (5 أصوات) "
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: بناءً على نقاط التقاطع الإيجابية ووجود سلسلة متوسطات القصيرة الموجبة (SMC OB=0)، يبدو أن السوق قد تجاوز مستوياته السابقة. ومع ذلك، التعرض الحالي للرصيد المنخفض (80.56$) يشير إلى احتمال عدم قدر"
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على التصويت الأخير الذي أظهر تقاطعًا إيجابيًا، يبدو أن السوق قد تجاوز مؤشرات التذبذب. ومع ذلك، السجل السابق من القرارات المعلقة أو الدخول المحظور بسبب وجود عقدة ضعيفة (الكلمات \"BLOCKED\" "
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على تقاطعات السعر الأخيرة التي أظهرت موافقة من جميع الأصوات، يبدو أن السوق قد تجاوز مستوى الدعم السابق. مع الرصيد الحالي البالغ 80.91$, الذي لا يزال قوياً نسبياً، وبدون أي مؤشرات مالية م"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على التصويت الأخير الذي أظهر موافقة (5 أصوات) للشراء، يبدو أن السوق قد تجاوز مؤشر SMC. هذا المؤشر يشير إلى وجود فرص جيدة لبدء عملية شراء جديدة. ومع ذلك، يجب مراعاة أن الرصيد الحالي هو 80"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nمن بين القرارات السابقة التي اتخذتها، لم تكن هناك أي عوامل مؤكدة لاتخاذ قرار شراء في هذا الوقت. الرصيد الحالي منخفض جداً (80.72$) مما يشير إلى أن السوق قد تكون غير مستقرة أو ضعيفة بشكل ملحوظ. "
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على التصويت الإيجابي للتقاطعات، ووجود نقطة ضغط (BUY) في مؤشر SMC، يبدو أن هناك دليلاً قوياً لفتح صفقة بيع. ومع ذلك، يجب مراعاة الظروف الحالية حيث لا يوجد أي تريليونات أو خطوط إش"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على نقطة التقاطع الموافق التي حصل عليها، يبدو أن هناك مؤشرات إيجابية لفتح صفقة شراء. ومع ذلك، يجب مراعاة أن الرصيد الحالي هو 81.07$, وهو مستوى منخفض قد يشير إلى أنه ليس الوقت المناسب للد"
+    },
+    {
+      "t": "2026-05-21T19:29",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على التقاطع الإيجابي الذي تم التحقق منه مؤخراً، وجدنا أن السعر يتحرك فوق خطEMA (إذا كان متاحاً) والمستوى المرجعي للسعر (RSI)، مما يشير إلى احتمالية تحسن في الاتجاه. ومع ذلك، مع عدم وجود "
+    },
+    {
+      "t": "2026-05-21T19:29",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:29",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: في الوقت الحالي، مع وجود تقاطع مؤشرات MACD (SMC) وموافق برصيد 79.77$, يبدو أن السوق قد تجاوز منطقة الدعم الرئيسية. هذا التوقيت قد يكون فرصة جيدة للدخول، حيث يمكن للفائض من الرصيد أن يوفر بعض ال"
+    },
+    {
+      "t": "2026-05-21T19:29",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: في هذه الحالة، مع وجود تقاطعات متفقة من قبل أغلبية (5 أصوات) ومؤشر سعر المكالمة المتذبذب (SMC) يشير إلى اتجاه شراء، يبدو أن الوقت قد حان للدخول. ومع ذلك، يجب مراعاة الرصيد المنخفض (79.77"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على نقطة التقاطع الموافق التي تم التحقق منها، وجدنا دلائل قوية لدعم الشراء. الرصيد الحالي البالغ 79.66$ يشير إلى أن السعر قد توقف عند مستويات الدعم المحتملة. إضافة إلى ذلك، الاتجاه الصعو"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على التصويت الإيجابي للتقاطع، ووجود سلسلة من القرارات السابقة التي أفضت إلى إدخال الصفقات دون نجاح، يبدو أن الوقت قد حان لدخول السوق. ومع ذلك، يجب الحذر حيث كان هناك عائق في كل مرة تم في"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: \nبناءً على نقطة التقاطع الموافق (5 أصوات) التي تم التحقق منها، يبدو أن السوق قد تجاوز مستوى المقاومة. مع عدم وجود مؤشرات أخرى مثل الرسم البياني أو المؤشرات الفنية الأخرى للإشارة إلى أي تحرك محت"
+    },
+    {
+      "t": "2026-05-21T19:31",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:31",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:31",
+      "score": 6,
+      "approved": true,
+      "narrative": "السرد: في الوقت الحالي، مع وجود نقطة ضغط من التقاطع الذي يشير إلى البيع (BUY)، وعدم وجود مؤشرات أخرى تدعم هذا القرار مثل الرسم البياني أو المؤشرات الأخرى مثل EMA وRSI، لا أرى أي دليل قوي على أن الدخول"
+    },
+    {
+      "t": "2026-05-21T19:32",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:33",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:33",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:33",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:34",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:34",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:35",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:35",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:35",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:36",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:36",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:36",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:36",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:37",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:37",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:38",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ConnectionError]"
+    },
+    {
+      "t": "2026-05-21T19:38",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:38",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:39",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:39",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:39",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:40",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:40",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:40",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:41",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    },
+    {
+      "t": "2026-05-21T19:41",
+      "score": 6,
+      "approved": true,
+      "narrative": "[Ollama offline — abstaining: ReadTimeout]"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "agent": "مدير المخاطر",
+  "name": "Mudir",
+  "role": "Risk Manager",
+  "runs": 1505,
+  "peak_balance": 145.16,
+  "max_dd": 50,
+  "kelly_fraction": 0.05,
+  "win_count": 0,
+  "loss_count": 0,
+  "risk_level": "RED"
+}

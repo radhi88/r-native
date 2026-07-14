@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FRIDAY — Unified Brain</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --bg:#020617; --surface:#0f1b2d; --border:rgba(148,163,184,0.15);
+  --text:#dbeafe; --muted:#64748b; --accent:#22d3ee;
+  --gold:#f59e0b; --green:#34d399; --red:#ef4444; --purple:#a78bfa; --blue:#60a5fa;
+}
+html,body { height:100%; background:var(--bg); color:var(--text);
+  font-family:"Segoe UI",Tahoma,system-ui,sans-serif; overflow:hidden; }
+
+/* HEADER */
+header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:6px 16px; background:var(--surface); border-bottom:1px solid var(--border);
+  height:48px; flex-shrink:0;
+}
+.logo { font-size:15px; font-weight:900; letter-spacing:3px; color:var(--gold); }
+.logo small { color:var(--muted); font-weight:400; letter-spacing:1px; margin-right:6px; }
+.header-stats { display:flex; gap:14px; font-size:11px; color:var(--muted); flex-wrap:wrap; }
+.header-stats b { color:var(--text); font-weight:700; }
+.header-stats .ok { color:var(--green); }
+.header-stats .err { color:var(--red); }
+#clock { font-size:12px; color:var(--accent); font-variant-numeric:tabular-nums; }
+
+/* Layout: TOP row (chart + graph), BOTTOM row (4 small panels) */
+.app { display:grid; grid-template-rows: 1fr 1fr; height: calc(100vh - 48px); gap:1px; background:var(--border); }
+.top-row { display:grid; grid-template-columns: 2fr 1fr; gap:1px; background:var(--border); }
+.bot-row { display:grid; grid-template-columns: 1.1fr 1fr 1fr 1fr; gap:1px; background:var(--border); }
+
+.panel { background:var(--surface); padding:8px 12px; overflow:hidden;
+  display:flex; flex-direction:column; min-height:0; min-width:0; }
+.panel h3 {
+  font-size:10px; font-weight:800; letter-spacing:2px; color:var(--muted);
+  text-transform:uppercase; padding-bottom:5px; margin-bottom:6px;
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center; flex-shrink:0;
+}
+.panel h3 .badge { font-size:10px; padding:2px 7px; border-radius:10px;
+  background:rgba(34,211,238,0.15); color:var(--accent); font-weight:700; }
+
+/* CHART PANEL */
+#chart-panel { padding:0; position:relative; }
+#chart-panel h3 { position:absolute; top:8px; right:12px; z-index:5;
+  border:none; background:rgba(15,27,45,0.85); padding:5px 10px; border-radius:6px; }
+#chart-info {
+  position:absolute; top:8px; left:12px; z-index:5;
+  background:rgba(15,27,45,0.85); padding:6px 10px; border-radius:6px;
+  font-size:11px; color:var(--muted); display:flex; gap:14px;
+}
+#chart-info b { color:var(--text); font-variant-numeric:tabular-nums; }
+#chart-info .bias-up   { color:var(--green); font-weight:800; }
+#chart-info .bias-down { color:var(--red);   font-weight:800; }
+svg#candlechart { width:100%; height:100%; display:block; }
+
+/* GRAPH PANEL */
+#graph-panel { padding:0; position:relative; }
+#graph-panel h3 { position:absolute; top:8px; right:12px; z-index:5;
+  border:none; background:rgba(15,27,45,0.85); padding:5px 10px; border-radius:6px; }
+svg#force-graph { width:100%; height:100%; display:block; }
+#legend { position:absolute; bottom:8px; right:12px; display:flex; flex-direction:column; gap:3px;
+  background:rgba(15,27,45,0.85); padding:6px 10px; border-radius:6px; border:1px solid var(--border); font-size:10px; }
+.legend-item { display:flex; align-items:center; gap:5px; color:var(--text); }
+.legend-dot { width:8px; height:8px; border-radius:50%; }
+
+/* MARKET PANEL */
+.market-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; font-size:12px; padding:3px 0; }
+.market-row .k { color:var(--muted); font-size:11px; }
+.market-row .v { color:var(--text); font-weight:700; font-variant-numeric:tabular-nums; text-align:left; direction:ltr; font-size:12px; }
+.price-big { font-size:22px; font-weight:900; color:var(--gold); text-align:center;
+  padding:8px; border-radius:6px; background:rgba(245,158,11,0.08); margin:4px 0; }
+
+/* AGENTS */
+.agent-card { padding:5px 8px; margin-bottom:4px; border-radius:5px;
+  background:rgba(34,211,238,0.05); border-right:3px solid var(--accent); font-size:11px; }
+.agent-card .top { display:flex; justify-content:space-between; align-items:center; margin-bottom:2px; }
+.agent-card .name { font-weight:800; font-size:11px; }
+.agent-card .conf { font-size:10px; color:var(--gold); font-weight:700; }
+.agent-card .dec  { font-size:10px; color:var(--accent); font-weight:600; }
+.agent-card .th   { font-size:10px; color:var(--muted); margin-top:2px; line-height:1.3; }
+.agents-list { flex:1; overflow-y:auto; }
+
+/* SMC table */
+.smc-table { flex:1; overflow-y:auto; font-size:10px; }
+.smc-table table { width:100%; border-collapse:collapse; }
+.smc-table th { text-align:right; color:var(--muted); padding:3px 5px;
+  font-weight:600; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface); font-size:10px; }
+.smc-table td { padding:2px 5px; border-bottom:1px solid rgba(100,116,139,0.08); font-size:10px; }
+.smc-table .buy  { color:var(--green); font-weight:700; }
+.smc-table .sell { color:var(--red);   font-weight:700; }
+.smc-table .neutral { color:var(--muted); }
+
+/* VAULT */
+.vault-text {
+  flex:1; overflow-y:auto; font-size:10px; line-height:1.5;
+  white-space:pre-wrap; color:var(--text); padding:6px;
+  background:rgba(2,6,23,0.5); border-radius:5px; border:1px solid var(--border);
+  font-family:Consolas,"SF Mono",monospace;
+}
+.tabs { display:flex; gap:3px; margin-bottom:5px; }
+.tab { padding:3px 8px; font-size:10px; border-radius:3px;
+  background:transparent; color:var(--muted); cursor:pointer; border:1px solid var(--border); }
+.tab.active { background:var(--accent); color:#0f1b2d; font-weight:700; border-color:var(--accent); }
+
+/* EA BRIDGE inline section */
+.ea-section { margin-top:6px; padding-top:5px; border-top:1px solid var(--border); }
+.ea-section .header-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+.ea-section .label { font-size:10px; font-weight:800; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+
+/* TOOLTIP */
+#tooltip { position:fixed; pointer-events:none; background:#0f1b2d;
+  border:1px solid rgba(148,163,184,0.3); border-radius:6px; padding:8px 12px;
+  font-size:11px; max-width:260px; z-index:9999; opacity:0;
+  transition:opacity 0.15s; box-shadow:0 8px 32px rgba(0,0,0,0.6); }
+#tooltip .tn { font-weight:800; font-size:12px; margin-bottom:4px; }
+#tooltip .tr { color:var(--muted); margin-bottom:1px; font-size:10px; }
+#tooltip .tr span { color:var(--text); }
+
+.dim { color:var(--muted); font-size:10px; padding:6px; text-align:center; }
+.live-dot { display:inline-block; width:7px; height:7px; border-radius:50%;
+  background:var(--green); margin-left:5px; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">FRIDAY <small>Unified Brain</small></div>
+  <div class="header-stats">
+    <span>السعر <b id="hdr-price">—</b></span>
+    <span>Eq <b id="hdr-eq">—</b></span>
+    <span>الوكلاء <b id="hdr-agents">—</b></span>
+    <span>القرارات <b id="hdr-dec">—</b></span>
+    <span>SMC <b id="hdr-smc">—</b></span>
+    <span>EA <b id="hdr-bridge">—</b></span>
+    <span>MT5 <b id="hdr-mt5" class="ok">●</b></span>
+  </div>
+  <div id="clock">--:--:--</div>
+</header>
+
+<div class="app">
+
+  <!-- TOP ROW: CHART (large) + AGENT GRAPH -->
+  <div class="top-row">
+
+    <section id="chart-panel" class="panel">
+      <h3>XAUUSDm · M1 · مباشر <span class="badge" id="bars-count">0</span></h3>
+      <div id="chart-info">
+        <span>O <b id="ci-o">—</b></span>
+        <span>H <b id="ci-h">—</b></span>
+        <span>L <b id="ci-l">—</b></span>
+        <span>C <b id="ci-c">—</b></span>
+        <span>Spread <b id="ci-spr">—</b></span>
+        <span>SMC <b id="ci-bias">—</b></span>
+        <span>OB/FVG <b id="ci-obfvg">—</b></span>
+      </div>
+      <svg id="candlechart"></svg>
+    </section>
+
+    <section id="graph-panel" class="panel">
+      <h3>شبكة الوكلاء <span class="badge" id="graph-count">0</span></h3>
+      <svg id="force-graph"></svg>
+      <div id="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#ffffff"></span> المنسق</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> فجوة</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#22d3ee"></span> سوق</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> مخاطر</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#a78bfa"></span> جينات</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#34d399"></span> استراتيجيات</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#fb923c"></span> كود</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- BOTTOM ROW: 4 small panels -->
+  <div class="bot-row">
+
+    <section id="market-panel" class="panel">
+      <h3>السوق + جسر EA <span class="badge"><span class="live-dot"></span></span></h3>
+      <div class="price-big" id="price">—</div>
+      <div class="market-row">
+        <div class="k">ATR</div><div class="v" id="atr">—</div>
+        <div class="k">RSI</div><div class="v" id="rsi">—</div>
+        <div class="k">السبريد</div><div class="v" id="spread">—</div>
+        <div class="k">الفجوة</div><div class="v" id="gap">—</div>
+        <div class="k">TP/SL</div><div class="v" id="tpsl">—</div>
+        <div class="k">الوضع</div><div class="v" id="mode">—</div>
+        <div class="k">Bal</div><div class="v" id="bal">—</div>
+        <div class="k">Equity</div><div class="v" id="eq">—</div>
+        <div class="k">خسائر</div><div class="v" id="loss">—</div>
+      </div>
+      <div class="ea-section">
+        <div class="header-row">
+          <span class="label">جسر → EA</span>
+          <span class="badge" id="ctrl-status">—</span>
+        </div>
+        <div class="market-row" style="font-size:10px;">
+          <div class="k">conf</div><div class="v" id="ctrl-conf">—</div>
+          <div class="k">lotF</div><div class="v" id="ctrl-lot">—</div>
+          <div class="k">gridF</div><div class="v" id="ctrl-grid">—</div>
+          <div class="k">gap→</div><div class="v" id="ctrl-gap">—</div>
+          <div class="k">vetoes</div><div class="v" id="ctrl-veto" style="color:var(--red); font-size:10px;">—</div>
+          <div class="k">CSV</div><div class="v" id="ctrl-age">—</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="agents-panel" class="panel">
+      <h3>الوكلاء <span class="badge" id="ag-count">0</span></h3>
+      <div class="agents-list" id="agents-list"><div class="dim">جاري التحميل…</div></div>
+    </section>
+
+    <section id="smc-panel" class="panel">
+      <h3>قرارات SMC <span class="badge" id="smc-count">0</span></h3>
+      <div class="smc-table">
+        <table>
+          <thead><tr><th>الوقت</th><th>الاتجاه</th><th>الثقة</th><th>السبب</th></tr></thead>
+          <tbody id="smc-body"><tr><td colspan="4" class="dim">جاري التحميل…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="vault-panel" class="panel">
+      <h3>المخّ الحيّ <span class="badge" id="brain-cycle">—</span></h3>
+      <div class="tabs">
+        <button class="tab active" data-tab="dialogue">حوار</button>
+        <button class="tab" data-tab="levels">مستويات</button>
+        <button class="tab" data-tab="orders">أوامر</button>
+        <button class="tab" data-tab="vault">vault</button>
+      </div>
+      <div class="vault-text" id="vault-content">جاري التحميل…</div>
+    </section>
+
+  </div>
+</div>
+
+<div id="tooltip"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+function fmt(v, d=2) { if (v===null||v===undefined||v==='?'||v==='—') return '—';
+  const n = Number(v); return isNaN(n) ? v : n.toFixed(d); }
+function setText(id, v) { const el=$(id); if(el) el.textContent = v ?? '—'; }
+
+const ROLE_COLOR = {
+  "محلل الفجوة":"#f59e0b","قارئ السوق":"#22d3ee","حارس المخاطر":"#ef4444",
+  "مطور الجينات":"#a78bfa","مبتكر الاستراتيجيات":"#34d399","محلل الكود":"#fb923c",
+  "المنسق الرئيسي":"#ffffff"
+};
+
+setInterval(()=>{ $("clock").textContent = new Date().toLocaleTimeString('en-GB'); }, 1000);
+
+// ═══════════════════ CANDLESTICK CHART ════════════════════════════════════
+function renderChart(chart) {
+  if (!chart || !chart.bars || !chart.bars.length) {
+    d3.select("#candlechart").selectAll("*").remove();
+    return;
+  }
+  const bars = chart.bars;
+  const lv   = chart.levels || {};
+  setText("bars-count", bars.length);
+
+  const panel = $("chart-panel");
+  const w = panel.clientWidth, h = panel.clientHeight;
+  const m = { top: 50, right: 60, bottom: 20, left: 8 };
+
+  const svg = d3.select("#candlechart").attr("viewBox", `0 0 ${w} ${h}`);
+  svg.selectAll("*").remove();
+
+  // X scale (index-based)
+  const x = d3.scaleLinear().domain([0, bars.length-1]).range([m.left, w-m.right]);
+  // Y scale (price)
+  const lo = d3.min(bars, d => Number(d.l ?? d.low ?? d.c));
+  const hi = d3.max(bars, d => Number(d.h ?? d.high ?? d.c));
+  const ext = (hi - lo) * 0.08 || 1;
+  const y = d3.scaleLinear().domain([lo - ext, hi + ext]).range([h - m.bottom, m.top]);
+
+  // Background grid
+  svg.append("g").attr("stroke", "rgba(148,163,184,0.06)").attr("stroke-width", 1)
+    .selectAll("line").data(y.ticks(8)).join("line")
+    .attr("x1", m.left).attr("x2", w - m.right)
+    .attr("y1", d => y(d)).attr("y2", d => y(d));
+
+  // Y-axis labels (right side for RTL)
+  svg.append("g").attr("font-size", 10).attr("fill", "#64748b")
+    .selectAll("text").data(y.ticks(8)).join("text")
+    .attr("x", w - m.right + 5).attr("y", d => y(d) + 3)
+    .attr("text-anchor", "start").attr("direction", "ltr").text(d => d.toFixed(1));
+
+  // Key horizontal levels
+  const drawLine = (price, color, label, dashed=true) => {
+    if (!price) return;
+    const yp = y(Number(price));
+    if (yp < m.top || yp > h-m.bottom) return;
+    svg.append("line").attr("x1", m.left).attr("x2", w - m.right)
+      .attr("y1", yp).attr("y2", yp).attr("stroke", color)
+      .attr("stroke-width", 1).attr("stroke-dasharray", dashed ? "4 3" : "");
+    svg.append("text").attr("x", w - m.right - 6).attr("y", yp - 3)
+      .attr("font-size", 9).attr("fill", color).attr("text-anchor", "end")
+      .text(label + " " + Number(price).toFixed(2));
+  };
+  drawLine(lv.prev_day_high,  "#a78bfa", "PDH");
+  drawLine(lv.prev_day_low,   "#a78bfa", "PDL");
+  drawLine(lv.smc_swing_high, "#34d399", "Swing↑");
+  drawLine(lv.smc_swing_low,  "#ef4444", "Swing↓");
+  drawLine(lv.smc_bos_level,  "#f59e0b", "BOS");
+
+  // Candles
+  const cw = Math.max(1, (w - m.left - m.right) / bars.length * 0.7);
+  const g = svg.append("g");
+  g.selectAll("line.wick").data(bars).join("line")
+    .attr("class","wick")
+    .attr("x1", (_,i) => x(i)).attr("x2", (_,i) => x(i))
+    .attr("y1", d => y(Number(d.h ?? d.high)))
+    .attr("y2", d => y(Number(d.l ?? d.low)))
+    .attr("stroke", d => Number(d.c ?? d.close) >= Number(d.o ?? d.open) ? "#34d399" : "#ef4444")
+    .attr("stroke-width", 1);
+
+  g.selectAll("rect.body").data(bars).join("rect")
+    .attr("class","body")
+    .attr("x", (_,i) => x(i) - cw/2)
+    .attr("y", d => y(Math.max(Number(d.o ?? d.open), Number(d.c ?? d.close))))
+    .attr("width", cw)
+    .attr("height", d => {
+      const o = Number(d.o ?? d.open), c = Number(d.c ?? d.close);
+      return Math.max(1, Math.abs(y(o) - y(c)));
+    })
+    .attr("fill", d => Number(d.c ?? d.close) >= Number(d.o ?? d.open) ? "#34d399" : "#ef4444")
+    .attr("opacity", 0.85);
+
+  // Current price line + bid/ask
+  if (lv.bid) {
+    const yb = y(Number(lv.bid));
+    svg.append("line").attr("x1", m.left).attr("x2", w - m.right)
+      .attr("y1", yb).attr("y2", yb)
+      .attr("stroke", "#f59e0b").attr("stroke-width", 1.5);
+    svg.append("rect").attr("x", w - m.right).attr("y", yb - 8)
+      .attr("width", 55).attr("height", 16).attr("fill", "#f59e0b");
+    svg.append("text").attr("x", w - m.right + 4).attr("y", yb + 4)
+      .attr("font-size", 11).attr("font-weight", 800).attr("fill", "#020617")
+      .text(Number(lv.bid).toFixed(2));
+  }
+
+  // Update info bar
+  const last = bars[bars.length-1] || {};
+  setText("ci-o", fmt(last.o ?? last.open));
+  setText("ci-h", fmt(last.h ?? last.high));
+  setText("ci-l", fmt(last.l ?? last.low));
+  setText("ci-c", fmt(last.c ?? last.close));
+  setText("ci-spr", last.spr ?? '—');
+  const biasEl = $("ci-bias");
+  if (lv.smc_bias === "BUY")       { biasEl.textContent = "↑ BUY";  biasEl.className = "bias-up"; }
+  else if (lv.smc_bias === "SELL") { biasEl.textContent = "↓ SELL"; biasEl.className = "bias-down"; }
+  else biasEl.textContent = lv.smc_bias || '—';
+  setText("ci-obfvg", `OB:${lv.smc_ob_count ?? 0} FVG:${lv.smc_fvg_count ?? 0}`);
+}
+
+// ═══════════════════ FORCE GRAPH ══════════════════════════════════════════
+let simulation=null, gNodes=null, gLinks=null, lastIds="";
+
+function buildGraph(agents) {
+  const svg = d3.select("#force-graph");
+  svg.selectAll("*").remove();
+  const el = $("graph-panel");
+  const w = el.clientWidth, h = el.clientHeight;
+
+  const coord = agents.find(a => a.id === "coordinator") || agents[0];
+  const others = agents.filter(a => a.id !== (coord && coord.id));
+  const nodes = agents.map(a => ({
+    id:a.id, name:a.name, color:a.color || ROLE_COLOR[a.role] || "#64748b",
+    confidence:a.confidence||0, decision:a.decision||"—",
+    task:a.current_task||"", status:a.status,
+    r: a.id==="coordinator" ? 30 : 16 + (a.confidence||0)/8
+  }));
+  const links = others.map(o => ({ source: coord.id, target: o.id }));
+  for (let i=0; i<others.length; i++)
+    links.push({ source: others[i].id, target: others[(i+1)%others.length].id });
+
+  const g = svg.append("g");
+  svg.call(d3.zoom().scaleExtent([0.4,3]).on("zoom", e => g.attr("transform", e.transform)));
+
+  gLinks = g.append("g").selectAll("line").data(links).join("line")
+    .attr("stroke","#22d3ee").attr("stroke-opacity",0.2).attr("stroke-width",1);
+
+  gNodes = g.append("g").selectAll("g").data(nodes).join("g")
+    .attr("cursor","pointer")
+    .on("mouseover",(e,d)=>showTip(e,d)).on("mousemove",moveTip).on("mouseout",hideTip);
+
+  gNodes.append("circle")
+    .attr("r", d => d.r).attr("fill", d => d.color).attr("fill-opacity",0.85)
+    .attr("stroke", d => d.status==="active" ? "#22d3ee" : "#475569")
+    .attr("stroke-width", d => d.id==="coordinator" ? 3 : 1.5);
+
+  gNodes.append("text").text(d => d.id==="coordinator" ? "🤖" : (d.name.split(" ")[0] || "").substring(0,2))
+    .attr("text-anchor","middle").attr("dy","0.35em")
+    .attr("font-size", d => d.id==="coordinator" ? 16 : 11)
+    .attr("font-weight",800).attr("fill","#020617");
+
+  simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(d=>d.id).distance(80).strength(0.4))
+    .force("charge", d3.forceManyBody().strength(-300))
+    .force("center", d3.forceCenter(w/2, h/2))
+    .force("collide", d3.forceCollide().radius(d => d.r + 5))
+    .on("tick", () => {
+      gLinks.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y)
+            .attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+      gNodes.attr("transform", d=>`translate(${d.x},${d.y})`);
+    });
+
+  gNodes.call(d3.drag()
+    .on("start",(e,d)=>{ if(!e.active) simulation.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+    .on("drag",(e,d)=>{ d.fx=e.x; d.fy=e.y; })
+    .on("end",(e,d)=>{ if(!e.active) simulation.alphaTarget(0); d.fx=null; d.fy=null; }));
+}
+
+function showTip(e,d) {
+  const t = $("tooltip");
+  t.innerHTML = `<div class="tn" style="color:${d.color}">${d.name}</div>
+    <div class="tr">القرار: <span>${d.decision}</span></div>
+    <div class="tr">الثقة: <span>${d.confidence}%</span></div>
+    <div class="tr">${d.task||''}</div>`;
+  t.style.opacity = 1; moveTip(e);
+}
+function moveTip(e){ const t=$("tooltip"); t.style.left=(e.clientX+15)+"px"; t.style.top=(e.clientY-10)+"px"; }
+function hideTip(){ $("tooltip").style.opacity=0; }
+
+// ═══════════════════ Renderers ════════════════════════════════════════════
+function renderMarket(m) {
+  if (!m || !Object.keys(m).length) return;
+  const price = m.close ?? m.price ?? m.bid;
+  setText("price", fmt(price, 2));
+  setText("hdr-price", fmt(price, 2));
+  setText("atr", m.atr_points ?? '—');
+  setText("rsi", fmt(m.rsi, 1));
+  setText("spread", m.spread_points ?? '—');
+  setText("gap", m.dna_gap ?? m.effective_gap ?? '—');
+  setText("tpsl", (m.dna_tp ?? '—') + " / " + (m.dna_sl ?? '—'));
+  setText("mode", m.market_mode===1 ? "Swing" : (m.market_mode===0 ? "Scalp" : '—'));
+  setText("bal", fmt(m.balance ?? m.account_balance, 2));
+  setText("eq",  fmt(m.equity ?? m.account_equity, 2));
+  setText("hdr-eq", fmt(m.equity ?? m.account_equity, 0));
+  setText("loss", m.loss_streak ?? '—');
+  $("hdr-mt5").className = (m.account_login || m.balance!==undefined) ? "ok" : "err";
+}
+
+function renderAgents(swarm) {
+  const list = $("agents-list");
+  if (!swarm.agents || !swarm.agents.length) {
+    list.innerHTML = '<div class="dim">السرب غير مشغّل</div>';
+    return;
+  }
+  setText("ag-count", swarm.agents.length);
+  setText("hdr-agents", swarm.agents.length);
+
+  const coord = swarm.coordinator || {};
+  const decCount = swarm.agents.reduce((s,a) => s + (a.decisions_count||0), 0) + (coord.decisions_count||0);
+  setText("hdr-dec", decCount);
+
+  let html = '';
+  if (coord && coord.decision) {
+    html += `<div class="agent-card" style="border-right-color:#ffffff;background:rgba(255,255,255,0.05)">
+      <div class="top"><span class="name">🤖 المنسق</span><span class="conf">${coord.confidence||0}%</span></div>
+      <div class="dec">${coord.decision || '—'}</div>
+      <div class="th">${(coord.thought||'').substring(0,80)}</div></div>`;
+  }
+  for (const a of swarm.agents) {
+    const color = ROLE_COLOR[a.role] || "#64748b";
+    html += `<div class="agent-card" style="border-right-color:${color}">
+      <div class="top"><span class="name" style="color:${color}">${a.emoji||''} ${a.role}</span><span class="conf">${a.confidence||0}%</span></div>
+      <div class="dec">${a.decision || '—'}</div>
+      <div class="th">${(a.thought||'').substring(0,70)}</div></div>`;
+  }
+  list.innerHTML = html;
+
+  const ids = swarm.agents.map(a=>a.name||a.role).join("|") + "|" + (coord ? "C" : "");
+  if (ids !== lastIds) {
+    const ga = swarm.agents.map(a => ({
+      id: a.name || a.role,
+      name: `${a.emoji||''} ${a.role}`,
+      role: a.role,
+      color: ROLE_COLOR[a.role] || "#64748b",
+      confidence: a.confidence || 0,
+      decision: a.decision || '—',
+      current_task: (a.thought||'').substring(0,90),
+      status: a.status === "نشط" ? "active" : "idle"
+    }));
+    if (coord && Object.keys(coord).length) {
+      ga.push({ id:"coordinator", name:"🤖 المنسق", role:"المنسق الرئيسي",
+        color:"#ffffff", confidence:coord.confidence||0,
+        decision:coord.decision||'—', current_task:(coord.thought||'').substring(0,90),
+        status:"active" });
+    }
+    setText("graph-count", ga.length);
+    buildGraph(ga);
+    lastIds = ids;
+  }
+}
+
+function renderSMC(smc) {
+  const decisions = smc.decisions || [];
+  setText("smc-count", decisions.length);
+  setText("hdr-smc", decisions.length);
+  const tbody = $("smc-body");
+  if (!decisions.length) { tbody.innerHTML = '<tr><td colspan="4" class="dim">لا بيانات</td></tr>'; return; }
+  tbody.innerHTML = decisions.slice(-30).reverse().map(d => {
+    const dir = (d.direction||d.dir||d.signal||'').toString().toUpperCase();
+    const cls = dir.includes("BUY") ? "buy" : dir.includes("SELL") ? "sell" : "neutral";
+    const time = (d.time||d.timestamp||d.ts||'').toString().split(/[T ]/).pop().split('.')[0];
+    return `<tr><td>${time||'—'}</td><td class="${cls}">${dir||'—'}</td>
+      <td>${d.confidence||d.conf||'—'}</td>
+      <td>${(d.action||d.note||d.reason||'—').toString().substring(0,30)}</td></tr>`;
+  }).join('');
+}
+
+function renderControl(c) {
+  const b = c.bridge || {};
+  const ctrl = b.control || {};
+  const vetoes = b.vetoes || [];
+  const age = c.csv_age_s;
+  const applied = c.applied;
+
+  setText("ctrl-conf", ctrl.confidence ?? '—');
+  setText("ctrl-lot",  ctrl.lot_factor != null ? Number(ctrl.lot_factor).toFixed(2) : '—');
+  setText("ctrl-grid", ctrl.grid_factor != null ? Number(ctrl.grid_factor).toFixed(2) : '—');
+  setText("ctrl-gap",  ctrl.gap || '—');
+  setText("ctrl-veto", vetoes.length ? vetoes.join(' · ') : 'لا veto');
+  setText("ctrl-age",  age != null ? age + 's' : '—');
+
+  const s = $("ctrl-status"), h = $("hdr-bridge");
+  if (applied) { s.textContent = "● ON"; s.style.background = "rgba(52,211,153,0.2)"; s.style.color = "var(--green)"; h.textContent = "ON"; h.className = "ok"; }
+  else if (vetoes.length || (ctrl.confidence ?? 0) < 50) { s.textContent = "● VETO"; s.style.background = "rgba(239,68,68,0.2)"; s.style.color = "var(--red)"; h.textContent = "VETO"; h.className = "err"; }
+  else { s.textContent = "● —"; s.style.background = "rgba(100,116,139,0.2)"; s.style.color = "var(--muted)"; h.textContent = "—"; h.className = ""; }
+}
+
+let vaultData = { dialogue:"", levels:"", orders:"", vault:"" };
+let activeTab = "dialogue";
+function renderVault() {
+  const el = $("vault-content");
+  if (!el) return;
+  el.textContent = vaultData[activeTab] || "(فارغ)";
+}
+
+function renderBrainLLM(b) {
+  if (!b || !b.cycle) {
+    vaultData.dialogue = "المخّ LLM غير مشغّل.\nشغّل: python friday_brain.py";
+    vaultData.levels   = "(لا مستويات)";
+    vaultData.orders   = "(لا أوامر)";
+    setText("brain-cycle", "—");
+    return;
+  }
+  setText("brain-cycle", "C" + b.cycle + (b.live ? " 🔴" : " 🟢"));
+
+  // Dialogue
+  const dlg = (b.dialogue || []).slice(-25).reverse();
+  let dlgTxt = "";
+  for (const m of dlg) {
+    const c = m.content || {};
+    const tag = m.topic === "decision" ? "🧠" : "💬";
+    if (m.topic === "decision") {
+      dlgTxt += `[${m.ts}] ${tag} ${m.sender}: ${c.final_action || '?'} ${c.side||''} entry=${c.entry||'-'} sl=${c.sl||'-'} tp=${c.tp||'-'}\n   ${(c.reason||'').substring(0,80)}\n\n`;
+    } else {
+      const veto = c.veto ? " 🚫" : "";
+      dlgTxt += `[${m.ts}] ${tag} ${m.sender} (${c.stance||'?'} ${c.confidence||0}%${veto})\n   ${c.say||''}\n\n`;
+    }
+  }
+  vaultData.dialogue = dlgTxt || "(لا حوار بعد)";
+
+  // Levels
+  const lv = (b.levels || []).slice(-20).reverse();
+  let lvTxt = "";
+  for (const x of lv) {
+    const arrow = x.side === "BUY" ? "↑" : x.side === "SELL" ? "↓" : "·";
+    lvTxt += `[${x.ts}] ${arrow} ${x.side.padEnd(5)} @ ${Number(x.price).toFixed(2)}   ← ${x.agent}\n   ${x.reason||''}\n`;
+  }
+  vaultData.levels = lvTxt || "(لا مستويات مقترحة)";
+
+  // Orders (pendings + positions)
+  const pends = b.pendings || [];
+  const poss  = b.positions || [];
+  let ordTxt = `=== Pendings (${pends.length}) ===\n`;
+  for (const o of pends) {
+    const typeStr = o.type === 4 ? "BUY_STOP" : o.type === 5 ? "SELL_STOP" :
+                    o.type === 2 ? "BUY_LIMIT" : o.type === 3 ? "SELL_LIMIT" : `type${o.type}`;
+    ordTxt += `#${o.ticket} ${typeStr} ${Number(o.price).toFixed(2)}  SL=${Number(o.sl||0).toFixed(2)} TP=${Number(o.tp||0).toFixed(2)} lot=${o.volume}\n`;
+  }
+  ordTxt += `\n=== Positions (${poss.length}) ===\n`;
+  for (const p of poss) {
+    const t = p.type === 0 ? "BUY" : "SELL";
+    ordTxt += `#${p.ticket} ${t} @ ${Number(p.price).toFixed(2)} SL=${Number(p.sl||0).toFixed(2)} TP=${Number(p.tp||0).toFixed(2)} P/L=${Number(p.profit||0).toFixed(2)}\n`;
+  }
+  if (b.coordinator?.last_decision) {
+    const d = b.coordinator.last_decision;
+    ordTxt += `\n=== Last Coordinator Decision ===\n`;
+    ordTxt += `${d.final_action || '?'} ${d.side || ''}\n`;
+    ordTxt += `entry=${d.entry||'-'}  SL=${d.sl||'-'}  TP=${d.tp||'-'}  lot=${d.lot||'-'}\n`;
+    ordTxt += `reason: ${d.reason||''}\n`;
+  }
+  vaultData.orders = ordTxt;
+
+  // Overlay proposed levels on chart (price markers)
+  drawProposedLevels(b.levels || []);
+}
+
+function drawProposedLevels(levels) {
+  // Draw price labels on right side of chart for each proposed level
+  const svg = d3.select("#candlechart");
+  svg.selectAll(".proposed-level").remove();
+  if (!levels.length) return;
+  const panel = $("chart-panel");
+  const w = panel.clientWidth, h = panel.clientHeight;
+  // Reuse the most recent y scale (we'd need to compute from current bars - simpler: just label)
+  const recent = levels.slice(-10);
+  recent.forEach((lv, i) => {
+    const color = lv.side === "BUY" ? "#34d399" : "#ef4444";
+    const yPos = h - 40 - i*14;
+    const g = svg.append("g").attr("class", "proposed-level");
+    g.append("text").attr("x", 12).attr("y", yPos)
+      .attr("font-size", 10).attr("fill", color).attr("font-weight", 700)
+      .text(`${lv.side} @ ${Number(lv.price).toFixed(2)} · ${lv.agent}`);
+  });
+}
+document.querySelectorAll(".tab").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    b.classList.add("active"); activeTab = b.dataset.tab; renderVault();
+  };
+});
+
+// ═══════════════════ TICK ════════════════════════════════════════════════
+async function tick() {
+  try {
+    const r = await fetch(`/api/unified?t=${Date.now()}`, { cache:"no-store" });
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+
+    renderChart(j.chart || {});
+    renderMarket(j.market || {});
+    renderAgents(j.swarm || {});
+    renderSMC(j.smc || {});
+    renderControl(j.control || {});
+    renderBrainLLM(j.brain_llm || {});
+
+    vaultData.vault = (j.vault?.hot || "") + "\n\n=== log ===\n" + (j.vault?.log_tail || "");
+    renderVault();
+  } catch(e) { console.warn("unified fetch:", e.message); }
+}
+
+tick();
+setInterval(tick, 2000);
+
+window.addEventListener("resize", () => { lastIds = ""; });
+</script>
+</body>
+</html>

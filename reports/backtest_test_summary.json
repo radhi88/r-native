@@ -1,0 +1,12 @@
+{
+  "split": "test",
+  "buy_threshold": 0.6900000000000002,
+  "sell_threshold": 0.30999999999999983,
+  "trades": 231,
+  "wins": 115,
+  "win_rate": 0.49783549783549785,
+  "net_points": -34.594535156250025,
+  "avg_points": -0.1497598924512986,
+  "chart": "C:\\Users\\Radhi\\MT5\\reports\\backtest_test.png",
+  "trades_csv": "C:\\Users\\Radhi\\MT5\\reports\\backtest_test_trades.csv"
+}

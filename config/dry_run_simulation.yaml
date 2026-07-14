@@ -1,0 +1,44 @@
+runtime:
+  mode: DRY_RUN
+  allow_live_trading: false
+  micro_live_mode: false
+  kill_switch: false
+
+execution:
+  simulate_only: true
+  one_execution_path_only: true
+  require_risk_approval: true
+  require_conflict_guard: true
+  magic_number: 20260600
+
+risk:
+  max_lot: 0.01
+  max_open_positions: 1
+  max_trades_per_day: 3
+  max_daily_loss_percent: 2
+  max_total_loss_percent: 5
+  allow_grid: false
+  allow_hedge: false
+  allow_martingale: false
+  allow_news_trading: false
+  cooldown_after_loss_minutes: 15
+  max_spread_points:
+    default: 30
+    XAUUSDm: 80
+
+confidence:
+  min_signal_confidence: 0.35
+  min_decision_confidence: 0.45
+  fractal_block_threshold: 0.65
+
+logging:
+  jsonl_enabled: true
+  log_dir: "logs"
+
+learning:
+  collect_every_cycle: true
+  apply_on_trade_opened: true
+  auto_apply_proposals: true
+  min_samples_for_auto_apply: 10
+  sample_window: 30
+  apply_cooldown_seconds: 60

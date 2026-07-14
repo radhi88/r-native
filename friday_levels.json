@@ -1,0 +1,212 @@
+[
+  {
+    "agent": "HUNTER",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "السبب",
+    "ts": "02:07:39"
+  },
+  {
+    "agent": "STRUCTURE",
+    "side": "BUY",
+    "price": 4681.27,
+    "reason": "مستويات الهدف المحددة",
+    "ts": "02:07:39"
+  },
+  {
+    "agent": "CHARTIST",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "السبب",
+    "ts": "02:07:39"
+  },
+  {
+    "agent": "MOMENTUM",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "السبب",
+    "ts": "02:08:13"
+  },
+  {
+    "agent": "STRUCTURE",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "فرقطا",
+    "ts": "02:08:13"
+  },
+  {
+    "agent": "HUNTER",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "فرقطا 4527.80",
+    "ts": "02:08:13"
+  },
+  {
+    "agent": "RISK",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "pending buy",
+    "ts": "02:08:13"
+  },
+  {
+    "agent": "CHARTIST",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "السبب",
+    "ts": "02:08:13"
+  },
+  {
+    "agent": "MOMENTUM",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "pending buy",
+    "ts": "02:08:49"
+  },
+  {
+    "agent": "STRUCTURE",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "فرقطا 4527.80 وpending buy عند فر",
+    "ts": "02:08:49"
+  },
+  {
+    "agent": "HUNTER",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neu",
+    "ts": "02:08:49"
+  },
+  {
+    "agent": "RISK",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "صعود متوقع مع دعم من المستويات المحددة رغم اتجاه Fractal Neu",
+    "ts": "02:08:49"
+  },
+  {
+    "agent": "CHARTIST",
+    "side": "SELL",
+    "price": 4527.8,
+    "reason": "struct",
+    "ts": "02:08:49"
+  },
+  {
+    "agent": "CHARTIST",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "swing high and fractal signal",
+    "ts": "02:08:49"
+  },
+  {
+    "agent": "RISK",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "السبب",
+    "ts": "02:09:21"
+  },
+  {
+    "agent": "HUNTER",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "الاتجاه صاعد ودعم من المستويات المحددة",
+    "ts": "02:09:21"
+  },
+  {
+    "agent": "STRUCTURE",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "فرقطا 4527.80",
+    "ts": "02:09:21"
+  },
+  {
+    "agent": "MOMENTUM",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "Level defined by Swing High and Fractal Neutral direction",
+    "ts": "02:09:21"
+  },
+  {
+    "agent": "CHARTIST",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "السبب",
+    "ts": "02:09:21"
+  },
+  {
+    "agent": "CHARTIST",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "دعم من المستويات المحددة وpending buy عند فرقطا 4527.80",
+    "ts": "02:10:00"
+  },
+  {
+    "agent": "STRUCTURE",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "Fractalticks=-3 POC=4527.4",
+    "ts": "02:10:00"
+  },
+  {
+    "agent": "STRUCTURE",
+    "side": "SELL",
+    "price": 4528.1,
+    "reason": "Fractalticks=-3 POC=4529.1",
+    "ts": "02:10:00"
+  },
+  {
+    "agent": "MOMENTUM",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "زخم دعم",
+    "ts": "02:10:00"
+  },
+  {
+    "agent": "RISK",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "صعود متوقع ودعم من المستويات المحددة",
+    "ts": "02:10:00"
+  },
+  {
+    "agent": "RISK",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "السبب",
+    "ts": "02:10:46"
+  },
+  {
+    "agent": "HUNTER",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "السبب",
+    "ts": "02:10:46"
+  },
+  {
+    "agent": "STRUCTURE",
+    "side": "BUY",
+    "price": 4527.8,
+    "reason": "Fractal Neutral",
+    "ts": "02:10:46"
+  },
+  {
+    "agent": "STRUCTURE",
+    "side": "SELL",
+    "price": 4681.27,
+    "reason": "FVG BUY below price",
+    "ts": "02:10:46"
+  },
+  {
+    "agent": "MOMENTUM",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "زخم صعودي ودعم مستويات سعرية",
+    "ts": "02:10:46"
+  },
+  {
+    "agent": "CHARTIST",
+    "side": "BUY",
+    "price": 4555.5,
+    "reason": "السبب",
+    "ts": "02:10:46"
+  }
+]

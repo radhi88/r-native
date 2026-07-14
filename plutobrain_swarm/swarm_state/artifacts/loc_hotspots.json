@@ -1,0 +1,55 @@
+{
+  "generated": 1782832624.7285125,
+  "top": [
+    {
+      "path": "live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "lines": 2792,
+      "bytes": 124316
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "lines": 2792,
+      "bytes": 124316
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+      "lines": 1413,
+      "bytes": 63703
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+      "lines": 1413,
+      "bytes": 63703
+    },
+    {
+      "path": "active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "lines": 1534,
+      "bytes": 63560
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "lines": 1534,
+      "bytes": 63560
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v4.mq5",
+      "lines": 1426,
+      "bytes": 62890
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v4.mq5",
+      "lines": 1426,
+      "bytes": 62890
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+      "lines": 1436,
+      "bytes": 60731
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+      "lines": 1436,
+      "bytes": 60731
+    }
+  ]
+}

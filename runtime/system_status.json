@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-07-10T17:36:07.899526+00:00",
+  "project_root": "C:\\Users\\Radhi\\MT5",
+  "services": {
+    "ollama": {
+      "status": "OK",
+      "port": 11434,
+      "port_open": true,
+      "http_ok": true,
+      "required_model": "qwen2.5:3b-instruct",
+      "required_model_present": true,
+      "models": [
+        "llava:latest",
+        "gemma4:31b-cloud",
+        "qwen2.5-coder:latest",
+        "qwen2.5:1.5b",
+        "qwen2.5-coder:7b",
+        "qwen2.5-coder:3b",
+        "qwen2.5:3b",
+        "llama3.2:3b",
+        "llama3.1:8b",
+        "qwen2.5:7b",
+        "qwen3.5:0.8b",
+        "qwen3.5:4b",
+        "qwen2.5:3b-instruct",
+        "qwen2.5:7b-instruct-q4_K_M",
+        "qwen3.5:2b",
+        "llama3:latest"
+      ],
+      "error": ""
+    },
+    "desktop_agent": {
+      "status": "OK",
+      "port": 8855,
+      "port_open": true,
+      "http_ok": true,
+      "health": {
+        "ok": true,
+        "service": "friday_jarvis_desktop_agent",
+        "time": "2026-07-10 20:35:57",
+        "hostname": "Radhi"
+      },
+      "error": "",
+      "name": "desktop_agent"
+    },
+    "gateway": {
+      "status": "OK",
+      "port": 8799,
+      "port_open": true,
+      "http_ok": true,
+      "health": {
+        "status": "ok",
+        "service": "FRIDAY Local Gateway",
+        "version": "1.2.0",
+        "mt5_root": "C:\\Users\\Radhi\\MT5",
+        "agents_app": "C:\\Users\\Radhi\\MT5\\mnt\\agents\\output\\app"
+      },
+      "error": "",
+      "name": "gateway"
+    },
+    "friday_dashboard": {
+      "status": "DOWN",
+      "port": 8790,
+      "port_open": false,
+      "http_ok": false,
+      "health": null,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "name": "friday_dashboard"
+    },
+    "chat": {
+      "status": "OK",
+      "port": 8811,
+      "port_open": true,
+      "http_ok": true,
+      "health": "\n<!doctype html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n  <meta charset=\"utf-8\"/>\n  <title>FRIDAY Jarvis Chat</title>\n  <style>\n    body {\n      margin: 0;\n      font-family: Arial, sans-serif;\n      background: #0f1117;\n      color: #f5f5f5;\n    }\n\n    .wrap {\n      max-width: 1050px;\n      margin: auto;\n      height: 100vh;\n      display: flex;\n      flex-direction: column;\n    }\n\n    header {\n      padding: 18px;\n      border-bottom: 1px solid #2a2d38;\n      font-size: 22px;\n      font-weight: bol",
+      "error": "",
+      "name": "chat"
+    },
+    "tradingview": {
+      "status": "OK",
+      "port": 8822,
+      "port_open": true,
+      "http_ok": true,
+      "health": {
+        "ok": true,
+        "service": "friday_scalper_live_dashboard",
+        "port": 8822,
+        "time": "2026-07-10T20:36:03"
+      },
+      "error": "",
+      "name": "tradingview"
+    },
+    "agents_browser": {
+      "status": "OK",
+      "port": 8833,
+      "port_open": true,
+      "http_ok": true,
+      "health": "\n<!doctype html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n  <meta charset=\"utf-8\"/>\n  <title>FRIDAY Agents Browser</title>\n  <style>\n    :root{\n      --bg:#07111f;\n      --card:#0d1728;\n      --card2:#0b1322;\n      --line:#1f3048;\n      --text:#eaf2ff;\n      --muted:#8ea4c5;\n      --green:#22c55e;\n      --red:#ef4444;\n      --yellow:#eab308;\n      --blue:#38bdf8;\n      --violet:#8b5cf6;\n      --pink:#ec4899;\n      --cyan:#06b6d4;\n    }\n    *{box-sizing:border-box}\n    html,body{\n      margin:0;\n      p",
+      "error": "",
+      "name": "agents_browser"
+    },
+    "brain_server": {
+      "status": "OK",
+      "port": 8844,
+      "port_open": true,
+      "http_ok": true,
+      "health": {
+        "ok": true,
+        "service": "friday_live_brain_state",
+        "port": 8844,
+        "time": "2026-07-10T20:36:03"
+      },
+      "error": "",
+      "name": "brain_server"
+    },
+    "algory_charts": {
+      "status": "OK",
+      "port": 8866,
+      "port_open": true,
+      "http_ok": true,
+      "health": "<!DOCTYPE html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Algory Intelligence — FRIDAY</title>\n<script src=\"https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js\"></script>\n<style>\n*{box-sizing:border-box;margin:0;padding:0}\nbody{background:#0d0f14;color:#cdd6f4;font-family:'Segoe UI',sans-serif;font-size:12px;overflow:hidden}\nheader{background:#1e1e2e;padding:6px 14px;",
+      "error": "",
+      "name": "algory_charts"
+    },
+    "qader": {
+      "status": "BLOCKED",
+      "state_file": "C:\\Users\\Radhi\\MT5\\dashboard\\qader_live_state.json",
+      "state_file_age_seconds": 840.0942318439484,
+      "loop_log": "C:\\Users\\Radhi\\MT5\\logs\\qader_realtime_loop.jsonl",
+      "loop_log_age_seconds": 4242403.7756893635,
+      "process_count": 1,
+      "loop": {
+        "state": "BLOCKED",
+        "reason": "headless_preflight_blocked",
+        "cycle_count": 0,
+        "last_cycle_time": "",
+        "last_signal": "",
+        "last_decision": "",
+        "last_block_reason": "headless_preflight_blocked",
+        "order_send_called": false,
+        "demo_trades_opened": 3,
+        "demo_trades_managed": 0,
+        "allow_new_entries": false,
+        "thread_alive": false
+      },
+      "latest_loop_record": {
+        "timestamp": "2026-05-22T15:09:17.065712+00:00",
+        "cycle_number": 321,
+        "loop_state": "RUNNING",
+        "event": "heartbeat",
+        "reason": "loop_running"
+      },
+      "evidence": "qader_live_state.json + qader_realtime_loop.jsonl + process scan"
+    },
+    "mt5": {
+      "status": "BLOCKED",
+      "initialized": true,
+      "login": <ACCOUNT_LOGIN>,
+      "server": "Exness-MT5Trial16",
+      "trade_mode": 0,
+      "demo_or_trial": true,
+      "balance": 70.36,
+      "equity": 69.87,
+      "xauusdm_tick": {
+        "bid": 4105.169,
+        "ask": 4105.409
+      },
+      "xauusdm_m1_bars": 10,
+      "open_positions": 1,
+      "pending_orders": 0,
+      "external_magic0_exposure": true,
+      "pending_order_details": [],
+      "terminal_processes": 2
+    }
+  },
+  "agents": {
+    "system_takeover": {
+      "status": "OK",
+      "evidence": "process/status/report coordinator active"
+    },
+    "voice": {
+      "status": "OK",
+      "evidence": "voice runtime status sink installed"
+    },
+    "brain": {
+      "status": "OK",
+      "evidence": "Ollama + router/brain checks"
+    },
+    "mt5": {
+      "status": "BLOCKED",
+      "evidence": "MT5 terminal/account/tick/bars check"
+    },
+    "diagnostics": {
+      "status": "OK",
+      "evidence": "system_status_report.py"
+    },
+    "qader": {
+      "status": "BLOCKED",
+      "evidence": "Qader loop state/log checks"
+    }
+  },
+  "logs": {
+    "qader_realtime_loop.jsonl": {
+      "exists": true,
+      "age_seconds": 4242408.4260389805,
+      "latest": {
+        "timestamp": "2026-05-22T15:09:17.065712+00:00",
+        "cycle_number": 321,
+        "loop_state": "RUNNING",
+        "event": "heartbeat",
+        "reason": "loop_running"
+      }
+    },
+    "qader_audit.jsonl": {
+      "exists": true,
+      "age_seconds": 4242409.134128809,
+      "latest": {
+        "timestamp": "2026-05-22T15:09:18.215907+00:00",
+        "action": "score_decision",
+        "permission_checked": null,
+        "allowed": true,
+        "reason": "decision_scored",
+        "module": "evaluation_engine",
+        "result": {
+          "action": "HOLD",
+          "confidence": 0.793,
+          "risk_status": "approved",
+          "score": 0.0
+        },
+        "metadata": {}
+      }
+    },
+    "signal_log.jsonl": {
+      "exists": true,
+      "age_seconds": 4242426.8910086155,
+      "latest": {
+        "source": "fractal_agent",
+        "symbol": "XAUUSDm",
+        "tf": "M1",
+        "direction": "BUY",
+        "confidence": 0.95,
+        "reason": "bull_struct(0.80) | BOS_bull | CHoCH_bull | bull_sweep(1.00) | ema_up",
+        "ts": "2026-05-22T15:09:01.699440+00:00"
+      }
+    },
+    "execution_log.jsonl": {
+      "exists": true,
+      "age_seconds": 4244159.465921164,
+      "latest": {
+        "action": "TRAIL_ONLY",
+        "symbol": "XAUUSDm",
+        "lot": 0.0,
+        "magic": 20260514,
+        "success": true,
+        "retcode": 10009,
+        "simulated": false,
+        "comment": "QADER_DEMO|PM_BREAK",
+        "ts": "2026-05-22T14:40:09.136690+00:00"
+      }
+    },
+    "risk_log.jsonl": {
+      "exists": true,
+      "age_seconds": 4242410.50434494,
+      "latest": {
+        "symbol": "XAUUSDm",
+        "approved": true,
+        "lot": 0.01,
+        "reason": "risk_approved",
+        "warnings": [
+          "spread_quality_wide:308.0/350.0"
+        ],
+        "ts": "2026-05-22T15:09:18.102460+00:00"
+      }
+    },
+    "decision_log.jsonl": {
+      "exists": true,
+      "age_seconds": 4242410.511743307,
+      "latest": {
+        "action": "BUY",
+        "symbol": "XAUUSDm",
+        "tf": "M1",
+        "confidence": 0.95,
+        "approved": [
+          "signal_arbiter"
+        ],
+        "blocked": [],
+        "reason": "buy_score=0.79_vs_sell=0.00",
+        "ts": "2026-05-22T15:09:18.099665+00:00"
+      }
+    },
+    "friday_voice/friday_voice.log": {
+      "exists": true,
+      "age_seconds": 3071848.5686383247,
+      "latest": null
+    },
+    "friday_voice/friday_voice_status.jsonl": {
+      "exists": true,
+      "age_seconds": 3071848.5688898563,
+      "latest": {
+        "timestamp": "2026-06-05T04:18:40.053776+00:00",
+        "tag": "HEALTH",
+        "message": "gateway REPAIR_DISPATCH_FAILED",
+        "payload": null
+      }
+    }
+  }
+}

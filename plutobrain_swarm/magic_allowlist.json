@@ -1,0 +1,4 @@
+{
+  "_note": "Magics intentionally SHARED across files by design — not collisions. The swarm's Magic Manager (B-13) excludes these from the collision KPI. Each entry: magic -> why it's shared.",
+  "20260605": "R-Native exported-strategy FAMILY. By design every R-Native genome EA uses this magic so the R-Native dashboard tracks them as one group (see r_native/mql5_export.py line 20). Covers live_ea/Stoch_Reversion_M3 + r_strategy_template + their source copies. Changing it would break dashboard position-tracking."
+}

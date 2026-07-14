@@ -1,0 +1,88 @@
+{
+  "time": "2026-05-21T19:41:36.309",
+  "timestamp": 1779381696.3099773,
+  "fresh": true,
+  "final_signal": "HOLD",
+  "raw_unified_signal": "HOLD",
+  "confidence": 17.46,
+  "consensus_ratio": "3/5",
+  "risk_level": "EXTREME",
+  "execution_mode": "LIMIT",
+  "price": 4516.251,
+  "stop_loss": 0.0,
+  "take_profit": 0.0,
+  "volume": 0.02,
+  "tp_money": 0.5,
+  "sl_money": 1.0,
+  "spread_points": 308.0,
+  "equity_at_decision": 73.68,
+  "trade_allowed": true,
+  "trade_block_reason": "ok",
+  "veto_reasons": [
+    "confidence 17.46<55"
+  ],
+  "scores": {
+    "BUY": 9.61,
+    "SELL": 17.03,
+    "HOLD": 17.46
+  },
+  "weights": {
+    "external": 0.4307,
+    "smc": 0.0507,
+    "multi_tf": 0.0842,
+    "volume_profile": 0.0524,
+    "agents": 0.0507,
+    "unusual_whales": 0.3313
+  },
+  "learning": {
+    "samples": 6700,
+    "last_outcome": {
+      "time": "2026-05-21T19:40:21",
+      "equity_delta": -0.02,
+      "previous_signal": "SELL",
+      "agreed_sources": [
+        "smc",
+        "volume_profile",
+        "agents"
+      ]
+    }
+  },
+  "sources": [
+    {
+      "source": "smc",
+      "signal": "SELL",
+      "confidence": 76.25,
+      "price": 4516.251,
+      "reasoning": "confluence votes=5/8 approved=True; OB:0 FVG:0 --- ↓Bias"
+    },
+    {
+      "source": "multi_tf",
+      "signal": "BUY",
+      "confidence": 65.0,
+      "price": 4516.234,
+      "reasoning": "multi-timeframe support/resistance map"
+    },
+    {
+      "source": "volume_profile",
+      "signal": "SELL",
+      "confidence": 58.0,
+      "price": 4516.234,
+      "reasoning": "poc=4504.999 vah=4510.73 val=4495.831 signal=SELL_ZONE"
+    },
+    {
+      "source": "agents",
+      "signal": "SELL",
+      "confidence": 55.0,
+      "price": 4516.251,
+      "reasoning": "agent confluence=SELL votes=5"
+    },
+    {
+      "source": "unusual_whales",
+      "signal": "HOLD",
+      "confidence": 30.0,
+      "price": 4516.251,
+      "reasoning": "missing_UW_API_KEY"
+    }
+  ],
+  "reasoning": "Unified Decision: HOLD\nFinal Signal: HOLD\nConfidence: 17.46%\nConsensus: 3/5\nRisk Level: EXTREME\nVeto: confidence 17.46<55\nSource Breakdown:\n- smc: SELL @ 76% - confluence votes=5/8 approved=True; OB:0 FVG:0 --- ↓Bias\n- multi_tf: BUY @ 65% - multi-timeframe support/resistance map\n- volume_profile: SELL @ 58% - poc=4504.999 vah=4510.73 val=4495.831 signal=SELL_ZONE\n- agents: SELL @ 55% - agent confluence=SELL votes=5\n- unusual_whales: HOLD @ 30% - missing_UW_API_KEY"
+}

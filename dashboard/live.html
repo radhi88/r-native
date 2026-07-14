@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>R Native — البث الحي للإشارة</title>
+<style>
+  :root{--bg:#0b0e14;--card:#141925;--bd:#222c3d;--tx:#e6edf3;--dim:#8aa0b6;--buy:#16c784;--sell:#ea3943;--wait:#7d8896}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--tx);font-family:"Segoe UI",Tahoma,Arial;padding:14px}
+  h1{font-size:18px;margin:0 0 4px} .sub{color:var(--dim);font-size:12px;margin-bottom:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px}
+  .sym{font-weight:700;font-size:16px} .act{float:left;font-weight:800;font-size:18px;padding:2px 10px;border-radius:8px}
+  .BUY{background:rgba(22,199,132,.15);color:var(--buy)} .SELL{background:rgba(234,57,67,.15);color:var(--sell)} .WAIT{background:rgba(125,136,150,.15);color:var(--wait)}
+  .bar{height:8px;background:#1f2733;border-radius:6px;margin:8px 0;overflow:hidden}
+  .fill{height:100%;border-radius:6px}
+  .row{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin:3px 0}
+  .row b{color:var(--tx)}
+  .pos{font-size:13px} .pl-pos{color:var(--buy)} .pl-neg{color:var(--sell)}
+  .fade{font-size:11px;color:#f0a020;margin-top:4px}
+  .top{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+  .stat{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 14px}
+  .stat .v{font-size:18px;font-weight:700} .stat .l{font-size:11px;color:var(--dim)}
+  .comp{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 12px;font-size:11px;color:var(--dim);margin-top:6px}
+</style>
+</head>
+<body>
+  <h1>🧠 R Native — البث الحي للإشارة</h1>
+  <div class="sub" id="ts">…</div>
+  <div class="top" id="top"></div>
+  <div class="grid" id="grid"></div>
+<script>
+function colorFor(a){return a==="BUY"?"var(--buy)":a==="SELL"?"var(--sell)":"var(--wait)";}
+function label(a){return a==="BUY"?"اشترِ":a==="SELL"?"بِع":"انتظر";}
+async function tick(){
+  try{
+    const r = await fetch("/api/r/live"); const d = await r.json();
+    const L = d.learning||{}, A = d.account||{};
+    document.getElementById("ts").textContent =
+      "تحديث "+new Date().toLocaleTimeString()+" · الوضع المُتعلَّم: "+(L.mode||"?")+
+      " · عتبة "+(L.recommended_min_conf||"?")+"% · صدق الإشارة "+(L.overall_hit_rate||"?")+"% (عيّنات "+(L.total_decided||0)+")";
+    // top stats
+    let top = "";
+    top += `<div class="stat"><div class="v">$${A.balance??"?"}</div><div class="l">الرصيد</div></div>`;
+    top += `<div class="stat"><div class="v">$${A.equity??"?"}</div><div class="l">الحقوق</div></div>`;
+    top += `<div class="stat"><div class="v" style="color:${(A.profit||0)>=0?'var(--buy)':'var(--sell)'}">$${A.profit??"?"}</div><div class="l">عائم</div></div>`;
+    for(const k in (d.positions||{})){const p=d.positions[k];
+      top += `<div class="stat"><div class="v" style="color:${p.pl>=0?'var(--buy)':'var(--sell)'}">${p.n} · $${p.pl}</div><div class="l">${k}</div></div>`;}
+    if(L.mode==="FADE") top += `<div class="stat" style="border-color:#f0a020"><div class="v" style="color:#f0a020">FADE 🔄</div><div class="l">الإشارة معكوسة (تصدق ${L.fade_hit_rate}%)</div></div>`;
+    document.getElementById("top").innerHTML = top;
+    // signal cards
+    let g = "";
+    for(const s of (d.signals||[])){
+      const c = colorFor(s.action), conf = s.confidence||0, bd = s.breakdown||{};
+      const fade = s.faded ? `<div class="fade">🔄 معكوس: ${s.orig_action} → ${s.action} (FADE)</div>` : "";
+      let comp = "";
+      for(const k of ["stoch","vel","vwap","imb","accel","flow","wick","rev","tf"]){
+        if(s.components && k in s.components){const v=s.components[k];
+          comp += `<div>${k}: <b style="color:${v>0?'var(--buy)':v<0?'var(--sell)':'var(--dim)'}">${v}</b></div>`;}}
+      const stz = (s.stoch_confirmed ? "#16c784" : "#f0a020");
+      g += `<div class="card">
+        <span class="act ${s.action}">${label(s.action)} ${conf.toFixed(0)}%</span>
+        <div class="sym">${s.symbol}</div>
+        <div class="bar"><div class="fill" style="width:${Math.min(conf,100)}%;background:${c}"></div></div>
+        <div class="row"><span>الدرجة</span><b>${s.score??"?"}</b></div>
+        <div class="row"><span>الأعمدة</span><b>${(bd.pillars_agree||"").split(" ")[0]}</b></div>
+        <div class="row"><span>الفريمات</span><b>${bd.tf_consensus||"?"}</b></div>
+        <div class="row"><span>ستوكاستك</span><b style="color:${stz}">${s.stoch||"-"}</b></div>
+        <div class="row"><span>الذيل</span><b>${bd.wick||"-"}</b></div>
+        <div class="row"><span>المنطقة</span><b>${(bd.zone||"-").replace("price at ","")}</b></div>
+        <div class="comp">${comp}</div>
+        ${fade}
+        <div class="row" style="margin-top:6px"><span>عمر</span><b>${s._age}s</b></div>
+      </div>`;
+    }
+    document.getElementById("grid").innerHTML = g || "<div class='card'>لا إشارات بعد…</div>";
+  }catch(e){document.getElementById("ts").textContent="خطأ في التحميل: "+e;}
+}
+tick(); setInterval(tick, 2000);
+</script>
+</body>
+</html>

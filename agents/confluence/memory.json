@@ -1,0 +1,1613 @@
+{
+  "agent": "محرك التقاطع",
+  "name": "Mujammi",
+  "role": "Confluence Engine v2",
+  "runs": 756,
+  "scalp_approved": 606,
+  "swing_approved": 149,
+  "rejected": 1,
+  "scalp_wins": 0,
+  "scalp_losses": 0,
+  "history": [
+    {
+      "t": "2026-05-21T19:00",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:00",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:00",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:00",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:00",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:01",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:01",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:01",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:01",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:01",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:01",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:02",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:02",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:02",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:02",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:02",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:02",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:03",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:03",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:03",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:03",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:03",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:04",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:04",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:04",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:04",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:04",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:04",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:05",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:05",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:05",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:05",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:05",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:05",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:06",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:06",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:06",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:06",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:06",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:07",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:07",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:07",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:07",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:07",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:07",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:08",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:08",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:08",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:08",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:08",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:08",
+      "votes": 6,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:09",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:09",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:09",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:09",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:09",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:10",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:10",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:10",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:10",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:10",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:10",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:11",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:11",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:11",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:11",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:11",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:11",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:12",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:12",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:12",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:12",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:12",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:12",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:13",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:13",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:13",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:13",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:13",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:14",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:14",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:14",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:14",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:14",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:14",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:15",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:15",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:15",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:15",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:15",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:15",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:16",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:16",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:16",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:16",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:16",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:17",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:17",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:17",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:17",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:17",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:17",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:18",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:18",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:18",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:18",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:18",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:18",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:19",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:19",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:19",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:19",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:19",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:19",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:20",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:20",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:20",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:20",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:20",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:21",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:21",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:21",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:21",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:21",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:21",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:22",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:22",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:22",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:22",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:22",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:22",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:23",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:23",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:23",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:23",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:23",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:24",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:24",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:24",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:24",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:24",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:24",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:25",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:25",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:25",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:25",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:25",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:25",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:26",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:26",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:26",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:26",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:26",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:27",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:28",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:29",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:29",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:29",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:29",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:30",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:31",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:31",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:31",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:32",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:32",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:33",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:33",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:34",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:34",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:34",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:35",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:35",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:35",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:36",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:36",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:36",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:37",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:37",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:37",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:38",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:38",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:38",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "BUY"
+    },
+    {
+      "t": "2026-05-21T19:39",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "SELL"
+    },
+    {
+      "t": "2026-05-21T19:39",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "SELL"
+    },
+    {
+      "t": "2026-05-21T19:40",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "SELL"
+    },
+    {
+      "t": "2026-05-21T19:40",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "SELL"
+    },
+    {
+      "t": "2026-05-21T19:40",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "SELL"
+    },
+    {
+      "t": "2026-05-21T19:40",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "SELL"
+    },
+    {
+      "t": "2026-05-21T19:41",
+      "votes": 5,
+      "dir_agreement": 2,
+      "scalp": true,
+      "swing": false,
+      "direction": "SELL"
+    }
+  ]
+}

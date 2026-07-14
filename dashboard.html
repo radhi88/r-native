@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8"/>
+<title>FRIDAY R Factory — Mission Control</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+<style>
+:root {
+  --bg-0: #0a0a0f;
+  --bg-1: #13131a;
+  --bg-2: #1a1a23;
+  --bg-3: #222230;
+  --bg-elev: #2a2a38;
+  --border: #2d2d3a;
+  --border-active: #3d3d52;
+  --gold: #f5a524;
+  --gold-dim: #c47e15;
+  --violet: #a78bfa;
+  --green: #22c55e;
+  --green-bg: #0e2a1a;
+  --red: #ef4444;
+  --red-bg: #2a0e0e;
+  --cyan: #06b6d4;
+  --text: #ededf0;
+  --text-mut: #9494a0;
+  --mono: 'JetBrains Mono','Consolas',ui-monospace,monospace;
+  --gap: 12px;
+  --radius: 6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--bg-0); color: var(--text);
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px; line-height: 1.45;
+}
+a { color: var(--cyan); text-decoration: none; }
+a:hover { color: var(--gold); }
+
+/* ── Layout ── */
+.wrap {
+  max-width: 1600px; margin: 0 auto; padding: var(--gap);
+}
+.header {
+  background: var(--bg-1); border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: var(--gap);
+}
+.brand {
+  font-size: 18px; font-weight: 900; letter-spacing: 6px; color: var(--gold);
+}
+.brand-sub {
+  font-size: 10px; letter-spacing: 3px; color: var(--text-mut);
+  margin-left: -10px;
+}
+.spacer { flex: 1; }
+.pill {
+  font-family: var(--mono); font-size: 10px;
+  padding: 3px 8px; border: 1px solid var(--border);
+  border-radius: 3px; color: var(--text-mut);
+}
+.pill.ok { color: var(--green); border-color: var(--green); }
+.pill.warn { color: var(--gold); border-color: var(--gold); }
+.pill.bad { color: var(--red); border-color: var(--red); }
+.btn {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 6px 14px; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; transition: 0.15s;
+}
+.btn:hover { color: var(--gold); border-color: var(--gold); }
+.btn.primary { background: var(--gold); color: var(--bg-0); border-color: var(--gold); }
+.btn.primary:hover { background: var(--gold-dim); }
+.btn.danger { color: var(--red); border-color: var(--red); }
+.btn.danger:hover { background: var(--red); color: var(--bg-0); }
+.btn.success { color: var(--green); border-color: var(--green); }
+.btn.success:hover { background: var(--green); color: var(--bg-0); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── KPI cards ── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--gap);
+  margin-bottom: var(--gap);
+}
+.kpi {
+  background: var(--bg-1); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.kpi .label {
+  font-size: 9px; letter-spacing: 2px; color: var(--text-mut);
+  font-weight: 700; text-transform: uppercase;
+}
+.kpi .value {
+  font-family: var(--mono); font-size: 24px; font-weight: 800;
+  margin-top: 6px; color: var(--text);
+}
+.kpi .sub { font-size: 11px; color: var(--text-mut); margin-top: 2px; }
+.value.pos { color: var(--green); }
+.value.neg { color: var(--red); }
+
+/* ── 2-column main ── */
+.cols {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: var(--gap);
+}
+.col { display: flex; flex-direction: column; gap: var(--gap); }
+.card {
+  background: var(--bg-1); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.card h3 {
+  font-size: 10px; letter-spacing: 2px; color: var(--gold);
+  font-weight: 800; text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card h3 .count {
+  font-size: 9px; color: var(--text-mut); font-weight: 600;
+  background: var(--bg-2); padding: 1px 6px; border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+/* ── Champions ── */
+.champions {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.champ {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 6px 10px;
+  min-width: 140px; cursor: pointer; transition: 0.15s;
+}
+.champ:hover { border-color: var(--gold); }
+.champ .top {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px;
+}
+.champ .sym { color: var(--gold); font-weight: 800; }
+.champ .gid {
+  color: var(--text-mut); font-family: var(--mono); font-size: 10px;
+}
+.champ .mid {
+  display: flex; gap: 8px; font-size: 10px;
+  color: var(--text-mut); margin-top: 3px; font-family: var(--mono);
+}
+.life-bar {
+  height: 5px; background: var(--bg-3); border-radius: 2px;
+  margin-top: 5px; overflow: hidden;
+}
+.life-bar > div {
+  height: 100%; border-radius: 2px; transition: width 0.5s;
+}
+.life-high { background: var(--green); }
+.life-med  { background: var(--gold); }
+.life-low  { background: var(--red); }
+
+/* ── Tables ── */
+table {
+  width: 100%; border-collapse: collapse; font-size: 11px;
+}
+table th {
+  text-align: left; padding: 6px 8px; color: var(--text-mut);
+  font-size: 9px; letter-spacing: 1px; font-weight: 700;
+  text-transform: uppercase; border-bottom: 1px solid var(--border);
+}
+table td {
+  padding: 6px 8px; border-bottom: 1px solid var(--bg-2);
+  font-family: var(--mono);
+}
+table tr:hover td { background: var(--bg-2); }
+.cell-sym { color: var(--gold); font-weight: 700; font-family: -apple-system, sans-serif; }
+.cell-gid { color: var(--violet); font-size: 10px; }
+.cell-pos { color: var(--green); }
+.cell-neg { color: var(--red); }
+.cell-mut { color: var(--text-mut); }
+
+/* ── Contenders ── */
+.contender {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 10px 12px; margin-bottom: 8px;
+}
+.contender .head {
+  display: flex; align-items: center; gap: 8px; font-size: 11px;
+}
+.contender .head .sym { color: var(--gold); font-weight: 800; }
+.contender .head .gid { color: var(--text-mut); font-family: var(--mono); font-size: 10px; }
+.contender .stats {
+  font-size: 10px; color: var(--text-mut); font-family: var(--mono);
+  margin: 4px 0;
+}
+.contender .reason {
+  font-size: 10px; color: var(--cyan); margin-bottom: 6px;
+}
+.contender .actions {
+  display: flex; gap: 6px;
+}
+.contender .actions button { padding: 3px 10px; font-size: 10px; }
+
+/* ── Agents ── */
+.agent {
+  display: flex; align-items: center; gap: 10px; padding: 6px 0;
+  border-bottom: 1px solid var(--bg-2); font-size: 11px;
+}
+.agent .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--text-mut);
+}
+.agent .dot.on { background: var(--green); }
+.agent .name { flex: 1; }
+.agent .meta { color: var(--text-mut); font-size: 10px; font-family: var(--mono); }
+
+/* ── Activity feed ── */
+.feed {
+  height: 200px; overflow-y: auto;
+  font-family: var(--mono); font-size: 10px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 3px; padding: 8px;
+}
+.feed .line { margin-bottom: 3px; word-wrap: break-word; }
+.feed .ts { color: var(--text-mut); margin-right: 6px; }
+.feed .live { color: var(--green); }
+.feed .seed { color: var(--cyan); }
+.feed .err  { color: var(--red); }
+.feed .info { color: var(--text); }
+
+/* ── Modals ── */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+  display: none; align-items: center; justify-content: center;
+  z-index: 100;
+}
+.modal-bg.show { display: flex; }
+.modal {
+  background: var(--bg-1); border: 1px solid var(--gold);
+  border-radius: var(--radius); padding: 20px;
+  min-width: 400px; max-width: 600px; max-height: 80vh; overflow-y: auto;
+}
+.modal h2 { color: var(--gold); margin-bottom: 12px; font-size: 16px; }
+.modal pre {
+  background: var(--bg-2); padding: 10px; border-radius: 4px;
+  font-size: 11px; overflow-x: auto; color: var(--text);
+}
+.modal .actions {
+  display: flex; gap: 8px; margin-top: 14px; justify-content: flex-end;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--bg-elev); color: var(--text);
+  border: 1px solid var(--green); padding: 10px 16px; border-radius: 4px;
+  font-size: 12px; z-index: 200;
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+.toast.err  { border-color: var(--red); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-1); }
+::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+@media (max-width: 1100px) {
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .cols { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="brand">FRIDAY</div>
+      <div class="brand-sub">R FACTORY · MISSION CONTROL</div>
+    </div>
+    <div class="spacer"></div>
+    <span class="pill" id="conn-pill">…</span>
+    <span class="pill" id="mode-pill">…</span>
+    <span class="pill" id="armed-pill">…</span>
+    <button class="btn" onclick="manualRefresh()">⟳ Refresh</button>
+    <button class="btn" id="autoref-btn" onclick="toggleAutoRefresh()">⏸ Auto</button>
+  </div>
+
+  <!-- KPI strip -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="label">Balance</div>
+      <div class="value" id="kpi-balance">—</div>
+      <div class="sub" id="kpi-balance-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Today P/L</div>
+      <div class="value" id="kpi-pl">—</div>
+      <div class="sub" id="kpi-pl-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Win Rate</div>
+      <div class="value" id="kpi-wr">—</div>
+      <div class="sub" id="kpi-wr-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Open / Max</div>
+      <div class="value" id="kpi-open">—</div>
+      <div class="sub" id="kpi-open-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Genomes Live</div>
+      <div class="value" id="kpi-genomes">—</div>
+      <div class="sub" id="kpi-genomes-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Contenders</div>
+      <div class="value" id="kpi-contenders">—</div>
+      <div class="sub" id="kpi-contenders-sub">awaiting review</div>
+    </div>
+  </div>
+
+  <!-- Main 2-col -->
+  <div class="cols">
+    <!-- LEFT -->
+    <div class="col">
+      <!-- Champions -->
+      <div class="card">
+        <h3>🏆 Champions <span class="count" id="champs-count">0</span></h3>
+        <div class="champions" id="champions"></div>
+      </div>
+
+      <!-- Live positions -->
+      <div class="card">
+        <h3>⚡ Live Positions <span class="count" id="pos-count">0</span></h3>
+        <table id="positions-table">
+          <thead>
+            <tr>
+              <th>Ticket</th><th>Symbol</th><th>Side</th>
+              <th>Entry</th><th>SL</th><th>TP</th>
+              <th>P/L</th><th>Comment</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- P/L trend chart -->
+      <div class="card">
+        <h3>📈 P/L Trend Today</h3>
+        <div style="height: 180px;"><canvas id="pl-chart"></canvas></div>
+      </div>
+
+      <!-- Activity feed -->
+      <div class="card">
+        <h3>📜 Activity Feed</h3>
+        <div class="feed" id="feed"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col">
+      <!-- Contenders -->
+      <div class="card">
+        <h3>🥊 Contenders <span class="count" id="cont-count">0</span></h3>
+        <div id="contenders"></div>
+      </div>
+
+      <!-- Monsters -->
+      <div class="card">
+        <h3>🔥 Monster Genomes <span class="count" id="mon-count">0</span></h3>
+        <div id="monsters"></div>
+      </div>
+
+      <!-- Agents -->
+      <div class="card">
+        <h3>🤖 AI Agents <span class="count" id="agents-count">0</span></h3>
+        <div id="agents"></div>
+      </div>
+
+      <!-- Exposure -->
+      <div class="card">
+        <h3>🛡 Per-Symbol Exposure <span class="count" id="expo-count">0</span></h3>
+        <table id="exposure-table">
+          <thead>
+            <tr><th>Symbol</th><th>Opens</th><th>Net</th><th>Status</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; color:var(--text-mut); font-size:10px; padding:14px;">
+    FRIDAY R Factory · Mission Control · auto-refresh <span id="refresh-rate">5s</span> ·
+    last update <span id="last-update">—</span>
+  </div>
+</div>
+
+<!-- Genome detail modal -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2 id="modal-title">Genome</h2>
+    <div id="modal-body"></div>
+    <div class="actions">
+      <button class="btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const BASE = "http://localhost:5055";
+const REFRESH_MS = 5000;
+let autoTimer = null;
+let plChart = null;
+let plHistory = [];   // {ts, pl}
+
+/* ── HTTP helpers ── */
+async function getJSON(url) {
+  try {
+    const r = await fetch(BASE + url, {cache: "no-store"});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return await r.json();
+  } catch (e) { console.warn(url, e); return null; }
+}
+async function postJSON(url) {
+  const r = await fetch(BASE + url, {method: "POST"});
+  return await r.json();
+}
+
+/* ── Formatting ── */
+const fmt$ = v => (v === null || v === undefined || isNaN(v))
+  ? "—" : ((v >= 0 ? "+" : "") + "$" + Number(v).toFixed(2));
+const fmtNum = v => v === null || v === undefined ? "—" : v.toLocaleString();
+const fmtPct = v => v === null || v === undefined ? "—" : (Number(v).toFixed(1) + "%");
+const fmtShort = (s, n = 14) => !s ? "—" : (s.length > n ? s.slice(0, n - 1) + "…" : s);
+const tsShort = () => new Date().toTimeString().slice(0, 8);
+
+/* ── Toast ── */
+function toast(msg, err = false) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (err ? " err" : "");
+  setTimeout(() => t.className = "toast" + (err ? " err" : ""), 2500);
+}
+
+/* ── KPI updates ── */
+function updateKPIs(exec, genomesActive, contenders, snap) {
+  // Balance/equity/margin live in /api/snapshot under account.account
+  const acct = (snap?.account?.account) || exec?.account || {};
+  const open = exec?.r_open_positions?.length ?? 0;
+  const today_w = exec?.today_wins ?? 0;
+  const today_t = exec?.today_trades ?? 0;
+  const today_pl = exec?.today_pl ?? 0;
+  const total_pl = exec?.total_pl ?? 0;
+  const wr = today_t > 0 ? (today_w / today_t * 100) : 0;
+  const genomes = (genomesActive?.symbols || []).filter(s => s.deployed_genome).length;
+  const cont = (contenders?.contenders || []).filter(c => c.status === "PENDING").length;
+
+  // Balance — try to pull from MT5 via /api/account
+  document.getElementById("kpi-balance").textContent =
+    acct.balance ? `$${Number(acct.balance).toFixed(2)}` : "$—";
+  document.getElementById("kpi-balance-sub").textContent =
+    acct.currency ? acct.currency : "";
+
+  const plEl = document.getElementById("kpi-pl");
+  plEl.textContent = fmt$(today_pl);
+  plEl.className = "value " + (today_pl > 0 ? "pos" : today_pl < 0 ? "neg" : "");
+  document.getElementById("kpi-pl-sub").textContent = `total ${fmt$(total_pl)}`;
+
+  document.getElementById("kpi-wr").textContent = fmtPct(wr);
+  document.getElementById("kpi-wr-sub").textContent = `${today_w}/${today_t} trades`;
+
+  document.getElementById("kpi-open").textContent = `${open}/12`;
+  document.getElementById("kpi-open-sub").textContent = exec?.last_action || "—";
+
+  document.getElementById("kpi-genomes").textContent = genomes;
+  document.getElementById("kpi-genomes-sub").textContent =
+    `${(genomesActive?.symbols || []).length} symbols total`;
+
+  document.getElementById("kpi-contenders").textContent = cont;
+}
+
+/* ── Header pills ── */
+function updateHeader(exec) {
+  const conn = document.getElementById("conn-pill");
+  const mode = document.getElementById("mode-pill");
+  const armed = document.getElementById("armed-pill");
+  if (exec && exec.alive !== undefined) {
+    conn.textContent = "● connected";
+    conn.className = "pill ok";
+    mode.textContent = exec.mode || "?";
+    mode.className = "pill " + (exec.mode === "LIVE" ? "ok" : "warn");
+    armed.textContent = exec.armed ? "● armed" : "○ disarmed";
+    armed.className = "pill " + (exec.armed ? "ok" : "warn");
+  } else {
+    conn.textContent = "○ disconnected";
+    conn.className = "pill bad";
+    mode.textContent = "—"; mode.className = "pill";
+    armed.textContent = "—"; armed.className = "pill";
+  }
+}
+
+/* ── Life % (copied from app.py logic) ── */
+function lifePct(dg, stats, isMon) {
+  const pf = +(dg.profit_factor || 0);
+  const live_pnl = +(stats.live_pnl || 0);
+  const trades = +(stats.live_trades || 0);
+  let score = 0;
+  score += Math.min(40, pf * 2);
+  score += Math.max(-25, Math.min(25, live_pnl * 5));
+  score += Math.min(15, trades * 1.5);
+  if (isMon) score += 10;
+  if (stats.kill_protected) score += 5;
+  if (stats.pinned) score += 5;
+  return Math.max(0, Math.min(100, score));
+}
+
+/* ── Champions ── */
+function renderChampions(genomesActive, monsterIds) {
+  const wrap = document.getElementById("champions");
+  const syms = (genomesActive?.symbols || []).filter(s => s.deployed_genome);
+  document.getElementById("champs-count").textContent = syms.length;
+  if (!syms.length) {
+    wrap.innerHTML = '<div class="cell-mut">no champions yet — waiting for first deploys…</div>';
+    return;
+  }
+  wrap.innerHTML = syms.map(s => {
+    const dg = s.deployed_genome;
+    const st = dg.stats || {};
+    const life = lifePct(dg, st, monsterIds.has(dg.id));
+    const lifeClass = life >= 60 ? "life-high" : life >= 30 ? "life-med" : "life-low";
+    const pnl = +st.live_pnl || 0;
+    const pnlColor = pnl > 0 ? "cell-pos" : pnl < 0 ? "cell-neg" : "cell-mut";
+    const mon = monsterIds.has(dg.id) ? "🔥 " : "";
+    return `
+      <div class="champ" onclick="showGenomeDetail('${dg.id}','${s.symbol}')">
+        <div class="top">
+          <span class="sym">${mon}${s.symbol}</span>
+          <span class="gid">${dg.id}</span>
+        </div>
+        <div class="mid">
+          <span class="${pnlColor}">${fmt$(pnl)}</span>
+          <span>· ${st.live_trades || 0}t</span>
+          <span>· PF ${(+dg.profit_factor || 0).toFixed(1)}</span>
+        </div>
+        <div class="life-bar">
+          <div class="${lifeClass}" style="width:${life}%"></div>
+        </div>
+        <div style="font-size:9px;color:var(--text-mut);margin-top:2px;">
+          life ${life.toFixed(0)}%
+        </div>
+      </div>`;
+  }).join("");
+}
+
+/* ── Positions table ── */
+function renderPositions(exec) {
+  const tbody = document.querySelector("#positions-table tbody");
+  const positions = exec?.r_open_positions || [];
+  document.getElementById("pos-count").textContent = positions.length;
+  if (!positions.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="cell-mut" style="text-align:center;">no open positions</td></tr>';
+    return;
+  }
+  tbody.innerHTML = positions.map(p => {
+    const pnlClass = p.profit > 0 ? "cell-pos" : p.profit < 0 ? "cell-neg" : "cell-mut";
+    const cmt = (p.comment || "—");
+    const cmtColor = cmt.startsWith("R-") ? "cell-gid" : "cell-mut";
+    return `<tr>
+      <td class="cell-mut">${p.ticket}</td>
+      <td class="cell-sym">${p.symbol}</td>
+      <td>${p.type}</td>
+      <td>${(+p.price_open || 0).toFixed(3)}</td>
+      <td class="cell-mut">${(+p.sl || 0).toFixed(3)}</td>
+      <td class="cell-mut">${(+p.tp || 0).toFixed(3)}</td>
+      <td class="${pnlClass}">${fmt$(p.profit)}</td>
+      <td class="${cmtColor}">${cmt}</td>
+    </tr>`;
+  }).join("");
+}
+
+/* ── Contenders panel ── */
+async function renderContenders(contenders) {
+  const wrap = document.getElementById("contenders");
+  const list = (contenders?.contenders || []).filter(c => c.status === "PENDING");
+  document.getElementById("cont-count").textContent = list.length;
+  if (!list.length) {
+    wrap.innerHTML = '<div class="cell-mut">no pending contenders — lab is empty</div>';
+    return;
+  }
+  wrap.innerHTML = list.slice(0, 6).map(c => {
+    const s = c.stats || {};
+    return `<div class="contender">
+      <div class="head">
+        <span class="sym">${c.symbol}</span>
+        <span class="gid">${c.child_id}</span>
+        <span style="flex:1"></span>
+        <span class="cell-mut" style="font-size:9px">${(c.promoted_at || '').slice(11,19)}</span>
+      </div>
+      <div class="stats">PF ${(+s.profit_factor || 0).toFixed(1)} · WR ${(+s.win_rate || 0).toFixed(0)}% · ${s.trades || 0} trades · vs parent ${(+c.parent_pf || 0).toFixed(1)}</div>
+      <div class="reason">${c.reason || ''}</div>
+      <div class="actions">
+        <button class="btn success" onclick="contenderAct('${c.child_id}','accept')">✓ Accept</button>
+        <button class="btn danger"  onclick="contenderAct('${c.child_id}','reject')">✗ Reject</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+async function contenderAct(cid, action) {
+  const r = await postJSON(`/api/r/contenders/${cid}/${action}`);
+  if (r.ok) {
+    toast(`${action.toUpperCase()} ${cid}: ${r.symbol ? `→ ${r.symbol}` : 'done'}`);
+    refresh();
+  } else {
+    toast(`${action} failed: ${r.error || r.err || '?'}`, true);
+  }
+}
+
+/* ── Monsters ── */
+function renderMonsters(monsters) {
+  const wrap = document.getElementById("monsters");
+  const list = (monsters?.monsters || []);
+  document.getElementById("mon-count").textContent = list.length;
+  if (!list.length) {
+    wrap.innerHTML = `<div class="cell-mut">no monsters yet · need ≥10 trades + ≥70% WR both sides + avg conf ≥85</div>`;
+    return;
+  }
+  wrap.innerHTML = list.slice(0, 6).map(m => `
+    <div style="padding:6px 0;border-bottom:1px solid var(--bg-2);font-size:11px">
+      <div><span class="cell-sym">🔥 ${m.id}</span>
+        <span style="color:var(--text-mut);font-size:10px;font-family:var(--mono)">
+          score=${m.monster_score}</span></div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--text-mut)">
+        BUY ${(m.buy_win_rate*100).toFixed(0)}% · SELL ${(m.sell_win_rate*100).toFixed(0)}% · conf ${m.avg_confidence} · hold ${m.avg_hold_min}m · PF ${m.combined_pf}
+      </div>
+    </div>`).join("");
+}
+
+/* ── Agents ── */
+function renderAgents(agents) {
+  const wrap = document.getElementById("agents");
+  const list = agents?.agents || [];
+  document.getElementById("agents-count").textContent =
+    `${list.filter(a => a.running).length}/${list.length}`;
+  if (!list.length) {
+    wrap.innerHTML = '<div class="cell-mut">no agents responding</div>';
+    return;
+  }
+  wrap.innerHTML = list.map(a => `
+    <div class="agent">
+      <div class="dot ${a.running ? 'on' : ''}"></div>
+      <div class="name">${a.name}</div>
+      <div class="meta">${a.ticks || 0}t · err ${a.errs || 0} · ${a.interval || '?'}s</div>
+      <button class="btn" style="padding:2px 8px;font-size:9px"
+              onclick="runAgent('${a.name}')">▶</button>
+    </div>`).join("");
+}
+async function runAgent(name) {
+  const r = await postJSON(`/api/r/agents/${name}/run`);
+  toast(r.ok || r.kicked_off ? `${name} kicked off` : `${name} failed`, !(r.ok || r.kicked_off));
+}
+
+/* ── Exposure ── */
+function renderExposure(expo) {
+  const tbody = document.querySelector("#exposure-table tbody");
+  const syms = (expo?.symbols || []).filter(s => s.opens_today > 0 || s.net_today !== 0);
+  document.getElementById("expo-count").textContent = syms.length;
+  if (!syms.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="cell-mut" style="text-align:center;">no activity today</td></tr>';
+    return;
+  }
+  tbody.innerHTML = syms.slice(0, 10).map(s => {
+    const netClass = s.net_today > 0 ? "cell-pos" : s.net_today < 0 ? "cell-neg" : "cell-mut";
+    const status = s.dd_paused ? '<span class="pill bad">DD</span>' : '<span class="pill ok">OK</span>';
+    return `<tr>
+      <td class="cell-sym">${s.symbol}</td>
+      <td>${s.opens_today}</td>
+      <td class="${netClass}">${fmt$(s.net_today)}</td>
+      <td>${status}</td>
+    </tr>`;
+  }).join("");
+}
+
+/* ── Activity feed (from executor log + lineage) ── */
+function appendFeed(line, cls = "info") {
+  const f = document.getElementById("feed");
+  const div = document.createElement("div");
+  div.className = "line";
+  div.innerHTML = `<span class="ts">${tsShort()}</span><span class="${cls}">${line}</span>`;
+  f.insertBefore(div, f.firstChild);
+  while (f.childElementCount > 100) f.removeChild(f.lastChild);
+}
+let lastLogIndex = -1;
+function renderFeed(exec) {
+  const log = exec?.last_log || [];
+  if (!log.length) return;
+  // Show only newest lines (since last seen)
+  const fresh = log.slice(-5);
+  fresh.forEach(l => {
+    let cls = "info";
+    if (l.includes("🚀 LIVE"))   cls = "live";
+    if (l.includes("🌱"))        cls = "seed";
+    if (l.includes("⚠") || l.includes("❌") || l.includes("err")) cls = "err";
+    appendFeed(l.replace(/\x1b\[[0-9;]*m/g, ""), cls);
+  });
+  lastLogIndex = log.length;
+}
+
+/* ── P/L chart ── */
+function initChart() {
+  const ctx = document.getElementById("pl-chart").getContext("2d");
+  plChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: [], datasets: [{
+      label: 'P/L today', data: [],
+      borderColor: '#f5a524',
+      backgroundColor: 'rgba(245,165,36,0.15)',
+      fill: true, tension: 0.3, borderWidth: 2, pointRadius: 0,
+    }]},
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#9494a0', font: { size: 9 } },
+             grid: { color: 'rgba(45,45,58,0.5)' }},
+        y: { ticks: { color: '#9494a0', font: { size: 9 },
+                       callback: v => '$' + v.toFixed(2) },
+             grid: { color: 'rgba(45,45,58,0.5)' }}
+      }
+    }
+  });
+}
+function updateChart(exec) {
+  if (!plChart) return;
+  const now = new Date();
+  const t = now.toTimeString().slice(0, 5);
+  plHistory.push({ t, pl: +exec.today_pl || 0 });
+  if (plHistory.length > 120) plHistory.shift();
+  plChart.data.labels = plHistory.map(p => p.t);
+  plChart.data.datasets[0].data = plHistory.map(p => p.pl);
+  plChart.update('none');
+}
+
+/* ── Modal ── */
+async function showGenomeDetail(gid, sym) {
+  const info = await getJSON(`/api/r/genome/${gid}/info`);
+  const decisions = await getJSON(`/api/r/genome/${gid}/decisions`);
+  const m = document.getElementById("modal-bg");
+  document.getElementById("modal-title").innerHTML =
+    `🧬 ${gid} <span style="color:var(--text-mut);font-size:11px">on ${sym}</span>`;
+  const g = info?.genome || {};
+  const decs = decisions?.decisions || [];
+  document.getElementById("modal-body").innerHTML = `
+    <pre>${JSON.stringify({
+      profit_factor: g.profit_factor,
+      score: g.score,
+      live_trades: g.live_trades,
+      live_pnl: g.live_pnl,
+      pinned: g.pinned,
+      kill_protected: g.kill_protected,
+      directional_specialist: g.directional_specialist,
+      active_genes: g.active_genes,
+      sl_atr_mult: g.sl_atr_mult,
+      tp_atr_mult: g.tp_atr_mult,
+    }, null, 2)}</pre>
+    <div style="margin-top:12px;font-size:11px;color:var(--text-mut)">
+      Decisions logged: ${decs.length}
+    </div>
+    <div style="margin-top:8px">
+      <a href="${BASE}/r/genome/${gid}" target="_blank" class="btn">📊 Open Live Chart →</a>
+    </div>`;
+  m.classList.add("show");
+}
+function closeModal(ev) {
+  if (ev && ev.target.id !== "modal-bg") return;
+  document.getElementById("modal-bg").classList.remove("show");
+}
+
+/* ── Main refresh ── */
+async function refresh() {
+  const [exec, genomesActive, contenders, monsters, agents, expo, snap] = await Promise.all([
+    getJSON("/api/r/executor"),
+    getJSON("/api/r/genomes/active"),
+    getJSON("/api/r/contenders"),
+    getJSON("/api/r/monsters"),
+    getJSON("/api/r/agents"),
+    getJSON("/api/r/exposure"),
+    getJSON("/api/snapshot"),
+  ]);
+  const monsterIds = new Set((monsters?.monsters || []).map(m => m.id));
+
+  updateHeader(exec);
+  updateKPIs(exec, genomesActive, contenders, snap);
+  renderChampions(genomesActive, monsterIds);
+  renderPositions(exec);
+  renderContenders(contenders);
+  renderMonsters(monsters);
+  renderAgents(agents);
+  renderExposure(expo);
+  renderFeed(exec);
+  if (exec) updateChart(exec);
+
+  document.getElementById("last-update").textContent = tsShort();
+}
+
+function manualRefresh() { refresh(); toast("refreshed"); }
+function toggleAutoRefresh() {
+  const btn = document.getElementById("autoref-btn");
+  if (autoTimer) {
+    clearInterval(autoTimer); autoTimer = null;
+    btn.textContent = "▶ Auto";
+    document.getElementById("refresh-rate").textContent = "paused";
+  } else {
+    autoTimer = setInterval(refresh, REFRESH_MS);
+    btn.textContent = "⏸ Auto";
+    document.getElementById("refresh-rate").textContent = `${REFRESH_MS/1000}s`;
+  }
+}
+
+initChart();
+refresh();
+autoTimer = setInterval(refresh, REFRESH_MS);
+</script>
+</body>
+</html>

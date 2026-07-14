@@ -1,0 +1,26 @@
+{
+ "ts": 1780744699,
+ "today": {
+  "trades": 0,
+  "net": 0,
+  "wr": 0.0,
+  "pf": 0.0,
+  "expectancy": 0.0,
+  "gross_win": 0,
+  "gross_loss": 0
+ },
+ "last14d": {
+  "trades": 0,
+  "net": 0,
+  "wr": 0.0,
+  "pf": 0.0,
+  "expectancy": 0.0,
+  "gross_win": 0,
+  "gross_loss": 0
+ },
+ "real_money_gate": {
+  "pass": false,
+  "need": ">=50 trades, PF>=1.2, net>0",
+  "status": "NOT READY — keep proving on demo"
+ }
+}

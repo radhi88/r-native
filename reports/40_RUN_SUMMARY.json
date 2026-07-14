@@ -1,0 +1,135 @@
+{
+  "phase_count": 10,
+  "total_phase_elapsed_seconds": 21.407,
+  "changed_files": [
+    "_archive/20260514_legacy_cleanup/README.md",
+    "config/dry_run_simulation.yaml",
+    "reports/40_ACTIVE_PIPELINE_MAP.md",
+    "reports/40_FILE_INVENTORY.csv",
+    "reports/40_FULL_CODEBASE_CONSOLIDATION_AND_READINESS.md",
+    "reports/40_MERGE_STATUS.csv",
+    "reports/40_PHASE_LOG.json",
+    "reports/40_run_full_audit.py",
+    "reports/41_CODEX_APPLIED_CLAUDE_REVIEW_FIXES.md",
+    "src/mt5_ai/algory_runner.py",
+    "src/mt5_ai/config.py",
+    "src/mt5_ai/core/config_loader.py",
+    "src/mt5_ai/core/decision_router.py",
+    "src/mt5_ai/core/indicators.py",
+    "src/mt5_ai/core/kill_switch.py",
+    "src/mt5_ai/core/magic_registry.py",
+    "src/mt5_ai/core/position_manager.py",
+    "src/mt5_ai/core/signal_schema.py",
+    "src/mt5_ai/mt5_gateway.py",
+    "src/mt5_ai/runtime/dry_run_simulation.py",
+    "src/mt5_ai/runtime/main_loop.py",
+    "tests/test_smart_algo.py"
+  ],
+  "archived_files": [
+    {
+      "file_path": "friday_demo_position_governor.py",
+      "archived_to": "_archive/20260514_legacy_cleanup/friday_demo_position_governor.py",
+      "reason": "already archived in this cleanup folder"
+    },
+    {
+      "file_path": "friday_demo_position_governor_v2.py",
+      "archived_to": "_archive/20260514_legacy_cleanup/friday_demo_position_governor_v2.py",
+      "reason": "already archived in this cleanup folder"
+    },
+    {
+      "file_path": "friday_realtime_scalper_demo_executor.py",
+      "archived_to": "_archive/20260514_legacy_cleanup/friday_realtime_scalper_demo_executor.py",
+      "reason": "already archived in this cleanup folder"
+    },
+    {
+      "file_path": "friday_touch_demo_executor.py",
+      "archived_to": "_archive/20260514_legacy_cleanup/friday_touch_demo_executor.py",
+      "reason": "already archived in this cleanup folder"
+    },
+    {
+      "file_path": "friday_risk_close.py",
+      "archived_to": "_archive/20260514_legacy_cleanup/friday_risk_close.py",
+      "reason": "already archived in this cleanup folder"
+    },
+    {
+      "file_path": "ict_sweep_trader.py",
+      "archived_to": "_archive/20260514_legacy_cleanup/ict_sweep_trader.py",
+      "reason": "already archived in this cleanup folder"
+    },
+    {
+      "file_path": "scripts/ict_sweep_trader.py",
+      "archived_to": "_archive/20260514_legacy_cleanup/scripts/ict_sweep_trader.py",
+      "reason": "already archived in this cleanup folder"
+    },
+    {
+      "file_path": "scripts/mt5_ollama_trader.py",
+      "archived_to": "_archive/20260514_legacy_cleanup/scripts/mt5_ollama_trader.py",
+      "reason": "already archived in this cleanup folder"
+    }
+  ],
+  "tests_run": [
+    {
+      "command": "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe -m py_compile src/mt5_ai/runtime/main_loop.py src/mt5_ai/runtime/dry_run_simulation.py src/mt5_ai/core/config_loader.py src/mt5_ai/core/decision_router.py src/mt5_ai/core/indicators.py src/mt5_ai/core/kill_switch.py src/mt5_ai/core/magic_registry.py src/mt5_ai/core/signal_schema.py src/mt5_ai/core/position_manager.py src/mt5_ai/core/execution_manager.py src/mt5_ai/mt5_gateway.py src/mt5_ai/algory_runner.py",
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_tail": "",
+      "stderr_tail": ""
+    },
+    {
+      "command": "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe -c import sys; sys.path.insert(0, 'src'); import mt5_ai.runtime.main_loop, mt5_ai.runtime.dry_run_simulation, mt5_ai.core.execution_manager, mt5_ai.core.signal_arbiter, mt5_ai.core.indicators, mt5_ai.core.kill_switch; print('IMPORT_OK')",
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_tail": "IMPORT_OK\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe -c import sys, runpy; sys.path.insert(0, 'src'); runpy.run_module('mt5_ai.runtime.dry_run_simulation', run_name='__main__')",
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_tail": "\n── SIMULATION RESULT ──────────────────────────────────────\n  status                   : SIMULATION_COMPLETE\n  signals                  : ['fractal_agent:BUY:0.92', 'smc_agent:BUY:0.88']\n  arbiter                  : BUY:0.88\n  decision                 : BUY:0.95\n  conflict_guard           : PASS\n  risk_approved            : True\n  lot                      : 0.01\n  exec_success             : True\n  exec_simulated           : True\n  exec_message             : DRY_RUN_SIMULATED_EXECUTION_NOT_SENT\n  real_order_sent          : False\n  mt5_gateway_called       : False\n\n── LOG VERIFICATION ───────────────────────────────────────\n  OK       logs/signal_log.jsonl\n  OK       logs/decision_log.jsonl\n  OK       logs/conflict_log.jsonl\n  OK       logs/risk_log.jsonl\n  OK       logs/execution_log.jsonl\n\nSIMULATION STATUS: PASS\n",
+      "stderr_tail": "================================\n2026-05-14 02:22:34,595 INFO     dry_run_simulation DRY_RUN_EXECUTION_SIMULATION START\n2026-05-14 02:22:34,595 INFO     dry_run_simulation Config: C:\\Users\\Radhi\\MT5\\config\\dry_run_simulation.yaml\n2026-05-14 02:22:34,597 INFO     dry_run_simulation kill_switch=False allow_live_trading=False mode=DRY_RUN\n2026-05-14 02:22:34,597 INFO     dry_run_simulation ======================================================================\n2026-05-14 02:22:34,598 INFO     dry_run_simulation [STEP 1] SYNTHETIC_SIGNAL: fractal_agent XAUUSDm M5 dir=BUY conf=0.92\n2026-05-14 02:22:34,599 INFO     dry_run_simulation [STEP 1] SYNTHETIC_SIGNAL: smc_agent XAUUSDm M5 dir=BUY conf=0.88\n2026-05-14 02:22:34,599 INFO     signal_arbiter [ARB] XAUUSDm M5 | F=BUY/0.92  S=BUY(directional)/0.88  sess=0.65 | conflict=False delta=0.875 | → BUY@0.875 | agents_aligned\n2026-05-14 02:22:34,599 INFO     dry_run_simulation [STEP 2] SignalArbiter: action=BUY conf=0.88 reason=agents_aligned|BUY|f=0.414+s=0.396+sess=0.065=0.8750\n2026-05-14 02:22:34,600 INFO     dry_run_simulation [STEP 3] DecisionRouter: action=BUY conf=0.95 reason=buy_score=1.31_vs_sell=0.00\n2026-05-14 02:22:34,600 INFO     dry_run_simulation [STEP 4] ConflictGuard: allow=True conflicts=[]\n2026-05-14 02:22:34,601 INFO     dry_run_simulation [STEP 5] RiskManager: approved=True lot=0.01 reason=risk_approved\n2026-05-14 02:22:34,601 INFO     dry_run_simulation [STEP 6] PositionManager: N/A for new entry signal\n2026-05-14 02:22:34,602 INFO     execution_manager [DRY_RUN_SIMULATED_EXECUTION_NOT_SENT] BUY XAUUSDm 0.01 lot | SL=1900.00000 TP=1950.00000 | magic=20260600\n2026-05-14 02:22:34,602 INFO     dry_run_simulation [STEP 7] ExecutionManager: success=True simulated=True message=DRY_RUN_SIMULATED_EXECUTION_NOT_SENT\n2026-05-14 02:22:34,602 INFO     dry_run_simulation [STEP 8] MT5Gateway: NOT called (DRY_RUN blocks before gateway)\n2026-05-14 02:22:34,602 INFO     dry_run_simulation ======================================================================\n2026-05-14 02:22:34,602 INFO     dry_run_simulation DRY_RUN_EXECUTION_SIMULATION COMPLETE\n2026-05-14 02:22:34,602 INFO     dry_run_simulation Real order sent: NO\n2026-05-14 02:22:34,602 INFO     dry_run_simulation MT5Gateway called: NO\n2026-05-14 02:22:34,602 INFO     dry_run_simulation ExecutionManager message: DRY_RUN_SIMULATED_EXECUTION_NOT_SENT\n2026-05-14 02:22:34,602 INFO     dry_run_simulation ======================================================================\n2026-05-14 02:22:34,602 INFO     dry_run_simulation LOG CHECK signal_log.jsonl: OK (107952 bytes)\n2026-05-14 02:22:34,603 INFO     dry_run_simulation LOG CHECK decision_log.jsonl: OK (66534 bytes)\n2026-05-14 02:22:34,603 INFO     dry_run_simulation LOG CHECK conflict_log.jsonl: OK (17196 bytes)\n2026-05-14 02:22:34,603 INFO     dry_run_simulation LOG CHECK risk_log.jsonl: OK (23491 bytes)\n2026-05-14 02:22:34,603 INFO     dry_run_simulation LOG CHECK execution_log.jsonl: OK (37710 bytes)\n"
+    },
+    {
+      "command": "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe tests/test_pivot_engine.py",
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_tail": "",
+      "stderr_tail": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.000s\n\nOK\n"
+    },
+    {
+      "command": "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe tests/test_smart_algo.py",
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_tail": "",
+      "stderr_tail": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.033s\n\nOK\n"
+    },
+    {
+      "command": "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe tests/test_genome_quality_gate.py",
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_tail": "\n========================================================================\n  GENOME QUALITY GATE — SYNTHETIC SAFETY TEST\n========================================================================\n\n✅ healthy_genome\n   Expect: PASS  Got: CANDIDATE  Rule: PASS\n   Score: 490.1  Reason: not yet breeding-approved: phase='tribe_a' not OOS-validated\n   Normal healthy genome — should become CANDIDATE or APPROVED_FOR_BREEDING\n\n✅ decent_small\n   Expect: PASS  Got: CANDIDATE  Rule: PASS\n   Score: 423.0  Reason: not yet breeding-approved: trades=160 < 250; phase='tribe_a' not OOS-validated\n   Decent smaller genome — should become CANDIDATE\n\n✅ degenerate_score\n   Expect: REJECT  Got: REJECTED  Rule: R1\n   Score: 0.0  Reason: score=26806002.00 > 10000.0\n   Actual degenerate EURUSDm H1 genome — MUST be REJECTED (R1+R2)\n\n✅ nan_score\n   Expect: REJECT  Got: REJECTED  Rule: R3\n   Score: 0.0  Reason: score is nan\n   NaN score — MUST be REJECTED (R3)\n\n✅ inf_return\n   Expect: REJECT  Got: REJECTED  Rule: R3\n   Score: 0.0  Reason: return_pct is inf\n   Inf return_pct — MUST be REJECTED (R3)\n\n✅ inf_score\n   Expect: REJECT  Got: REJECTED  Rule: R3\n   Score: 0.0  Reason: score is inf\n   Inf score — MUST be REJECTED (R3)\n\n✅ high_return_low_trades\n   Expect: REJECT  Got: REJECTED  Rule: R5\n   Score: 0.0  Reason: return=75000.0% with 100 trades\n   High return + low trades — MUST be REJECTED (R5)\n\n✅ high_wr_low_trades\n   Expect: REJECT  Got: REJECTED  Rule: R6\n   Score: 0.0  Reason: winrate=97.0% with 150 trades\n   Win rate 97% with only 150 trades — MUST be REJECTED (R6)\n\n✅ zero_dd_high_return\n   Expect: REJECT  Got: REJECTED  Rule: R7\n   Score: 0.0  Reason: drawdown=0.020% but return=5000.0%\n   Near-zero drawdown + very high return — MUST be REJECTED (R7)\n\n✅ too_few_trades\n   Expect: REJECT  Got: REJECTED  Rule: RMIN\n   Score: 0.0  Reason: trades=50 < 100 (hard minimum)\n   Only 50 trades — MUST be REJECTED (RMIN)\n\n✅ bounded_score_never_exceeds_1000\n   All extreme inputs produce score in [0, 1000]: PASS\n\n========================================================================\n  RESULTS: 11/11 passed  |  0 failed\n========================================================================\n\nGENOME_GATE_STATUS = PASS\n",
+      "stderr_tail": "[QualityGate] REJECT R1 — score=26806002.00 > 10000.0 | source=test:degenerate_score\n[Quarantine] unknown archived → 20260513_232235_unknown_unknown.quarantine.json\n[QualityGate] REJECT R3 — score is nan | source=test:nan_score\n[Quarantine] unknown archived → 20260513_232235_unknown_unknown.quarantine.json\n[QualityGate] REJECT R3 — return_pct is inf | source=test:inf_return\n[Quarantine] unknown archived → 20260513_232235_unknown_unknown.quarantine.json\n[QualityGate] REJECT R3 — score is inf | source=test:inf_score\n[Quarantine] unknown archived → 20260513_232235_unknown_unknown.quarantine.json\n[QualityGate] REJECT R5 — return=75000.0% with 100 trades | source=test:high_return_low_trades\n[Quarantine] unknown archived → 20260513_232235_unknown_unknown.quarantine.json\n[QualityGate] REJECT R6 — winrate=97.0% with 150 trades | source=test:high_wr_low_trades\n[Quarantine] unknown archived → 20260513_232235_unknown_unknown.quarantine.json\n[QualityGate] REJECT R7 — drawdown=0.020% but return=5000.0% | source=test:zero_dd_high_return\n[Quarantine] unknown archived → 20260513_232235_unknown_unknown.quarantine.json\n[QualityGate] REJECT RMIN — trades=50 < 100 (hard minimum) | source=test:too_few_trades\n"
+    },
+    {
+      "command": "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe test_100_cycles.py",
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_tail": "\n======================================================================\n  FRIDAY — 100-CYCLE PIPELINE STRESS TEST\n  Config: dry_run_simulation.yaml\n  Mode: DRY_RUN  |  kill_switch=False  |  live=False\n======================================================================\n  [███░░░░░░░░░░░░░░░░░░░░░░░░░░░]  10/100  errors=0\n  [██████░░░░░░░░░░░░░░░░░░░░░░░░]  20/100  errors=0\n  [█████████░░░░░░░░░░░░░░░░░░░░░]  30/100  errors=0\n  [████████████░░░░░░░░░░░░░░░░░░]  40/100  errors=0\n  [███████████████░░░░░░░░░░░░░░░]  50/100  errors=0\n  [██████████████████░░░░░░░░░░░░]  60/100  errors=0\n  [█████████████████████░░░░░░░░░]  70/100  errors=0\n  [████████████████████████░░░░░░]  80/100  errors=0\n  [███████████████████████████░░░]  90/100  errors=0\n  [██████████████████████████████] 100/100  errors=0\n\n======================================================================\n  RESULTS SUMMARY\n======================================================================\n  Total cycles      : 100\n  Errors            : 0\n  HOLD decisions    : 20\n  BUY decisions     : 40\n  SELL decisions    : 34\n  ConflictGuard blocked : 29\n  RiskManager approved  : 51\n  Simulated executions  : 45\n  REAL orders sent  : 0  ← MUST BE 0\n\n  Decision breakdown:\n    BUY         :  40  (40%)\n    SELL        :  34  (34%)\n    HOLD        :  20  (20%)\n    CLOSE       :   6  (6%)\n\n  ── SAFETY GATE ─────────────────────────────────────────────────\n  Real orders sent   : PASS (0)\n  Zero errors        : PASS\n  Pipeline exercises : PASS (51 approved, 45 simulated)\n\n  OVERALL VERDICT: ✓ PASS\n======================================================================\n\n  Completed in 0.1s\n\n",
+      "stderr_tail": "C:\\Users\\Radhi\\MT5\\test_100_cycles.py:6: SyntaxWarning: invalid escape sequence '\\.'\n  Run: .\\.venv\\Scripts\\python.exe test_100_cycles.py\n"
+    }
+  ],
+  "real_order_send_calls": 0,
+  "runtime_errors": 0,
+  "test_failures": 0,
+  "lockdown_exit_code": 0,
+  "final_status": "SAFE_FOR_DRY_RUN_ONLY",
+  "reports": [
+    "reports/40_FULL_CODEBASE_CONSOLIDATION_AND_READINESS.md",
+    "reports/40_FILE_INVENTORY.csv",
+    "reports/40_MERGE_STATUS.csv",
+    "reports/40_ACTIVE_PIPELINE_MAP.md",
+    "reports/41_CODEX_APPLIED_CLAUDE_REVIEW_FIXES.md",
+    "reports/40_PHASE_LOG.json",
+    "reports/40_RUN_SUMMARY.json"
+  ]
+}

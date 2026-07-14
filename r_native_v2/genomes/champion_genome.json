@@ -1,0 +1,40 @@
+{
+  "champion_genome": {
+    "name": "GEN-CHILD-080001-21",
+    "generation": 0,
+    "promoted_ts": "2026-07-13T08:00:05.326300+00:00",
+    "params": {
+      "name": "GEN-CHILD-080001-21",
+      "lot": 0.02,
+      "use_footprint": true,
+      "rsi_max": 53,
+      "min_pressure_abs": 4,
+      "min_mtf_agreement": 2,
+      "sl_pts": 6.97,
+      "tp_pts": 5.06,
+      "side_bias": "SELL_ONLY",
+      "entry_mode": "pullback",
+      "min_trend_strength": 1.6,
+      "parents": [
+        "GEN-CHILD-075231-56",
+        "GEN-CHILD-075440-88"
+      ],
+      "born": "2026-07-13T08:00:01.070795+00:00"
+    },
+    "parents": [
+      "GEN-CHILD-075231-56",
+      "GEN-CHILD-075440-88"
+    ]
+  },
+  "captured_ts": "2026-07-13T08:00:05.326312+00:00",
+  "panel_score": 0.661,
+  "generalizes": true,
+  "profitable_symbols": [
+    "XAUUSDm",
+    "BTCUSDm",
+    "GBPUSDm",
+    "XAGUSDm",
+    "USDJPYm"
+  ],
+  "note": "crowned by genome_academy gauntlet+panel"
+}

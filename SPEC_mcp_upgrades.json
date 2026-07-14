@@ -1,0 +1,83 @@
+{
+  "summary": "Expert agents decode \"Fable5 + Claude Code + MCP = King of Algo Trading\" and extract techniques to upgrade FRIDAY's own Claude-Code + MCP + AI trading stack",
+  "agentCount": 5,
+  "logs": [],
+  "result": {
+    "spec": {
+      "mcp_additions": [
+        {
+          "tool": "friday_order_check(symbol, side, volume, sl, tp) -> dict",
+          "why": "Dry-run preview via mt5.order_check() BEFORE friday_place_order: returns margin_required, free_margin_after, expected price, retcode/comment, WITHOUT sending. Verified absent in friday_mcp_server.py (place_order at line 610 sends blind). Both public MT5 MCP repos expose this; it's the #1 safety primitive the video's pre-trade-verify workflow depends on. Cheap: one mt5.order_check wrapper reusing the existing _mt5_init/_is_demo helpers.",
+          "priority": "high"
+        },
+        {
+          "tool": "confirm:bool=False guard on friday_place_order AND friday_close_symbol(which='all')",
+          "why": "Verified: place_order (L610) and close_symbol (L665) execute IMMEDIATELY with no confirmation. close_symbol('all') closes EVERY position on a symbol regardless of magic — the exact 'hallucinate my portfolio to zero' hole the HN thread warns about. Add a confirm flag that refuses unless True. One-line change per mutator, layered on top of the existing _is_demo()/_risk_blocks() gates. Highest safety/effort ratio.",
+          "priority": "high"
+        },
+        {
+          "tool": "Tool annotations (readOnlyHint/destructiveHint/openWorldHint) on all 24 tools",
+          "why": "Verified: every tool is a bare @mcp.tool() with no annotations. The Claude host therefore cannot distinguish friday_status (read) from friday_close_symbol (destructive market action) to auto-gate or render a confirm UI. Mark status/symbol_info/market_data/ticks/history/recent_orders/dialogue/brain_health/team_status/task_* as readOnlyHint:True; place_order/close_position/close_symbol/cancel_*/modify_sltp/set_mode/kill as destructiveHint:True + openWorldHint:True. Pure decorator edit, no logic change.",
+          "priority": "high"
+        },
+        {
+          "tool": "friday_backtest / friday_quant_gate / friday_monte_carlo / friday_walk_forward (read-only MCP wrappers over EXISTING engines)",
+          "why": "The video's headline (research->backtest->optimize->validate from prompts) has ZERO MCP surface in FRIDAY today, yet the engines already exist and were verified: r_native_v2/runtime/oos_backtest.py:backtest_genome(symbol,tf,genome,days) already does a 67/33 IS/OOS split; quant_gates.py exposes probabilistic_sharpe_ratio (L14), deflated_sharpe_ratio (L36), hurst_regime (L57); r_native/monte_carlo.py:simulate(trades,n_sims=1000) returns DD percentiles + prob-of-ruin; r_native/walkforward.py:run_walkforward(). Wrapping these as readOnlyHint:True tools lets Claude run the full validation gauntlet natively from one prompt. This is the single biggest capability add and it's mostly glue.",
+          "priority": "high"
+        },
+        {
+          "tool": "friday_calc_position_size(symbol, risk_pct, sl_price) -> lots",
+          "why": "Verified: place_order only clamps to volume_min/step (L632), never computes lots from risk. Add equity x risk% / (stop_distance x tick_value), clamped to volume_min/step — uses data symbol_info already returns. Removes ad-hoc lot guessing and makes risk-based sizing the default; complements order_check.",
+          "priority": "med"
+        },
+        {
+          "tool": "friday_rule_significance(strategy_or_trades, n=1000) -> percentile/p-value",
+          "why": "Genuinely absent (grep across the codebase found no random-entry test). Run the entry rule against thousands of random-entry baselines and return where the real edge sits in that distribution — the video's 'is this better than coin-flip entries?' gate. Distinct from PSR/DSR (which fight selection bias) and from MC (which tests sequence stability). Net-new test, moderate effort, high credibility payoff.",
+          "priority": "med"
+        },
+        {
+          "tool": "friday_place_pending(symbol, side, type, price, sl, tp, volume) for limit/stop orders",
+          "why": "Verified: place_order is MARKET-only (TRADE_ACTION_DEAL, L635). The brain itself places S/R limit/stop pendings (per session-specialists memory) but MCP cannot. Add TRADE_ACTION_PENDING with the same _is_demo()/_risk_blocks()/confirm governance. Closes a real parity gap between brain and MCP.",
+          "priority": "med"
+        },
+        {
+          "tool": "friday_account_risk() -> margin_level, free_margin, today_pnl, pnl_vs_daily_cap, aggregate_open_risk_R, num_positions",
+          "why": "friday_status returns balance/equity/positions but no consolidated risk snapshot. A dedicated read tool lets Claude check 'am I near the daily cap / over-exposed' in one call before sizing or placing. readOnlyHint:True, reuses MT5 account_info + positions already wired.",
+          "priority": "med"
+        },
+        {
+          "tool": "Refactor per-call mt5.initialize()/shutdown() into one thread-serialized, timeout-guarded client wrapper (~60s)",
+          "why": "Verified: every tool calls _mt5_init() then mt5.shutdown() (e.g. L91/124, L617/640). The MT5 python lib is single-threaded and hangs without a timeout; a stuck terminal currently freezes any tool with no recovery. Both reference architectures warn on this. Internal refactor — no API change, improves reliability under the ~35-engine load FRIDAY already runs.",
+          "priority": "med"
+        },
+        {
+          "tool": "friday://how-to and friday://risk-policy doc resources",
+          "why": "Verified: only friday://state and friday://orders-log resources exist (L692/698). Add a how-to resource documenting the order_check -> calc_size -> confirm -> place sequence, and a risk-policy resource (DEMO-only, daily cap, magic conventions 20260600/20260615/99791/3627) so any cold Claude session self-orients on correct tool order. Low effort, prevents misuse.",
+          "priority": "low"
+        }
+      ],
+      "automation": [
+        "Create root C:/Users/Radhi/MT5/CLAUDE.md (verified ABSENT — only stale nested vault copies exist). Encode standing invariants once so every interactive + headless run inherits them: magic numbers (20260600 brain, 20260615 MCP, 99791 gold_live, 3627 straddle), 22:00-08:00 broker-time night ban (the proven edge=discipline), DEMO-only + kill_switch.txt stance, port map (5055 brain API, 11434 ollama, 8765 tick_ws, 8822/8855/8866 dashboards, 8099 plutobrain), and the 'verify-before-cut / edit-don't-create' lesson. NOTE: do NOT copy the stale project CLAUDE.md verbatim — it still lists 'no SL on entry' and 'kill-switch not enforced' as open bugs, both long fixed per memory; write fresh from current state.",
+        "Add a deterministic PreToolUse hook in .claude/settings.json matching the friday MCP write tools (friday_place_order|friday_place_pending|friday_modify_sltp|friday_close_position|friday_close_symbol|friday_set_mode|friday_kill). Verified: settings.json has only GSD-generic hooks, NONE on friday_* tools. A small script hard-blocks orders during the night window / when kill_switch.txt exists / when mode!=DRY_RUN / over the daily-loss cap — model-independent, defense-in-depth on top of the server-side _is_demo()/_risk_blocks() (belt-and-suspenders, since the server gate can be bypassed if the model calls a future un-gated tool).",
+        "Create .claude/commands/friday/ slash commands that chain the existing+new engines into one-word verbs (mirrors the cbt-framework's 21-command UX): research.md, backtest.md, optimize.md (walk-forward), montecarlo.md, significance.md, gate.md (PSR/DSR/Hurst), iterate.md (reuse reflection_engine's one-variable-per-cycle), compare.md, report.md, promote.md, status.md (calls friday_status), kill.md. Verified ABSENT — only GSD commands exist. Each is a thin markdown prompt invoking the MCP tools above.",
+        "Make /friday:promote a REAL gate, not advisory. Verified: market_gate.py and paper_prover.py have ZERO references to monte_carlo/quant_gates/walkforward/rule-significance — the robustness engines exist but are NOT in the promotion path. Wire a hard pre-promotion check: refuse to advance any genome toward live unless it clears (a) IS-vs-OOS Sharpe degradation < threshold, (b) Monte Carlo p5 Sharpe > 0 and acceptable maxDD, (c) rule-significance > random baseline — layered ON TOP of the existing OOS/4-fold gate. Auto-emit a living REPORT.md per genome. This is the video's core rigor and FRIDAY's biggest real gap.",
+        "Adopt the falsifiable-target-in-prompt convention (the video's 'Sharpe>1.2 or reject') in the nightly self-dev loop: every research run must state an explicit accept/reject metric upfront (e.g. 'OOS Sharpe>1.0 AND MC-p5>0 or discard'). Cheap convention change to the loop prompt; gives every autonomous run a concrete kill bar.",
+        "Enforce anti-lookahead as a lint/assert in the research path ('indicators must be lagged / .shift(1)'). Matches the video's top best-practice and FRIDAY's own prior fractal/analog no-lookahead discipline. Add as a guard in the new research command + a CI-style assert in backtest_genome's feature builder.",
+        "Upgrade the nightly headless loop: sdk_scheduler.py (verified) only re-runs friday_decision.py every 5 min — it is NOT a self-improving Claude session. Add a separate Windows Task Scheduler job invoking `claude -p` with the falsifiable improvement prompt, --output-format stream-json, and a tight --allowedTools list (friday read + backtest/quant/MC tools only, NO order tools), writing a dated transcript + Telegram ping. Keep sdk_scheduler as-is for the live bias loop.",
+        "OPTIONAL/low: register a Context7 live-docs MCP so headless code-gen targets current MT5/pandas APIs without hallucinating, and consider FRED/Alpha Vantage MCPs alongside the existing free yfinance macro_feed for richer CPI/GDP/rates context when designing session strategies. Pure additive context, no core change."
+      ],
+      "already_have": [
+        "LIVE EXECUTION on MT5: friday_place_order/close/modify/cancel actually send orders to a real terminal. The video places ZERO live orders end-to-end — it's pure research/backtest. FRIDAY is a strict superset on the live side.",
+        "DEMO-only + emergency-risk-gate refusal (_is_demo() at L533 handles the Exness-Trial-reports-REAL quirk; _risk_blocks() at L548 honors a risk_manager EMERGENCY flag) baked into every order tool. Neither public MT5 MCP repo (ariadng, Qoyyuum) has this governance — it's FRIDAY's edge over the servers the video uses.",
+        "The robustness ENGINES the video showcases already exist on disk and are deeper than the demo: quant_gates.py (PSR + Deflated Sharpe + Hurst + GARCH — stronger than anything shown), r_native/monte_carlo.py (1000-path bootstrap, prob-of-ruin, DD percentiles), r_native/walkforward.py + r_native_v2/runtime/oos_backtest.py (anchored walk-forward with built-in 67/33 IS/OOS split), scripts/massive_backtest_engine.py (1M+ candles). The gap is EXPOSURE via MCP/commands, not the math.",
+        "~35 windowless engines under a watchdog, GA evolution, news genes, session-specialist genome stables + router, ORB + straddle (3627) + tournament + multi_trader, chart_read 40 indicators, free yfinance macro_feed, WAR ROOM dashboard. The video is one model + one MCP + one backtester — FRIDAY is an orchestrated fleet.",
+        "Agent-team delegation surface (friday_delegate to 5 specialist Claude clones + task_status/list/log, L414-521) — a multi-agent layer the single-prompt video workflow doesn't have.",
+        "An autonomous nightly /loop where Claude Code self-develops, plus reflection_engine's one-variable-per-cycle + falsifiable-hypothesis machinery — already the backbone the cbt-framework's /iterate command reimplements. FRIDAY just needs to surface it as a command.",
+        "A full MQL5 EA generator + headless MetaEditor CLI compiler pipeline (friday_mql5_compile.py, friday_ea_evolver.py, mql5_export.py, active_ea/live_ea fleets) — entirely beyond the video's scope.",
+        "friday_status as a rich consolidated snapshot (brain cycle, account, market, pendings, positions, agents, last_decision, momentum, recent scalps) — far richer than the public servers' account-info call."
+      ],
+      "verdict": "FRIDAY is already a strict superset of the video on the LIVE/execution side — the video places zero real orders and uses one model + one MCP + one backtester, while FRIDAY runs a governed live-trading MCP, ~35-engine fleet, GA evolution, and an EA-generation pipeline. The real, additive value is NOT new strategy capability but PACKAGING and SAFETY of the research-to-validation rigor FRIDAY already owns but hasn't surfaced. Verified-true gaps, in priority order: (1) HIGH — safety hardening of the MCP (confirm-flag on place_order/close_all, order_check dry-run, tool annotations) since the destructive tools currently fire immediately with no preview or host-gating; (2) HIGH — expose the EXISTING backtest/quant_gate/monte_carlo/walk_forward engines as read-only MCP tools so Claude runs the video's full research->validate loop natively (mostly glue, biggest capability unlock); (3) HIGH — wire those engines into a REAL promotion gate (market_gate/paper_prover have zero robustness checks today) so nothing moves toward live without IS/OOS-degradation + MC-p5 + rule-significance passing; (4) MED — root CLAUDE.md (absent) + a deterministic PreToolUse trade-safety hook (absent) + a /friday: slash-command surface + position-sizing/rule-significance/pending-order/account-risk tools + thread-serialized MT5 wrapper; (5) LOW — doc resources, Context7/FRED/AlphaVantage MCPs. Do NOT rebuild Monte Carlo, walk-forward, PSR/DSR, or a backtester — they exist and are deeper than the demo; only wrap and gate them. Also note the project CLAUDE.md is stale (lists already-fixed bugs) — write the root one fresh, don't copy it.\""
+    },
+    "experts": 4
+  }
+}

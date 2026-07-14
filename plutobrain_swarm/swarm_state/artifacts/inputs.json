@@ -1,0 +1,7295 @@
+{
+  "generated": 1782832563.0300117,
+  "by_file": {
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5": [
+      {
+        "type": "string",
+        "name": "InpProfileCsv",
+        "default": "\"agent_profiles_mql5.csv\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCommonFiles",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpGoldSymbol",
+        "default": "\"XAUUSDm\""
+      },
+      {
+        "type": "bool",
+        "name": "InpForceChartSymbolOnly",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpAutoTrade",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDryRunPrintOnly",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpTimeframe",
+        "default": "PERIOD_M1"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseDNAEvolution",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAMutateFromBest",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpDNAMutationStrength",
+        "default": "0.15"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAUseElitism",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAVerboseReport",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpExtraTightGapPoints",
+        "default": "500"
+      },
+      {
+        "type": "int",
+        "name": "InpModifyStepPoints",
+        "default": "1"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseStopReversePair",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpManagePairEveryTick",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpOneWayTrailOnly",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMinHoldSeconds",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "InpChopMaxFlipsPerMin",
+        "default": "4"
+      },
+      {
+        "type": "bool",
+        "name": "InpPairPositionSLWithPending",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpPendingHasNoOwnSLTP",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDeleteSameSidePending",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDeleteDuplicates",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxOpenPositionsPerSymbol",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpResolveHedgeImmediately",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpResolveHedgeKeepLatest",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketTakeProfit",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketTakeProfitMoney",
+        "default": "2.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketStopLoss",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketStopLossMoney",
+        "default": "8.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketEquityLock",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketLockStartMoney",
+        "default": "7.00"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketLockGiveBackMoney",
+        "default": "2.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseConfidenceBasketTPBoost",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceEntryMin",
+        "default": "55"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceAvoidMax",
+        "default": "25"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceAdxMin",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceSigMin",
+        "default": "45"
+      },
+      {
+        "type": "double",
+        "name": "InpConfidenceTPBoostFactor",
+        "default": "1.60"
+      },
+      {
+        "type": "double",
+        "name": "InpConfidenceTPMaxFactor",
+        "default": "2.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseConfidenceLotBoost",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceLotMin",
+        "default": "70"
+      },
+      {
+        "type": "double",
+        "name": "InpConfidenceLotBoostFactor",
+        "default": "1.20"
+      },
+      {
+        "type": "double",
+        "name": "InpConfidenceLotMaxFactor",
+        "default": "1.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFallbackInitialSLTP",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpFallbackSLPoints",
+        "default": "5000"
+      },
+      {
+        "type": "int",
+        "name": "InpFallbackTPPoints",
+        "default": "5000"
+      },
+      {
+        "type": "int",
+        "name": "InpMinSecondsBetweenOrders",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpDeviationPoints",
+        "default": "50"
+      },
+      {
+        "type": "int",
+        "name": "InpExtraStopBufferPoints",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSpreadFilter",
+        "default": "false"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxSpreadToAtrRatioOverride",
+        "default": "0.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBlockedHours",
+        "default": "false"
+      },
+      {
+        "type": "string",
+        "name": "InpBlockedHours",
+        "default": "\"0,8,9,11,12,20\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFridayCloseFilter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpFridayStopHour",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterBasketTPMinutes",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterBasketSLMinutes",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterLargeLossMinutes",
+        "default": "30"
+      },
+      {
+        "type": "double",
+        "name": "InpLargeSingleLossMoney",
+        "default": "10.00"
+      },
+      {
+        "type": "double",
+        "name": "InpLotReductionFactor",
+        "default": "0.50"
+      },
+      {
+        "type": "double",
+        "name": "InpMinLotFactor",
+        "default": "0.25"
+      },
+      {
+        "type": "double",
+        "name": "InpGridWidenFactor",
+        "default": "1.25"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxGridFactor",
+        "default": "4.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpRecoverAfterWins",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpWinsToRecover",
+        "default": "2"
+      },
+      {
+        "type": "double",
+        "name": "InpRecoveryLotStep",
+        "default": "0.15"
+      },
+      {
+        "type": "double",
+        "name": "InpRecoveryGridStep",
+        "default": "0.25"
+      },
+      {
+        "type": "string",
+        "name": "InpInitialDirection",
+        "default": "\"AUTO\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerboseLogs",
+        "default": "true"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_BRAIN_EA_v1.mq5": [
+      {
+        "type": "ulong",
+        "name": "InpMagic",
+        "default": "99778"
+      },
+      {
+        "type": "string",
+        "name": "InpComment",
+        "default": "\"CLAUDE_BRAIN\""
+      },
+      {
+        "type": "string",
+        "name": "InpSymbolFilter",
+        "default": "\"\""
+      },
+      {
+        "type": "bool",
+        "name": "InpOnlyNYOverlap",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpAllowLondon",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpAllowNYLate",
+        "default": "false"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxLotTotal",
+        "default": "0.05"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxOpenPositions",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpRiskUSDPerTrade",
+        "default": "5.00"
+      },
+      {
+        "type": "double",
+        "name": "InpDailyLossLimit",
+        "default": "-15.00"
+      },
+      {
+        "type": "double",
+        "name": "InpEquityFloorUSD",
+        "default": "0.0"
+      },
+      {
+        "type": "int",
+        "name": "InpConsecLossPause",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownMinutes",
+        "default": "60"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxSpreadUSD",
+        "default": "0.50"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxATRm1",
+        "default": "8.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpBlockOnDryVol",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMinConfluence",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpMinRR",
+        "default": "1.5"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule1",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule2",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule3",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule4",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule5",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule6",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule7",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpTrailSL",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpTrailTrigger1",
+        "default": "4.0"
+      },
+      {
+        "type": "double",
+        "name": "InpTrailTrigger2",
+        "default": "8.0"
+      },
+      {
+        "type": "double",
+        "name": "InpEmergencyBearVol",
+        "default": "750"
+      },
+      {
+        "type": "bool",
+        "name": "InpVerbose",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawZones",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpReadFootprintJSON",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpFootprintFile",
+        "default": "\"footprint_cells.json\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFootprintInRules",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpFPImbDomBoost",
+        "default": "1.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawFPSnapshot",
+        "default": "true"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v1.mq5": [
+      {
+        "type": "int",
+        "name": "InpVisibleBars",
+        "default": "25"
+      },
+      {
+        "type": "double",
+        "name": "InpPriceStepUSD",
+        "default": "0.30"
+      },
+      {
+        "type": "int",
+        "name": "InpBarWidthPx",
+        "default": "80"
+      },
+      {
+        "type": "int",
+        "name": "InpCellHeightPx",
+        "default": "12"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowFootprint",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDeltaStrip",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSummaryTable",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSessionVP",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowHeaderBar",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpImbL1Ratio",
+        "default": "3.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbL2Ratio",
+        "default": "5.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbL3Ratio",
+        "default": "8.0"
+      },
+      {
+        "type": "long",
+        "name": "InpImbMinVolume",
+        "default": "5"
+      },
+      {
+        "type": "double",
+        "name": "InpHighThresholdPct",
+        "default": "70"
+      },
+      {
+        "type": "double",
+        "name": "InpMedThresholdPct",
+        "default": "40"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyHigh",
+        "default": "clrGreen"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyMed",
+        "default": "clrSeaGreen"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyLow",
+        "default": "C'25,100,50'"
+      },
+      {
+        "type": "color",
+        "name": "InpSellHigh",
+        "default": "clrRed"
+      },
+      {
+        "type": "color",
+        "name": "InpSellMed",
+        "default": "clrCrimson"
+      },
+      {
+        "type": "color",
+        "name": "InpSellLow",
+        "default": "C'120,30,40'"
+      },
+      {
+        "type": "color",
+        "name": "InpNeutral",
+        "default": "C'80,80,80'"
+      },
+      {
+        "type": "color",
+        "name": "InpImbL1Color",
+        "default": "clrYellow"
+      },
+      {
+        "type": "color",
+        "name": "InpImbL2Color",
+        "default": "clrOrange"
+      },
+      {
+        "type": "color",
+        "name": "InpImbL3Color",
+        "default": "clrMagenta"
+      },
+      {
+        "type": "int",
+        "name": "InpVPLookbackBars",
+        "default": "100"
+      },
+      {
+        "type": "color",
+        "name": "InpPOCColor",
+        "default": "clrGold"
+      },
+      {
+        "type": "color",
+        "name": "InpVAHColor",
+        "default": "clrDodgerBlue"
+      },
+      {
+        "type": "color",
+        "name": "InpVALColor",
+        "default": "clrDodgerBlue"
+      },
+      {
+        "type": "double",
+        "name": "InpValueAreaPct",
+        "default": "70.0"
+      },
+      {
+        "type": "int",
+        "name": "InpHeaderHeight",
+        "default": "28"
+      },
+      {
+        "type": "int",
+        "name": "InpDeltaStripHeight",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpSummaryHeight",
+        "default": "80"
+      },
+      {
+        "type": "int",
+        "name": "InpRightMarginPx",
+        "default": "200"
+      },
+      {
+        "type": "color",
+        "name": "InpPanelBg",
+        "default": "C'20,22,28'"
+      },
+      {
+        "type": "color",
+        "name": "InpTextColor",
+        "default": "clrWhiteSmoke"
+      },
+      {
+        "type": "color",
+        "name": "InpBullColor",
+        "default": "clrLimeGreen"
+      },
+      {
+        "type": "color",
+        "name": "InpBearColor",
+        "default": "clrTomato"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowAnalyst",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSignalMeter",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSDZones",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowButtonBar",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowCumDeltaLine",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowRSI",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowMACD",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystRefreshSec",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpSDSwingBars",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpSDLookback",
+        "default": "100"
+      },
+      {
+        "type": "double",
+        "name": "InpSDVolMultiplier",
+        "default": "1.3"
+      },
+      {
+        "type": "double",
+        "name": "InpSDATRMult",
+        "default": "1.0"
+      },
+      {
+        "type": "int",
+        "name": "InpSDMaxZones",
+        "default": "8"
+      },
+      {
+        "type": "color",
+        "name": "InpSupplyColor",
+        "default": "C'200,40,40'"
+      },
+      {
+        "type": "color",
+        "name": "InpDemandColor",
+        "default": "C'40,180,80'"
+      },
+      {
+        "type": "int",
+        "name": "InpDisplayStyle",
+        "default": "0"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseTickInference",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpRefreshMs",
+        "default": "200"
+      },
+      {
+        "type": "string",
+        "name": "InpObjPrefix",
+        "default": "\"CLFP_\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerbose",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpExportToJSON",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpExportFile",
+        "default": "\"footprint_cells.json\""
+      },
+      {
+        "type": "int",
+        "name": "InpExportEverySec",
+        "default": "3"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v3.mq5": [
+      {
+        "type": "int",
+        "name": "InpPanelTheme",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpPanelSkin",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpColorTheme",
+        "default": "0"
+      },
+      {
+        "type": "bool",
+        "name": "InpThemeOverrideAll",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpPricePrecision",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "InpBarsToDisplay",
+        "default": "15"
+      },
+      {
+        "type": "int",
+        "name": "InpRefreshRateMs",
+        "default": "100"
+      },
+      {
+        "type": "double",
+        "name": "InpVolumeScaleFactor",
+        "default": "1.0"
+      },
+      {
+        "type": "double",
+        "name": "InpMinMoveFromLevel",
+        "default": "2.0"
+      },
+      {
+        "type": "int",
+        "name": "InpFeedMode",
+        "default": "0"
+      },
+      {
+        "type": "bool",
+        "name": "InpInferTickToVolume",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayXPosition",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayYPosition",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayWidth",
+        "default": "1200"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayHeight",
+        "default": "980"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelInsetLeft",
+        "default": "24"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelInsetTop",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelInsetRight",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelInsetBottom",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelGap",
+        "default": "8"
+      },
+      {
+        "type": "color",
+        "name": "InpGlobalBgColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpBackgroundColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpPanelBorderColor",
+        "default": "(color)3616040"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowGrid",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpTextColor",
+        "default": "(color)15458780"
+      },
+      {
+        "type": "color",
+        "name": "InpTextDimColor",
+        "default": "(color)10195340"
+      },
+      {
+        "type": "color",
+        "name": "InpBullishCandleColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpBearishCandleColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpBullishCandleFill",
+        "default": "(color)3433750"
+      },
+      {
+        "type": "color",
+        "name": "InpBearishCandleFill",
+        "default": "(color)1908095"
+      },
+      {
+        "type": "color",
+        "name": "InpWickColor",
+        "default": "(color)7563620"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerHigh",
+        "default": "(color)4891414"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerMed",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerLow",
+        "default": "(color)8445514"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerHigh",
+        "default": "(color)1842361"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerMed",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerLow",
+        "default": "(color)10855932"
+      },
+      {
+        "type": "color",
+        "name": "InpCellPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpCellNeutralColor",
+        "default": "(color)4734007"
+      },
+      {
+        "type": "bool",
+        "name": "InpSeamlessCells",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpCellGap",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpCellPadding",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpCellMinHeight",
+        "default": "14"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowCandleFrame",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpCandleFrameWidth",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpCandleTextSize",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpImbalanceTextSize",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpPricePanelGap",
+        "default": "75"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowAskLine",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowCandleTimer",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpCumDeltaSessionMode",
+        "default": "false"
+      },
+      {
+        "type": "string",
+        "name": "InpCumDeltaSessionStart",
+        "default": "\"23:00\""
+      },
+      {
+        "type": "string",
+        "name": "InpCumDeltaSessionEnd",
+        "default": "\"22:00\""
+      },
+      {
+        "type": "int",
+        "name": "InpCellIntensityHigh",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "InpCellIntensityMed",
+        "default": "40"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio1",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio2",
+        "default": "3.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio3",
+        "default": "4.0"
+      },
+      {
+        "type": "int",
+        "name": "InpImbalanceMinVolume",
+        "default": "10"
+      },
+      {
+        "type": "bool",
+        "name": "InpImbalanceBold",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance1",
+        "default": "(color)11333510"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance2",
+        "default": "(color)8445514"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance3",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance1",
+        "default": "(color)13290238"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance2",
+        "default": "(color)10855932"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance3",
+        "default": "(color)7434744"
+      },
+      {
+        "type": "int",
+        "name": "InpBarWidth",
+        "default": "55"
+      },
+      {
+        "type": "int",
+        "name": "InpBarSpacing",
+        "default": "14"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDivider",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSeparatorWidth",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpFootprintStyle",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDeltaBar",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpDeltaBarHeight",
+        "default": "18"
+      },
+      {
+        "type": "int",
+        "name": "InpDeltaBarGap",
+        "default": "15"
+      },
+      {
+        "type": "color",
+        "name": "InpDeltaPositiveColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpDeltaNegativeColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowFL2MBPOCOutline",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpFL2MBPOCOutlineColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowPerBarVP",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpPerBarVPWidth",
+        "default": "40"
+      },
+      {
+        "type": "color",
+        "name": "InpVPBidColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpVPAskColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpVPPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSessionPOC",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpSessionPOCColor",
+        "default": "(color)16209320"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowZones",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpZoneSupplyColor",
+        "default": "clrNONE"
+      },
+      {
+        "type": "color",
+        "name": "InpZoneDemandColor",
+        "default": "clrNONE"
+      },
+      {
+        "type": "int",
+        "name": "InpZoneOpacity",
+        "default": "40"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxZones",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpZoneVolumeLookback",
+        "default": "20"
+      },
+      {
+        "type": "double",
+        "name": "InpZoneVolumeMinRatio",
+        "default": "1.2"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostZoneATRLen",
+        "default": "50"
+      },
+      {
+        "type": "double",
+        "name": "InpFrostZoneWidth",
+        "default": "4.0"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostSwingLen",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostSwingLookback",
+        "default": "200"
+      },
+      {
+        "type": "string",
+        "name": "InpAsiaSessionStart",
+        "default": "\"00:00\""
+      },
+      {
+        "type": "string",
+        "name": "InpAsiaSessionEnd",
+        "default": "\"08:00\""
+      },
+      {
+        "type": "color",
+        "name": "InpAsiaSessionColor",
+        "default": "(color)16301368"
+      },
+      {
+        "type": "string",
+        "name": "InpLondonSessionStart",
+        "default": "\"08:00\""
+      },
+      {
+        "type": "string",
+        "name": "InpLondonSessionEnd",
+        "default": "\"16:30\""
+      },
+      {
+        "type": "color",
+        "name": "InpLondonSessionColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "string",
+        "name": "InpNewYorkSessionStart",
+        "default": "\"14:30\""
+      },
+      {
+        "type": "string",
+        "name": "InpNewYorkSessionEnd",
+        "default": "\"22:00\""
+      },
+      {
+        "type": "color",
+        "name": "InpNewYorkSessionColor",
+        "default": "(color)11956980"
+      },
+      {
+        "type": "int",
+        "name": "InpStructureSwingLen",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpStructureLookbackBars",
+        "default": "60"
+      },
+      {
+        "type": "int",
+        "name": "InpStructureMaxFVG",
+        "default": "6"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPMode",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPBars",
+        "default": "50"
+      },
+      {
+        "type": "string",
+        "name": "InpSessionStartTime",
+        "default": "\"00:00\""
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPType",
+        "default": "0"
+      },
+      {
+        "type": "double",
+        "name": "InpSessionVPBarScale",
+        "default": "0.5"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPHeight",
+        "default": "475"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPVAHColor",
+        "default": "(color)16631187"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPVALColor",
+        "default": "(color)16631187"
+      },
+      {
+        "type": "double",
+        "name": "InpValueAreaPct",
+        "default": "70.0"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBgColor",
+        "default": "(color)2103574"
+      },
+      {
+        "type": "bool",
+        "name": "InpTickerSymbolUseThemeColor",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerSymbolColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "bool",
+        "name": "InpTickerPriceUseThemeColor",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerPriceColor",
+        "default": "(color)16426336"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSummaryTable",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpTableRowHeight",
+        "default": "15"
+      },
+      {
+        "type": "color",
+        "name": "InpTableHeaderColor",
+        "default": "(color)2958110"
+      },
+      {
+        "type": "color",
+        "name": "InpTablePositiveColor",
+        "default": "(color)3433750"
+      },
+      {
+        "type": "color",
+        "name": "InpTableNegativeColor",
+        "default": "(color)1908095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowRSI",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIPeriod",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIHeight",
+        "default": "80"
+      },
+      {
+        "type": "color",
+        "name": "InpRSILineColor",
+        "default": "(color)16209320"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIOverboughtLevel",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIOversoldLevel",
+        "default": "30"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowMACD",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMACDFast",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpMACDSlow",
+        "default": "26"
+      },
+      {
+        "type": "int",
+        "name": "InpMACDSignal",
+        "default": "9"
+      },
+      {
+        "type": "int",
+        "name": "InpMACDHeight",
+        "default": "80"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSignalMeter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpDialSize",
+        "default": "120"
+      },
+      {
+        "type": "int",
+        "name": "InpDialMA1Period",
+        "default": "9"
+      },
+      {
+        "type": "int",
+        "name": "InpDialMA2Period",
+        "default": "21"
+      },
+      {
+        "type": "int",
+        "name": "InpDialMA3Period",
+        "default": "50"
+      },
+      {
+        "type": "int",
+        "name": "InpDialATRPeriod",
+        "default": "14"
+      },
+      {
+        "type": "double",
+        "name": "InpDialATRTrendHigh",
+        "default": "1.15"
+      },
+      {
+        "type": "double",
+        "name": "InpDialATRTrendLow",
+        "default": "0.85"
+      },
+      {
+        "type": "int",
+        "name": "InpDialPOCAcceptBars",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpDialPOCAcceptTicks",
+        "default": "1.5"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpDialNeutralColor",
+        "default": "(color)7563620"
+      },
+      {
+        "type": "color",
+        "name": "InpDialPointerColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBgColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpDialHeaderColor",
+        "default": "(color)2103574"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowAnalyst",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystRefreshSecs",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystWidth",
+        "default": "280"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystHeight",
+        "default": "235"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystBgColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystHeaderColor",
+        "default": "(color)2103574"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystNeutralColor",
+        "default": "(color)12100500"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystWarningColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystAccentColor",
+        "default": "(color)16155195"
+      },
+      {
+        "type": "string",
+        "name": "InpFontName",
+        "default": "\"Segoe UI\""
+      },
+      {
+        "type": "string",
+        "name": "InpFontMono",
+        "default": "\"Consolas\""
+      },
+      {
+        "type": "int",
+        "name": "InpFontSize",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpFontSizeSmall",
+        "default": "11"
+      },
+      {
+        "type": "int",
+        "name": "InpFontSizeLarge",
+        "default": "17"
+      },
+      {
+        "type": "bool",
+        "name": "InpExportToJSON",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpExportFile",
+        "default": "\"footprint_cells.json\""
+      },
+      {
+        "type": "int",
+        "name": "InpExportEverySec",
+        "default": "3"
+      },
+      {
+        "type": "string",
+        "name": "InpObjPrefix",
+        "default": "\"CLFP3_\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerbose",
+        "default": "false"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v4.mq5": [
+      {
+        "type": "int",
+        "name": "InpPanelTheme",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpPanelSkin",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpColorTheme",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpPricePrecision",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "InpBarsToDisplay",
+        "default": "15"
+      },
+      {
+        "type": "int",
+        "name": "InpRefreshRateMs",
+        "default": "200"
+      },
+      {
+        "type": "double",
+        "name": "InpVolumeScaleFactor",
+        "default": "1.0"
+      },
+      {
+        "type": "double",
+        "name": "InpTickMoveImpact",
+        "default": "0.45"
+      },
+      {
+        "type": "long",
+        "name": "InpTickInferMin",
+        "default": "5"
+      },
+      {
+        "type": "long",
+        "name": "InpTickInferMax",
+        "default": "5000"
+      },
+      {
+        "type": "bool",
+        "name": "InpInferTickToVolume",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpGlobalBgColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpPanelBg",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpPanelBorderColor",
+        "default": "(color)3616040"
+      },
+      {
+        "type": "color",
+        "name": "InpTextColor",
+        "default": "(color)15458780"
+      },
+      {
+        "type": "color",
+        "name": "InpTextDimColor",
+        "default": "(color)10195340"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerHigh",
+        "default": "(color)4891414"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerMed",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerLow",
+        "default": "(color)8445514"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerHigh",
+        "default": "(color)1842361"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerMed",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerLow",
+        "default": "(color)10855932"
+      },
+      {
+        "type": "color",
+        "name": "InpCellPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpCellNeutralColor",
+        "default": "(color)4734007"
+      },
+      {
+        "type": "int",
+        "name": "InpCellIntensityHigh",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "InpCellIntensityMed",
+        "default": "40"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio1",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio2",
+        "default": "3.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio3",
+        "default": "4.0"
+      },
+      {
+        "type": "int",
+        "name": "InpImbalanceMinVolume",
+        "default": "10"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance1",
+        "default": "(color)11333510"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance2",
+        "default": "(color)8445514"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance3",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance1",
+        "default": "(color)13290238"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance2",
+        "default": "(color)10855932"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance3",
+        "default": "(color)7434744"
+      },
+      {
+        "type": "int",
+        "name": "InpBarWidth",
+        "default": "55"
+      },
+      {
+        "type": "int",
+        "name": "InpBarSpacing",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpHeaderHeight",
+        "default": "32"
+      },
+      {
+        "type": "int",
+        "name": "InpDeltaStripHeight",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpSummaryHeight",
+        "default": "80"
+      },
+      {
+        "type": "int",
+        "name": "InpRightMarginPx",
+        "default": "200"
+      },
+      {
+        "type": "int",
+        "name": "InpFootprintStyle",
+        "default": "1"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDeltaBar",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpDeltaPositiveColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpDeltaNegativeColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowPOCOutline",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowZones",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpZoneSupplyColor",
+        "default": "(color)1908095"
+      },
+      {
+        "type": "color",
+        "name": "InpZoneDemandColor",
+        "default": "(color)3433750"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxZones",
+        "default": "4"
+      },
+      {
+        "type": "double",
+        "name": "InpZoneVolumeMinRatio",
+        "default": "1.2"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostZoneATRLen",
+        "default": "50"
+      },
+      {
+        "type": "double",
+        "name": "InpFrostZoneWidth",
+        "default": "4.0"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostSwingLen",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostSwingLookback",
+        "default": "200"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSessionVP",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPBars",
+        "default": "50"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPVAHColor",
+        "default": "(color)16631187"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPVALColor",
+        "default": "(color)16631187"
+      },
+      {
+        "type": "double",
+        "name": "InpValueAreaPct",
+        "default": "70.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowHeaderBar",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBgColor",
+        "default": "(color)2103574"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerSymbolColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSignalMeter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpDialSize",
+        "default": "120"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpDialNeutralColor",
+        "default": "(color)7563620"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowAnalyst",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystRefreshSecs",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystWidth",
+        "default": "280"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystHeight",
+        "default": "230"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystAccentColor",
+        "default": "(color)16155195"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowCumDeltaLine",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSummaryTable",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowButtonBar",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpFontName",
+        "default": "\"Segoe UI\""
+      },
+      {
+        "type": "string",
+        "name": "InpFontMono",
+        "default": "\"Consolas\""
+      },
+      {
+        "type": "int",
+        "name": "InpFontSize",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpFontSizeSmall",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "InpFontSizeLarge",
+        "default": "15"
+      },
+      {
+        "type": "bool",
+        "name": "InpExportToJSON",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpExportFile",
+        "default": "\"footprint_cells.json\""
+      },
+      {
+        "type": "int",
+        "name": "InpExportEverySec",
+        "default": "3"
+      },
+      {
+        "type": "string",
+        "name": "InpObjPrefix",
+        "default": "\"CLFP4_\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerbose",
+        "default": "false"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5": [
+      {
+        "type": "bool",
+        "name": "EnableTrading",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "MagicNumber",
+        "default": "20250422"
+      },
+      {
+        "type": "int",
+        "name": "MaxPositions",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "MinSecondsBetweenTrades",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "EMA_Fast",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "EMA_Slow",
+        "default": "21"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Period",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Overbought",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Oversold",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "ATR_Period",
+        "default": "10"
+      },
+      {
+        "type": "double",
+        "name": "BaseRiskPercent",
+        "default": "1.5"
+      },
+      {
+        "type": "double",
+        "name": "MaxLot",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "MinLot",
+        "default": "0.01"
+      },
+      {
+        "type": "double",
+        "name": "SL_ATR_Mult",
+        "default": "1.2"
+      },
+      {
+        "type": "double",
+        "name": "TP_ATR_Mult",
+        "default": "2.0"
+      },
+      {
+        "type": "bool",
+        "name": "EnableBE",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "BE_ATR",
+        "default": "0.6"
+      },
+      {
+        "type": "bool",
+        "name": "EnableTrail",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "Trail_ATR",
+        "default": "0.6"
+      },
+      {
+        "type": "double",
+        "name": "TrailStep_ATR",
+        "default": "0.25"
+      },
+      {
+        "type": "bool",
+        "name": "UseTrendFilter",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "UseRSIFilter",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "ForceResetDNA",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "MaxDailyLossPct",
+        "default": "8.0"
+      },
+      {
+        "type": "int",
+        "name": "CooldownMinutes",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "EnableLogs",
+        "default": "true"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5": [
+      {
+        "type": "bool",
+        "name": "EnableTrading",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "MagicBase",
+        "default": "20250430"
+      },
+      {
+        "type": "int",
+        "name": "NumGenes",
+        "default": "6"
+      },
+      {
+        "type": "int",
+        "name": "MaxPositions",
+        "default": "5"
+      },
+      {
+        "type": "double",
+        "name": "MaxSpreadPoints",
+        "default": "350"
+      },
+      {
+        "type": "int",
+        "name": "MinSecondsBetween",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "MaxEntriesPerMinute",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "MaxEntriesPerBar",
+        "default": "1"
+      },
+      {
+        "type": "double",
+        "name": "BaseRiskPercent",
+        "default": "1.0"
+      },
+      {
+        "type": "double",
+        "name": "MaxLot",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "MinLot",
+        "default": "0.01"
+      },
+      {
+        "type": "bool",
+        "name": "BlockNight",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "NightStartHour",
+        "default": "22"
+      },
+      {
+        "type": "int",
+        "name": "NightEndHour",
+        "default": "8"
+      },
+      {
+        "type": "bool",
+        "name": "UseRejectionWick",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "WickBodyRatio",
+        "default": "1.5"
+      },
+      {
+        "type": "double",
+        "name": "WickRangeFrac",
+        "default": "0.5"
+      },
+      {
+        "type": "double",
+        "name": "MaxGeneDailyLoss",
+        "default": "50.0"
+      },
+      {
+        "type": "double",
+        "name": "MaxDailyLossPct",
+        "default": "8.0"
+      },
+      {
+        "type": "int",
+        "name": "CooldownMinutes",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "ForceResetGenes",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "EnableLogs",
+        "default": "true"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\FRIDAY_Gold_EA.mq5": [
+      {
+        "type": "string",
+        "name": "InpSymbol",
+        "default": "\"\""
+      },
+      {
+        "type": "ENUM_TIMEFRAMES",
+        "name": "InpTimeframe",
+        "default": "PERIOD_M1"
+      },
+      {
+        "type": "int",
+        "name": "InpLookbackBars",
+        "default": "300"
+      },
+      {
+        "type": "int",
+        "name": "InpEMAPeriod",
+        "default": "200"
+      },
+      {
+        "type": "int",
+        "name": "InpTimerSeconds",
+        "default": "5"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCommonFiles",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpFolder",
+        "default": "\"FRIDAY\""
+      },
+      {
+        "type": "string",
+        "name": "InpFileName",
+        "default": "\"FRIDAY_Gold_signal.json\""
+      },
+      {
+        "type": "bool",
+        "name": "InpShowComment",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawLabel",
+        "default": "true"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE.mq5": [
+      {
+        "type": "int",
+        "name": "InpBasketGap",
+        "default": "500"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketTP",
+        "default": "50.0"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketSL",
+        "default": "150.0"
+      },
+      {
+        "type": "double",
+        "name": "InpLotBase",
+        "default": "0.01"
+      },
+      {
+        "type": "double",
+        "name": "InpLotFactor",
+        "default": "1.5"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxLevels",
+        "default": "6"
+      },
+      {
+        "type": "int",
+        "name": "InpGenSize",
+        "default": "30"
+      },
+      {
+        "type": "bool",
+        "name": "InpAutoEvolve",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpMutateStep",
+        "default": "0.08"
+      },
+      {
+        "type": "bool",
+        "name": "InpRollback",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRSI",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIPeriod",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIOB",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIOS",
+        "default": "30"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseTrend",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpEMAPeriod",
+        "default": "200"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSession",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionStart",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionEnd",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownBars",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpMagic",
+        "default": "72000"
+      },
+      {
+        "type": "bool",
+        "name": "InpWriteFiles",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpReadCmds",
+        "default": "true"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE_TESTER.mq5": [
+      {
+        "type": "int",
+        "name": "InpBasketGap",
+        "default": "500"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketTP",
+        "default": "50.0"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketSL",
+        "default": "150.0"
+      },
+      {
+        "type": "double",
+        "name": "InpLotBase",
+        "default": "0.01"
+      },
+      {
+        "type": "double",
+        "name": "InpLotFactor",
+        "default": "1.5"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxLevels",
+        "default": "6"
+      },
+      {
+        "type": "int",
+        "name": "InpGenSize",
+        "default": "30"
+      },
+      {
+        "type": "bool",
+        "name": "InpAutoEvolve",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpMutateStep",
+        "default": "0.08"
+      },
+      {
+        "type": "bool",
+        "name": "InpRollback",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownBars",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpMagic",
+        "default": "72001"
+      },
+      {
+        "type": "bool",
+        "name": "InpWriteFiles",
+        "default": "false"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5": [
+      {
+        "type": "string",
+        "name": "InpProfileCsv",
+        "default": "\"agent_profiles_mql5.csv\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCommonFiles",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpGoldSymbol",
+        "default": "\"XAUUSDm\""
+      },
+      {
+        "type": "bool",
+        "name": "InpForceChartSymbolOnly",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpAutoTrade",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDryRunPrintOnly",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpTimeframe",
+        "default": "PERIOD_M1"
+      },
+      {
+        "type": "int",
+        "name": "InpRealtimeHistoryBars",
+        "default": "200"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseDNAEvolution",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAMutateFromBest",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpDNAMutationStrength",
+        "default": "0.10"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAUseElitism",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAVerboseReport",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAUseOnlyProfitableMemory",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseLiveControl",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpLiveControlCsv",
+        "default": "\"claude_live_control.csv\""
+      },
+      {
+        "type": "int",
+        "name": "InpLiveControlEverySeconds",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpLiveControlMaxAgeSeconds",
+        "default": "21600"
+      },
+      {
+        "type": "int",
+        "name": "InpLiveControlGapStepPoints",
+        "default": "25"
+      },
+      {
+        "type": "double",
+        "name": "InpLiveControlMoneyStep",
+        "default": "0.25"
+      },
+      {
+        "type": "double",
+        "name": "InpLiveControlFactorStep",
+        "default": "0.05"
+      },
+      {
+        "type": "bool",
+        "name": "InpSaveLiveDNASnapshots",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSaveLiveDNASnapshotBars",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "InpExtraTightGapPoints",
+        "default": "150"
+      },
+      {
+        "type": "int",
+        "name": "InpModifyStepPoints",
+        "default": "1"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseStopReversePair",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpManagePairEveryTick",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseAdaptiveStopReverse",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpPairModifyEverySeconds",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpPairModifyMinStepPoints",
+        "default": "120"
+      },
+      {
+        "type": "double",
+        "name": "InpGapSpreadMultiplier",
+        "default": "2.20"
+      },
+      {
+        "type": "double",
+        "name": "InpGapAtrMultiplier",
+        "default": "0.18"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveMinGapPoints",
+        "default": "150"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveMaxGapPoints",
+        "default": "1500"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveGapStepPoints",
+        "default": "75"
+      },
+      {
+        "type": "double",
+        "name": "InpAdaptiveGridFactorStep",
+        "default": "0.25"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveWinsToTighten",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveNoReverseMinutes",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpOneWayTrailOnly",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMinHoldSeconds",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "InpChopMaxFlipsPerMin",
+        "default": "4"
+      },
+      {
+        "type": "bool",
+        "name": "InpPairPositionSLWithPending",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpPendingHasNoOwnSLTP",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDeleteSameSidePending",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDeleteDuplicates",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxOpenPositionsPerSymbol",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpResolveHedgeImmediately",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpResolveHedgeKeepLatest",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketTakeProfit",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketTakeProfitMoney",
+        "default": "2.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketStopLoss",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketStopLossMoney",
+        "default": "5.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketEquityLock",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketLockStartMoney",
+        "default": "3.00"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketLockGiveBackMoney",
+        "default": "1.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSecureProfitSL",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpSecureProfitStartMoney",
+        "default": "0.50"
+      },
+      {
+        "type": "double",
+        "name": "InpSecureProfitLockMoney",
+        "default": "0.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFallbackInitialSLTP",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpFallbackSLPoints",
+        "default": "5000"
+      },
+      {
+        "type": "int",
+        "name": "InpFallbackTPPoints",
+        "default": "5000"
+      },
+      {
+        "type": "int",
+        "name": "InpMinSecondsBetweenOrders",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpDeviationPoints",
+        "default": "50"
+      },
+      {
+        "type": "int",
+        "name": "InpExtraStopBufferPoints",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSpreadFilter",
+        "default": "false"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxSpreadToAtrRatioOverride",
+        "default": "0.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBlockedHours",
+        "default": "false"
+      },
+      {
+        "type": "string",
+        "name": "InpBlockedHours",
+        "default": "\"0,8,9,11,12,20\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFridayCloseFilter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpFridayStopHour",
+        "default": "20"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCooldown",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterBasketTPMinutes",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterBasketSLMinutes",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterLargeLossMinutes",
+        "default": "0"
+      },
+      {
+        "type": "double",
+        "name": "InpLargeSingleLossMoney",
+        "default": "3.00"
+      },
+      {
+        "type": "double",
+        "name": "InpLotReductionFactor",
+        "default": "0.50"
+      },
+      {
+        "type": "double",
+        "name": "InpMinLotFactor",
+        "default": "0.25"
+      },
+      {
+        "type": "double",
+        "name": "InpGridWidenFactor",
+        "default": "1.25"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxGridFactor",
+        "default": "4.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpRecoverAfterWins",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpWinsToRecover",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpRecoveryLotStep",
+        "default": "0.15"
+      },
+      {
+        "type": "double",
+        "name": "InpRecoveryGridStep",
+        "default": "0.25"
+      },
+      {
+        "type": "string",
+        "name": "InpInitialDirection",
+        "default": "\"AUTO\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerboseLogs",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSmartEntry",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpFastEMAPeriod",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "InpSlowEMAPeriod",
+        "default": "21"
+      },
+      {
+        "type": "int",
+        "name": "InpTrendEMAPeriod",
+        "default": "50"
+      },
+      {
+        "type": "bool",
+        "name": "InpRequireAllEMAsAligned",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRSIFilter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIPeriod",
+        "default": "14"
+      },
+      {
+        "type": "double",
+        "name": "InpRSIBuyMax",
+        "default": "65.0"
+      },
+      {
+        "type": "double",
+        "name": "InpRSISellMin",
+        "default": "35.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCandleConfirm",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpCandleBodyRatio",
+        "default": "0.40"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRegimeFilter",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpATRRangingThreshold",
+        "default": "0.70"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSMCFilter",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCRequireOBorFVG",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCRequireStructure",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSMCLookback",
+        "default": "80"
+      },
+      {
+        "type": "int",
+        "name": "InpSMCStructureLookback",
+        "default": "35"
+      },
+      {
+        "type": "double",
+        "name": "InpSMCImpulseRatio",
+        "default": "1.2"
+      },
+      {
+        "type": "double",
+        "name": "InpSMCMinFVGSizeRatio",
+        "default": "0.25"
+      },
+      {
+        "type": "double",
+        "name": "InpSMCZoneTouchPct",
+        "default": "0.60"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCDrawOB",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCDrawFVG",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCDrawBOS",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCLogDecisions",
+        "default": "true"
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Stoch_Reversion_M3.mq5": [
+      {
+        "type": "double",
+        "name": "InpOB_Heavy",
+        "default": "90.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOB_Light",
+        "default": "85.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOS_Heavy",
+        "default": "10.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOS_Light",
+        "default": "15.0"
+      },
+      {
+        "type": "double",
+        "name": "InpMidline",
+        "default": "50.0"
+      },
+      {
+        "type": "int",
+        "name": "InpKPeriod",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpDPeriod",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpSlowing",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpLot",
+        "default": "0.01"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxTrades",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSL",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpAtrSlMult",
+        "default": "2.5"
+      },
+      {
+        "type": "int",
+        "name": "InpAtrPeriod",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpMagic",
+        "default": "20260605"
+      },
+      {
+        "type": "string",
+        "name": "InpComment",
+        "default": "\"StochReversion\""
+      }
+    ],
+    ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5": [
+      {
+        "type": "bool",
+        "name": "EnableTrading",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "MagicNumber",
+        "default": "20250423"
+      },
+      {
+        "type": "int",
+        "name": "MaxPositions",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "MinSecondsBetweenTrades",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "EMA_Fast",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "EMA_Slow",
+        "default": "21"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Period",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Overbought",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Oversold",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "ATR_Period",
+        "default": "14"
+      },
+      {
+        "type": "double",
+        "name": "RiskPercent",
+        "default": "0.5"
+      },
+      {
+        "type": "double",
+        "name": "MaxTradeLossPct",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "MaxLotHard",
+        "default": "0.10"
+      },
+      {
+        "type": "double",
+        "name": "MaxMarginPctPerTrade",
+        "default": "10.0"
+      },
+      {
+        "type": "double",
+        "name": "SL_ATR_Mult",
+        "default": "1.5"
+      },
+      {
+        "type": "double",
+        "name": "TP_ATR_Mult",
+        "default": "2.0"
+      },
+      {
+        "type": "bool",
+        "name": "EnableBE",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "BE_ATR",
+        "default": "0.7"
+      },
+      {
+        "type": "bool",
+        "name": "EnableTrail",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "Trail_ATR",
+        "default": "0.7"
+      },
+      {
+        "type": "double",
+        "name": "TrailStep_ATR",
+        "default": "0.3"
+      },
+      {
+        "type": "bool",
+        "name": "UseTrendFilter",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "UseRSIFilter",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "PullbackATR",
+        "default": "0.5"
+      },
+      {
+        "type": "int",
+        "name": "MaxSpreadPoints",
+        "default": "60"
+      },
+      {
+        "type": "bool",
+        "name": "UseSessionFilter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "NoTradeStartUTC",
+        "default": "22"
+      },
+      {
+        "type": "int",
+        "name": "NoTradeEndUTC",
+        "default": "7"
+      },
+      {
+        "type": "double",
+        "name": "MaxDailyLossPct",
+        "default": "5.0"
+      },
+      {
+        "type": "int",
+        "name": "CooldownMinutes",
+        "default": "5"
+      },
+      {
+        "type": "bool",
+        "name": "EnableLogs",
+        "default": "true"
+      }
+    ],
+    "active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5": [
+      {
+        "type": "string",
+        "name": "InpProfileCsv",
+        "default": "\"agent_profiles_mql5.csv\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCommonFiles",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpGoldSymbol",
+        "default": "\"XAUUSDm\""
+      },
+      {
+        "type": "bool",
+        "name": "InpForceChartSymbolOnly",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpAutoTrade",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDryRunPrintOnly",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpTimeframe",
+        "default": "PERIOD_M1"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseDNAEvolution",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAMutateFromBest",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpDNAMutationStrength",
+        "default": "0.15"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAUseElitism",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAVerboseReport",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpExtraTightGapPoints",
+        "default": "500"
+      },
+      {
+        "type": "int",
+        "name": "InpModifyStepPoints",
+        "default": "1"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseStopReversePair",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpManagePairEveryTick",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpOneWayTrailOnly",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMinHoldSeconds",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "InpChopMaxFlipsPerMin",
+        "default": "4"
+      },
+      {
+        "type": "bool",
+        "name": "InpPairPositionSLWithPending",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpPendingHasNoOwnSLTP",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDeleteSameSidePending",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDeleteDuplicates",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxOpenPositionsPerSymbol",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpResolveHedgeImmediately",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpResolveHedgeKeepLatest",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketTakeProfit",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketTakeProfitMoney",
+        "default": "2.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketStopLoss",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketStopLossMoney",
+        "default": "8.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketEquityLock",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketLockStartMoney",
+        "default": "7.00"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketLockGiveBackMoney",
+        "default": "2.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseConfidenceBasketTPBoost",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceEntryMin",
+        "default": "55"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceAvoidMax",
+        "default": "25"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceAdxMin",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceSigMin",
+        "default": "45"
+      },
+      {
+        "type": "double",
+        "name": "InpConfidenceTPBoostFactor",
+        "default": "1.60"
+      },
+      {
+        "type": "double",
+        "name": "InpConfidenceTPMaxFactor",
+        "default": "2.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseConfidenceLotBoost",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpConfidenceLotMin",
+        "default": "70"
+      },
+      {
+        "type": "double",
+        "name": "InpConfidenceLotBoostFactor",
+        "default": "1.20"
+      },
+      {
+        "type": "double",
+        "name": "InpConfidenceLotMaxFactor",
+        "default": "1.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFallbackInitialSLTP",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpFallbackSLPoints",
+        "default": "5000"
+      },
+      {
+        "type": "int",
+        "name": "InpFallbackTPPoints",
+        "default": "5000"
+      },
+      {
+        "type": "int",
+        "name": "InpMinSecondsBetweenOrders",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpDeviationPoints",
+        "default": "50"
+      },
+      {
+        "type": "int",
+        "name": "InpExtraStopBufferPoints",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSpreadFilter",
+        "default": "false"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxSpreadToAtrRatioOverride",
+        "default": "0.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBlockedHours",
+        "default": "false"
+      },
+      {
+        "type": "string",
+        "name": "InpBlockedHours",
+        "default": "\"0,8,9,11,12,20\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFridayCloseFilter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpFridayStopHour",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterBasketTPMinutes",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterBasketSLMinutes",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterLargeLossMinutes",
+        "default": "30"
+      },
+      {
+        "type": "double",
+        "name": "InpLargeSingleLossMoney",
+        "default": "10.00"
+      },
+      {
+        "type": "double",
+        "name": "InpLotReductionFactor",
+        "default": "0.50"
+      },
+      {
+        "type": "double",
+        "name": "InpMinLotFactor",
+        "default": "0.25"
+      },
+      {
+        "type": "double",
+        "name": "InpGridWidenFactor",
+        "default": "1.25"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxGridFactor",
+        "default": "4.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpRecoverAfterWins",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpWinsToRecover",
+        "default": "2"
+      },
+      {
+        "type": "double",
+        "name": "InpRecoveryLotStep",
+        "default": "0.15"
+      },
+      {
+        "type": "double",
+        "name": "InpRecoveryGridStep",
+        "default": "0.25"
+      },
+      {
+        "type": "string",
+        "name": "InpInitialDirection",
+        "default": "\"AUTO\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerboseLogs",
+        "default": "true"
+      }
+    ],
+    "active_ea\\CLAUDE_BRAIN_EA_v1.mq5": [
+      {
+        "type": "ulong",
+        "name": "InpMagic",
+        "default": "99778"
+      },
+      {
+        "type": "string",
+        "name": "InpComment",
+        "default": "\"CLAUDE_BRAIN\""
+      },
+      {
+        "type": "string",
+        "name": "InpSymbolFilter",
+        "default": "\"\""
+      },
+      {
+        "type": "bool",
+        "name": "InpOnlyNYOverlap",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpAllowLondon",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpAllowNYLate",
+        "default": "false"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxLotTotal",
+        "default": "0.05"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxOpenPositions",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpRiskUSDPerTrade",
+        "default": "5.00"
+      },
+      {
+        "type": "double",
+        "name": "InpDailyLossLimit",
+        "default": "-15.00"
+      },
+      {
+        "type": "double",
+        "name": "InpEquityFloorUSD",
+        "default": "0.0"
+      },
+      {
+        "type": "int",
+        "name": "InpConsecLossPause",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownMinutes",
+        "default": "60"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxSpreadUSD",
+        "default": "0.50"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxATRm1",
+        "default": "8.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpBlockOnDryVol",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMinConfluence",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpMinRR",
+        "default": "1.5"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule1",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule2",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule3",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule4",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule5",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule6",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRule7",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpTrailSL",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpTrailTrigger1",
+        "default": "4.0"
+      },
+      {
+        "type": "double",
+        "name": "InpTrailTrigger2",
+        "default": "8.0"
+      },
+      {
+        "type": "double",
+        "name": "InpEmergencyBearVol",
+        "default": "750"
+      },
+      {
+        "type": "bool",
+        "name": "InpVerbose",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawZones",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpReadFootprintJSON",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpFootprintFile",
+        "default": "\"footprint_cells.json\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFootprintInRules",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpFPImbDomBoost",
+        "default": "1.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawFPSnapshot",
+        "default": "true"
+      }
+    ],
+    "active_ea\\CLAUDE_FOOTPRINT_v1.mq5": [
+      {
+        "type": "int",
+        "name": "InpVisibleBars",
+        "default": "25"
+      },
+      {
+        "type": "double",
+        "name": "InpPriceStepUSD",
+        "default": "0.30"
+      },
+      {
+        "type": "int",
+        "name": "InpBarWidthPx",
+        "default": "80"
+      },
+      {
+        "type": "int",
+        "name": "InpCellHeightPx",
+        "default": "12"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowFootprint",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDeltaStrip",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSummaryTable",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSessionVP",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowHeaderBar",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpImbL1Ratio",
+        "default": "3.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbL2Ratio",
+        "default": "5.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbL3Ratio",
+        "default": "8.0"
+      },
+      {
+        "type": "long",
+        "name": "InpImbMinVolume",
+        "default": "5"
+      },
+      {
+        "type": "double",
+        "name": "InpHighThresholdPct",
+        "default": "70"
+      },
+      {
+        "type": "double",
+        "name": "InpMedThresholdPct",
+        "default": "40"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyHigh",
+        "default": "clrGreen"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyMed",
+        "default": "clrSeaGreen"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyLow",
+        "default": "C'25,100,50'"
+      },
+      {
+        "type": "color",
+        "name": "InpSellHigh",
+        "default": "clrRed"
+      },
+      {
+        "type": "color",
+        "name": "InpSellMed",
+        "default": "clrCrimson"
+      },
+      {
+        "type": "color",
+        "name": "InpSellLow",
+        "default": "C'120,30,40'"
+      },
+      {
+        "type": "color",
+        "name": "InpNeutral",
+        "default": "C'80,80,80'"
+      },
+      {
+        "type": "color",
+        "name": "InpImbL1Color",
+        "default": "clrYellow"
+      },
+      {
+        "type": "color",
+        "name": "InpImbL2Color",
+        "default": "clrOrange"
+      },
+      {
+        "type": "color",
+        "name": "InpImbL3Color",
+        "default": "clrMagenta"
+      },
+      {
+        "type": "int",
+        "name": "InpVPLookbackBars",
+        "default": "100"
+      },
+      {
+        "type": "color",
+        "name": "InpPOCColor",
+        "default": "clrGold"
+      },
+      {
+        "type": "color",
+        "name": "InpVAHColor",
+        "default": "clrDodgerBlue"
+      },
+      {
+        "type": "color",
+        "name": "InpVALColor",
+        "default": "clrDodgerBlue"
+      },
+      {
+        "type": "double",
+        "name": "InpValueAreaPct",
+        "default": "70.0"
+      },
+      {
+        "type": "int",
+        "name": "InpHeaderHeight",
+        "default": "28"
+      },
+      {
+        "type": "int",
+        "name": "InpDeltaStripHeight",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpSummaryHeight",
+        "default": "80"
+      },
+      {
+        "type": "int",
+        "name": "InpRightMarginPx",
+        "default": "200"
+      },
+      {
+        "type": "color",
+        "name": "InpPanelBg",
+        "default": "C'20,22,28'"
+      },
+      {
+        "type": "color",
+        "name": "InpTextColor",
+        "default": "clrWhiteSmoke"
+      },
+      {
+        "type": "color",
+        "name": "InpBullColor",
+        "default": "clrLimeGreen"
+      },
+      {
+        "type": "color",
+        "name": "InpBearColor",
+        "default": "clrTomato"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowAnalyst",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSignalMeter",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSDZones",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowButtonBar",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowCumDeltaLine",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowRSI",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowMACD",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystRefreshSec",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpSDSwingBars",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpSDLookback",
+        "default": "100"
+      },
+      {
+        "type": "double",
+        "name": "InpSDVolMultiplier",
+        "default": "1.3"
+      },
+      {
+        "type": "double",
+        "name": "InpSDATRMult",
+        "default": "1.0"
+      },
+      {
+        "type": "int",
+        "name": "InpSDMaxZones",
+        "default": "8"
+      },
+      {
+        "type": "color",
+        "name": "InpSupplyColor",
+        "default": "C'200,40,40'"
+      },
+      {
+        "type": "color",
+        "name": "InpDemandColor",
+        "default": "C'40,180,80'"
+      },
+      {
+        "type": "int",
+        "name": "InpDisplayStyle",
+        "default": "0"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseTickInference",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpRefreshMs",
+        "default": "200"
+      },
+      {
+        "type": "string",
+        "name": "InpObjPrefix",
+        "default": "\"CLFP_\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerbose",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpExportToJSON",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpExportFile",
+        "default": "\"footprint_cells.json\""
+      },
+      {
+        "type": "int",
+        "name": "InpExportEverySec",
+        "default": "3"
+      }
+    ],
+    "active_ea\\CLAUDE_FOOTPRINT_v3.mq5": [
+      {
+        "type": "int",
+        "name": "InpPanelTheme",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpPanelSkin",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpColorTheme",
+        "default": "0"
+      },
+      {
+        "type": "bool",
+        "name": "InpThemeOverrideAll",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpPricePrecision",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "InpBarsToDisplay",
+        "default": "15"
+      },
+      {
+        "type": "int",
+        "name": "InpRefreshRateMs",
+        "default": "100"
+      },
+      {
+        "type": "double",
+        "name": "InpVolumeScaleFactor",
+        "default": "1.0"
+      },
+      {
+        "type": "double",
+        "name": "InpMinMoveFromLevel",
+        "default": "2.0"
+      },
+      {
+        "type": "int",
+        "name": "InpFeedMode",
+        "default": "0"
+      },
+      {
+        "type": "bool",
+        "name": "InpInferTickToVolume",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayXPosition",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayYPosition",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayWidth",
+        "default": "1200"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayHeight",
+        "default": "980"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelInsetLeft",
+        "default": "24"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelInsetTop",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelInsetRight",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelInsetBottom",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpOverlayPanelGap",
+        "default": "8"
+      },
+      {
+        "type": "color",
+        "name": "InpGlobalBgColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpBackgroundColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpPanelBorderColor",
+        "default": "(color)3616040"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowGrid",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpTextColor",
+        "default": "(color)15458780"
+      },
+      {
+        "type": "color",
+        "name": "InpTextDimColor",
+        "default": "(color)10195340"
+      },
+      {
+        "type": "color",
+        "name": "InpBullishCandleColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpBearishCandleColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpBullishCandleFill",
+        "default": "(color)3433750"
+      },
+      {
+        "type": "color",
+        "name": "InpBearishCandleFill",
+        "default": "(color)1908095"
+      },
+      {
+        "type": "color",
+        "name": "InpWickColor",
+        "default": "(color)7563620"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerHigh",
+        "default": "(color)4891414"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerMed",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerLow",
+        "default": "(color)8445514"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerHigh",
+        "default": "(color)1842361"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerMed",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerLow",
+        "default": "(color)10855932"
+      },
+      {
+        "type": "color",
+        "name": "InpCellPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpCellNeutralColor",
+        "default": "(color)4734007"
+      },
+      {
+        "type": "bool",
+        "name": "InpSeamlessCells",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpCellGap",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpCellPadding",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpCellMinHeight",
+        "default": "14"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowCandleFrame",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpCandleFrameWidth",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpCandleTextSize",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpImbalanceTextSize",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpPricePanelGap",
+        "default": "75"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowAskLine",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowCandleTimer",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpCumDeltaSessionMode",
+        "default": "false"
+      },
+      {
+        "type": "string",
+        "name": "InpCumDeltaSessionStart",
+        "default": "\"23:00\""
+      },
+      {
+        "type": "string",
+        "name": "InpCumDeltaSessionEnd",
+        "default": "\"22:00\""
+      },
+      {
+        "type": "int",
+        "name": "InpCellIntensityHigh",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "InpCellIntensityMed",
+        "default": "40"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio1",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio2",
+        "default": "3.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio3",
+        "default": "4.0"
+      },
+      {
+        "type": "int",
+        "name": "InpImbalanceMinVolume",
+        "default": "10"
+      },
+      {
+        "type": "bool",
+        "name": "InpImbalanceBold",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance1",
+        "default": "(color)11333510"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance2",
+        "default": "(color)8445514"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance3",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance1",
+        "default": "(color)13290238"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance2",
+        "default": "(color)10855932"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance3",
+        "default": "(color)7434744"
+      },
+      {
+        "type": "int",
+        "name": "InpBarWidth",
+        "default": "55"
+      },
+      {
+        "type": "int",
+        "name": "InpBarSpacing",
+        "default": "14"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDivider",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSeparatorWidth",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpFootprintStyle",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDeltaBar",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpDeltaBarHeight",
+        "default": "18"
+      },
+      {
+        "type": "int",
+        "name": "InpDeltaBarGap",
+        "default": "15"
+      },
+      {
+        "type": "color",
+        "name": "InpDeltaPositiveColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpDeltaNegativeColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowFL2MBPOCOutline",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpFL2MBPOCOutlineColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowPerBarVP",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpPerBarVPWidth",
+        "default": "40"
+      },
+      {
+        "type": "color",
+        "name": "InpVPBidColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpVPAskColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpVPPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSessionPOC",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpSessionPOCColor",
+        "default": "(color)16209320"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowZones",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpZoneSupplyColor",
+        "default": "clrNONE"
+      },
+      {
+        "type": "color",
+        "name": "InpZoneDemandColor",
+        "default": "clrNONE"
+      },
+      {
+        "type": "int",
+        "name": "InpZoneOpacity",
+        "default": "40"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxZones",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpZoneVolumeLookback",
+        "default": "20"
+      },
+      {
+        "type": "double",
+        "name": "InpZoneVolumeMinRatio",
+        "default": "1.2"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostZoneATRLen",
+        "default": "50"
+      },
+      {
+        "type": "double",
+        "name": "InpFrostZoneWidth",
+        "default": "4.0"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostSwingLen",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostSwingLookback",
+        "default": "200"
+      },
+      {
+        "type": "string",
+        "name": "InpAsiaSessionStart",
+        "default": "\"00:00\""
+      },
+      {
+        "type": "string",
+        "name": "InpAsiaSessionEnd",
+        "default": "\"08:00\""
+      },
+      {
+        "type": "color",
+        "name": "InpAsiaSessionColor",
+        "default": "(color)16301368"
+      },
+      {
+        "type": "string",
+        "name": "InpLondonSessionStart",
+        "default": "\"08:00\""
+      },
+      {
+        "type": "string",
+        "name": "InpLondonSessionEnd",
+        "default": "\"16:30\""
+      },
+      {
+        "type": "color",
+        "name": "InpLondonSessionColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "string",
+        "name": "InpNewYorkSessionStart",
+        "default": "\"14:30\""
+      },
+      {
+        "type": "string",
+        "name": "InpNewYorkSessionEnd",
+        "default": "\"22:00\""
+      },
+      {
+        "type": "color",
+        "name": "InpNewYorkSessionColor",
+        "default": "(color)11956980"
+      },
+      {
+        "type": "int",
+        "name": "InpStructureSwingLen",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpStructureLookbackBars",
+        "default": "60"
+      },
+      {
+        "type": "int",
+        "name": "InpStructureMaxFVG",
+        "default": "6"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPMode",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPBars",
+        "default": "50"
+      },
+      {
+        "type": "string",
+        "name": "InpSessionStartTime",
+        "default": "\"00:00\""
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPType",
+        "default": "0"
+      },
+      {
+        "type": "double",
+        "name": "InpSessionVPBarScale",
+        "default": "0.5"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPHeight",
+        "default": "475"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPVAHColor",
+        "default": "(color)16631187"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPVALColor",
+        "default": "(color)16631187"
+      },
+      {
+        "type": "double",
+        "name": "InpValueAreaPct",
+        "default": "70.0"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBgColor",
+        "default": "(color)2103574"
+      },
+      {
+        "type": "bool",
+        "name": "InpTickerSymbolUseThemeColor",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerSymbolColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "bool",
+        "name": "InpTickerPriceUseThemeColor",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerPriceColor",
+        "default": "(color)16426336"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSummaryTable",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpTableRowHeight",
+        "default": "15"
+      },
+      {
+        "type": "color",
+        "name": "InpTableHeaderColor",
+        "default": "(color)2958110"
+      },
+      {
+        "type": "color",
+        "name": "InpTablePositiveColor",
+        "default": "(color)3433750"
+      },
+      {
+        "type": "color",
+        "name": "InpTableNegativeColor",
+        "default": "(color)1908095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowRSI",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIPeriod",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIHeight",
+        "default": "80"
+      },
+      {
+        "type": "color",
+        "name": "InpRSILineColor",
+        "default": "(color)16209320"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIOverboughtLevel",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIOversoldLevel",
+        "default": "30"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowMACD",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMACDFast",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpMACDSlow",
+        "default": "26"
+      },
+      {
+        "type": "int",
+        "name": "InpMACDSignal",
+        "default": "9"
+      },
+      {
+        "type": "int",
+        "name": "InpMACDHeight",
+        "default": "80"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSignalMeter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpDialSize",
+        "default": "120"
+      },
+      {
+        "type": "int",
+        "name": "InpDialMA1Period",
+        "default": "9"
+      },
+      {
+        "type": "int",
+        "name": "InpDialMA2Period",
+        "default": "21"
+      },
+      {
+        "type": "int",
+        "name": "InpDialMA3Period",
+        "default": "50"
+      },
+      {
+        "type": "int",
+        "name": "InpDialATRPeriod",
+        "default": "14"
+      },
+      {
+        "type": "double",
+        "name": "InpDialATRTrendHigh",
+        "default": "1.15"
+      },
+      {
+        "type": "double",
+        "name": "InpDialATRTrendLow",
+        "default": "0.85"
+      },
+      {
+        "type": "int",
+        "name": "InpDialPOCAcceptBars",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpDialPOCAcceptTicks",
+        "default": "1.5"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpDialNeutralColor",
+        "default": "(color)7563620"
+      },
+      {
+        "type": "color",
+        "name": "InpDialPointerColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBgColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpDialHeaderColor",
+        "default": "(color)2103574"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowAnalyst",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystRefreshSecs",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystWidth",
+        "default": "280"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystHeight",
+        "default": "235"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystBgColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystHeaderColor",
+        "default": "(color)2103574"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystNeutralColor",
+        "default": "(color)12100500"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystWarningColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystAccentColor",
+        "default": "(color)16155195"
+      },
+      {
+        "type": "string",
+        "name": "InpFontName",
+        "default": "\"Segoe UI\""
+      },
+      {
+        "type": "string",
+        "name": "InpFontMono",
+        "default": "\"Consolas\""
+      },
+      {
+        "type": "int",
+        "name": "InpFontSize",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpFontSizeSmall",
+        "default": "11"
+      },
+      {
+        "type": "int",
+        "name": "InpFontSizeLarge",
+        "default": "17"
+      },
+      {
+        "type": "bool",
+        "name": "InpExportToJSON",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpExportFile",
+        "default": "\"footprint_cells.json\""
+      },
+      {
+        "type": "int",
+        "name": "InpExportEverySec",
+        "default": "3"
+      },
+      {
+        "type": "string",
+        "name": "InpObjPrefix",
+        "default": "\"CLFP3_\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerbose",
+        "default": "false"
+      }
+    ],
+    "active_ea\\CLAUDE_FOOTPRINT_v4.mq5": [
+      {
+        "type": "int",
+        "name": "InpPanelTheme",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpPanelSkin",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpColorTheme",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpPricePrecision",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "InpBarsToDisplay",
+        "default": "15"
+      },
+      {
+        "type": "int",
+        "name": "InpRefreshRateMs",
+        "default": "200"
+      },
+      {
+        "type": "double",
+        "name": "InpVolumeScaleFactor",
+        "default": "1.0"
+      },
+      {
+        "type": "double",
+        "name": "InpTickMoveImpact",
+        "default": "0.45"
+      },
+      {
+        "type": "long",
+        "name": "InpTickInferMin",
+        "default": "5"
+      },
+      {
+        "type": "long",
+        "name": "InpTickInferMax",
+        "default": "5000"
+      },
+      {
+        "type": "bool",
+        "name": "InpInferTickToVolume",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpGlobalBgColor",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpPanelBg",
+        "default": "(color)1511695"
+      },
+      {
+        "type": "color",
+        "name": "InpPanelBorderColor",
+        "default": "(color)3616040"
+      },
+      {
+        "type": "color",
+        "name": "InpTextColor",
+        "default": "(color)15458780"
+      },
+      {
+        "type": "color",
+        "name": "InpTextDimColor",
+        "default": "(color)10195340"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerHigh",
+        "default": "(color)4891414"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerMed",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpCellBuyerLow",
+        "default": "(color)8445514"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerHigh",
+        "default": "(color)1842361"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerMed",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpCellSellerLow",
+        "default": "(color)10855932"
+      },
+      {
+        "type": "color",
+        "name": "InpCellPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpCellNeutralColor",
+        "default": "(color)4734007"
+      },
+      {
+        "type": "int",
+        "name": "InpCellIntensityHigh",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "InpCellIntensityMed",
+        "default": "40"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio1",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio2",
+        "default": "3.0"
+      },
+      {
+        "type": "double",
+        "name": "InpImbalanceRatio3",
+        "default": "4.0"
+      },
+      {
+        "type": "int",
+        "name": "InpImbalanceMinVolume",
+        "default": "10"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance1",
+        "default": "(color)11333510"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance2",
+        "default": "(color)8445514"
+      },
+      {
+        "type": "color",
+        "name": "InpBuyerImbalance3",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance1",
+        "default": "(color)13290238"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance2",
+        "default": "(color)10855932"
+      },
+      {
+        "type": "color",
+        "name": "InpSellerImbalance3",
+        "default": "(color)7434744"
+      },
+      {
+        "type": "int",
+        "name": "InpBarWidth",
+        "default": "55"
+      },
+      {
+        "type": "int",
+        "name": "InpBarSpacing",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpHeaderHeight",
+        "default": "32"
+      },
+      {
+        "type": "int",
+        "name": "InpDeltaStripHeight",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpSummaryHeight",
+        "default": "80"
+      },
+      {
+        "type": "int",
+        "name": "InpRightMarginPx",
+        "default": "200"
+      },
+      {
+        "type": "int",
+        "name": "InpFootprintStyle",
+        "default": "1"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDeltaBar",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpDeltaPositiveColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpDeltaNegativeColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowPOCOutline",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowZones",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpZoneSupplyColor",
+        "default": "(color)1908095"
+      },
+      {
+        "type": "color",
+        "name": "InpZoneDemandColor",
+        "default": "(color)3433750"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxZones",
+        "default": "4"
+      },
+      {
+        "type": "double",
+        "name": "InpZoneVolumeMinRatio",
+        "default": "1.2"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostZoneATRLen",
+        "default": "50"
+      },
+      {
+        "type": "double",
+        "name": "InpFrostZoneWidth",
+        "default": "4.0"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostSwingLen",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "InpFrostSwingLookback",
+        "default": "200"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSessionVP",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionVPBars",
+        "default": "50"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPPOCColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPVAHColor",
+        "default": "(color)16631187"
+      },
+      {
+        "type": "color",
+        "name": "InpSVPVALColor",
+        "default": "(color)16631187"
+      },
+      {
+        "type": "double",
+        "name": "InpValueAreaPct",
+        "default": "70.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowHeaderBar",
+        "default": "true"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBgColor",
+        "default": "(color)2103574"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerSymbolColor",
+        "default": "(color)1428730"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpTickerBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSignalMeter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpDialSize",
+        "default": "120"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBullColor",
+        "default": "(color)6210850"
+      },
+      {
+        "type": "color",
+        "name": "InpDialBearColor",
+        "default": "(color)4474095"
+      },
+      {
+        "type": "color",
+        "name": "InpDialNeutralColor",
+        "default": "(color)7563620"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowAnalyst",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystRefreshSecs",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystWidth",
+        "default": "280"
+      },
+      {
+        "type": "int",
+        "name": "InpAnalystHeight",
+        "default": "230"
+      },
+      {
+        "type": "color",
+        "name": "InpAnalystAccentColor",
+        "default": "(color)16155195"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowCumDeltaLine",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowSummaryTable",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowButtonBar",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpFontName",
+        "default": "\"Segoe UI\""
+      },
+      {
+        "type": "string",
+        "name": "InpFontMono",
+        "default": "\"Consolas\""
+      },
+      {
+        "type": "int",
+        "name": "InpFontSize",
+        "default": "12"
+      },
+      {
+        "type": "int",
+        "name": "InpFontSizeSmall",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "InpFontSizeLarge",
+        "default": "15"
+      },
+      {
+        "type": "bool",
+        "name": "InpExportToJSON",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpExportFile",
+        "default": "\"footprint_cells.json\""
+      },
+      {
+        "type": "int",
+        "name": "InpExportEverySec",
+        "default": "3"
+      },
+      {
+        "type": "string",
+        "name": "InpObjPrefix",
+        "default": "\"CLFP4_\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerbose",
+        "default": "false"
+      }
+    ],
+    "active_ea\\QuantumShark_Learner_v8_2.mq5": [
+      {
+        "type": "bool",
+        "name": "EnableTrading",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "MagicNumber",
+        "default": "20250422"
+      },
+      {
+        "type": "int",
+        "name": "MaxPositions",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "MinSecondsBetweenTrades",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "EMA_Fast",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "EMA_Slow",
+        "default": "21"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Period",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Overbought",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Oversold",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "ATR_Period",
+        "default": "10"
+      },
+      {
+        "type": "double",
+        "name": "BaseRiskPercent",
+        "default": "1.5"
+      },
+      {
+        "type": "double",
+        "name": "MaxLot",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "MinLot",
+        "default": "0.01"
+      },
+      {
+        "type": "double",
+        "name": "SL_ATR_Mult",
+        "default": "1.2"
+      },
+      {
+        "type": "double",
+        "name": "TP_ATR_Mult",
+        "default": "2.0"
+      },
+      {
+        "type": "bool",
+        "name": "EnableBE",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "BE_ATR",
+        "default": "0.6"
+      },
+      {
+        "type": "bool",
+        "name": "EnableTrail",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "Trail_ATR",
+        "default": "0.6"
+      },
+      {
+        "type": "double",
+        "name": "TrailStep_ATR",
+        "default": "0.25"
+      },
+      {
+        "type": "bool",
+        "name": "UseTrendFilter",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "UseRSIFilter",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "ForceResetDNA",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "MaxDailyLossPct",
+        "default": "8.0"
+      },
+      {
+        "type": "int",
+        "name": "CooldownMinutes",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "EnableLogs",
+        "default": "true"
+      }
+    ],
+    "active_ea\\QuantumShark_Learner_v8_3.mq5": [
+      {
+        "type": "bool",
+        "name": "EnableTrading",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "MagicBase",
+        "default": "20250430"
+      },
+      {
+        "type": "int",
+        "name": "NumGenes",
+        "default": "6"
+      },
+      {
+        "type": "int",
+        "name": "MaxPositions",
+        "default": "5"
+      },
+      {
+        "type": "double",
+        "name": "MaxSpreadPoints",
+        "default": "350"
+      },
+      {
+        "type": "int",
+        "name": "MinSecondsBetween",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "MaxEntriesPerMinute",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "MaxEntriesPerBar",
+        "default": "1"
+      },
+      {
+        "type": "double",
+        "name": "BaseRiskPercent",
+        "default": "1.0"
+      },
+      {
+        "type": "double",
+        "name": "MaxLot",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "MinLot",
+        "default": "0.01"
+      },
+      {
+        "type": "bool",
+        "name": "BlockNight",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "NightStartHour",
+        "default": "22"
+      },
+      {
+        "type": "int",
+        "name": "NightEndHour",
+        "default": "8"
+      },
+      {
+        "type": "bool",
+        "name": "UseRejectionWick",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "WickBodyRatio",
+        "default": "1.5"
+      },
+      {
+        "type": "double",
+        "name": "WickRangeFrac",
+        "default": "0.5"
+      },
+      {
+        "type": "double",
+        "name": "MaxGeneDailyLoss",
+        "default": "50.0"
+      },
+      {
+        "type": "double",
+        "name": "MaxDailyLossPct",
+        "default": "8.0"
+      },
+      {
+        "type": "int",
+        "name": "CooldownMinutes",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "ForceResetGenes",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "EnableLogs",
+        "default": "true"
+      }
+    ],
+    "ea\\FRIDAY_Gold_EA.mq5": [
+      {
+        "type": "string",
+        "name": "InpSymbol",
+        "default": "\"\""
+      },
+      {
+        "type": "ENUM_TIMEFRAMES",
+        "name": "InpTimeframe",
+        "default": "PERIOD_M1"
+      },
+      {
+        "type": "int",
+        "name": "InpLookbackBars",
+        "default": "300"
+      },
+      {
+        "type": "int",
+        "name": "InpEMAPeriod",
+        "default": "200"
+      },
+      {
+        "type": "int",
+        "name": "InpTimerSeconds",
+        "default": "5"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCommonFiles",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpFolder",
+        "default": "\"FRIDAY\""
+      },
+      {
+        "type": "string",
+        "name": "InpFileName",
+        "default": "\"FRIDAY_Gold_signal.json\""
+      },
+      {
+        "type": "bool",
+        "name": "InpShowComment",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawLabel",
+        "default": "true"
+      }
+    ],
+    "ea\\v7_2_DNA_EVOLVE.mq5": [
+      {
+        "type": "int",
+        "name": "InpBasketGap",
+        "default": "500"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketTP",
+        "default": "50.0"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketSL",
+        "default": "150.0"
+      },
+      {
+        "type": "double",
+        "name": "InpLotBase",
+        "default": "0.01"
+      },
+      {
+        "type": "double",
+        "name": "InpLotFactor",
+        "default": "1.5"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxLevels",
+        "default": "6"
+      },
+      {
+        "type": "int",
+        "name": "InpGenSize",
+        "default": "30"
+      },
+      {
+        "type": "bool",
+        "name": "InpAutoEvolve",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpMutateStep",
+        "default": "0.08"
+      },
+      {
+        "type": "bool",
+        "name": "InpRollback",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRSI",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIPeriod",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIOB",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIOS",
+        "default": "30"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseTrend",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpEMAPeriod",
+        "default": "200"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSession",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionStart",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "InpSessionEnd",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownBars",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpMagic",
+        "default": "72000"
+      },
+      {
+        "type": "bool",
+        "name": "InpWriteFiles",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpReadCmds",
+        "default": "true"
+      }
+    ],
+    "ea\\v7_2_DNA_EVOLVE_TESTER.mq5": [
+      {
+        "type": "int",
+        "name": "InpBasketGap",
+        "default": "500"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketTP",
+        "default": "50.0"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketSL",
+        "default": "150.0"
+      },
+      {
+        "type": "double",
+        "name": "InpLotBase",
+        "default": "0.01"
+      },
+      {
+        "type": "double",
+        "name": "InpLotFactor",
+        "default": "1.5"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxLevels",
+        "default": "6"
+      },
+      {
+        "type": "int",
+        "name": "InpGenSize",
+        "default": "30"
+      },
+      {
+        "type": "bool",
+        "name": "InpAutoEvolve",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpMutateStep",
+        "default": "0.08"
+      },
+      {
+        "type": "bool",
+        "name": "InpRollback",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownBars",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpMagic",
+        "default": "72001"
+      },
+      {
+        "type": "bool",
+        "name": "InpWriteFiles",
+        "default": "false"
+      }
+    ],
+    "live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5": [
+      {
+        "type": "string",
+        "name": "InpProfileCsv",
+        "default": "\"agent_profiles_mql5.csv\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCommonFiles",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpGoldSymbol",
+        "default": "\"XAUUSDm\""
+      },
+      {
+        "type": "bool",
+        "name": "InpForceChartSymbolOnly",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpAutoTrade",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDryRunPrintOnly",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpTimeframe",
+        "default": "PERIOD_M1"
+      },
+      {
+        "type": "int",
+        "name": "InpRealtimeHistoryBars",
+        "default": "200"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseDNAEvolution",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAMutateFromBest",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpDNAMutationStrength",
+        "default": "0.10"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAUseElitism",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAVerboseReport",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDNAUseOnlyProfitableMemory",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseLiveControl",
+        "default": "true"
+      },
+      {
+        "type": "string",
+        "name": "InpLiveControlCsv",
+        "default": "\"claude_live_control.csv\""
+      },
+      {
+        "type": "int",
+        "name": "InpLiveControlEverySeconds",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpLiveControlMaxAgeSeconds",
+        "default": "21600"
+      },
+      {
+        "type": "int",
+        "name": "InpLiveControlGapStepPoints",
+        "default": "25"
+      },
+      {
+        "type": "double",
+        "name": "InpLiveControlMoneyStep",
+        "default": "0.25"
+      },
+      {
+        "type": "double",
+        "name": "InpLiveControlFactorStep",
+        "default": "0.05"
+      },
+      {
+        "type": "bool",
+        "name": "InpSaveLiveDNASnapshots",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSaveLiveDNASnapshotBars",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "InpExtraTightGapPoints",
+        "default": "150"
+      },
+      {
+        "type": "int",
+        "name": "InpModifyStepPoints",
+        "default": "1"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseStopReversePair",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpManagePairEveryTick",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseAdaptiveStopReverse",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpPairModifyEverySeconds",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpPairModifyMinStepPoints",
+        "default": "120"
+      },
+      {
+        "type": "double",
+        "name": "InpGapSpreadMultiplier",
+        "default": "2.20"
+      },
+      {
+        "type": "double",
+        "name": "InpGapAtrMultiplier",
+        "default": "0.18"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveMinGapPoints",
+        "default": "150"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveMaxGapPoints",
+        "default": "1500"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveGapStepPoints",
+        "default": "75"
+      },
+      {
+        "type": "double",
+        "name": "InpAdaptiveGridFactorStep",
+        "default": "0.25"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveWinsToTighten",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "InpAdaptiveNoReverseMinutes",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpOneWayTrailOnly",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMinHoldSeconds",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "InpChopMaxFlipsPerMin",
+        "default": "4"
+      },
+      {
+        "type": "bool",
+        "name": "InpPairPositionSLWithPending",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpPendingHasNoOwnSLTP",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDeleteSameSidePending",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDeleteDuplicates",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxOpenPositionsPerSymbol",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpResolveHedgeImmediately",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpResolveHedgeKeepLatest",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketTakeProfit",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketTakeProfitMoney",
+        "default": "2.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketStopLoss",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketStopLossMoney",
+        "default": "5.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBasketEquityLock",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketLockStartMoney",
+        "default": "3.00"
+      },
+      {
+        "type": "double",
+        "name": "InpBasketLockGiveBackMoney",
+        "default": "1.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSecureProfitSL",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpSecureProfitStartMoney",
+        "default": "0.50"
+      },
+      {
+        "type": "double",
+        "name": "InpSecureProfitLockMoney",
+        "default": "0.50"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFallbackInitialSLTP",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpFallbackSLPoints",
+        "default": "5000"
+      },
+      {
+        "type": "int",
+        "name": "InpFallbackTPPoints",
+        "default": "5000"
+      },
+      {
+        "type": "int",
+        "name": "InpMinSecondsBetweenOrders",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpDeviationPoints",
+        "default": "50"
+      },
+      {
+        "type": "int",
+        "name": "InpExtraStopBufferPoints",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSpreadFilter",
+        "default": "false"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxSpreadToAtrRatioOverride",
+        "default": "0.00"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseBlockedHours",
+        "default": "false"
+      },
+      {
+        "type": "string",
+        "name": "InpBlockedHours",
+        "default": "\"0,8,9,11,12,20\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseFridayCloseFilter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpFridayStopHour",
+        "default": "20"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCooldown",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterBasketTPMinutes",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterBasketSLMinutes",
+        "default": "0"
+      },
+      {
+        "type": "int",
+        "name": "InpCooldownAfterLargeLossMinutes",
+        "default": "0"
+      },
+      {
+        "type": "double",
+        "name": "InpLargeSingleLossMoney",
+        "default": "3.00"
+      },
+      {
+        "type": "double",
+        "name": "InpLotReductionFactor",
+        "default": "0.50"
+      },
+      {
+        "type": "double",
+        "name": "InpMinLotFactor",
+        "default": "0.25"
+      },
+      {
+        "type": "double",
+        "name": "InpGridWidenFactor",
+        "default": "1.25"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxGridFactor",
+        "default": "4.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpRecoverAfterWins",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpWinsToRecover",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpRecoveryLotStep",
+        "default": "0.15"
+      },
+      {
+        "type": "double",
+        "name": "InpRecoveryGridStep",
+        "default": "0.25"
+      },
+      {
+        "type": "string",
+        "name": "InpInitialDirection",
+        "default": "\"AUTO\""
+      },
+      {
+        "type": "bool",
+        "name": "InpVerboseLogs",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSmartEntry",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpFastEMAPeriod",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "InpSlowEMAPeriod",
+        "default": "21"
+      },
+      {
+        "type": "int",
+        "name": "InpTrendEMAPeriod",
+        "default": "50"
+      },
+      {
+        "type": "bool",
+        "name": "InpRequireAllEMAsAligned",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRSIFilter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpRSIPeriod",
+        "default": "14"
+      },
+      {
+        "type": "double",
+        "name": "InpRSIBuyMax",
+        "default": "65.0"
+      },
+      {
+        "type": "double",
+        "name": "InpRSISellMin",
+        "default": "35.0"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCandleConfirm",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpCandleBodyRatio",
+        "default": "0.40"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseRegimeFilter",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpATRRangingThreshold",
+        "default": "0.70"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSMCFilter",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCRequireOBorFVG",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCRequireStructure",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpSMCLookback",
+        "default": "80"
+      },
+      {
+        "type": "int",
+        "name": "InpSMCStructureLookback",
+        "default": "35"
+      },
+      {
+        "type": "double",
+        "name": "InpSMCImpulseRatio",
+        "default": "1.2"
+      },
+      {
+        "type": "double",
+        "name": "InpSMCMinFVGSizeRatio",
+        "default": "0.25"
+      },
+      {
+        "type": "double",
+        "name": "InpSMCZoneTouchPct",
+        "default": "0.60"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCDrawOB",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCDrawFVG",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCDrawBOS",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpSMCLogDecisions",
+        "default": "true"
+      }
+    ],
+    "live_ea\\Stoch_Reversion_M3.mq5": [
+      {
+        "type": "double",
+        "name": "InpOB_Heavy",
+        "default": "90.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOB_Light",
+        "default": "85.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOS_Heavy",
+        "default": "10.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOS_Light",
+        "default": "15.0"
+      },
+      {
+        "type": "double",
+        "name": "InpMidline",
+        "default": "50.0"
+      },
+      {
+        "type": "int",
+        "name": "InpKPeriod",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpDPeriod",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpSlowing",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpLot",
+        "default": "0.01"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxTrades",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSL",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpAtrSlMult",
+        "default": "2.5"
+      },
+      {
+        "type": "int",
+        "name": "InpAtrPeriod",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpMagic",
+        "default": "20260605"
+      },
+      {
+        "type": "string",
+        "name": "InpComment",
+        "default": "\"StochReversion\""
+      }
+    ],
+    "QuantumShark_Safe_v9.mq5": [
+      {
+        "type": "bool",
+        "name": "EnableTrading",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "MagicNumber",
+        "default": "20250423"
+      },
+      {
+        "type": "int",
+        "name": "MaxPositions",
+        "default": "2"
+      },
+      {
+        "type": "int",
+        "name": "MinSecondsBetweenTrades",
+        "default": "10"
+      },
+      {
+        "type": "int",
+        "name": "EMA_Fast",
+        "default": "8"
+      },
+      {
+        "type": "int",
+        "name": "EMA_Slow",
+        "default": "21"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Period",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Overbought",
+        "default": "70"
+      },
+      {
+        "type": "int",
+        "name": "RSI_Oversold",
+        "default": "30"
+      },
+      {
+        "type": "int",
+        "name": "ATR_Period",
+        "default": "14"
+      },
+      {
+        "type": "double",
+        "name": "RiskPercent",
+        "default": "0.5"
+      },
+      {
+        "type": "double",
+        "name": "MaxTradeLossPct",
+        "default": "2.0"
+      },
+      {
+        "type": "double",
+        "name": "MaxLotHard",
+        "default": "0.10"
+      },
+      {
+        "type": "double",
+        "name": "MaxMarginPctPerTrade",
+        "default": "10.0"
+      },
+      {
+        "type": "double",
+        "name": "SL_ATR_Mult",
+        "default": "1.5"
+      },
+      {
+        "type": "double",
+        "name": "TP_ATR_Mult",
+        "default": "2.0"
+      },
+      {
+        "type": "bool",
+        "name": "EnableBE",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "BE_ATR",
+        "default": "0.7"
+      },
+      {
+        "type": "bool",
+        "name": "EnableTrail",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "Trail_ATR",
+        "default": "0.7"
+      },
+      {
+        "type": "double",
+        "name": "TrailStep_ATR",
+        "default": "0.3"
+      },
+      {
+        "type": "bool",
+        "name": "UseTrendFilter",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "UseRSIFilter",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "PullbackATR",
+        "default": "0.5"
+      },
+      {
+        "type": "int",
+        "name": "MaxSpreadPoints",
+        "default": "60"
+      },
+      {
+        "type": "bool",
+        "name": "UseSessionFilter",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "NoTradeStartUTC",
+        "default": "22"
+      },
+      {
+        "type": "int",
+        "name": "NoTradeEndUTC",
+        "default": "7"
+      },
+      {
+        "type": "double",
+        "name": "MaxDailyLossPct",
+        "default": "5.0"
+      },
+      {
+        "type": "int",
+        "name": "CooldownMinutes",
+        "default": "5"
+      },
+      {
+        "type": "bool",
+        "name": "EnableLogs",
+        "default": "true"
+      }
+    ],
+    "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5": [
+      {
+        "type": "double",
+        "name": "SL_ATR_MULT",
+        "default": "{{SL_ATR_MULT}}"
+      },
+      {
+        "type": "double",
+        "name": "TP_ATR_MULT",
+        "default": "{{TP_ATR_MULT}}"
+      },
+      {
+        "type": "int",
+        "name": "START_HOUR",
+        "default": "{{START_HOUR}}"
+      },
+      {
+        "type": "int",
+        "name": "END_HOUR",
+        "default": "{{END_HOUR}}"
+      },
+      {
+        "type": "int",
+        "name": "RSI_PERIOD",
+        "default": "{{RSI_PERIOD}}"
+      },
+      {
+        "type": "int",
+        "name": "EMA_FAST",
+        "default": "{{EMA_FAST}}"
+      },
+      {
+        "type": "int",
+        "name": "EMA_SLOW",
+        "default": "{{EMA_SLOW}}"
+      },
+      {
+        "type": "int",
+        "name": "ATR_PERIOD",
+        "default": "{{ATR_PERIOD}}"
+      },
+      {
+        "type": "int",
+        "name": "BREAKOUT_LOOKBACK",
+        "default": "{{BREAKOUT_LOOKBACK}}"
+      },
+      {
+        "type": "double",
+        "name": "LOT_SIZE",
+        "default": "0.01"
+      },
+      {
+        "type": "int",
+        "name": "MAGIC",
+        "default": "20260605"
+      },
+      {
+        "type": "int",
+        "name": "MAX_POSITIONS",
+        "default": "1"
+      },
+      {
+        "type": "bool",
+        "name": "USE_BREAKEVEN",
+        "default": "{{USE_BREAKEVEN}}"
+      },
+      {
+        "type": "bool",
+        "name": "USE_FRIDAY_CLOSE",
+        "default": "{{USE_FRIDAY_CLOSE}}"
+      },
+      {
+        "type": "int",
+        "name": "FRIDAY_CLOSE_HOUR",
+        "default": "19"
+      },
+      {
+        "type": "bool",
+        "name": "ENABLE_TRADING",
+        "default": "false"
+      }
+    ],
+    "r-native-pipflow\\mql5_templates\\Stoch_Reversion_M3.mq5": [
+      {
+        "type": "double",
+        "name": "InpOB_Heavy",
+        "default": "90.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOB_Light",
+        "default": "85.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOS_Heavy",
+        "default": "10.0"
+      },
+      {
+        "type": "double",
+        "name": "InpOS_Light",
+        "default": "15.0"
+      },
+      {
+        "type": "double",
+        "name": "InpMidline",
+        "default": "50.0"
+      },
+      {
+        "type": "int",
+        "name": "InpKPeriod",
+        "default": "5"
+      },
+      {
+        "type": "int",
+        "name": "InpDPeriod",
+        "default": "3"
+      },
+      {
+        "type": "int",
+        "name": "InpSlowing",
+        "default": "3"
+      },
+      {
+        "type": "double",
+        "name": "InpLot",
+        "default": "0.01"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxTrades",
+        "default": "2"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSL",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpAtrSlMult",
+        "default": "2.5"
+      },
+      {
+        "type": "int",
+        "name": "InpAtrPeriod",
+        "default": "14"
+      },
+      {
+        "type": "int",
+        "name": "InpMagic",
+        "default": "20260605"
+      },
+      {
+        "type": "string",
+        "name": "InpComment",
+        "default": "\"StochReversion\""
+      }
+    ],
+    "r_native\\mql5_templates\\r_strategy_template.mq5": [
+      {
+        "type": "double",
+        "name": "SL_ATR_MULT",
+        "default": "{{SL_ATR_MULT}}"
+      },
+      {
+        "type": "double",
+        "name": "TP_ATR_MULT",
+        "default": "{{TP_ATR_MULT}}"
+      },
+      {
+        "type": "int",
+        "name": "START_HOUR",
+        "default": "{{START_HOUR}}"
+      },
+      {
+        "type": "int",
+        "name": "END_HOUR",
+        "default": "{{END_HOUR}}"
+      },
+      {
+        "type": "int",
+        "name": "RSI_PERIOD",
+        "default": "{{RSI_PERIOD}}"
+      },
+      {
+        "type": "int",
+        "name": "EMA_FAST",
+        "default": "{{EMA_FAST}}"
+      },
+      {
+        "type": "int",
+        "name": "EMA_SLOW",
+        "default": "{{EMA_SLOW}}"
+      },
+      {
+        "type": "int",
+        "name": "ATR_PERIOD",
+        "default": "{{ATR_PERIOD}}"
+      },
+      {
+        "type": "int",
+        "name": "BREAKOUT_LOOKBACK",
+        "default": "{{BREAKOUT_LOOKBACK}}"
+      },
+      {
+        "type": "double",
+        "name": "LOT_SIZE",
+        "default": "0.01"
+      },
+      {
+        "type": "int",
+        "name": "MAGIC",
+        "default": "20260605"
+      },
+      {
+        "type": "int",
+        "name": "MAX_POSITIONS",
+        "default": "1"
+      },
+      {
+        "type": "bool",
+        "name": "USE_BREAKEVEN",
+        "default": "{{USE_BREAKEVEN}}"
+      },
+      {
+        "type": "bool",
+        "name": "USE_FRIDAY_CLOSE",
+        "default": "{{USE_FRIDAY_CLOSE}}"
+      },
+      {
+        "type": "int",
+        "name": "FRIDAY_CLOSE_HOUR",
+        "default": "19"
+      },
+      {
+        "type": "bool",
+        "name": "ENABLE_TRADING",
+        "default": "false"
+      }
+    ],
+    "r_native\\v2\\mql5_experts\\FRIDAY_Brain_Executor.mq5": [
+      {
+        "type": "string",
+        "name": "InpSymbol",
+        "default": "\"XAUUSDm\""
+      },
+      {
+        "type": "long",
+        "name": "InpMagic",
+        "default": "20260600"
+      },
+      {
+        "type": "string",
+        "name": "InpComment",
+        "default": "\"FRIDAY-Brain\""
+      },
+      {
+        "type": "string",
+        "name": "InpBrainJson",
+        "default": "\"friday_brain_orders.json\""
+      },
+      {
+        "type": "string",
+        "name": "InpKillFile",
+        "default": "\"kill_switch.txt\""
+      },
+      {
+        "type": "bool",
+        "name": "InpUseCommonFiles",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpCheckEverySeconds",
+        "default": "3"
+      },
+      {
+        "type": "bool",
+        "name": "InpDryRun",
+        "default": "false"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxEpochAgeSec",
+        "default": "60"
+      },
+      {
+        "type": "double",
+        "name": "InpMaxLot",
+        "default": "0.05"
+      },
+      {
+        "type": "double",
+        "name": "InpMinLot",
+        "default": "0.01"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxOpenOrders",
+        "default": "4"
+      },
+      {
+        "type": "int",
+        "name": "InpMinSecondsBetween",
+        "default": "20"
+      },
+      {
+        "type": "int",
+        "name": "InpMaxSpreadPoints",
+        "default": "600"
+      },
+      {
+        "type": "bool",
+        "name": "InpRequireSL",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawAgentObjects",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawLevels",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpDrawTradeBox",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowEMA",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowBB",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowVWAP",
+        "default": "false"
+      },
+      {
+        "type": "bool",
+        "name": "InpShowDashboard",
+        "default": "true"
+      },
+      {
+        "type": "bool",
+        "name": "InpUseSonGate",
+        "default": "true"
+      },
+      {
+        "type": "double",
+        "name": "InpSonMinPwin",
+        "default": "0.50"
+      },
+      {
+        "type": "string",
+        "name": "InpSonStatusFile",
+        "default": "\"son_status.json\""
+      },
+      {
+        "type": "int",
+        "name": "InpSonMaxAgeSec",
+        "default": "45"
+      },
+      {
+        "type": "bool",
+        "name": "InpNightBlock",
+        "default": "true"
+      },
+      {
+        "type": "int",
+        "name": "InpNightStartHour",
+        "default": "22"
+      },
+      {
+        "type": "int",
+        "name": "InpNightEndHour",
+        "default": "8"
+      }
+    ]
+  }
+}

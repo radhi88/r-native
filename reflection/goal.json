@@ -1,0 +1,18 @@
+{
+  "_comment": "FRIDAY reflection goal. Defines success / failure / quality bar. Trades are scored against this. Edit by hand any time; the engine never rewrites this file.",
+  "asset_scope": "all_friday_demo_symbols",
+  "target_return_30d": 0.50,
+  "max_drawdown": 0.15,
+  "min_sharpe": 2.0,
+  "failure_below_return": -0.04,
+  "failure_below_score": -0.30,
+  "reflection_every": 20,
+  "one_variable_only": true,
+  "account_equity_base": 10000.0,
+  "_notes": {
+    "target_return_30d": "0.50 = +50% in 30 days. Operator-set. Effectively unreachable at min_sharpe 2.0 — the failure floors below are the brakes that stop the loop chasing it into reckless territory.",
+    "failure_below_return": "If projected 30d return drops below this, the composite score is forced steeply negative regardless of other factors.",
+    "failure_below_score": "Below this composite score, the engine is forbidden from increasing risk. It may only de-risk or enforce discipline.",
+    "account_equity_base": "Denominator for return/drawdown. Auto-updated from MT5 balance when a live demo connection is available; otherwise this static value is used."
+  }
+}

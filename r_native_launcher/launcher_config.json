@@ -1,0 +1,11 @@
+{
+  "worker_cmd": [
+    "C:\\Users\\Radhi\\MT5\\dist\\RNative\\RNativeWorker.exe"
+  ],
+  "worker_exe": "C:\\Users\\Radhi\\MT5\\dist\\RNative\\RNativeWorker.exe",
+  "heartbeat_url": "http://127.0.0.1:7711/heartbeat",
+  "poll_sec": 10,
+  "restart_backoff_sec": 2,
+  "max_restarts_per_hour": 6,
+  "control_port": 7712
+}

@@ -1,0 +1,48 @@
+{
+  "name": "desk-lifecycle",
+  "description": "Validate, launch, and verify the 24/7 geometric agentic desk. Gated: a failing validation step halts the pipeline before anything launches.",
+  "steps": [
+    {
+      "name": "compile",
+      "action": "compile",
+      "task": "Byte-compile every module to catch syntax/import errors",
+      "depends": [],
+      "gate": true
+    },
+    {
+      "name": "test",
+      "action": "pytest",
+      "task": "Run the unit test suite (math, geometry, exam)",
+      "depends": ["compile"],
+      "gate": true
+    },
+    {
+      "name": "selftest",
+      "action": "selftest",
+      "task": "Offline end-to-end pipeline self-test (no broker, no orders)",
+      "depends": ["test"],
+      "gate": true
+    },
+    {
+      "name": "launch",
+      "action": "launch",
+      "task": "Start the detached watchdog supervising all four agents",
+      "depends": ["selftest"],
+      "gate": false
+    },
+    {
+      "name": "verify",
+      "action": "verify",
+      "task": "Confirm agents publish to the bus and the dashboard is live",
+      "depends": ["launch"],
+      "gate": true
+    },
+    {
+      "name": "report",
+      "action": "report",
+      "task": "Generate the transparency report (architecture + exam table)",
+      "depends": ["verify"],
+      "gate": false
+    }
+  ]
+}

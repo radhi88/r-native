@@ -1,0 +1,36 @@
+{
+  "version": "0.1",
+  "updated_at": "2026-05-12T18:37:03",
+  "plan_cooldowns": {
+    "XAUUSDm|SELL|SELL_LIMIT|4651609": {
+      "until_ts": 1778601471.6389072,
+      "symbol": "XAUUSDm",
+      "action": "SELL",
+      "order_kind": "SELL_LIMIT",
+      "entry": 4651.609,
+      "level": 4651.609,
+      "reason": "sent",
+      "created_at": "2026-05-12T18:27:51"
+    },
+    "XAUUSDm|SELL|SELL_LIMIT|4655000": {
+      "until_ts": 1778601476.8029723,
+      "symbol": "XAUUSDm",
+      "action": "SELL",
+      "order_kind": "SELL_LIMIT",
+      "entry": 4655.0,
+      "level": 4655.0,
+      "reason": "sent",
+      "created_at": "2026-05-12T18:27:56"
+    }
+  },
+  "profit_symbol_cooldowns": {
+    "XAUUSDm": {
+      "until_ts": 1778601645.3788402,
+      "profit": 1.15,
+      "deal": 1481664043,
+      "comment": "[tp 4658.11600]",
+      "created_at": "2026-05-12T18:30:45"
+    }
+  },
+  "last_history_scan_ts": 1778600220.3715518
+}

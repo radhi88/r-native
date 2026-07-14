@@ -1,0 +1,13 @@
+{
+  "name": "friday-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FRIDAY unified desktop app — Tauri (Rust) shell + web UI + Python/FastAPI backend",
+  "scripts": {
+    "tauri": "tauri",
+    "backend": "../.venv/Scripts/python.exe -m uvicorn backend.server:app --host 127.0.0.1 --port 8770"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>R Native · لوحة المؤشرات والأداء</title>
+<style>
+:root{
+  --bg-0:#060418; --bg-1:#0d0824; --bg-2:#14092e; --bg-3:#1c1142;
+  --gold-0:#fbbf24; --gold-1:#f59e0b; --gold-2:#b45309;
+  --violet:#8b5cf6; --green:#10b981; --red:#ef4444; --cyan:#22d3ee;
+  --text:#f1f5f9; --muted:#94a3b8; --border:#2d1b69;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(135deg,var(--bg-0),var(--bg-1) 50%,var(--bg-2));
+  color:var(--text);font-family:'Inter','Segoe UI',Tahoma,sans-serif;min-height:100vh;padding:18px}
+h1{font-size:20px;color:var(--gold-0);margin-bottom:4px;display:flex;gap:8px;align-items:center}
+.sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+select,button,input{background:var(--bg-3);color:var(--text);border:1px solid var(--border);
+  border-radius:8px;padding:8px 12px;font-size:13px;font-family:inherit}
+button{cursor:pointer;background:linear-gradient(135deg,var(--gold-1),var(--gold-2));color:#1a1205;font-weight:600;border:none}
+button:hover{filter:brightness(1.1)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.card{background:rgba(28,17,66,.55);border:1px solid var(--border);border-radius:12px;padding:14px;backdrop-filter:blur(8px)}
+.ind{display:flex;justify-content:space-between;align-items:center}
+.ind .name{font-weight:600;font-size:14px}
+.pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+.BULLISH{background:rgba(16,185,129,.18);color:var(--green)}
+.BEARISH{background:rgba(239,68,68,.18);color:var(--red)}
+.NEUTRAL{background:rgba(148,163,184,.16);color:var(--muted)}
+.wrbar{height:6px;background:var(--bg-3);border-radius:99px;margin-top:10px;overflow:hidden}
+.wrbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--gold-0))}
+.wrlabel{font-size:11px;color:var(--muted);margin-top:5px;display:flex;justify-content:space-between}
+.toggle{font-size:11px;color:var(--muted)}
+.signalcard{grid-column:1/-1;text-align:center;padding:22px}
+.signalcard .big{font-size:34px;font-weight:800;letter-spacing:1px}
+.LONG{color:var(--green)} .SHORT{color:var(--red)} .NONE{color:var(--muted)}
+.perf{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:18px}
+.kpi{background:rgba(28,17,66,.55);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.kpi .v{font-size:24px;font-weight:800;color:var(--gold-0)}
+.kpi .l{font-size:11px;color:var(--muted);margin-top:3px}
+.nav{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.nav a{font-size:12px;color:var(--muted);text-decoration:none;padding:6px 10px;border:1px solid var(--border);border-radius:8px}
+.nav a:hover{color:var(--gold-0)}
+.err{color:var(--red);font-size:12px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/r/indicators">📊 المؤشرات</a>
+  <a href="/r/strategies">🧠 بناء استراتيجية</a>
+  <a href="/r/analyze">🔍 تحليل الشارت</a>
+  <a href="/r/monitor">📡 المتابعة المباشرة</a>
+</div>
+<h1>📊 لوحة المؤشرات والأداء</h1>
+<div class="sub">حالة 11 مؤشّر حيّة من MT5 + الإشارة المجمّعة + ملخّص الأداء</div>
+
+<div class="bar">
+  <label>الرمز
+    <select id="symbol">
+      <option>XAUUSDm</option><option>XAGUSDm</option><option>BTCUSDm</option>
+      <option>EURUSDm</option><option>GBPUSDm</option><option>USDJPYm</option>
+    </select>
+  </label>
+  <label>الفريم
+    <select id="tf">
+      <option value="5m">5m</option><option value="15m" selected>15m</option>
+      <option value="30m">30m</option><option value="1h">1h</option>
+      <option value="4h">4h</option><option value="1d">1d</option>
+    </select>
+  </label>
+  <button onclick="refresh()">تحديث</button>
+  <span id="status" class="sub"></span>
+</div>
+
+<div id="grid" class="grid"></div>
+<div id="err" class="err"></div>
+
+<h1 style="margin-top:24px">💰 الأداء</h1>
+<div class="sub">من سجل صفقات MT5 (Magic R = 20260605)</div>
+<div id="perf" class="perf"></div>
+
+<script>
+async function safeFetch(url){
+  try{const r=await fetch(url,{cache:'no-store'});return await r.json();}
+  catch(e){return {_err:e.message};}
+}
+function el(html){const d=document.createElement('div');d.innerHTML=html.trim();return d.firstChild;}
+
+async function refresh(){
+  const sym=document.getElementById('symbol').value;
+  const tf=document.getElementById('tf').value;
+  document.getElementById('status').textContent='…جاري التحميل';
+  document.getElementById('err').textContent='';
+  const data=await safeFetch(`/api/r/indicators?symbol=${sym}&tf=${tf}&t=`+Date.now());
+  const grid=document.getElementById('grid');grid.innerHTML='';
+  if(!data.ok){
+    document.getElementById('err').textContent='تعذّر جلب المؤشرات: '+(data.reason||data._err||'?');
+    document.getElementById('status').textContent='';
+    return;
+  }
+  // Aggregate signal card
+  const conf=data.confluence||{};
+  grid.appendChild(el(`<div class="card signalcard">
+    <div class="sub">الإشارة المجمّعة (توافق كامل)</div>
+    <div class="big ${data.signal}">${data.signal}</div>
+    <div class="sub">${conf.bullish||0} صاعد · ${conf.bearish||0} هابط · ${conf.neutral||0} محايد من ${conf.enabled||0} مُفعّل</div>
+  </div>`));
+  (data.indicators||[]).forEach(ind=>{
+    grid.appendChild(el(`<div class="card">
+      <div class="ind">
+        <span class="name">${ind.label}</span>
+        <span class="pill ${ind.status}">${ind.status}</span>
+      </div>
+      <div class="wrbar"><i style="width:${Math.max(2,ind.standaloneWR)}%"></i></div>
+      <div class="wrlabel"><span>WR منفرد</span><span>${ind.standaloneWR.toFixed(0)}%</span></div>
+      <div class="toggle">${ind.enabled?'✓ داخل الحساب':'✗ مُستبعد'}</div>
+    </div>`));
+  });
+  document.getElementById('status').textContent='آخر تحديث '+new Date().toLocaleTimeString('ar');
+  refreshPerf();
+}
+
+async function refreshPerf(){
+  const sym=document.getElementById('symbol').value;
+  const data=await safeFetch(`/api/r/performance?symbol=${sym}&t=`+Date.now());
+  const perf=document.getElementById('perf');perf.innerHTML='';
+  if(!data.ok){perf.innerHTML='<div class="kpi"><div class="v">—</div><div class="l">'+(data.reason||'لا بيانات')+'</div></div>';return;}
+  const p=data.performance||{};
+  const pfColor=p.profitFactor>1?'var(--green)':'var(--red)';
+  const pnlColor=p.pnlPct>=0?'var(--green)':'var(--red)';
+  const cards=[
+    ['إجمالي الصفقات',p.totalTrades,'var(--gold-0)'],
+    ['رابحة',p.wins,'var(--green)'],['خاسرة',p.losses,'var(--red)'],
+    ['نسبة الفوز',p.winratePct.toFixed(0)+'%','var(--gold-0)'],
+    ['Profit Factor',p.profitFactor,pfColor],
+    ['صافي الربح',(p.pnlPct>=0?'+':'')+p.pnlPct,pnlColor],
+  ];
+  cards.forEach(([l,v,c])=>perf.appendChild(el(
+    `<div class="kpi"><div class="v" style="color:${c}">${v}</div><div class="l">${l}</div></div>`)));
+}
+
+refresh();
+setInterval(refresh,10000);
+</script>
+</body>
+</html>

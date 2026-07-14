@@ -1,0 +1,41 @@
+{
+  "generated": 1782832772.9344726,
+  "cycle": 17,
+  "mode": "run",
+  "uptime_min": 8.0,
+  "agents_total": 46,
+  "active_pool": 24,
+  "clusters": {
+    "ORCH": {
+      "total": 1,
+      "ok": 0,
+      "active_pool": 0
+    },
+    "ALPHA": {
+      "total": 15,
+      "ok": 11,
+      "active_pool": 11
+    },
+    "BETA": {
+      "total": 15,
+      "ok": 5,
+      "active_pool": 5
+    },
+    "GAMMA": {
+      "total": 15,
+      "ok": 8,
+      "active_pool": 8
+    }
+  },
+  "open_alerts": 1,
+  "latest_findings": 0,
+  "kpis": {
+    "magic_collisions": 6,
+    "unbalanced_files": 0,
+    "duplicate_bodies": 341,
+    "duplicate_names": 257,
+    "ea_families_multi_version": 11,
+    "ea_consolidatable": 7,
+    "ea_divergent": 1
+  }
+}

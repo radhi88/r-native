@@ -1,0 +1,1131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Qader Live Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #020617; --surface: #0f172a; --border: #1e293b;
+      --text: #e2e8f0; --muted: #64748b; --accent: #22d3ee;
+      --green: #34d399; --red: #ef4444; --yellow: #f59e0b; --purple: #a78bfa;
+    }
+    body { background: var(--bg); color: var(--text); font: 13px/1.5 'Segoe UI', system-ui, sans-serif; }
+    .shell { display: grid; grid-template-rows: auto auto 1fr; min-height: 100vh; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap;
+      padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
+    }
+    .topbar h1 { font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: .04em; }
+    .topbar .eyebrow { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+    .topbar-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+    .badges { display: flex; gap: 8px; align-items: center; }
+    .badge {
+      padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: 700;
+      letter-spacing: .06em; border: 1px solid var(--border); color: var(--muted);
+      text-transform: uppercase;
+    }
+    .badge.live { border-color: var(--green); color: var(--green); }
+    .badge.demo { border-color: var(--yellow); color: var(--yellow); }
+    .badge.warn { border-color: var(--red); color: var(--red); }
+    .surface-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .nav-link, .service-link {
+      color: var(--accent); text-decoration: none; font-size: 10px; font-weight: 700;
+      border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px;
+      background: rgba(34,211,238,.05);
+    }
+    .service-link { color: var(--purple); background: rgba(167,139,250,.06); }
+    .nav-link:hover, .service-link:hover { border-color: currentColor; }
+
+    /* ── METRICS ── */
+    .metric-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1px; background: var(--border); border-bottom: 1px solid var(--border);
+    }
+    .metric {
+      background: var(--surface); padding: 10px 14px;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .metric span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .metric strong { font-size: 22px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .metric strong.green { color: var(--green); }
+    .metric strong.red   { color: var(--red); }
+    .metric strong.yellow{ color: var(--yellow); }
+    .live-tick { animation: liveTick .22s ease-out; }
+    @keyframes liveTick {
+      0% { filter: brightness(1.8); transform: translateY(-1px); }
+      100% { filter: brightness(1); transform: translateY(0); }
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-areas:
+        "chart chart signal"
+        "chart chart risk"
+        "flow flow flow"
+        "positions positions positions"
+        "trades trades trades"
+        "dna dna logs";
+      gap: 1px; background: var(--border); padding: 0;
+    }
+    .panel { background: var(--surface); padding: 14px 16px; overflow: auto; }
+    .panel h2 { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .chart-panel { grid-area: chart; }
+    .signal-panel{ grid-area: signal; }
+    .risk-panel  { grid-area: risk; }
+    .flow-panel  { grid-area: flow; }
+    .positions-panel{ grid-area: positions; }
+    .trades-panel{ grid-area: trades; }
+    .dna-panel   { grid-area: dna; }
+    .logs-panel  { grid-area: logs; }
+
+    .chart-wrap { display:grid; grid-template-columns:minmax(0,1fr) 150px; gap:12px; align-items:stretch; }
+    canvas#liveChart { width: 100%; height: 280px; display: block; }
+    canvas#fusionCandle { width: 100%; height: 196px; display:block; background:var(--bg); border:1px solid var(--border); border-radius:6px; }
+    .fusion-card { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:10px; min-height:280px; }
+    .fusion-card strong { display:block; font-size:12px; line-height:1.25; margin-top:8px; }
+    .fusion-card span { display:block; color:var(--muted); font-size:10px; margin-top:4px; word-break:break-word; }
+    @media (max-width: 900px) { .chart-wrap { grid-template-columns:1fr; } }
+
+    /* signal rows */
+    .signal-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .signal-row:last-child { border-bottom: none; }
+    .signal-row span { color: var(--muted); font-size: 11px; }
+    .signal-row strong { font-size: 13px; font-weight: 700; }
+    .decision { font-size: 28px; font-weight: 900; letter-spacing: .05em; display: block; text-align: center; padding: 8px 0; }
+    .decision.buy  { color: var(--green); }
+    .decision.sell { color: var(--red); }
+    .decision.hold { color: var(--muted); }
+
+    /* agent flow diagram */
+    .agent-flow {
+      display: grid;
+      grid-template-columns: minmax(180px, 1.2fr) 28px repeat(5, minmax(120px, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+    .flow-source-group { display: grid; gap: 8px; }
+    .flow-node {
+      min-height: 58px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+      transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .flow-node span { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+    .flow-node strong { color: var(--text); font-size: 13px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .flow-node.buy { border-color: var(--green); box-shadow: inset 0 0 0 1px rgba(52,211,153,.16); }
+    .flow-node.sell { border-color: var(--red); box-shadow: inset 0 0 0 1px rgba(239,68,68,.16); }
+    .flow-node.ok { border-color: var(--green); }
+    .flow-node.blocked, .flow-node.error { border-color: var(--red); }
+    .flow-node.applied { border-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(34,211,238,.18); }
+    .flow-edge {
+      height: 2px;
+      background: linear-gradient(90deg, rgba(34,211,238,.2), rgba(34,211,238,.85));
+      position: relative;
+      min-width: 22px;
+    }
+    .flow-edge::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: -4px;
+      border-left: 8px solid var(--accent);
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+    .flow-summary {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+    @media (max-width: 1100px) {
+      .agent-flow { grid-template-columns: 1fr; }
+      .flow-edge { width: 2px; height: 16px; justify-self: center; }
+      .flow-edge::after {
+        right: -4px;
+        top: 12px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid var(--accent);
+        border-bottom: 0;
+      }
+    }
+
+    /* risk meter */
+    .meter { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 8px 0; }
+    .meter span { display: block; height: 100%; border-radius: 4px; transition: width .4s; background: var(--green); }
+
+    /* tables */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { color: var(--muted); text-align: left; padding: 4px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; border-bottom: 1px solid var(--border); }
+    tbody td { padding: 5px 8px; border-bottom: 1px solid rgba(30,41,59,.5); font-variant-numeric: tabular-nums; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(34,211,238,.04); }
+    tbody tr { transition: background .18s ease, color .18s ease; }
+    .tag { display: inline-block; padding: 1px 7px; border-radius: 3px; font-size: 10px; font-weight: 700; }
+    .tag.buy  { background: rgba(52,211,153,.15); color: var(--green); }
+    .tag.sell { background: rgba(239,68,68,.15);  color: var(--red); }
+    .tag.hold { background: rgba(100,116,139,.15); color: var(--muted); }
+    .tag.ok   { background: rgba(52,211,153,.12); color: var(--green); }
+    .tag.block{ background: rgba(239,68,68,.12);  color: var(--red); }
+
+    /* pre logs */
+    pre { font-size: 11px; color: var(--muted); white-space: pre-wrap; word-break: break-word; max-height: 240px; overflow-y: auto; }
+
+    /* dna gene cards */
+    .gene-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .gene-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px 14px; min-width: 200px; flex: 1;
+    }
+    .gene-card .gene-id { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+    .gene-card dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 11px; }
+    .gene-card dt { color: var(--muted); }
+    .gene-card dd { color: var(--text); font-variant-numeric: tabular-nums; }
+    .gene-card.inactive { opacity: .4; }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; grid-template-areas: "chart" "signal" "risk" "flow" "positions" "trades" "dna" "logs"; }
+    }
+  </style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="topbar">
+    <section>
+      <p class="eyebrow">Qader DEMO execution system</p>
+      <h1 id="titleBar">Realtime Trading Dashboard</h1>
+    </section>
+    <section class="topbar-actions">
+      <section class="badges">
+        <span class="badge live"  id="heartbeatBadge">LIVE</span>
+        <span class="badge demo">DEMO ONLY</span>
+        <span class="badge"       id="allowBadge">ENTRIES: ?</span>
+        <span class="badge"       id="dataBadge">DATA WAITING</span>
+      </section>
+      <nav class="surface-nav" aria-label="Qader surfaces">
+        <a class="nav-link" href="/qader_unified_console.html">Unified</a>
+        <a class="nav-link" href="/market_depth.html">Market Depth</a>
+        <a class="nav-link" href="/agent_flow_diagram.html">Agent Flow</a>
+        <a class="service-link" href="http://127.0.0.1:8866/" target="_blank" rel="noopener">8866</a>
+        <a class="service-link" href="http://127.0.0.1:8833/" target="_blank" rel="noopener">8833</a>
+      </nav>
+    </section>
+  </header>
+
+  <section class="metric-grid">
+    <article class="metric"><span>Loop State</span>    <strong id="loopState">-</strong></article>
+    <article class="metric"><span>Cycle</span>         <strong id="cycleCount">0</strong></article>
+    <article class="metric"><span>Trades Opened</span> <strong id="tradeCount" class="green">0</strong></article>
+    <article class="metric"><span>Managed</span>       <strong id="managedCount">0</strong></article>
+    <article class="metric"><span>Open Positions</span><strong id="openPos">0</strong></article>
+    <article class="metric"><span>Confidence</span>    <strong id="confidence">0.000</strong></article>
+    <article class="metric"><span>Spread pts</span>    <strong id="spread">-</strong></article>
+    <article class="metric"><span>Session</span>       <strong id="session">-</strong></article>
+  </section>
+
+  <section class="grid">
+
+    <!-- CHART -->
+    <article class="panel chart-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h2>XAUUSDm Live Chart</h2>
+        <span style="font-size:11px;color:var(--muted)" id="chartMeta">—</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="liveChart" height="280"></canvas>
+        <aside class="fusion-card">
+          <canvas id="fusionCandle" width="130" height="196"></canvas>
+          <strong id="fusionPattern">Fusion Candle</strong>
+          <span id="fusionMeta">Waiting for multi-timeframe candle...</span>
+        </aside>
+      </div>
+      <div style="display:flex;gap:16px;font-size:11px;color:var(--muted);margin-top:8px;flex-wrap:wrap">
+        <span><span style="display:inline-block;width:10px;height:14px;background:var(--green);vertical-align:middle;margin-right:4px"></span>Bull Candle</span>
+        <span><span style="display:inline-block;width:10px;height:14px;background:var(--red);vertical-align:middle;margin-right:4px"></span>Bear Candle</span>
+        <span><span style="display:inline-block;width:16px;height:2px;background:var(--yellow);vertical-align:middle;margin-right:4px;border-top:2px dashed var(--yellow)"></span>Confidence</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);vertical-align:middle;margin-right:4px"></span>BUY</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);vertical-align:middle;margin-right:4px"></span>SELL</span>
+        <span><span style="display:inline-block;width:20px;height:8px;background:rgba(52,211,153,.28);border:1px solid rgba(52,211,153,.6);vertical-align:middle;margin-right:4px;border-radius:2px"></span>Bull FVG</span>
+        <span><span style="display:inline-block;width:20px;height:8px;background:rgba(239,68,68,.28);border:1px solid rgba(239,68,68,.6);vertical-align:middle;margin-right:4px;border-radius:2px"></span>Bear FVG</span>
+        <span><span style="display:inline-block;width:20px;height:2px;background:#f59e0b;vertical-align:middle;margin-right:4px"></span>VWAP / PP</span>
+      </div>
+      <div id="levelList" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:24px"></div>
+    </article>
+
+    <!-- SIGNALS -->
+    <article class="panel signal-panel">
+      <h2>Agent Signals</h2>
+      <div class="signal-row"><span>Fractal Agent</span>  <strong id="fractalSignal">-</strong></div>
+      <div class="signal-row"><span>SMC Agent</span>      <strong id="smcSignal">-</strong></div>
+      <div class="signal-row"><span>ICT Sweep</span>      <strong id="ictSignal">-</strong></div>
+      <div class="signal-row"><span>SignalArbiter</span>  <strong id="arbiterResult">-</strong></div>
+      <strong class="decision hold" id="finalAction">HOLD</strong>
+      <p id="arbiterReason" style="font-size:11px;color:var(--muted);text-align:center;padding-top:6px">—</p>
+    </article>
+
+    <!-- RISK -->
+    <article class="panel risk-panel">
+      <h2>Risk Gate</h2>
+      <div class="meter"><span id="riskMeter" style="width:5%"></span></div>
+      <p id="riskStatus" style="font-size:11px;color:var(--muted);margin-bottom:10px">not evaluated</p>
+      <div class="signal-row"><span>Exec Status</span><strong id="execStatus" style="font-size:12px">-</strong></div>
+      <div class="signal-row"><span>Risk Status</span><strong id="riskStatusInline" style="font-size:12px">-</strong></div>
+      <div class="signal-row"><span>Block Reason</span><strong id="blockReason" style="font-size:10px;max-width:180px;text-align:right;word-break:break-all">-</strong></div>
+      <div class="signal-row"><span>Orders/Run</span><strong id="ordersRun">-</strong></div>
+    </article>
+
+    <!-- AGENT FLOW -->
+    <article class="panel flow-panel">
+      <h2>Agent Flow Diagram</h2>
+      <div class="agent-flow">
+        <div class="flow-source-group">
+          <div class="flow-node" id="flowFractal"><span>Fractal Agent</span><strong id="flowFractalVal">-</strong></div>
+          <div class="flow-node" id="flowSmc"><span>SMC Agent</span><strong id="flowSmcVal">-</strong></div>
+          <div class="flow-node" id="flowIct"><span>ICT Sweep</span><strong id="flowIctVal">-</strong></div>
+        </div>
+        <div class="flow-edge"></div>
+        <div class="flow-node" id="flowArbiter"><span>SignalArbiter</span><strong id="flowArbiterVal">-</strong></div>
+        <div class="flow-node" id="flowRisk"><span>Conflict + Risk</span><strong id="flowRiskVal">-</strong></div>
+        <div class="flow-node" id="flowExec"><span>ExecutionManager</span><strong id="flowExecVal">-</strong></div>
+        <div class="flow-node" id="flowLearning"><span>LearningService</span><strong id="flowLearningVal">-</strong></div>
+        <div class="flow-node" id="flowDna"><span>Active Strategy DNA</span><strong id="flowDnaVal">-</strong></div>
+      </div>
+      <div class="flow-summary" id="flowSummary">Waiting for live agent flow...</div>
+    </article>
+
+    <!-- OPEN POSITIONS (MT5) -->
+    <article class="panel positions-panel">
+      <h2>Open MT5 Positions</h2>
+      <table>
+        <thead><tr><th>Ticket</th><th>Symbol</th><th>Type</th><th>Lot</th><th>Open</th><th>SL</th><th>TP</th><th>P&amp;L</th><th>Magic</th></tr></thead>
+        <tbody id="positionRows"><tr><td colspan="9" style="color:var(--muted);text-align:center">No open positions</td></tr></tbody>
+      </table>
+    </article>
+
+    <!-- PENDING ORDERS (MT5) -->
+    <article class="panel" style="grid-area:auto;grid-column:1/-1">
+      <h2>Pending MT5 Orders</h2>
+      <table>
+        <thead><tr><th>Ticket</th><th>Symbol</th><th>Type</th><th>Lot</th><th>Price</th><th>SL</th><th>TP</th><th>Magic</th><th>Comment</th></tr></thead>
+        <tbody id="pendingRows"><tr><td colspan="9" style="color:var(--muted);text-align:center">No pending orders</td></tr></tbody>
+      </table>
+    </article>
+
+    <!-- TRADE LOG -->
+    <article class="panel trades-panel">
+      <h2>Trade Journal (last 30 entries)</h2>
+      <table>
+        <thead><tr><th>Time</th><th>Symbol</th><th>TF</th><th>Side</th><th>Lot</th><th>SL</th><th>TP</th><th>Spread</th><th>Conf</th><th>Order</th></tr></thead>
+        <tbody id="tradeRows"><tr><td colspan="10" style="color:var(--muted);text-align:center">Waiting for first trade...</td></tr></tbody>
+      </table>
+    </article>
+
+    <!-- CANDLE ALERTS -->
+    <article class="panel" style="grid-area:auto;grid-column:1/-1">
+      <h2>🕯 Candlestick Pattern Alerts — Live Detection</h2>
+      <div id="candleAlerts" style="display:flex;flex-wrap:wrap;gap:8px;min-height:48px;align-items:flex-start">
+        <span style="color:var(--muted);font-size:12px">Scanning patterns…</span>
+      </div>
+    </article>
+
+    <!-- SESSION + FVG -->
+    <article class="panel" style="grid-area:auto;grid-column:1/-1">
+      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+
+        <!-- Current Session -->
+        <div style="flex:0 0 200px">
+          <h2 style="margin-bottom:8px">Trading Session</h2>
+          <div id="sessionBig" style="font-size:32px;font-weight:900;letter-spacing:.05em;color:var(--accent)">—</div>
+          <div id="sessionTime" style="font-size:11px;color:var(--muted);margin-top:2px">UTC —</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:4px" id="sessionList"></div>
+        </div>
+
+        <!-- FVG Zones -->
+        <div style="flex:1;min-width:280px">
+          <h2 style="margin-bottom:8px">Fair Value Gaps — Open Imbalance Zones</h2>
+          <div id="fvgList" style="display:flex;flex-wrap:wrap;gap:8px;min-height:48px;align-items:flex-start">
+            <span style="color:var(--muted);font-size:12px">Scanning FVG zones…</span>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- MARKET STRUCTURE -->
+    <article class="panel" style="grid-area:auto;grid-column:1/-1">
+      <h2>Market Structure Map</h2>
+      <div id="structureMap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
+        <span style="color:var(--muted);font-size:12px">Waiting for structure map...</span>
+      </div>
+    </article>
+
+    <!-- INDICATORS -->
+    <article class="panel" style="grid-area:auto;grid-column:1/-1">
+      <h2>Indicator Pack</h2>
+      <div id="indicatorPack" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
+        <span style="color:var(--muted);font-size:12px">Waiting for indicators...</span>
+      </div>
+    </article>
+
+    <!-- DNA GENES -->
+    <article class="panel dna-panel">
+      <h2>Strategy DNA — Active Genes</h2>
+      <div class="gene-grid" id="geneGrid">
+        <p style="color:var(--muted);font-size:12px">Backtest genes loading…</p>
+      </div>
+    </article>
+
+    <!-- LOGS -->
+    <article class="panel logs-panel">
+      <h2>Latest Cycle Log</h2>
+      <pre id="logsConsole">Connecting to dashboard server…</pre>
+    </article>
+
+  </section>
+</main>
+
+<script>
+const STATE_URL = "/api/state";
+const STREAM_URL = "/api/stream";
+const MAX_CHART = 300;
+let chartSeries = [];
+let candleSeries = [];
+let _fvgZones   = [];   // updated in render(), read by drawChart()
+let _marketLevels = {};
+let _fusionCandle = {};
+let _structureMap = {};
+let _indicatorPack = {};
+let _drawPending = false;
+let _stream = null;
+let _pollTimer = null;
+let _lastStateAt = 0;
+const _htmlCache = new Map();
+
+const $ = id => document.getElementById(id);
+const fmt = (v, fb = "-") => (v === undefined || v === null || v === "") ? fb : (typeof v === "number" && isFinite(v) ? (v % 1 === 0 ? String(v) : v.toFixed(3)) : String(v));
+const tag  = (txt, cls) => `<span class="tag ${cls}">${txt}</span>`;
+
+function setLiveText(id, value, className) {
+  const node = $(id);
+  if (!node) return;
+  const text = String(value ?? "-");
+  if (className !== undefined && node.className !== className) node.className = className;
+  if (node.textContent !== text) {
+    node.textContent = text;
+    node.classList.remove("live-tick");
+    void node.offsetWidth;
+    node.classList.add("live-tick");
+  }
+}
+
+function setStableHTML(id, html) {
+  const node = $(id);
+  if (!node) return;
+  const next = String(html);
+  if (_htmlCache.get(id) === next) return;
+  _htmlCache.set(id, next);
+  node.innerHTML = next;
+}
+
+function scheduleChartDraw() {
+  if (_drawPending) return;
+  _drawPending = true;
+  requestAnimationFrame(() => {
+    _drawPending = false;
+    drawChart();
+  });
+}
+
+function colourAction(a) {
+  if (!a) return "hold";
+  const u = String(a).toUpperCase();
+  if (u === "BUY") return "buy";
+  if (u === "SELL") return "sell";
+  return "hold";
+}
+
+function setFlowNode(nodeId, valueId, value, cls = "") {
+  const node = $(nodeId);
+  const valueNode = $(valueId);
+  if (!node || !valueNode) return;
+  const cleanClass = cls ? `flow-node ${cls}` : "flow-node";
+  if (node.className !== cleanClass) node.className = cleanClass;
+  setLiveText(valueId, fmt(value));
+}
+
+function flowClassForStatus(value) {
+  const text = String(value || "").toUpperCase();
+  if (text.includes("ERROR")) return "error";
+  if (text.includes("BLOCK")) return "blocked";
+  if (text.includes("BUY")) return "buy";
+  if (text.includes("SELL")) return "sell";
+  if (text.includes("APPROVED") || text.includes("EXECUTED") || text.includes("PLACED")) return "ok";
+  return "";
+}
+
+function renderAgentFlow(state, latest, loop) {
+  const learning = state.learning_state || {};
+  const application = learning.application || {};
+  const learningStatus = application.applied
+    ? "APPLIED"
+    : learning.error
+      ? "ERROR"
+      : learning.source_event
+        ? "PROPOSED"
+        : "WAITING";
+  const dnaStatus = application.applied
+    ? `v${(application.genome || {}).version || "?"} ${fmt((learning.proposal || {}).confidence_thresholds?.arbiter_pass)}`
+    : learning.strategy_dna_modification || "guarded";
+
+  setFlowNode("flowFractal", "flowFractalVal", latest.fractal_result || "-", flowClassForStatus(latest.fractal_result));
+  setFlowNode("flowSmc", "flowSmcVal", latest.smc_result || "-", flowClassForStatus(latest.smc_result));
+  setFlowNode("flowIct", "flowIctVal", latest.ict_result || "-", flowClassForStatus(latest.ict_result));
+  setFlowNode("flowArbiter", "flowArbiterVal", `${fmt(latest.arbiter_result)} @ ${Number(latest.confidence || 0).toFixed(3)}`, flowClassForStatus(latest.arbiter_result));
+  setFlowNode("flowRisk", "flowRiskVal", latest.risk_status || "-", flowClassForStatus(latest.risk_status));
+  setFlowNode("flowExec", "flowExecVal", latest.execution_status || "-", flowClassForStatus(latest.execution_status));
+  setFlowNode("flowLearning", "flowLearningVal", learningStatus, application.applied ? "applied" : flowClassForStatus(learningStatus));
+  setFlowNode("flowDna", "flowDnaVal", dnaStatus, application.applied ? "applied" : "");
+
+  const summary = learning.summary || {};
+  const reason = application.reason || latest.reason || loop.reason || "-";
+  setLiveText(
+    "flowSummary",
+    `cycle ${fmt(loop.cycle_count || latest.cycle_number || 0)} | samples ${fmt(summary.count || 0)} | learning ${learningStatus.toLowerCase()} | ${reason}`
+  );
+}
+
+function setDecision(action) {
+  const node = $("finalAction");
+  const text = fmt(action, "HOLD").toUpperCase();
+  setLiveText("finalAction", text, `decision ${colourAction(action)}`);
+}
+
+function riskWidth(latest) {
+  const rs = String(latest.risk_status || "");
+  if (rs === "approved" || rs === "risk_approved") return 20;
+  if (rs.includes("blocked") || String(latest.execution_status || "").includes("blocked")) return 88;
+  if (["BUY","SELL"].includes(String(latest.final_action || "").toUpperCase())) return 45;
+  return 8;
+}
+
+/* ── CHART ── */
+function normalizePoint(p) {
+  const bid = +p.bid || 0, ask = +p.ask || 0;
+  const mid = +p.mid || (bid + ask) / 2;
+  if (!isFinite(mid) || mid <= 0) return null;
+  return {
+    ts: p.timestamp || "", cycle: +(p.cycle_number || 0),
+    bid, ask, mid, spread: +(p.spread || 0),
+    conf: Math.max(0, Math.min(1, +(p.confidence || 0))),
+    action: p.final_action || "HOLD",
+    arbiter: p.arbiter_result || p.final_action || "HOLD",
+    exec: p.execution_status || "",
+  };
+}
+
+function normalizeCandle(b) {
+  const o = Number(b.open), h = Number(b.high), l = Number(b.low), c = Number(b.close);
+  if (![o,h,l,c].every(Number.isFinite) || h <= 0 || l <= 0) return null;
+  return {
+    time: Number(b.time || 0),
+    open: o, high: h, low: l, close: c,
+    volume: Number(b.volume || 0),
+    bullish: c >= o,
+  };
+}
+
+function pushChartPoint(latest) {
+  const p = normalizePoint(latest);
+  if (!p) return;
+  const last = chartSeries[chartSeries.length - 1];
+  if (!last || last.cycle !== p.cycle) chartSeries.push(p);
+  else chartSeries[chartSeries.length - 1] = p;
+  if (chartSeries.length > MAX_CHART) chartSeries = chartSeries.slice(-MAX_CHART);
+}
+
+function drawChart() {
+  const canvas = $("liveChart");
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth || 800, H = canvas.clientHeight || 280;
+  if (canvas.width !== Math.round(W*dpr)) { canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr); }
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0, "#0d1e36"); grad.addColorStop(1, "#020617");
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+
+  const pad = {l:60, r:16, t:24, b:36};
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+
+  ctx.strokeStyle = "rgba(148,163,184,.12)"; ctx.lineWidth = 1;
+  for (let i=0; i<=4; i++) { const y=pad.t+(i/4)*ph; ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke(); }
+  for (let i=0; i<=6; i++) { const x=pad.l+(i/6)*pw; ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,H-pad.b); ctx.stroke(); }
+
+  const candles = candleSeries.length >= 3 ? candleSeries.slice(-90) : [];
+  if (candles.length < 2 && chartSeries.length < 2) {
+    ctx.fillStyle = "#94a3b8"; ctx.font = "700 14px Segoe UI"; ctx.textAlign = "center";
+    ctx.fillText("Waiting for chart data…", W/2, H/2); return;
+  }
+
+  const priceValues = [];
+  candles.forEach(c => priceValues.push(c.high, c.low));
+  if (!candles.length) chartSeries.forEach(p => priceValues.push(p.mid));
+  (_fvgZones || []).forEach(z => {
+    const low = Number(z.low), high = Number(z.high);
+    if (Number.isFinite(low)) priceValues.push(low);
+    if (Number.isFinite(high)) priceValues.push(high);
+  });
+  ((_marketLevels || {}).levels || []).slice(0, 8).forEach(l => {
+    const p = Number(l.price); if (Number.isFinite(p)) priceValues.push(p);
+  });
+  let lo = Math.min(...priceValues), hi = Math.max(...priceValues);
+  if (hi - lo < 0.01) { lo -= 0.5; hi += 0.5; }
+  const xAt = i => pad.l + (i / Math.max(1, Math.max(candles.length, chartSeries.length)-1)) * pw;
+  const xCandle = i => pad.l + ((i + .5) / Math.max(1, candles.length)) * pw;
+  const yP  = v => pad.t + (1 - (v-lo)/(hi-lo)) * ph;
+  const yC  = c => H - pad.b - 8 - Math.max(0, Math.min(1, c)) * 30;
+
+  // FVG zones - horizontal bands behind candles
+  _fvgZones.forEach(z => {
+    const low = Number(z.low), high = Number(z.high);
+    if (!isFinite(low) || !isFinite(high)) return;
+    const yHi = yP(high), yLo = yP(low);
+    const bandH = Math.abs(yLo - yHi);
+    if (high < lo || low > hi) return;  // off-screen
+    const isBull = z.type === "bull_fvg";
+    ctx.fillStyle   = isBull ? "rgba(52,211,153,.18)" : "rgba(239,68,68,.18)";
+    ctx.strokeStyle = isBull ? "rgba(52,211,153,.5)"  : "rgba(239,68,68,.5)";
+    ctx.lineWidth = 1;
+    ctx.fillRect(pad.l, Math.min(yHi, yLo), pw, bandH || 2);
+    ctx.strokeRect(pad.l, Math.min(yHi, yLo), pw, bandH || 2);
+    // Label at right edge
+    ctx.fillStyle = isBull ? "rgba(52,211,153,.85)" : "rgba(239,68,68,.85)";
+    ctx.font = "10px Segoe UI"; ctx.textAlign = "right";
+    ctx.fillText(`${z.label} ${low.toFixed(2)}–${high.toFixed(2)}`, W - pad.r - 4, Math.min(yHi, yLo) - 3);
+  });
+
+  // VWAP / pivot levels
+  const levelColors = { VWAP:"#22d3ee", PP:"#f59e0b", R1:"#ef4444", R2:"#ef4444", S1:"#34d399", S2:"#34d399" };
+  ((_marketLevels || {}).levels || []).slice(0, 10).forEach(l => {
+    const price = Number(l.price); if (!Number.isFinite(price) || price < lo || price > hi) return;
+    const y = yP(price);
+    const name = String(l.name || "");
+    ctx.strokeStyle = levelColors[name] || "rgba(226,232,240,.55)";
+    ctx.setLineDash(name === "VWAP" ? [8,5] : [3,4]);
+    ctx.lineWidth = name === "VWAP" || name === "PP" ? 1.4 : 1;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = ctx.strokeStyle; ctx.font = "10px Segoe UI"; ctx.textAlign = "left";
+    ctx.fillText(`${name} ${price.toFixed(2)}`, pad.l + 4, y - 3);
+  });
+
+  // Candles
+  if (candles.length) {
+    const cw = Math.max(3, Math.min(12, (pw / candles.length) * .62));
+    candles.forEach((c, i) => {
+      const x = xCandle(i);
+      const yH = yP(c.high), yL = yP(c.low), yO = yP(c.open), yCl = yP(c.close);
+      const bull = c.close >= c.open;
+      const col = bull ? "#34d399" : "#ef4444";
+      ctx.strokeStyle = col; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(x, yH); ctx.lineTo(x, yL); ctx.stroke();
+      ctx.fillStyle = col;
+      const top = Math.min(yO, yCl), bodyH = Math.max(1.5, Math.abs(yCl - yO));
+      ctx.fillRect(x - cw/2, top, cw, bodyH);
+    });
+  } else {
+    ctx.lineWidth = 2.2; ctx.strokeStyle = "#22d3ee"; ctx.beginPath();
+    chartSeries.forEach((p,i) => { const x=xAt(i), y=yP(p.mid); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke();
+  }
+
+  // Confidence mini-line at bottom
+  if (chartSeries.length > 1) {
+    ctx.lineWidth = 1.5; ctx.setLineDash([6,5]); ctx.strokeStyle = "#f59e0b"; ctx.beginPath();
+    chartSeries.slice(-90).forEach((p,i,arr) => {
+      const x = pad.l + (i / Math.max(1, arr.length-1)) * pw, y = yC(p.conf);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // Signal dots
+  chartSeries.slice(-90).forEach((p,i,arr) => {
+    const a = (p.arbiter || p.action || "").toUpperCase();
+    if (a !== "BUY" && a !== "SELL") return;
+    ctx.fillStyle = a === "BUY" ? "#34d399" : "#ef4444";
+    ctx.strokeStyle = "#020617"; ctx.lineWidth = 1.2;
+    const x = pad.l + (i / Math.max(1, arr.length-1)) * pw;
+    ctx.beginPath(); ctx.arc(x, yP(p.mid), 4, 0, Math.PI*2);
+    ctx.fill(); ctx.stroke();
+  });
+
+  // Executed trades (green/red triangles)
+  chartSeries.slice(-90).forEach((p,i,arr) => {
+    if (!["executed","order_sent"].some(s => (p.exec||"").includes(s))) return;
+    const a = (p.action||"").toUpperCase();
+    const x = pad.l + (i / Math.max(1, arr.length-1)) * pw, y = yP(p.mid);
+    ctx.fillStyle = a === "BUY" ? "#34d399" : "#ef4444";
+    ctx.beginPath();
+    if (a === "BUY") { ctx.moveTo(x, y-10); ctx.lineTo(x-6, y+2); ctx.lineTo(x+6, y+2); }
+    else             { ctx.moveTo(x, y+10); ctx.lineTo(x-6, y-2); ctx.lineTo(x+6, y-2); }
+    ctx.closePath(); ctx.fill();
+  });
+
+  // Labels
+  const latest = chartSeries[chartSeries.length-1] || {};
+  const lastPrice = candles.length ? candles[candles.length-1].close : latest.mid;
+  ctx.fillStyle="#dbeafe"; ctx.font="700 12px Segoe UI"; ctx.textAlign="right";
+  ctx.fillText(`${Number(lastPrice || 0).toFixed(3)} | sprd ${Number(latest.spread || 0).toFixed(0)}`, W-pad.r, 16);
+  ctx.textAlign="right"; ctx.fillStyle="#94a3b8"; ctx.font="11px Segoe UI";
+  ctx.fillText(hi.toFixed(2), pad.l-4, pad.t+4);
+  ctx.fillText(lo.toFixed(2), pad.l-4, H-pad.b);
+}
+
+function renderFusionCandle(fc) {
+  const canvas = $("fusionCandle");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = "#020617"; ctx.fillRect(0, 0, W, H);
+  if (!fc || !Number.isFinite(Number(fc.open))) {
+    ctx.fillStyle = "#64748b"; ctx.font = "12px Segoe UI"; ctx.textAlign = "center";
+    ctx.fillText("Waiting", W/2, H/2);
+    $("fusionPattern").textContent = "Fusion Candle";
+    $("fusionMeta").textContent = "Waiting for multi-timeframe candle...";
+    return;
+  }
+  const o = Number(fc.open), h = Number(fc.high), l = Number(fc.low), c = Number(fc.close);
+  const pad = 20, yP = v => pad + (1 - (v-l)/Math.max(.0001,h-l)) * (H-pad*2);
+  const x = W/2, col = c >= o ? "#34d399" : "#ef4444";
+  ctx.strokeStyle = col; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(x, yP(h)); ctx.lineTo(x, yP(l)); ctx.stroke();
+  ctx.fillStyle = col;
+  const top = Math.min(yP(o), yP(c)), bodyH = Math.max(4, Math.abs(yP(c)-yP(o)));
+  ctx.fillRect(x-22, top, 44, bodyH);
+  ctx.strokeStyle = "rgba(226,232,240,.18)"; ctx.lineWidth = 1;
+  ctx.strokeRect(8, 8, W-16, H-16);
+  $("fusionPattern").textContent = fc.pattern || "Fusion Candle";
+  const bias = fc.bias || fc.direction || "HOLD";
+  $("fusionPattern").style.color = bias === "BUY" ? "var(--green)" : bias === "SELL" ? "var(--red)" : "var(--yellow)";
+  $("fusionMeta").textContent = `${bias} | consensus ${Math.round(Number(fc.consensus || 0)*100)}% | body ${Math.round(Number(fc.body_pct || 0)*100)}% | ${fc.timeframes ? fc.timeframes.join("/") : ""}`;
+}
+
+function renderLevels(levels, pendingPlan) {
+  const div = $("levelList");
+  if (!div) return;
+  const rows = ((levels || {}).levels || []).slice(0, 8);
+  const plan = pendingPlan && pendingPlan.ok ? pendingPlan : null;
+  if (!rows.length && !plan) {
+    setStableHTML("levelList", '<span style="color:var(--muted);font-size:11px">No levels yet</span>');
+    return;
+  }
+  const chips = rows.map(l => {
+    const col = l.name === "VWAP" ? "var(--accent)" : l.role === "support" ? "var(--green)" : "var(--red)";
+    return `<span class="tag" style="border:1px solid ${col};color:${col};background:transparent">${l.name} ${Number(l.price).toFixed(2)} ${l.role}</span>`;
+  });
+  if (plan) chips.unshift(`<span class="tag ${plan.side === 'BUY' ? 'buy':'sell'}">${plan.order_type} ${Number(plan.price).toFixed(2)} @ ${plan.level_name}</span>`);
+  setStableHTML("levelList", chips.join(""));
+}
+
+function renderPendingOrders(orders) {
+  const tbody = $("pendingRows");
+  if (!orders || !orders.length) {
+    setStableHTML("pendingRows", `<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:12px">No pending orders</td></tr>`);
+    return;
+  }
+  setStableHTML("pendingRows", orders.map(o => {
+    const side = String(o.type || "").includes("BUY") ? "buy" : "sell";
+    return `<tr>
+      <td>${o.ticket}</td><td>${o.symbol}</td><td>${tag(o.type, side)}</td><td>${o.volume}</td>
+      <td>${Number(o.price).toFixed(3)}</td><td style="color:var(--red)">${Number(o.sl).toFixed(3)}</td>
+      <td style="color:var(--green)">${Number(o.tp).toFixed(3)}</td><td>${o.magic}</td>
+      <td style="color:var(--muted);font-size:11px">${o.comment || ""}</td>
+    </tr>`;
+  }).join(""));
+}
+
+function renderStructureMap(sm) {
+  const div = $("structureMap");
+  if (!div) return;
+  if (!sm || !Object.keys(sm).length) {
+    setStableHTML("structureMap", '<span style="color:var(--muted);font-size:12px">Waiting for structure map...</span>');
+    return;
+  }
+  const pred = sm.prediction || {};
+  const predCls = pred.bias === "BUY" ? "buy" : pred.bias === "SELL" ? "sell" : "hold";
+  const liq = (sm.liquidity || []).slice(0, 4).map(x => `${x.type.replace("_liquidity","")} ${Number(x.price).toFixed(2)} (${x.touches})`).join("<br>") || "—";
+  const ifvg = (sm.ifvg || []).slice(0, 3).map(x => `${x.type} ${Number(x.low).toFixed(2)}-${Number(x.high).toFixed(2)}`).join("<br>") || "—";
+  const ob = sm.order_block && sm.order_block.type ? `${sm.order_block.type} ${Number(sm.order_block.low).toFixed(2)}-${Number(sm.order_block.high).toFixed(2)}` : "—";
+  setStableHTML("structureMap", `
+    <div class="gene-card"><div class="gene-id">Prediction</div><dl>
+      <dt>Bias</dt><dd>${tag(pred.bias || "HOLD", predCls)}</dd>
+      <dt>Conf</dt><dd>${Number(pred.confidence || 0).toFixed(3)}</dd>
+      <dt>Reasons</dt><dd>${(pred.reasons || []).join(", ") || "—"}</dd>
+    </dl></div>
+    <div class="gene-card"><div class="gene-id">Structure</div><dl>
+      <dt>BOS</dt><dd>${sm.bos || "NONE"}</dd>
+      <dt>OB</dt><dd>${ob}</dd>
+      <dt>Micro</dt><dd>${sm.micro_pattern || "—"}</dd>
+    </dl></div>
+    <div class="gene-card"><div class="gene-id">iFVG / Liquidity</div><dl>
+      <dt>iFVG</dt><dd>${ifvg}</dd>
+      <dt>Liquidity</dt><dd>${liq}</dd>
+    </dl></div>
+    <div class="gene-card"><div class="gene-id">Drift</div><dl>
+      <dt>ATR x</dt><dd>${Number((sm.drift||{}).atr_multiple || 0).toFixed(3)}</dd>
+      <dt>Angle</dt><dd>${Number((sm.drift||{}).angle || 0).toFixed(2)} deg</dd>
+      <dt>Volume</dt><dd>${sm.volume_surge ? "surge" : "normal"}</dd>
+    </dl></div>`);
+}
+
+function renderIndicatorPack(ip) {
+  const div = $("indicatorPack");
+  if (!div) return;
+  if (!ip || !Object.keys(ip).length) {
+    setStableHTML("indicatorPack", '<span style="color:var(--muted);font-size:12px">Waiting for indicators...</span>');
+    return;
+  }
+  const c = ip.classic || {}, t = ip.trend || {}, s = ip.structure || {}, v = ip.volume || {}, m = ip.microstructure || {};
+  const trendCls = t.classifier === "BUY" ? "buy" : t.classifier === "SELL" ? "sell" : "hold";
+  setStableHTML("indicatorPack", `
+    <div class="gene-card"><div class="gene-id">Classic</div><dl>
+      <dt>RSI</dt><dd>${Number(c.rsi || 0).toFixed(2)}</dd>
+      <dt>ATR</dt><dd>${Number(c.atr || 0).toFixed(3)}</dd>
+      <dt>ADX</dt><dd>${Number(c.adx || 0).toFixed(2)} | +DI ${Number(c.plus_di || 0).toFixed(1)} / -DI ${Number(c.minus_di || 0).toFixed(1)}</dd>
+      <dt>MFI</dt><dd>${Number(c.mfi || 0).toFixed(2)}</dd>
+    </dl></div>
+    <div class="gene-card"><div class="gene-id">MACD / Trend</div><dl>
+      <dt>MACD</dt><dd>${Number((c.macd||{}).line || 0).toFixed(3)} / ${Number((c.macd||{}).signal || 0).toFixed(3)} / ${Number((c.macd||{}).hist || 0).toFixed(3)}</dd>
+      <dt>EMA</dt><dd>${t.ema_trend || "MIXED"} | ${Number(t.ema20 || 0).toFixed(2)} / ${Number(t.ema50 || 0).toFixed(2)}</dd>
+      <dt>SIG</dt><dd>${t.sig_trend || "RANGE"}</dd>
+      <dt>Classifier</dt><dd>${tag(t.classifier || "HOLD", trendCls)} ${Number(t.confidence || 0).toFixed(3)}</dd>
+    </dl></div>
+    <div class="gene-card"><div class="gene-id">Donchian / Zones</div><dl>
+      <dt>Breakout</dt><dd>${(s.donchian||{}).breakout || "INSIDE"}</dd>
+      <dt>Donchian</dt><dd>${Number((s.donchian||{}).lower || 0).toFixed(2)} - ${Number((s.donchian||{}).upper || 0).toFixed(2)}</dd>
+      <dt>Demand</dt><dd>${Number((s.demand_zone||{}).low || 0).toFixed(2)} - ${Number((s.demand_zone||{}).high || 0).toFixed(2)}</dd>
+      <dt>Supply</dt><dd>${Number((s.supply_zone||{}).low || 0).toFixed(2)} - ${Number((s.supply_zone||{}).high || 0).toFixed(2)}</dd>
+    </dl></div>
+    <div class="gene-card"><div class="gene-id">Volume / Micro</div><dl>
+      <dt>VoI%</dt><dd>${Number(v.voi_percent || 0).toFixed(2)}% ${v.behavior || ""}</dd>
+      <dt>Tick Vol</dt><dd>${Number(v.tick_volume || 0).toFixed(0)} / ${Number(v.avg_tick_volume_20 || 0).toFixed(0)}</dd>
+      <dt>Spread</dt><dd>${Number(m.spread_points || 0).toFixed(0)} ${m.spread_status || ""}</dd>
+      <dt>Body</dt><dd>${Math.round(Number(m.last_candle_body_pct || 0) * 100)}%</dd>
+    </dl></div>`);
+}
+
+/* ── POSITIONS ── */
+function renderPositions(positions) {
+  const tbody = $("positionRows");
+  if (!positions || !positions.length) {
+    setStableHTML("positionRows", `<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:12px">No open positions</td></tr>`);
+    return;
+  }
+  setStableHTML("positionRows", positions.map(p => `<tr>
+    <td>${p.ticket}</td>
+    <td>${p.symbol}</td>
+    <td>${tag(p.type, colourAction(p.type))}</td>
+    <td>${p.volume}</td>
+    <td>${p.open_price}</td>
+    <td style="color:var(--red)">${p.sl}</td>
+    <td style="color:var(--green)">${p.tp}</td>
+    <td style="color:${p.profit>=0?'var(--green)':'var(--red);font-weight:700'}">${p.profit>=0?'+':''}${p.profit}</td>
+    <td style="color:var(--muted)">${p.magic}</td>
+  </tr>`).join(""));
+}
+
+/* ── TRADE LOG ── */
+function renderTradeLog(trades) {
+  const tbody = $("tradeRows");
+  if (!trades || !trades.length) {
+    setStableHTML("tradeRows", `<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:12px">No trades recorded yet</td></tr>`);
+    return;
+  }
+  setStableHTML("tradeRows", [...trades].reverse().map(t => `<tr>
+    <td style="color:var(--muted);font-size:11px">${t.time}</td>
+    <td>${t.symbol}</td>
+    <td style="color:var(--muted)">${t.tf}</td>
+    <td>${tag(t.action, colourAction(t.action))}</td>
+    <td>${t.lot}</td>
+    <td style="color:var(--red)">${Number(t.sl).toFixed(2)}</td>
+    <td style="color:var(--green)">${Number(t.tp).toFixed(2)}</td>
+    <td style="color:var(--muted)">${t.spread}</td>
+    <td style="${Number(t.conf)>=0.7?'color:var(--green)':'color:var(--yellow)'}">${Number(t.conf).toFixed(3)}</td>
+    <td style="color:var(--muted)">${t.order}</td>
+  </tr>`).join(""));
+}
+
+/* ── DNA GENES ── */
+function renderGenes(genes) {
+  const grid = $("geneGrid");
+  if (!genes || !genes.length) {
+    setStableHTML("geneGrid", `<p style="color:var(--muted);font-size:12px">No genes — run backtest first.</p>`);
+    return;
+  }
+  setStableHTML("geneGrid", genes.map(g => `
+    <div class="gene-card ${g.active ? '' : 'inactive'}">
+      <div class="gene-id">${g.id}</div>
+      <dl>
+        <dt>Win Rate</dt><dd>${g.wr}</dd>
+        <dt>Profit Factor</dt><dd>${Number(g.pf).toFixed(2)}</dd>
+        <dt>Sharpe</dt><dd>${Number(g.sharpe).toFixed(2)}</dd>
+        <dt>Lot Scale</dt><dd>${g.lot_scale}×</dd>
+        <dt>Min Conf</dt><dd>${Number(g.min_conf).toFixed(3)}</dd>
+        <dt>Live Trades</dt><dd>${g.live_trades}</dd>
+        <dt>Status</dt><dd style="color:${g.active?'var(--green)':'var(--red)'}">${g.active?'ACTIVE':'INACTIVE'}</dd>
+      </dl>
+    </div>`).join(""));
+}
+
+/* ── CANDLE ALERTS ── */
+const _alertSeen = new Set();
+function renderCandleAlerts(alerts) {
+  const div = $("candleAlerts");
+  if (!alerts.length) { setStableHTML("candleAlerts", '<span style="color:var(--muted);font-size:12px">No patterns detected yet</span>'); return; }
+  const COLORS = { BUY:"var(--green)", SELL:"var(--red)", NEUTRAL:"var(--yellow)" };
+  const STRENGTH = { strong:"●●●", medium:"●●○", weak:"●○○" };
+  setStableHTML("candleAlerts", [...alerts].reverse().slice(0, 10).map(a => {
+    const isNew = !_alertSeen.has(a.time + a.pattern);
+    _alertSeen.add(a.time + a.pattern);
+    const t = new Date(a.time * 1000).toLocaleTimeString("ar-SA", {hour:"2-digit", minute:"2-digit"});
+    return `<div style="background:var(--bg);border:1px solid ${COLORS[a.bias]||'var(--border)'};border-radius:6px;padding:8px 12px;min-width:220px;${isNew?'box-shadow:0 0 8px '+COLORS[a.bias]:''}">
+      <div style="font-weight:700;color:${COLORS[a.bias]||'var(--text)'};font-size:12px">${a.pattern} ${STRENGTH[a.strength]||''}</div>
+      <div style="color:var(--muted);font-size:10px;margin:2px 0">${t} | ${a.bias}</div>
+      <div style="font-size:11px;color:var(--text)">${a.desc}</div>
+    </div>`;
+  }).join(""));
+  // Sound alert for new strong patterns
+  alerts.filter(a => a.strength === "strong").forEach(a => {
+    if (!_alertSeen.has("sound_" + a.time + a.pattern)) {
+      _alertSeen.add("sound_" + a.time + a.pattern);
+      try { const ctx = new AudioContext(); const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = a.bias === "BUY" ? 880 : 440;
+        g.gain.setValueAtTime(0.15, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        o.start(); o.stop(ctx.currentTime + 0.4); } catch(_) {}
+    }
+  });
+}
+
+/* ── FVG ZONES LIST ── */
+function renderFvgZones(zones) {
+  const div = $("fvgList");
+  if (!zones || !zones.length) {
+    setStableHTML("fvgList", '<span style="color:var(--muted);font-size:12px">No open FVG zones detected</span>');
+    return;
+  }
+  setStableHTML("fvgList", zones.map(z => {
+    const low = Number(z.low), high = Number(z.high);
+    if (!isFinite(low) || !isFinite(high)) return "";
+    const isBull = z.type === "bull_fvg";
+    const col    = isBull ? "var(--green)" : "var(--red)";
+    const bg     = isBull ? "rgba(52,211,153,.12)" : "rgba(239,68,68,.12)";
+    const dir    = isBull ? "↑ Demand" : "↓ Supply";
+    const t      = z.time ? new Date(z.time * 1000).toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"}) : "";
+    return `<div style="background:${bg};border:1px solid ${col};border-radius:6px;padding:8px 12px;min-width:180px">
+      <div style="font-weight:700;color:${col};font-size:12px">${z.label} ${dir}</div>
+      <div style="font-size:13px;font-variant-numeric:tabular-nums;color:var(--text);margin:2px 0">
+        ${low.toFixed(3)} – ${high.toFixed(3)}
+      </div>
+      <div style="font-size:10px;color:var(--muted)">${t} | gap ${(high - low).toFixed(3)} pts</div>
+    </div>`;
+  }).join(""));
+}
+
+/* ── SESSION INFO ── */
+const SESSION_LABELS = {
+  asia:    { label:"ASIA",    col:"#a78bfa" },
+  london:  { label:"LONDON",  col:"#22d3ee" },
+  overlap: { label:"OVERLAP", col:"#f59e0b" },
+  ny:      { label:"NEW YORK",col:"#34d399" },
+  off:     { label:"CLOSED",  col:"#64748b" },
+  london_ny_overlap: { label:"OVERLAP", col:"#f59e0b" },
+  asia_london_overlap: { label:"OVERLAP", col:"#f59e0b" },
+  new_york: { label:"NEW YORK", col:"#34d399" },
+  off_session: { label:"CLOSED", col:"#64748b" },
+};
+function renderSession(info) {
+  if (!info) return;
+  const meta = SESSION_LABELS[info.current] || { label: info.current.toUpperCase(), col:"#64748b" };
+  $("sessionBig").textContent  = meta.label;
+  $("sessionBig").style.color  = meta.col;
+  $("sessionTime").textContent = `UTC ${String(info.utc_hour).padStart(2,"0")}:xx`;
+
+  const sl = $("sessionList");
+  const by = info.by_session || {};
+  setStableHTML("sessionList", Object.entries(by).map(([s, d]) => {
+    const m = SESSION_LABELS[s] || { label: s, col:"#64748b" };
+    return `<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid var(--border)">
+      <span style="color:${m.col};font-weight:700">${m.label}</span>
+      <span style="color:var(--muted)">${d.genes.length} gene${d.genes.length!==1?'s':''} | WR ${(d.avg_wr*100).toFixed(1)}%</span>
+    </div>`;
+  }).join("") || '<span style="color:var(--muted);font-size:11px">No gene sessions</span>');
+}
+
+/* ── MAIN RENDER ── */
+function render(state) {
+  const loop   = state.loop   || {};
+  const latest = state.display_record || state.latest_decision_record || state.latest_record || {};
+
+  // push to chart
+  if (Array.isArray(state.chart_history) && state.chart_history.length) {
+    chartSeries = state.chart_history.map(normalizePoint).filter(Boolean).slice(-MAX_CHART);
+  } else {
+    pushChartPoint(latest);
+  }
+  candleSeries = Array.isArray(state.order_flow) ? state.order_flow.map(normalizeCandle).filter(Boolean) : candleSeries;
+  _marketLevels = state.market_levels || latest.market_levels || {};
+  _fusionCandle = state.fusion_candle || latest.fusion_candle || {};
+  _structureMap = state.structure_map || latest.structure_map || {};
+  _indicatorPack = state.indicator_pack || latest.indicator_pack || {};
+
+  // metrics
+  const allow = loop.allow_new_entries;
+  setLiveText("loopState", loop.state || "-");
+  setLiveText("cycleCount", loop.cycle_count || latest.cycle_number || 0);
+  setLiveText("tradeCount", loop.demo_trades_opened || 0, (loop.demo_trades_opened || 0) > 0 ? "green" : "");
+  setLiveText("managedCount", loop.demo_trades_managed || 0);
+  setLiveText("openPos", (state.mt5_positions || []).length);
+  setLiveText("confidence", Number(latest.confidence || 0).toFixed(3));
+  setLiveText("spread", fmt(latest.spread));
+  const si = state.session_info || {};
+  setLiveText("session", si.current ? si.current.toUpperCase() : fmt(latest.session));
+
+  // badges
+  $("heartbeatBadge").className = `badge ${loop.thread_alive ? "live" : "warn"}`;
+  setLiveText("heartbeatBadge", loop.thread_alive ? "LIVE" : "OFFLINE");
+  $("allowBadge").className  = `badge ${allow ? "live" : "warn"}`;
+  setLiveText("allowBadge", allow ? "ENTRIES: ON" : "ENTRIES: OFF");
+  setLiveText("dataBadge", (latest.bars_received || 0) > 0 ? "DATA OK" : "DATA WAIT");
+
+  // signals
+  setLiveText("fractalSignal", fmt(latest.fractal_result));
+  setLiveText("smcSignal", fmt(latest.smc_result));
+  setLiveText("ictSignal", fmt(latest.ict_result));
+  setLiveText("arbiterResult", fmt(latest.arbiter_result));
+  setDecision(latest.final_action);
+  setLiveText("arbiterReason", fmt(loop.last_block_reason || latest.reason));
+
+  // risk
+  $("riskMeter").style.width   = `${riskWidth(latest)}%`;
+  $("riskMeter").style.background = riskWidth(latest) > 50 ? "var(--red)" : "var(--green)";
+  setLiveText("riskStatus", fmt(latest.risk_status));
+  setLiveText("execStatus", fmt(latest.execution_status));
+  setLiveText("riskStatusInline", fmt(latest.risk_status));
+  setLiveText("blockReason", fmt(latest.blocked_reason || latest.reason));
+  setLiveText("ordersRun", `${latest.orders_sent_this_run || 0} / ${latest.max_market_orders_per_run || 3}`);
+  renderAgentFlow(state, latest, loop);
+
+  // chart label
+  const lp = chartSeries[chartSeries.length-1];
+  setLiveText("chartMeta", lp
+    ? `mid ${lp.mid.toFixed(3)} | spread ${lp.spread.toFixed(0)} | latency ${Math.max(0,Math.round((Date.now()-Date.parse(lp.ts))/1000))}s`
+    : "—");
+
+  // title bar
+  document.title = lp ? `Qader | ${lp.mid.toFixed(2)} | C${loop.cycle_count||0}` : "Qader Live";
+
+  _fvgZones = state.fvg_zones || [];
+  scheduleChartDraw();
+  renderFusionCandle(_fusionCandle);
+  renderLevels(_marketLevels, state.pending_plan || latest.pending_plan || {});
+  renderPositions(state.mt5_positions || []);
+  renderPendingOrders(state.mt5_pending_orders || []);
+  renderTradeLog(state.trade_log || []);
+  renderGenes(state.dna_genes || []);
+  renderCandleAlerts(state.candle_alerts || []);
+  renderFvgZones(state.fvg_zones || []);
+  renderSession(state.session_info);
+  renderStructureMap(_structureMap);
+  renderIndicatorPack(_indicatorPack);
+
+  setLiveText("logsConsole", JSON.stringify({
+    loop: {state: loop.state, cycle: loop.cycle_count, allow_new_entries: allow,
+           trades: loop.demo_trades_opened, managed: loop.demo_trades_managed},
+    signal: {fractal: latest.fractal_result, smc: latest.smc_result, arbiter: latest.arbiter_result,
+             final: latest.final_action, conf: latest.confidence,
+             buy_score: latest.buy_agent_score, sell_score: latest.sell_agent_score,
+             primary_code: latest.arbiter_primary_code},
+    exec: {status: latest.execution_status, risk: latest.risk_status, reason: latest.blocked_reason},
+    pending: {status: latest.pending_order_status, plan: latest.pending_plan},
+    fusion: _fusionCandle,
+    structure: (_structureMap || {}).prediction,
+    indicators: (_indicatorPack || {}).trend,
+    server_ts: state.server_ts,
+  }, null, 2));
+}
+
+async function poll() {
+  try {
+    const r = await fetch(`${STATE_URL}?t=${Date.now()}`, { cache: "no-store" });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    _lastStateAt = Date.now();
+    render(await r.json());
+  } catch (err) {
+    setLiveText("logsConsole",
+      `Cannot load ${STATE_URL}\n${err.message}\n\n` +
+      `Start the dashboard server:\n  python scripts/dashboard_server.py\n` +
+      `Then open: http://localhost:8765/qader_live_dashboard.html`);
+  }
+}
+
+function startPollingFallback() {
+  if (_pollTimer) return;
+  poll();
+  _pollTimer = setInterval(poll, 1000);
+}
+
+function stopPollingFallback() {
+  if (!_pollTimer) return;
+  clearInterval(_pollTimer);
+  _pollTimer = null;
+}
+
+function connectStream() {
+  if (!window.EventSource) {
+    startPollingFallback();
+    return;
+  }
+  _stream = new EventSource(STREAM_URL);
+  _stream.addEventListener("state", event => {
+    try {
+      _lastStateAt = Date.now();
+      stopPollingFallback();
+      render(JSON.parse(event.data));
+    } catch (err) {
+      setLiveText("logsConsole", `Stream parse error\n${err.message}`);
+    }
+  });
+  _stream.onerror = () => {
+    if (Date.now() - _lastStateAt > 2500) startPollingFallback();
+  };
+}
+
+connectStream();
+setInterval(() => {
+  if (!_lastStateAt || Date.now() - _lastStateAt > 4000) startPollingFallback();
+}, 2000);
+window.addEventListener("resize", scheduleChartDraw);
+</script>
+</body>
+</html>

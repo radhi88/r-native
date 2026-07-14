@@ -1,0 +1,248 @@
+{
+  "version": "0.1",
+  "updated_at": "2026-05-24T11:35:59",
+  "groups": {
+    "A_TREND_MOMENTUM": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "B_FLOW_VOLUME": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "C_STRUCTURE_BREAKOUT": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    }
+  },
+  "indicators": {
+    "EMA": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "RSI": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "ADX": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "MACD": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "VWAP": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "MFI": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "DELTA": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "VOL": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "SPREAD": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "DONCHIAN": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "DEMAND": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "SUPPLY": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "BOS": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "SWEEP": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "CANDLE": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "TOUCH_MEMORY": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "VOLUME_PROFILE": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "POC": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "VAH_VAL": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "CVD": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "ABSORPTION": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "EXHAUSTION": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "IMBALANCE": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "ORDERFLOW_EVENT": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "SESSION_VWAP": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "WICK": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "FVG": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "IFVG": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "ZONE": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "NEAR_TOP": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    },
+    "NEAR_BOTTOM": {
+      "weight": 1.0,
+      "score": 1.0,
+      "wins": 0,
+      "losses": 0,
+      "probation": false
+    }
+  },
+  "feature_signatures": {},
+  "recent_learning": []
+}

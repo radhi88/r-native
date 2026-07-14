@@ -1,0 +1,87 @@
+{
+  "version": "01",
+  "project": "FRIDAY Reflection Strategy",
+  "_comment": "Discipline + scalp tunables. The reflection engine edits exactly ONE per cycle, archives the prior version to state/history/, logs a falsifiable hypothesis, and REVERTS it next cycle if the score got worse — so only profit-improving values are kept. unified_trader.py reads the scalp_* values LIVE.",
+  "updated_at": null,
+  "night_trade_block": {
+    "enabled": true,
+    "frame": "broker_server_time",
+    "start_hour": 22,
+    "end_hour": 8,
+    "server_utc_offset_hours": 3,
+    "exempt_symbols": [
+      "BTCUSDm"
+    ],
+    "_why": "Excluding 22:00-08:00 BROKER-SERVER time flipped the user's real manual record from -$18 to +$904 (PF 3.36) — the single strongest edge. Hours are broker/server time (the user's chart clock, currently UTC+3), the SAME frame MT5 deal timestamps use. The live Python gate converts now-UTC to server via server_utc_offset_hours; the EA reads server time natively (DST-proof). BTCUSDm exempt: crypto trades 24/7 by design (genome session_filter=[]). NOTE: server_utc_offset_hours may need to flip 3->2 if the broker observes EET/EEST winter time."
+  },
+  "risk_per_trade_r": 0.5,
+  "daily_loss_cap_pct": 25.0,
+  "max_concurrent_positions": 5,
+  "cooldown_minutes_after_loss": 0,
+  "min_confidence": 0.0,
+  "_scalp_comment": "LIVE scalping knobs read by unified_trader.py every entry scan (no restart needed). The reflection engine hill-climbs these: nudges ONE per cycle, keeps it if the next cycle's profit score improved, reverts it if it got worse. This is how it 'learns the profitable values and saves them'.",
+  "scalp_min_confidence": 0.55,
+  "scalp_ml_base_pwin": 0.38,
+  "scalp_global_max_open": 8,
+  "_bounds": {
+    "risk_per_trade_r": {
+      "min": 0.1,
+      "max": 2.0,
+      "step": 0.1
+    },
+    "daily_loss_cap_pct": {
+      "min": 5.0,
+      "max": 25.0,
+      "step": 5.0
+    },
+    "max_concurrent_positions": {
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    "cooldown_minutes_after_loss": {
+      "min": 0,
+      "max": 120,
+      "step": 15
+    },
+    "min_confidence": {
+      "min": 0.0,
+      "max": 0.05,
+      "step": 0.0025
+    },
+    "scalp_min_confidence": {
+      "min": 0.1,
+      "max": 0.8,
+      "step": 0.05
+    },
+    "scalp_ml_base_pwin": {
+      "min": 0.2,
+      "max": 0.6,
+      "step": 0.03
+    },
+    "scalp_global_max_open": {
+      "min": 2,
+      "max": 12,
+      "step": 1
+    },
+    "scalp_trail_trigger_pt": {
+      "min": 0.4,
+      "max": 6.0,
+      "step": 0.3
+    },
+    "scalp_trail_distance_pt": {
+      "min": 0.2,
+      "max": 3.0,
+      "step": 0.2
+    }
+  },
+  "_self_tune": {
+    "enabled": true,
+    "explore_scalp": true,
+    "_note": "When enabled, reflect.py explores the scalp_* knobs (round-robin, one per cycle) in addition to the discipline rules. Profitable nudges are kept; harmful ones auto-revert. Run continuously with: python reflection\\reflect.py --fallback --loop --interval 600"
+  },
+  "_scalp_1plus3_note": "2026-05-30 USER '1+3': disciplined conviction + proven sizing + let-winners-run (trail-tighten keys removed → wide ladder). The reflection hill-climber may re-tune FROM here on measured profit (honest).",
+  "scalp_trail_trigger_pt": 1.2,
+  "scalp_trail_distance_pt": 0.6,
+  "_scalp_mode_note": "2026-05-30 USER: confident scalping + same-symbol stacking into strength (conf>=0.72 add, green book, same side). First entry gate 0.55 (clear setup); moderate scalp trail."
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>FRIDAY — خريطة المنظومة الحيّة</title>
+<script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>
+<style>
+  :root{--bg:#0a0e1a;--panel:#121829;--line:#1e2740;--txt:#e8eef9;--mut:#8aa0c8;
+        --exec:#ff8c42;--data:#3aa0ff;--ctrl:#ffd23f;--dead:#ff4d4d;--stale:#ffb020;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,'Segoe UI',Tahoma,sans-serif;overflow:hidden}
+  #svg{width:100vw;height:100vh;display:block;touch-action:none}
+  .edge{stroke-opacity:.5}
+  .edge.exec{stroke:var(--exec);stroke-opacity:.75}
+  .edge.data{stroke:var(--data);stroke-opacity:.6}                 /* التغذية بين المحرّكات — بارزة */
+  .edge.mt5{stroke:#3a4a6a;stroke-opacity:.22}                     /* وصلة MT5 — خافتة كي لا يطغى المحور */
+  .edge.control{stroke:var(--ctrl);stroke-dasharray:4 3;stroke-opacity:.8}
+  .edge.llm{stroke:#c084fc;stroke-dasharray:2 3;stroke-opacity:.7}      /* 🏛️ خيوط العقول */
+  .edge.flow{stroke-dasharray:6 5;animation:flowdash 1.1s linear infinite;stroke-opacity:.95;stroke-width:2.2px}
+  @keyframes flowdash{to{stroke-dashoffset:-11}}                        /* تدفّق بياناتٍ حيّ */
+  .node.hot circle{animation:hotpulse 1.6s ease-in-out infinite}        /* نبض النشاط الحقيقيّ */
+  @keyframes hotpulse{0%,100%{filter:drop-shadow(0 0 2px currentColor)}50%{filter:drop-shadow(0 0 12px currentColor)}}
+  /* 💓 حلقة النبض حول العقدة حسب حالتها (live/warm/stale/dark) */
+  .node.p-live circle{stroke:#22c55e;stroke-width:2.4;animation:heartbeat 1.4s ease-in-out infinite}
+  @keyframes heartbeat{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.14);opacity:.78}}
+  .node.p-warm  circle{stroke:#eab308;stroke-width:2.2}                  /* أصفر — نبض فاتر */
+  .node.p-stale circle{stroke:#f97316;stroke-width:2.2}                  /* برتقاليّ — متقادم */
+  .node.p-dark  circle{stroke:#3a4560;stroke-width:1.2;fill-opacity:.42} /* رماديّ خافت — بلا نبض */
+  .node.p-dark  text{fill:#54617e}
+  .node circle{stroke:#0a0e1a;stroke-width:1.5;cursor:pointer;transition:r .6s ease}
+  .node text{font-size:8.5px;fill:var(--mut);pointer-events:none}
+  .node.dead circle{stroke:var(--dead);stroke-width:2.5}
+  .node.stale circle{stroke:var(--stale);stroke-width:2.5}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .node.disc circle{animation:pulse 1.1s infinite;stroke:var(--dead);stroke-width:3}
+  .node.fired circle{stroke:#ff2d2d;stroke-width:3;stroke-dasharray:3 2}
+  #hdr{position:fixed;top:0;left:0;right:0;padding:10px 14px;display:flex;align-items:center;gap:10px;
+       background:linear-gradient(180deg,rgba(10,14,26,.95),rgba(10,14,26,0));z-index:5;pointer-events:none}
+  #hdr b{font-size:15px;letter-spacing:.3px}
+  #stat{font-size:11px;color:var(--mut)}
+  #gaps{position:fixed;top:46px;left:10px;right:10px;background:var(--panel);border:1px solid var(--line);
+        border-radius:12px;padding:10px 12px;font-size:12px;z-index:6;max-height:38vh;overflow:auto;display:none}
+  #gaps h4{margin:0 0 6px;font-size:12px;color:var(--stale)}
+  #gaps .row{color:var(--mut);line-height:1.7}
+  #gaps .ok{color:#4ade80}
+  .chip{display:inline-block;background:#1a2742;border-radius:8px;padding:2px 8px;margin:2px;font-size:11px}
+  .chip.bad{background:#3a1620;color:#ff8a8a} .chip.warn{background:#3a2c12;color:#ffce7a}
+  #legend{position:fixed;bottom:8px;left:10px;right:10px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;z-index:5;pointer-events:none}
+  .lg{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--mut);background:rgba(18,24,41,.7);border-radius:7px;padding:3px 7px}
+  .dot{width:9px;height:9px;border-radius:50%}
+  #det{position:fixed;bottom:42px;left:10px;right:10px;background:var(--panel);border:1px solid var(--line);
+       border-radius:12px;padding:12px 14px;z-index:7;display:none;font-size:13px}
+  #det b{font-size:14px} #det .k{color:var(--mut);font-size:11px}
+  #btns{position:fixed;top:9px;left:12px;z-index:8;display:flex;gap:6px}
+  .b{pointer-events:auto;background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:9px;
+     padding:6px 10px;font-size:12px;cursor:pointer}
+  .b.act{border-color:var(--stale);color:var(--stale)}
+
+  #inspector{position:fixed;top:0;bottom:0;left:0;width:min(390px,92vw);background:#0d1322;border-right:1px solid var(--line);
+    z-index:20;overflow:auto;padding:14px 14px 30px;display:none;box-shadow:6px 0 26px rgba(0,0,0,.55)}
+  #inspector h3{margin:0 0 2px;font-size:15px}
+  #inspector .x{position:absolute;top:9px;left:11px;cursor:pointer;font-size:19px;color:var(--mut)}
+  #inspector .badges{display:flex;flex-wrap:wrap;gap:5px;margin:9px 0}
+  #inspector .b2{font-size:11px;border-radius:7px;padding:3px 8px;background:#1a2742}
+  #inspector .lbl{font-size:11px;color:var(--mut);margin-top:11px;margin-bottom:3px}
+  #inspector .term{background:#05080f;border:1px solid var(--line);border-radius:8px;padding:8px;
+    font-family:ui-monospace,Consolas,monospace;font-size:10.5px;line-height:1.5;color:#9fe7b0;white-space:pre-wrap;
+    word-break:break-all;max-height:210px;overflow:auto;direction:ltr;text-align:left}
+</style>
+</head>
+<body>
+<div id="hdr"><b>🕸️ FRIDAY — خريطة المنظومة الحيّة</b><span id="stat">…</span></div>
+<div id="btns"><button class="b" id="bgaps">الفجوات</button><button class="b" id="bfreeze">تثبيت</button></div>
+<div id="gaps"></div>
+<svg id="svg"></svg>
+<div id="det"></div>
+<div id="inspector"></div>
+<div id="legend">
+  <div class="lg"><span class="dot" style="background:#ff8c42"></span>منفّذ</div>
+  <div class="lg"><span class="dot" style="background:#3aa0ff"></span>مغذّي/بيانات</div>
+  <div class="lg"><span class="dot" style="background:#a78bfa"></span>دماغ/تعلّم</div>
+  <div class="lg"><span class="dot" style="background:#ffd23f"></span>حوكمة</div>
+  <div class="lg"><span class="dot" style="background:#34d399"></span>مُسجّل</div>
+  <div class="lg"><span style="width:14px;height:2px;background:#3aa0ff;display:inline-block"></span>معلومات</div>
+  <div class="lg"><span style="width:14px;height:2px;background:#ff8c42;display:inline-block"></span>تنفيذ</div>
+  <div class="lg"><span style="width:14px;height:2px;background:#ffd23f;display:inline-block"></span>حوكمة</div>
+  <div class="lg"><span class="dot" style="background:#22c55e;box-shadow:0 0 6px #22c55e"></span>💓 نبض حيّ</div>
+  <div class="lg"><span class="dot" style="background:#eab308"></span>فاتر</div>
+  <div class="lg"><span class="dot" style="background:#f97316"></span>متقادم</div>
+  <div class="lg"><span class="dot" style="background:#3a4560"></span>خامد</div>
+</div>
+<script>
+const COLOR={executor:'#ff8c42',feeder:'#3aa0ff',data:'#3aa0ff',learner:'#a78bfa',brain:'#a78bfa',
+             governor:'#ffd23f',recorder:'#34d399',broker:'#e8eef9',
+             llm:'#c084fc',ui:'#4fd0e0'};                              // 🏛️ العقول بنفسجيّة · الواجهات سماويّة
+const RAD={executor:13,governor:12,brain:11,learner:9,feeder:8,recorder:9,data:5,broker:18,llm:11,ui:9};
+const svg=d3.select('#svg'), W=()=>innerWidth, H=()=>innerHeight;
+let g=svg.append('g');
+svg.call(d3.zoom().scaleExtent([0.25,4]).on('zoom',e=>g.attr('transform',e.transform)));
+let link=g.append('g').selectAll('line'), node=g.append('g').selectAll('g');
+/* 🧲 عناقيد الوحدات (modularity كمخطّط InfraNodus): كل صنفٍ يتجاذب نحو زاويته حول المركز */
+const TYPE_ANGLE={executor:0,feeder:1,brain:2,llm:2.6,learner:3.4,governor:4.2,recorder:5,ui:5.6,data:null,broker:null};
+function clusterX(d){const a=TYPE_ANGLE[d.type];return a==null?W()/2:W()/2+Math.cos(a)*Math.min(W(),H())*0.30}
+function clusterY(d){const a=TYPE_ANGLE[d.type];return a==null?H()/2:H()/2+Math.sin(a)*Math.min(W(),H())*0.30}
+let DEG=new Map();
+const nodeR=d=>RAD[d.type]+Math.min(7,(DEG.get(d.id)||0)*0.55);       // 🌱 يكبر بوصلاته (تكاثرٌ هندسيّ)
+let sim=d3.forceSimulation()
+  .force('link',d3.forceLink().id(d=>d.id)
+     .distance(d=>d.kind==='mt5'?150:d.kind==='data'?46:d.kind==='llm'?40:62)
+     .strength(d=>d.kind==='mt5'?0.04:d.kind==='control'?0.3:0.5))
+  .force('charge',d3.forceManyBody().strength(-190))
+  .force('center',d3.forceCenter(W()/2,H()/2))
+  .force('cx',d3.forceX(clusterX).strength(0.06))
+  .force('cy',d3.forceY(clusterY).strength(0.06))
+  .force('collide',d3.forceCollide().radius(d=>nodeR(d)+6));
+let nodes=[],links=[],byId=new Map(),frozen=false,selected=null;
+
+function tick(){
+  link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+  node.attr('transform',d=>`translate(${d.x},${d.y})`);
+}
+sim.on('tick',tick);
+
+function merge(data){
+  const nn=data.nodes, ll=data.edges;
+  const nm=new Map(nn.map(d=>[d.id,d]));
+  // keep positions of existing nodes
+  nodes=nn.map(d=>{const o=byId.get(d.id); return Object.assign(o||{},d);});
+  byId=new Map(nodes.map(d=>[d.id,d]));
+  links=ll.filter(e=>byId.has(e.source.id||e.source)&&byId.has(e.target.id||e.target))
+          .map(e=>({source:e.source.id||e.source,target:e.target.id||e.target,kind:e.kind}));
+  // 🌱 درجات الوصل (تحدّد حجم العقدة — النموّ الذاتي) + العقد الساخنة (نشاطٌ حقيقيّ <90ث)
+  DEG=new Map();
+  for(const e of links){const s=e.source.id||e.source,t=e.target.id||e.target;
+    DEG.set(s,(DEG.get(s)||0)+1);DEG.set(t,(DEG.get(t)||0)+1)}
+  const hot=new Set(nodes.filter(n=>n.age!=null&&n.age<90&&n.alive!==false).map(n=>n.id));
+  link=link.data(links,d=>(d.source.id||d.source)+'>'+(d.target.id||d.target)+d.kind);
+  link.exit().transition().duration(500).attr('stroke-opacity',0).remove();
+  link=link.enter().append('line').attr('class',d=>'edge '+d.kind).attr('stroke-width',d=>d.kind==='exec'?2:d.kind==='mt5'?0.7:d.kind==='data'?1.7:1.4).merge(link);
+  link.classed('flow',d=>d.kind==='data'&&(hot.has(d.source.id||d.source)||hot.has(d.target.id||d.target)));
+  node=node.data(nodes,d=>d.id);
+  node.exit().transition().duration(700).style('opacity',0).remove();     // 💀 موتٌ متلاشٍ
+  const ne=node.enter().append('g').attr('class','node').call(drag(sim)).on('click',(e,d)=>openInspector(d));
+  ne.append('circle').attr('r',0);                                        // 👶 يولد من صفر
+  ne.append('text').attr('dy',d=>RAD[d.type]+9).attr('text-anchor','middle').text(d=>d.label||d.id);
+  ne.select('circle').transition().duration(800).ease(d3.easeElasticOut).attr('r',d=>nodeR(d));
+  node=ne.merge(node);
+  node.attr('class',d=>'node'+(d.pulse?' p-'+d.pulse:'')+(d.alive===false?' dead':'')+(d.stale?' stale':'')+((d.disc)?' disc':'')+(d.fired?' fired':'')+(hot.has(d.id)?' hot':''));
+  node.select('circle').attr('r',d=>nodeR(d)).attr('fill',d=>COLOR[d.type]||'#888')
+      .style('color',d=>COLOR[d.type]||'#888')
+      .attr('fill-opacity',d=>d.throttle!=null&&d.throttle<0.6?0.4:0.92);
+  // mark disconnected
+  const disc=new Set(data.gaps.disconnected||[]); nodes.forEach(n=>n.disc=disc.has(n.id));
+  node.classed('disc',d=>d.disc);
+  sim.nodes(nodes); sim.force('link').links(links);
+  if(!frozen){sim.alpha(0.5).restart();}
+  renderGaps(data.gaps);
+  document.getElementById('stat').textContent=`${nodes.length} عقدة · ${links.length} وصلة · ${data.iso||''}`;
+}
+function drag(sim){return d3.drag()
+  .on('start',(e,d)=>{if(!e.active)sim.alphaTarget(.2).restart();d.fx=d.x;d.fy=d.y;})
+  .on('drag',(e,d)=>{d.fx=e.x;d.fy=e.y;})
+  .on('end',(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;});}
+function showDet(d){
+  selected=d;const el=document.getElementById('det');
+  el.style.display='block';
+  el.innerHTML=`<b>${d.label||d.id}</b> <span class="k">(${d.type})</span><br>
+   <span class="k">حيّ:</span> ${d.alive===false?'❌ ميت':'✅'} ${d.pulse?` · <span class="k">نبض</span> ${({live:'🟢 حيّ',warm:'🟡 فاتر',stale:'🟠 متقادم',dark:'⚫ خامد'})[d.pulse]||d.pulse}${d.age_s!=null?` (${d.age_s<90?d.age_s+'ث':(d.age_s/60).toFixed(0)+'د'})`:''}`:''} ${d.magic?` · <span class="k">magic</span> ${d.magic}`:''}
+   ${d.net!=null?` · <span class="k">صافي7ي</span> $${d.net}`:''}
+   ${d.throttle!=null?` · <span class="k">خنق المايسترو</span> ×${d.throttle}`:''}
+   ${d.fired?' · <span style="color:#ff5c5c">🔥 مُقال (المايسترو)</span>':''}${d.tier?` · <span class="k">رتبة</span> ${d.tier}`:''}
+   ${d.age!=null?` · <span class="k">عمر الملفّ</span> ${(d.age/60).toFixed(0)}د${d.stale?' ⚠️متقادم':''}`:''}
+   <div style="text-align:left;margin-top:6px"><span class="b" onclick="this.parentElement.parentElement.style.display='none'">إغلاق ✕</span></div>`;
+}
+function renderGaps(gp){
+  const el=document.getElementById('gaps');
+  const dis=gp.disconnected||[],dead=gp.dead_engines||[],st=gp.stale_files||[];
+  let h=`<h4>🔍 الفجوات (الوكيل يراقب)</h4>`;
+  h+=`<div class="row"><b>غير متّصل:</b> ${dis.length?dis.map(x=>`<span class="chip bad">${x}</span>`).join(''):'<span class="ok">لا شيء ✓</span>'}</div>`;
+  h+=`<div class="row"><b>محرّك ميت:</b> ${dead.length?dead.map(x=>`<span class="chip bad">${x}</span>`).join(''):'<span class="ok">لا شيء ✓</span>'}</div>`;
+  h+=`<div class="row"><b>ملفّ متقادم:</b> ${st.length?st.map(x=>`<span class="chip warn">${x}</span>`).join(''):'<span class="ok">لا شيء ✓</span>'}</div>`;
+  el.innerHTML=h;
+}
+async function refresh(){
+  try{const r=await fetch('/graph.json',{cache:'no-store'});const d=await r.json();merge(d);}catch(e){}
+}
+document.getElementById('bgaps').onclick=()=>{const e=document.getElementById('gaps');e.style.display=e.style.display==='block'?'none':'block';document.getElementById('bgaps').classList.toggle('act');};
+document.getElementById('bfreeze').onclick=function(){frozen=!frozen;this.classList.toggle('act');if(!frozen)sim.alpha(.3).restart();};
+addEventListener('resize',()=>sim.force('center',d3.forceCenter(W()/2,H()/2)).alpha(.3).restart());
+
+let inspId=null, inspTimer=null;
+function openInspector(d){ inspId=d.id; document.getElementById('inspector').style.display='block'; fetchInspector(); clearInterval(inspTimer); inspTimer=setInterval(fetchInspector,3000); }
+function closeInspector(){ inspId=null; clearInterval(inspTimer); document.getElementById('inspector').style.display='none'; }
+async function fetchInspector(){ if(!inspId) return; try{ const r=await fetch('/node?id='+encodeURIComponent(inspId),{cache:'no-store'}); renderInspector(await r.json()); }catch(e){} }
+function esc(t){ return (t||'').toString().replace(/</g,'&lt;'); }
+function fileBlock(title, fd){
+  if(!fd||!fd.exists) return `<div class="lbl">${title}: <span style="color:#ff8a8a">مفقود</span></div>`;
+  const fresh=fd.fresh!==false; const age=fd.age_min!=null?`${fd.age_min}د`:'';
+  return `<div class="lbl">${title} <span style="color:${fresh?'#4ade80':'#ffb020'}">${age}${fresh?' · طازج':' · متقادم'}</span></div><div class="term">${esc(fd.content||fd.note||'')}${fd.truncated?'\n…':''}</div>`;
+}
+function renderInspector(d){
+  const el=document.getElementById('inspector');
+  let h=`<span class="x" onclick="closeInspector()">✕</span><h3>${esc(d.label||d.id)}</h3><div class="muted" style="font-size:11px">${esc(d.type)}</div>`;
+  h+=`<div class="badges"><span class="b2" style="color:${d.alive===false?'#ff5c5c':'#4ade80'}">${d.alive===false?'❌ متوقّف':'✅ يعمل'}</span>`;
+  if(d.magic) h+=`<span class="b2">magic ${d.magic}</span>`;
+  if(d.tier) h+=`<span class="b2">${d.fired?'🔥 ':''}${esc(d.tier)}</span>`;
+  if(d.throttle!=null) h+=`<span class="b2">خنق ×${d.throttle}</span>`;
+  if(d.net!=null) h+=`<span class="b2" style="color:${d.net<0?'#ff8a8a':'#4ade80'}">صافي $${d.net}</span>`;
+  if(d.trades_to) h+=`<span class="b2" style="color:var(--exec)">⮕ MT5</span>`;
+  h+=`</div>`;
+  if(d.error){ h+=`<div class="term" style="color:#ff8a8a">${esc(d.error)}</div>`; el.innerHTML=h; return; }
+  if(d.file) h+=fileBlock('📄 بياناته', d.file);
+  if(d.outputs) for(const k in d.outputs) h+=fileBlock('🟢 يُغذّي · '+k, d.outputs[k]);
+  if(d.reads && d.reads.length) h+=`<div class="lbl">🔵 يتغذّى من:</div><div>${d.reads.map(x=>`<span class="b2">${esc(x)}</span>`).join(' ')}</div>`;
+  if(d.log){ h+=`<div class="lbl">🖥️ السجلّ الحيّ (ترمينال):</div><div class="term">${esc(d.log.join('\n'))||'—'}</div>`; }
+  else if(d.outputs && !Object.keys(d.outputs).length) h+=`<div class="lbl muted">لا سجلّ/مخرج ملفّيّ (قد ينفّذ مباشرة على MT5)</div>`;
+  if(d.connected_engines){ h+=`<div class="lbl">المحرّكات المتّصلة (${d.connected_engines.length}):</div><div>${d.connected_engines.map(x=>`<span class="b2">${esc(x)}</span>`).join(' ')}</div>`; if(d.floor) h+=fileBlock('الأرضية', d.floor); if(d.pnl) h+=fileBlock('السبورة', d.pnl); }
+  el.innerHTML=h;
+}
+
+refresh(); setInterval(refresh,5000);
+</script>
+</body>
+</html>

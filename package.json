@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "lightweight-charts": "^5.2.0"
+  },
+  "devDependencies": {
+    "@unusualwhales/mcp": "^1.1.0",
+    "mcp-remote": "^0.1.38"
+  }
+}

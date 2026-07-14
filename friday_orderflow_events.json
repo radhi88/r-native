@@ -1,0 +1,7241 @@
+[
+  {
+    "symbol": "TMUSm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 185.92,
+    "reason": "Price above VAH=185.58700 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:55"
+  },
+  {
+    "symbol": "TMUSm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 185.92,
+    "reason": "Price above VAH=185.58700 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:55"
+  },
+  {
+    "symbol": "TSLAm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 408.34,
+    "reason": "Price below VAL=408.55120 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:55"
+  },
+  {
+    "symbol": "TSLAm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 408.34,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:55"
+  },
+  {
+    "symbol": "Tm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 21.11,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "Tm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 21.11,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "UPSm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 112.8,
+    "reason": "Price above VAH=112.58160 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "UPSm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 112.8,
+    "reason": "Price above VAH=112.61080 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "VIPSm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 13.95,
+    "reason": "Price below VAL=13.96960 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "VIPSm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 13.95,
+    "reason": "Price below VAL=13.96740 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "VIPSm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 13.95,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "VIPSm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 13.95,
+    "reason": "Price above VAH=13.84600 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "VZm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 42.34,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "VZm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 42.34,
+    "reason": "Price above VAH=42.22240 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "VZm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 42.34,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "Vm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 347.47,
+    "reason": "Price above VAH=346.67800 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "Vm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 347.47,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "Vm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 347.47,
+    "reason": "Price above VAH=346.79440 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:56"
+  },
+  {
+    "symbol": "WFCm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 87.2,
+    "reason": "Price above VAH=87.17400 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "WFCm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 87.2,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "WFCm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 87.2,
+    "reason": "Price above VAH=87.18400 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "WMTm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 113.66,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "WMTm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 113.66,
+    "reason": "Price near VAH=113.69640 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "XOMm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 138.0,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 13.06,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 13.06,
+    "reason": "Price below VAL=13.08100 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 13.06,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 13.06,
+    "reason": "Price below VAL=13.08280 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 13.06,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "YUMCm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 43.13,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "YUMCm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 43.13,
+    "reason": "Price above VAH=42.92080 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "ZTOm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 23.8,
+    "reason": "Price below VAL=23.80980 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "ZTOm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 23.8,
+    "reason": "Price below VAL=23.82040 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "ZTOm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 23.8,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "ZTOm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 23.8,
+    "reason": "Price near VAL=23.79100 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "ZTOm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 23.8,
+    "reason": "Price above VAH=23.21500 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:49:57"
+  },
+  {
+    "symbol": "XAUUSDm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 4100.292,
+    "reason": "Price below VAL=4102.14668 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:07"
+  },
+  {
+    "symbol": "XAGUSDm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 59.563,
+    "reason": "Price near VAL=59.53606 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:07"
+  },
+  {
+    "symbol": "EURUSDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.14151,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:07"
+  },
+  {
+    "symbol": "EURUSDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.14151,
+    "reason": "Price below VAL=1.14191 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:07"
+  },
+  {
+    "symbol": "EURUSDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.14151,
+    "reason": "Price below VAL=1.14191 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "EURUSDm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.14151,
+    "reason": "Price below VAL=1.14211 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "GBPUSDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.3395299999999999,
+    "reason": "Price below VAL=1.34034 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "GBPUSDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.3395299999999999,
+    "reason": "Price below VAL=1.34082 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "GBPUSDm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.3395299999999999,
+    "reason": "Price below VAL=1.34082 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "USDCHFm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.80855,
+    "reason": "Price above VAH=0.80807 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "USDCHFm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.80855,
+    "reason": "Price above VAH=0.80807 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "USDCHFm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.80855,
+    "reason": "Price above VAH=0.80796 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "USDCADm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 1.41503,
+    "reason": "Price above VAH=1.41496 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "USDCADm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.41503,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "NZDUSDm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.57631,
+    "reason": "Price near VAL=0.57623 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "NZDUSDm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.57631,
+    "reason": "Price near VAL=0.57631 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "NZDUSDm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.57631,
+    "reason": "Price near VAL=0.57623 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "EURJPYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 184.572,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "EURJPYm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 184.572,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "EURJPYm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 184.572,
+    "reason": "Price near VAL=184.56052 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "EURJPYm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 184.572,
+    "reason": "Price near VAL=184.55756 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:08"
+  },
+  {
+    "symbol": "GBPJPYm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 216.595,
+    "reason": "Price near VAL=216.52780 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "GBPJPYm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 216.595,
+    "reason": "Price near VAL=216.58840 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCUSDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 63756.4,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCUSDm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 63756.4,
+    "reason": "Price below VAL=63815.52040 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCUSDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 63756.4,
+    "reason": "Price below VAL=63793.13360 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "USOILm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 71.493,
+    "reason": "Price above VAH=71.24334 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "UKOILm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 76.088,
+    "reason": "Price above VAH=75.87660 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCAUDm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 91693.7,
+    "reason": "Price below VAL=91748.29200 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCAUDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 91693.7,
+    "reason": "Price below VAL=91738.12000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCAUDm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 91693.7,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCAUDm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 91693.7,
+    "reason": "Price near VAL=91688.22400 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCAUDm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 91693.7,
+    "reason": "Price near VAL=91688.22400 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCCNHm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 432310.2,
+    "reason": "Price below VAL=432655.85200 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCCNHm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 432310.2,
+    "reason": "Price below VAL=432558.19600 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCCNHm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 432310.2,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCCNHm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 432310.2,
+    "reason": "Price below VAL=432457.53600 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCTHBm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 2113139.0,
+    "reason": "Price below VAL=2114851.00000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCTHBm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 2113139.0,
+    "reason": "Price below VAL=2114220.80000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCTHBm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 2113139.0,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCTHBm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 2113139.0,
+    "reason": "Price below VAL=2114239.12000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:09"
+  },
+  {
+    "symbol": "BTCXAUm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 15.54766,
+    "reason": "Price below VAL=15.54783 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCXAUm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 15.54766,
+    "reason": "Price near VAL=15.53441 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCZARm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1039779.0,
+    "reason": "Price below VAL=1040640.44000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCZARm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1039779.0,
+    "reason": "Price below VAL=1040351.46000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCZARm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 1039779.0,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCZARm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1039779.0,
+    "reason": "Price below VAL=1039893.84000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCZARm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 1039779.0,
+    "reason": "Price near VAL=1039322.50000 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCJPYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 10308683.0,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCJPYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 10308683.0,
+    "reason": "Price below VAL=10312296.12000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCJPYm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 10308683.0,
+    "reason": "Price below VAL=10308940.80000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCJPYm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 10308683.0,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCJPYm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 10308683.0,
+    "reason": "Price near VAL=10300993.54000 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCUSDTm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 63759.6,
+    "reason": "Price below VAL=63822.03040 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCUSDTm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 63759.6,
+    "reason": "Price below VAL=63800.66200 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "BTCUSDTm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 63759.6,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "ETHBTCm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 0.027979,
+    "reason": "Price near VAH=0.02801 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:10"
+  },
+  {
+    "symbol": "XNGUSDm",
+    "timeframe": "H1",
+    "event_type": "big_buy_burst",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 2.9106,
+    "reason": "3+ consecutive bullish bars with rising volume",
+    "related_features": [
+      "aggressive_buy_burst",
+      "volume_spike_score"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDCADm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.98372,
+    "reason": "Price above VAH=0.98357 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDCADm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 0.98372,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDCHFm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.56215,
+    "reason": "Price above VAH=0.56164 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDCHFm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 0.56215,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDCHFm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.56215,
+    "reason": "Price above VAH=0.56140 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDDKKm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 4.54772,
+    "reason": "Price above VAH=4.54727 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDDKKm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 4.54772,
+    "reason": "Price above VAH=4.54737 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDDKKm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 4.54772,
+    "reason": "Price above VAH=4.54737 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDJPYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 112.411,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDMXNm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 12.15081,
+    "reason": "Price below VAL=12.16235 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDMXNm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 12.15081,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDMXNm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 12.15081,
+    "reason": "Price below VAL=12.16235 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDNOKm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 6.79555,
+    "reason": "Price near VAH=6.79701 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDNZDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 1.20615,
+    "reason": "Price above VAH=1.20574 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDNZDm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.20615,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDPLNm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 2.62624,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDSEKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 6.71045,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDSEKm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 6.71045,
+    "reason": "Price above VAH=6.69820 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:11"
+  },
+  {
+    "symbol": "AUDSEKm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 6.71045,
+    "reason": "Price above VAH=6.69777 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "AUDZARm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 11.3382,
+    "reason": "Price above VAH=11.33677 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "CADCHFm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 0.57141,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "CADCHFm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 0.57141,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "CADCHFm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.57141,
+    "reason": "Price above VAH=0.57141 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "CADJPYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 114.26,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "CADMXNm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 12.34771,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "CADMXNm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 12.34771,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "CADNOKm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 6.90269,
+    "reason": "Price near VAH=6.90698 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:12"
+  },
+  {
+    "symbol": "CADTRYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 33.13405,
+    "reason": "Price below VAL=33.13536 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CADTRYm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 33.13405,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFDKKm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 8.09341,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFDKKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 8.09341,
+    "reason": "Price below VAL=8.09371 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFDKKm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 8.09341,
+    "reason": "Price below VAL=8.09461 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFDKKm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 8.09341,
+    "reason": "Price below VAL=8.09410 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFJPYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 199.949,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFJPYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 199.949,
+    "reason": "Price below VAL=199.97076 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFJPYm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 199.949,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFJPYm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 199.949,
+    "reason": "Price below VAL=200.08188 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFJPYm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 199.949,
+    "reason": "Price below VAL=200.06850 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFMXNm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 21.61262,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFMXNm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 21.61262,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFMXNm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 21.61262,
+    "reason": "Price below VAL=21.63128 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFMXNm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 21.61262,
+    "reason": "Price below VAL=21.66565 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFMXNm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 21.61262,
+    "reason": "Price below VAL=21.66909 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFNOKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 12.07938,
+    "reason": "Price below VAL=12.08124 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFPLNm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 4.67124,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFPLNm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 4.67124,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFPLNm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 4.67124,
+    "reason": "Price below VAL=4.67206 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:13"
+  },
+  {
+    "symbol": "CHFSGDm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.5965799999999999,
+    "reason": "Price below VAL=1.59663 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFSGDm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 1.5965799999999999,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFSGDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.5965799999999999,
+    "reason": "Price below VAL=1.59729 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFSGDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.5965799999999999,
+    "reason": "Price below VAL=1.59746 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFSGDm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.5965799999999999,
+    "reason": "Price below VAL=1.59711 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFTRYm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 57.98171,
+    "reason": "Price below VAL=58.02188 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFTRYm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 57.98171,
+    "reason": "Price below VAL=58.02962 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFTRYm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 57.98171,
+    "reason": "Price below VAL=58.02962 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFZARm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 20.16708,
+    "reason": "Price below VAL=20.17310 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFZARm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 20.16708,
+    "reason": "Price below VAL=20.17582 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "CHFZARm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 20.16708,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKJPYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 24.68,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKJPYm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 24.68,
+    "reason": "Price near VAL=24.67834 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKJPYm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 24.68,
+    "reason": "Price near VAL=24.67660 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKJPYm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 24.68,
+    "reason": "Price near VAL=24.67660 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKPLNm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.5766,
+    "reason": "Price near VAL=0.57646 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKPLNm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 0.5766,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKPLNm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.5766,
+    "reason": "Price near VAL=0.57646 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKSGDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 0.19708,
+    "reason": "Price below VAL=0.19708 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:14"
+  },
+  {
+    "symbol": "DKKZARm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 2.48933,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "DXYm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 100.958,
+    "reason": "Price above VAH=100.92328 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "DXYm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 100.958,
+    "reason": "Price above VAH=100.92328 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "DXYm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 100.958,
+    "reason": "Price above VAH=100.89904 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURAUDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.64177,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURAUDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.64177,
+    "reason": "Price below VAL=1.64194 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURAUDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.64177,
+    "reason": "Price below VAL=1.64330 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURAUDm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.64176,
+    "reason": "Price below VAL=1.64330 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURCADm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.61521,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURCHFm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 0.92299,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURCHFm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.92299,
+    "reason": "Price above VAH=0.92282 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURCHFm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.92299,
+    "reason": "Price above VAH=0.92280 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURCHFm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.92299,
+    "reason": "Price above VAH=0.92286 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURCHFm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.92299,
+    "reason": "Price above VAH=0.92286 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURDKKm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 7.47199,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURDKKm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 7.47199,
+    "reason": "Price near VAH=7.47199 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURDKKm",
+    "timeframe": "M5",
+    "event_type": "absorption_at_support",
+    "side": "BUY",
+    "confidence": 0.75,
+    "price": 7.47199,
+    "reason": "Buy absorption at val=7.47191",
+    "related_features": [
+      "absorption_buy",
+      "val"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURDKKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 7.47199,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURDKKm",
+    "timeframe": "M15",
+    "event_type": "absorption_at_support",
+    "side": "BUY",
+    "confidence": 0.75,
+    "price": 7.47199,
+    "reason": "Buy absorption at val=7.47191",
+    "related_features": [
+      "absorption_buy",
+      "val"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURDKKm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 7.47199,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURDKKm",
+    "timeframe": "H1",
+    "event_type": "big_buy_burst",
+    "side": "BUY",
+    "confidence": 0.74,
+    "price": 7.47199,
+    "reason": "Volume spike 2.4x with positive delta",
+    "related_features": [
+      "volume_spike_score",
+      "bar_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURDKKm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 7.47199,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:15"
+  },
+  {
+    "symbol": "EURHKDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 8.94761,
+    "reason": "Price below VAL=8.95122 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURHKDm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 8.94761,
+    "reason": "Price below VAL=8.95465 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURMXNm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 19.95038,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURMXNm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 19.95038,
+    "reason": "Price below VAL=19.99612 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURMXNm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 19.95038,
+    "reason": "Price below VAL=19.99826 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURNOKm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 11.15787,
+    "reason": "Price near VAH=11.16324 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURNZDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 1.9804,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURPLNm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 4.32051,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURPLNm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 4.32051,
+    "reason": "Price near VAL=4.31939 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURPLNm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 4.32051,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURPLNm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 4.32051,
+    "reason": "Price near VAL=4.31939 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURSEKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 11.0182,
+    "reason": "Price above VAH=11.01651 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURSEKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 11.0182,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURSEKm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 11.0182,
+    "reason": "Price near VAH=11.01931 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:16"
+  },
+  {
+    "symbol": "EURSEKm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 11.0182,
+    "reason": "Price near VAH=11.01847 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "EURSGDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.4741900000000001,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "EURSGDm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 1.4741900000000001,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "EURSGDm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 1.4741900000000001,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "EURSGDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.4741900000000001,
+    "reason": "Price below VAL=1.47453 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "EURTRYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 53.59175,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "EURZARm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 18.61459,
+    "reason": "Price near VAL=18.61299 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "EURZARm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 18.61459,
+    "reason": "Price near VAL=18.61299 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPAUDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.92667,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPAUDm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 1.92667,
+    "reason": "Price near VAL=1.92646 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPAUDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.92667,
+    "reason": "Price below VAL=1.92699 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPAUDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.92667,
+    "reason": "Price below VAL=1.92938 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPAUDm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 1.92667,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPCADm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.89547,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPCHFm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.08315,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPCHFm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.08315,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:17"
+  },
+  {
+    "symbol": "GBPILSm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 4.03516,
+    "reason": "Price above VAH=4.03404 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPMXNm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 23.4116,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPMXNm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 23.4116,
+    "reason": "Price below VAL=23.41216 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPMXNm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 23.4116,
+    "reason": "Price below VAL=23.42397 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPMXNm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 23.4116,
+    "reason": "Price below VAL=23.47616 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPMXNm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 23.4116,
+    "reason": "Price below VAL=23.48138 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPNOKm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 13.08493,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPNOKm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 13.08493,
+    "reason": "Price near VAH=13.09254 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPPLNm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 5.06018,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPPLNm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 5.06018,
+    "reason": "Price near VAL=5.05764 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPPLNm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 5.06018,
+    "reason": "Price near VAL=5.05829 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPSEKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 12.93955,
+    "reason": "Price above VAH=12.93931 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPSEKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 12.93955,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPSEKm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 12.93955,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:18"
+  },
+  {
+    "symbol": "GBPSGDm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 1.72913,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "GBPSGDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.72913,
+    "reason": "Price below VAL=1.72942 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "GBPSGDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.72913,
+    "reason": "Price below VAL=1.72942 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "GBPSGDm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 1.72913,
+    "reason": "Price below VAL=1.72990 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "GBPTRYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 62.81026,
+    "reason": "Price below VAL=62.81647 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "GBPTRYm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 62.81026,
+    "reason": "Price below VAL=62.82506 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "HKDJPYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 20.608,
+    "reason": "Price above VAH=20.60740 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "MXNJPYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 9.2468,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "MXNJPYm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 9.2468,
+    "reason": "Price above VAH=9.23700 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "MXNJPYm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 9.2468,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "MXNJPYm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 9.2468,
+    "reason": "Price above VAH=9.23710 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "MXNJPYm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 9.2468,
+    "reason": "Price above VAH=9.23802 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "NOKDKKm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.6686,
+    "reason": "Price near VAL=0.66831 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "NOKDKKm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.6686,
+    "reason": "Price near VAL=0.66831 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:19"
+  },
+  {
+    "symbol": "NOKDKKm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.6686,
+    "reason": "Price near VAL=0.66831 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NOKJPYm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 16.517,
+    "reason": "Price near VAL=16.51056 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NOKJPYm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 16.517,
+    "reason": "Price near VAL=16.51056 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NOKSEKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.9868,
+    "reason": "Price above VAH=0.98626 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NOKSEKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 0.9868,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NOKSEKm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 0.9868,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDCHFm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 0.46601,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDCHFm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.46601,
+    "reason": "Price above VAH=0.46592 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDCHFm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.46601,
+    "reason": "Price above VAH=0.46592 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDCHFm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 0.46601,
+    "reason": "Price above VAH=0.46588 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDDKKm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 3.7711,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDJPYm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 93.19,
+    "reason": "Price near VAL=93.17480 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDJPYm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 93.19,
+    "reason": "Price near VAL=93.16900 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDJPYm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 93.19,
+    "reason": "Price near VAL=93.16900 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDMXNm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 10.07281,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDMXNm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 10.07281,
+    "reason": "Price below VAL=10.08696 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDMXNm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 10.07281,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDMXNm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 10.07281,
+    "reason": "Price below VAL=10.07305 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:20"
+  },
+  {
+    "symbol": "NZDNOKm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 5.62964,
+    "reason": "Price near VAH=5.63141 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "NZDNOKm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 5.62964,
+    "reason": "Price near VAH=5.63227 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "NZDPLNm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 2.17708,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "NZDSEKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 5.56715,
+    "reason": "Price above VAH=5.56626 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "NZDSEKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 5.56715,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "NZDSGDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 0.7441,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "NZDSGDm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 0.7441,
+    "reason": "Price near VAL=0.74391 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "NZDTRYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 27.02333,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "NZDTRYm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 27.02333,
+    "reason": "Price near VAL=27.01996 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "PLNDKKm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1.71942,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "PLNJPYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 42.4762,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:21"
+  },
+  {
+    "symbol": "PLNSEKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 2.53771,
+    "reason": "Price above VAH=2.53758 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "PLNSEKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 2.53771,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "PLNSEKm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 2.53771,
+    "reason": "Price above VAH=2.53761 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SEKDKKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 0.67667,
+    "reason": "Price below VAL=0.67683 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SEKDKKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 0.67667,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SEKDKKm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 0.67667,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SEKJPYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 16.716,
+    "reason": "Price below VAL=16.72100 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SEKJPYm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 16.716,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SEKJPYm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 16.716,
+    "reason": "Price below VAL=16.72680 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SGDHKDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 6.06492,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SGDHKDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 6.06492,
+    "reason": "Price below VAL=6.06550 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SGDHKDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 6.06492,
+    "reason": "Price below VAL=6.06549 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SGDHKDm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 6.06492,
+    "reason": "Price below VAL=6.06520 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "SGDJPYm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 125.132,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "TRYDKKm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 0.139,
+    "reason": "Price near VAH=0.13901 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:22"
+  },
+  {
+    "symbol": "TRYJPYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 3.432,
+    "reason": "Price above VAH=3.43000 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "TRYZARm",
+    "timeframe": "M1",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 0.34615,
+    "reason": "Price rejected at session VWAP=0.34601",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "TRYZARm",
+    "timeframe": "M5",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 0.34615,
+    "reason": "Price rejected at session VWAP=0.34601",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "TRYZARm",
+    "timeframe": "M15",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 0.34615,
+    "reason": "Price rejected at session VWAP=0.34601",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "TRYZARm",
+    "timeframe": "H1",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 0.34615,
+    "reason": "Price rejected at session VWAP=0.34601",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDCNHm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 6.78006,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDCNHm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 6.78006,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDCNHm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 6.78006,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDDKKm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 6.54512,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDDKKm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 6.54512,
+    "reason": "Price above VAH=6.54258 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDDKKm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 6.54512,
+    "reason": "Price above VAH=6.54258 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDDKKm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 6.54512,
+    "reason": "Price above VAH=6.54091 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDHKDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 7.83845,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDHKDm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7.83845,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDHKDm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7.83845,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDHKDm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 7.83845,
+    "reason": "Price near VAH=7.83856 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDILSm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 3.00945,
+    "reason": "Price above VAH=3.00907 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDILSm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 3.00945,
+    "reason": "Price near VAH=3.00969 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDILSm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 3.00945,
+    "reason": "Price above VAH=3.00873 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:23"
+  },
+  {
+    "symbol": "USDNOKm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 9.76889,
+    "reason": "Price near VAH=9.77077 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDPLNm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 3.7777,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSEKm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 9.66007,
+    "reason": "Price above VAH=9.65981 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSEKm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 9.66007,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSEKm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 9.66007,
+    "reason": "Price above VAH=9.64787 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSEKm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 9.66007,
+    "reason": "Price above VAH=9.64876 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSEKm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 9.66007,
+    "reason": "Price above VAH=9.65054 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSGDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 1.29117,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSGDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 1.29117,
+    "reason": "Price above VAH=1.29102 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSGDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 1.29117,
+    "reason": "Price above VAH=1.29101 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDSGDm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 1.29117,
+    "reason": "Price above VAH=1.29101 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDTRYm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 46.95576,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDTRYm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 46.95576,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDTRYm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 46.95576,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:24"
+  },
+  {
+    "symbol": "USDZARm",
+    "timeframe": "M1",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 16.30861,
+    "reason": "Price rejected at session VWAP=16.30275",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:25"
+  },
+  {
+    "symbol": "USDZARm",
+    "timeframe": "M5",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 16.30861,
+    "reason": "Price rejected at session VWAP=16.30275",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:25"
+  },
+  {
+    "symbol": "USDZARm",
+    "timeframe": "M15",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 16.30861,
+    "reason": "Price rejected at session VWAP=16.30275",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:25"
+  },
+  {
+    "symbol": "USDZARm",
+    "timeframe": "H1",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 16.30861,
+    "reason": "Price rejected at session VWAP=16.30275",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:25"
+  },
+  {
+    "symbol": "XAGAUDm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 85.644,
+    "reason": "Price near VAL=85.61840 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:25"
+  },
+  {
+    "symbol": "XAGEURm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 52.165,
+    "reason": "Price near VAL=52.15116 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:25"
+  },
+  {
+    "symbol": "XAGGBPm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 44.452,
+    "reason": "Price near VAL=44.43288 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:25"
+  },
+  {
+    "symbol": "XAUAUDm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 5896.887,
+    "reason": "Price near VAL=5896.03020 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:25"
+  },
+  {
+    "symbol": "XNIUSDm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 16691.96,
+    "reason": "Price below VAL=16720.84000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:26"
+  },
+  {
+    "symbol": "XPBUSDm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 1896.25,
+    "reason": "Price near VAH=1896.31140 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:26"
+  },
+  {
+    "symbol": "XPDUSDm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 1274.1,
+    "reason": "Price near VAL=1273.82400 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:26"
+  },
+  {
+    "symbol": "XPTUSDm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 1621.47,
+    "reason": "Price near VAL=1621.30600 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:27"
+  },
+  {
+    "symbol": "ZARJPYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 9.903,
+    "reason": "Price above VAH=9.89880 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:27"
+  },
+  {
+    "symbol": "US30_x10m",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 52719.0,
+    "reason": "Price above VAH=52701.82000 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:27"
+  },
+  {
+    "symbol": "US30_x10m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 52719.0,
+    "reason": "Price above VAH=52676.27200 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:27"
+  },
+  {
+    "symbol": "US30_x10m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 52719.0,
+    "reason": "Price above VAH=52685.21000 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:27"
+  },
+  {
+    "symbol": "US500_x100m",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7579.89,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:27"
+  },
+  {
+    "symbol": "US500_x100m",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7579.89,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "US500_x100m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 7579.89,
+    "reason": "Price above VAH=7564.24480 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "US500_x100m",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7579.89,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "US500_x100m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 7579.89,
+    "reason": "Price above VAH=7564.24480 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "US500_x100m",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7579.89,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "US500_x100m",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 7579.89,
+    "reason": "Price above VAH=7564.24480 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "USTEC_x100m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 29849.13,
+    "reason": "Price above VAH=29759.99400 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "USTEC_x100m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 29849.13,
+    "reason": "Price above VAH=29744.26520 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "USTEC_x100m",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 29849.13,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "USTEC_x100m",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 29849.13,
+    "reason": "Price above VAH=29759.99400 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "AUS200m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 8829.51,
+    "reason": "Price above VAH=8821.08900 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "AUS200m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 8829.51,
+    "reason": "Price above VAH=8822.55680 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "AUS200m",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 8829.51,
+    "reason": "Price above VAH=8824.38440 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "DE30m",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 25122.7,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "FR40m",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 8348.18,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "FR40m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 8348.18,
+    "reason": "Price above VAH=8339.22200 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "FR40m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 8348.18,
+    "reason": "Price above VAH=8337.77720 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:28"
+  },
+  {
+    "symbol": "JP225m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 69144.7,
+    "reason": "Price above VAH=69128.25600 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "JP225m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 69144.7,
+    "reason": "Price above VAH=69115.75600 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "JP225m",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 69144.7,
+    "reason": "Price above VAH=69141.21800 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "STOXX50m",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 6286.97,
+    "reason": "Price near VAH=6288.97040 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "STOXX50m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 6286.97,
+    "reason": "Price above VAH=6284.40140 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "STOXX50m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 6286.97,
+    "reason": "Price above VAH=6285.58400 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "STOXX50m",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 6286.97,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "UK100m",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 10561.61,
+    "reason": "Price above VAH=10557.38280 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "UK100m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 10561.61,
+    "reason": "Price above VAH=10514.88920 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "UK100m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 10561.61,
+    "reason": "Price above VAH=10516.01020 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "UK100m",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 10561.61,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US30m",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 52719.0,
+    "reason": "Price above VAH=52701.82000 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US30m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 52719.0,
+    "reason": "Price above VAH=52676.27200 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US30m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 52719.0,
+    "reason": "Price above VAH=52685.21000 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US500m",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7579.89,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US500m",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7579.89,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US500m",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 7579.89,
+    "reason": "Price above VAH=7564.24480 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US500m",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7579.89,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US500m",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 7579.89,
+    "reason": "Price above VAH=7564.24480 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US500m",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 7579.89,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "US500m",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 7579.89,
+    "reason": "Price above VAH=7564.24480 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "USTECm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 29848.49,
+    "reason": "Price above VAH=29759.99400 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "USTECm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 29848.49,
+    "reason": "Price above VAH=29744.26520 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "USTECm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 29848.49,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "USTECm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 29848.49,
+    "reason": "Price above VAH=29759.99400 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "AAPLm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 315.1,
+    "reason": "Price above VAH=314.82860 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "AAPLm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 315.1,
+    "reason": "Price above VAH=314.70300 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "AAPLm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 315.1,
+    "reason": "Price above VAH=314.70300 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:29"
+  },
+  {
+    "symbol": "ABBVm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 245.66,
+    "reason": "Price above VAH=245.18200 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:30"
+  },
+  {
+    "symbol": "ABBVm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 245.66,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:30"
+  },
+  {
+    "symbol": "ADBEm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 223.54,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:30"
+  },
+  {
+    "symbol": "ADPm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 241.13,
+    "reason": "Price near VAH=241.15600 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:30"
+  },
+  {
+    "symbol": "ADPm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 241.13,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:30"
+  },
+  {
+    "symbol": "AMDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 555.39,
+    "reason": "Price above VAH=555.14980 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:30"
+  },
+  {
+    "symbol": "AMDm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 555.39,
+    "reason": "Price above VAH=555.14980 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:30"
+  },
+  {
+    "symbol": "AMTm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 167.86,
+    "reason": "Price above VAH=167.83000 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "AVGOm",
+    "timeframe": "M1",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 400.08,
+    "reason": "Price rejected at session VWAP=399.92000",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "AVGOm",
+    "timeframe": "M5",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 400.08,
+    "reason": "Price rejected at session VWAP=399.92000",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "AVGOm",
+    "timeframe": "M15",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 400.08,
+    "reason": "Price rejected at session VWAP=399.92000",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "AVGOm",
+    "timeframe": "H1",
+    "event_type": "vwap_rejection",
+    "side": "SELL",
+    "confidence": 0.72,
+    "price": 400.08,
+    "reason": "Price rejected at session VWAP=399.92000",
+    "related_features": [
+      "vwap_signal",
+      "session_vwap"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "AVGOm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 400.08,
+    "reason": "Price near VAH=401.73040 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "BABAm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 112.35,
+    "reason": "Price below VAL=112.36000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "BABAm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 112.35,
+    "reason": "Price below VAL=112.35280 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "BABAm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 112.35,
+    "reason": "Price below VAL=112.35280 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "BABAm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 112.35,
+    "reason": "Price above VAH=111.54600 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "BACm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 59.77,
+    "reason": "Price near VAH=59.78120 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "BACm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 59.77,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:31"
+  },
+  {
+    "symbol": "BEKEm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 15.48,
+    "reason": "Price below VAL=15.48220 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BEKEm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 15.48,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BEKEm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 15.48,
+    "reason": "Price above VAH=15.26740 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BIDUm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 117.1,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BIDUm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 117.1,
+    "reason": "Price below VAL=117.19800 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BIDUm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 117.1,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BIIBm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 199.43,
+    "reason": "Price above VAH=199.24240 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BIIBm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 199.43,
+    "reason": "Price above VAH=199.21640 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BIIBm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 199.43,
+    "reason": "Price above VAH=199.21640 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BILIm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 17.67,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BILIm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 17.67,
+    "reason": "Price below VAL=17.68920 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BILIm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 17.67,
+    "reason": "Price below VAL=17.68200 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "BILIm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 17.67,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:32"
+  },
+  {
+    "symbol": "CHTRm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 130.96,
+    "reason": "Price near VAH=130.97680 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:33"
+  },
+  {
+    "symbol": "CHTRm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 130.96,
+    "reason": "Price near VAH=131.09640 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:33"
+  },
+  {
+    "symbol": "CHTRm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 130.96,
+    "reason": "Price near VAH=130.98660 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:33"
+  },
+  {
+    "symbol": "CMEm",
+    "timeframe": "M1",
+    "event_type": "big_buy_burst",
+    "side": "BUY",
+    "confidence": 0.817,
+    "price": 239.34,
+    "reason": "Volume spike 3.2x with positive delta",
+    "related_features": [
+      "volume_spike_score",
+      "bar_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:33"
+  },
+  {
+    "symbol": "CMEm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 239.34,
+    "reason": "Price above VAH=239.13700 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:33"
+  },
+  {
+    "symbol": "COSTm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 914.59,
+    "reason": "Price near VAH=914.72200 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:33"
+  },
+  {
+    "symbol": "COSTm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 914.59,
+    "reason": "Price near VAH=914.73240 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:33"
+  },
+  {
+    "symbol": "CSCOm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 120.4,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:33"
+  },
+  {
+    "symbol": "CSXm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 49.49,
+    "reason": "Price above VAH=49.37560 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:34"
+  },
+  {
+    "symbol": "EBAYm",
+    "timeframe": "M1",
+    "event_type": "big_buy_burst",
+    "side": "BUY",
+    "confidence": 0.772,
+    "price": 117.14,
+    "reason": "Volume spike 2.7x with positive delta",
+    "related_features": [
+      "volume_spike_score",
+      "bar_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:34"
+  },
+  {
+    "symbol": "FTNTm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 157.06,
+    "reason": "Price near VAL=157.00560 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:35"
+  },
+  {
+    "symbol": "GOOGLm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 355.43,
+    "reason": "Price near VAH=355.49880 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:35"
+  },
+  {
+    "symbol": "IBMm",
+    "timeframe": "M5",
+    "event_type": "big_buy_burst",
+    "side": "BUY",
+    "confidence": 0.758,
+    "price": 288.82,
+    "reason": "Volume spike 2.6x with positive delta",
+    "related_features": [
+      "volume_spike_score",
+      "bar_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:36"
+  },
+  {
+    "symbol": "IBMm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 288.82,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:36"
+  },
+  {
+    "symbol": "INTCm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 109.99,
+    "reason": "Price above VAH=109.64060 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:36"
+  },
+  {
+    "symbol": "INTCm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 109.99,
+    "reason": "Price above VAH=109.64060 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:36"
+  },
+  {
+    "symbol": "JDm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 28.17,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:37"
+  },
+  {
+    "symbol": "JDm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 28.17,
+    "reason": "Price below VAL=28.21200 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:37"
+  },
+  {
+    "symbol": "JDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 28.17,
+    "reason": "Price below VAL=28.20400 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:37"
+  },
+  {
+    "symbol": "JDm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 28.17,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:37"
+  },
+  {
+    "symbol": "JNJm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 256.58,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:37"
+  },
+  {
+    "symbol": "JPMm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 337.11,
+    "reason": "Price above VAH=336.65040 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:37"
+  },
+  {
+    "symbol": "JPMm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 337.11,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:37"
+  },
+  {
+    "symbol": "LLYm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 1187.15,
+    "reason": "Price above VAH=1186.48640 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:38"
+  },
+  {
+    "symbol": "LLYm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 1187.15,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:38"
+  },
+  {
+    "symbol": "LMTm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 520.56,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:38"
+  },
+  {
+    "symbol": "LMTm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 520.56,
+    "reason": "Price above VAH=519.91060 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:38"
+  },
+  {
+    "symbol": "LMTm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 520.56,
+    "reason": "Price above VAH=519.64640 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:38"
+  },
+  {
+    "symbol": "LMTm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 520.56,
+    "reason": "Price above VAH=519.76560 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:38"
+  },
+  {
+    "symbol": "MAm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 522.95,
+    "reason": "Price above VAH=521.63600 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:38"
+  },
+  {
+    "symbol": "MAm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 522.95,
+    "reason": "Price near VAH=523.01640 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:38"
+  },
+  {
+    "symbol": "MDLZm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 58.7,
+    "reason": "Price near VAL=58.52000 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:39"
+  },
+  {
+    "symbol": "MMMm",
+    "timeframe": "M1",
+    "event_type": "big_sell_burst",
+    "side": "SELL",
+    "confidence": 0.738,
+    "price": 157.33,
+    "reason": "Volume spike 2.4x with negative delta",
+    "related_features": [
+      "volume_spike_score",
+      "bar_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:39"
+  },
+  {
+    "symbol": "MOm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 71.69,
+    "reason": "Price above VAH=71.55400 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:39"
+  },
+  {
+    "symbol": "MOm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 71.69,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:39"
+  },
+  {
+    "symbol": "MRKm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 123.25,
+    "reason": "Price near VAL=123.14600 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:39"
+  },
+  {
+    "symbol": "NIOm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 4.78,
+    "reason": "Price below VAL=4.78020 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:40"
+  },
+  {
+    "symbol": "NKEm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 44.44,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:40"
+  },
+  {
+    "symbol": "NTESm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 128.22,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:40"
+  },
+  {
+    "symbol": "NTESm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 128.22,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:40"
+  },
+  {
+    "symbol": "NTESm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 128.22,
+    "reason": "Price below VAL=128.22980 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:40"
+  },
+  {
+    "symbol": "NVDAm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 209.96,
+    "reason": "Price above VAH=199.42300 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:40"
+  },
+  {
+    "symbol": "PDDm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 85.47,
+    "reason": "Price below VAL=85.47040 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:41"
+  },
+  {
+    "symbol": "PDDm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 85.47,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:41"
+  },
+  {
+    "symbol": "PMm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 180.66,
+    "reason": "Price near VAH=180.84140 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:41"
+  },
+  {
+    "symbol": "PMm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 180.66,
+    "reason": "Price near VAH=180.72180 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:41"
+  },
+  {
+    "symbol": "PYPLm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 46.03,
+    "reason": "Price above VAH=46.01000 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:41"
+  },
+  {
+    "symbol": "SBUXm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 106.38,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "SBUXm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 106.38,
+    "reason": "Price near VAL=106.31600 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TALm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 10.19,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TALm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 10.19,
+    "reason": "Price below VAL=10.19120 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TALm",
+    "timeframe": "M15",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 10.19,
+    "reason": "Price near VAL=10.18460 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TMEm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 8.85,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TMEm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 8.85,
+    "reason": "Price below VAL=8.86000 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TMEm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 8.85,
+    "reason": "Price below VAL=8.85880 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TMEm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 8.85,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TMEm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 8.85,
+    "reason": "Price below VAL=8.85160 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TMEm",
+    "timeframe": "H1",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 8.85,
+    "reason": "Price near VAH=8.87400 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:42"
+  },
+  {
+    "symbol": "TMOm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 525.31,
+    "reason": "Price above VAH=522.37960 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "TMUSm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 185.67,
+    "reason": "Price above VAH=185.58700 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "TMUSm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 185.67,
+    "reason": "Price above VAH=185.58700 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "TMUSm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 185.67,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "TSLAm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 408.24,
+    "reason": "Price below VAL=408.29960 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "TSLAm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 408.24,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "UPSm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 112.81,
+    "reason": "Price above VAH=112.58160 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "UPSm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "SELL",
+    "confidence": 0.6,
+    "price": 112.81,
+    "reason": "Price near VAH=112.85720 returning inside VA",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "UPSm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 112.81,
+    "reason": "Price above VAH=112.61080 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "VIPSm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 13.96,
+    "reason": "Price below VAL=13.96960 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:43"
+  },
+  {
+    "symbol": "VIPSm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 13.96,
+    "reason": "Price below VAL=13.96740 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "VIPSm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 13.96,
+    "reason": "Price above VAH=13.84600 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "VRTXm",
+    "timeframe": "M1",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 485.35,
+    "reason": "Price near VAL=485.30000 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "VRTXm",
+    "timeframe": "M5",
+    "event_type": "value_area_reversion",
+    "side": "BUY",
+    "confidence": 0.6,
+    "price": 485.35,
+    "reason": "Price near VAL=485.18080 returning inside VA",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "VZm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 42.32,
+    "reason": "Price above VAH=42.22240 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "VZm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 42.32,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "Vm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 347.43,
+    "reason": "Price above VAH=346.67800 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "Vm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 347.43,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "Vm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 347.43,
+    "reason": "Price above VAH=346.79440 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "WFCm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 87.22,
+    "reason": "Price above VAH=87.17120 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "WFCm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 87.22,
+    "reason": "Price above VAH=87.20300 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "WFCm",
+    "timeframe": "M15",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 87.22,
+    "reason": "Price above VAH=87.20300 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "WMTm",
+    "timeframe": "H1",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 113.59,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "XOMm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "SELL",
+    "confidence": 0.7,
+    "price": 138.02,
+    "reason": "Price higher high but delta weakening — bearish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M1",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 13.06,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M1",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 13.06,
+    "reason": "Price below VAL=13.07880 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:44"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M5",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 13.06,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:45"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M5",
+    "event_type": "value_area_breakout",
+    "side": "SELL",
+    "confidence": 0.65,
+    "price": 13.06,
+    "reason": "Price below VAL=13.08280 with negative CVD",
+    "related_features": [
+      "val",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:45"
+  },
+  {
+    "symbol": "XPEVm",
+    "timeframe": "M15",
+    "event_type": "delta_divergence_reversal",
+    "side": "BUY",
+    "confidence": 0.7,
+    "price": 13.06,
+    "reason": "Price lower low but delta improving — bullish divergence",
+    "related_features": [
+      "delta_divergence",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:45"
+  },
+  {
+    "symbol": "YUMCm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 43.11,
+    "reason": "Price above VAH=42.92080 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:45"
+  },
+  {
+    "symbol": "ZTOm",
+    "timeframe": "H1",
+    "event_type": "value_area_breakout",
+    "side": "BUY",
+    "confidence": 0.65,
+    "price": 23.82,
+    "reason": "Price above VAH=23.21500 with positive CVD",
+    "related_features": [
+      "vah",
+      "price_location_vs_value_area",
+      "cumulative_delta_proxy"
+    ],
+    "created_at": "2026-07-10T21:53:45"
+  }
+]

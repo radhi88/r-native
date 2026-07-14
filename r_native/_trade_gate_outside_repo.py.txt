@@ -1,0 +1,962 @@
+"""
+trade_gate.py — The exact rules that decide WHEN R would enter a trade.
+
+R is an ADVISORY system. This module:
+  1. Reads the live snapshot (account, regime, multi-TF, spread, news)
+  2. Checks ALL Algory-derived entry conditions
+  3. Returns a structured verdict: GO / WAIT / NO + which conditions block
+  4. Estimates next earliest possible entry window
+
+If you wire this to a real broker, the GO path becomes an order_send.  But by
+default R never sends orders — it only TELLS you when conditions align.
+
+Entry conditions (in priority order):
+
+  A) HARD SAFETY GATES (any False → NO TRADE)
+     - account.balance > minimum survival floor
+     - positions_count < max_concurrent
+     - daily_loss < daily_cap
+     - regime.allow_trade == True
+     - trade window (not weekend, not Friday-close window)
+     - news blackout: no high-impact event in next 15 min
+
+  B) ALGORY WISDOM (any False → NO TRADE for this archetype)
+     - spread / ATR(H1) ≤ 0.2
+     - H1 ATR ≥ minimum (so SL has room)
+     - At least one archetype has its archetype-specific filters passing
+
+  C) ENTRY TRIGGER (must have at least one of)
+     - BREAKOUT_HUNTER: H1 breakout signal + receding filter
+     - MEAN_REVERTER:   H1 in RANGE + RSI extreme on M15
+     - MULTI_SIGNAL:    3+ indicators aligned
+     - PATTERN_SPOTTER: pin bar/engulfing at H1 swing level
+"""
+from __future__ import annotations
+import json
+from dataclasses import dataclass, field, asdict
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+from typing import Optional
+
+ROOT = Path(r"C:\Users\Radhi\MT5\friday_v3")
+
+
+# ─── Safety thresholds (tunable) ───
+# USER OVERRIDE 2026-05-25: caps relaxed by explicit owner instruction
+# "let him run until we win or die with full balance"
+DAILY_LOSS_CAP_USD   = 99999.0  # disabled — no daily stop
+MIN_BALANCE_USD      = 1.0      # only bail at $1 — full-balance run
+MAX_CONCURRENT       = 5        # SCALED DOWN 2026-05-25: $60 account → 5 max (was 12)
+MIN_H1_ATR_PRICE     = 3.0      # $3 = 3000pt — need real range
+MAX_SPREAD_ATR_RATIO = 0.20     # spread must be ≤ 20% of H1 ATR
+NEWS_BLACKOUT_MIN    = 15       # block 15 min around HIGH-impact news
+MAX_RISK_PCT         = 0.025    # max 2.5% of balance per trade
+MAX_RISK_USD_HARD    = 2.50     # absolute hard cap regardless of balance
+ADX_MIN_H1           = 0.0      # USER OVERRIDE 2026-05-25: disabled — trade chop too
+
+# ─── Session window (Algory top-5 consensus) ───
+SESSION_START_HOUR_UTC = 8
+SESSION_END_HOUR_UTC   = 20
+FRIDAY_CUTOFF_HOUR_UTC = 18
+
+# Override toggles — set per-call via evaluate_gate(..., bypass={...})
+# or via env on a per-process basis.
+import os as _os
+_BYPASS_SESSION_ENV = _os.environ.get("R_BYPASS_SESSION", "0") == "1"
+_BYPASS_WEEKEND_ENV = _os.environ.get("R_BYPASS_WEEKEND", "0") == "1"
+_BYPASS_FRIDAY_ENV  = _os.environ.get("R_BYPASS_FRIDAY",  "0") == "1"
+# Effective flags (mutated by evaluate_gate when called with bypass dict)
+_BYPASS_SESSION  = _BYPASS_SESSION_ENV
+_BYPASS_WEEKEND  = _BYPASS_WEEKEND_ENV
+_BYPASS_FRIDAY   = _BYPASS_FRIDAY_ENV
+
+
+@dataclass
+class GateCheck:
+    name:   str
+    passed: bool
+    detail: str
+    weight: str = "HARD"   # HARD / SOFT / TRIGGER
+
+
+@dataclass
+class TradeVerdict:
+    verdict:        str               # GO / WAIT / NO
+    archetype:      Optional[str]
+    side:           Optional[str]
+    entry:          Optional[float]
+    sl:             Optional[float]
+    near_tp:        Optional[float]
+    far_tp:         Optional[float]
+    risk_usd:       Optional[float]
+    confidence:     int
+    checks:         list
+    hard_blockers:  list
+    soft_warnings:  list
+    earliest_open:  Optional[str]
+    reason_ar:      str
+    # H.7.6: which genome from R Native UI is currently driving the decision
+    deployed_genome_id: Optional[str] = None
+    deployed_genome_pf: Optional[float] = None
+    deployed_genome_archetype: Optional[str] = None
+    deployed_genome_compat:    Optional[str] = None   # MATCH / DIVERGE / NONE
+    # decision-log payload (additive, optional — never affects gate logic)
+    genome_signals_fired:    list = field(default_factory=list)
+    genome_biases_aligned:   list = field(default_factory=list)
+    genome_filters_blocking: list = field(default_factory=list)
+
+    def to_dict(self):
+        d = asdict(self)
+        return d
+
+
+_ADX_CACHE: dict = {}   # {symbol: (timestamp_s, adx_value)} — re-compute every 60 s
+
+def _compute_adx_h1(symbol: str, period: int = 14) -> Optional[float]:
+    """Wilder's ADX on H1 candles via MT5. Returns float or None on failure."""
+    import time as _t
+    now_s = _t.time()
+    cached = _ADX_CACHE.get(symbol)
+    if cached and (now_s - cached[0]) < 60:
+        return cached[1]
+    try:
+        import MetaTrader5 as _mt5
+        import pandas as _pd
+        import numpy as _np
+        rates = _mt5.copy_rates_from_pos(symbol, _mt5.TIMEFRAME_H1, 0, period * 4 + 5)
+        if rates is None or len(rates) < period * 2:
+            return None
+        df = _pd.DataFrame(rates)
+        high, low, close = df["high"].astype(float), df["low"].astype(float), df["close"].astype(float)
+        up_move   = high.diff()
+        down_move = -low.diff()
+        plus_dm  = up_move.where((up_move > down_move) & (up_move > 0), 0.0)
+        minus_dm = down_move.where((down_move > up_move) & (down_move > 0), 0.0)
+        tr = _pd.concat([(high - low),
+                         (high - close.shift()).abs(),
+                         (low  - close.shift()).abs()], axis=1).max(axis=1)
+        alpha = 1.0 / period
+        atr_w    = tr.ewm(alpha=alpha, adjust=False).mean()
+        plus_di  = 100 * plus_dm.ewm(alpha=alpha, adjust=False).mean() / atr_w
+        minus_di = 100 * minus_dm.ewm(alpha=alpha, adjust=False).mean() / atr_w
+        denom = (plus_di + minus_di).replace(0, _np.nan)
+        dx    = (abs(plus_di - minus_di) / denom) * 100
+        dx    = dx.fillna(0.0).astype(float)
+        adx   = dx.ewm(alpha=alpha, adjust=False).mean()
+        val = float(adx.iloc[-1])
+        if val != val:   # NaN guard
+            return None
+        _ADX_CACHE[symbol] = (now_s, val)
+        return val
+    except Exception:
+        return None
+
+
+def _is_weekend(dt: datetime) -> bool:
+    if _BYPASS_WEEKEND: return False
+    return dt.weekday() == 5 or (dt.weekday() == 6 and dt.hour < 22)
+
+
+def _in_friday_close_window(dt: datetime) -> bool:
+    if _BYPASS_FRIDAY: return False
+    return dt.weekday() == 4 and dt.hour >= FRIDAY_CUTOFF_HOUR_UTC
+
+
+def _in_session(dt: datetime) -> bool:
+    if _BYPASS_SESSION: return True
+    return SESSION_START_HOUR_UTC <= dt.hour < SESSION_END_HOUR_UTC
+
+
+def _next_session_open(now: datetime) -> datetime:
+    """Compute next time the session opens (skip weekend)."""
+    target = now.replace(hour=SESSION_START_HOUR_UTC, minute=0, second=0, microsecond=0)
+    if now >= target:
+        target += timedelta(days=1)
+    while _is_weekend(target):
+        target += timedelta(days=1)
+    return target
+
+
+def _load_deployed_genome(symbol: str, force_id: str = None) -> dict | None:
+    """Load the genome currently deployed for `symbol`.
+
+    If `force_id` is given, search the symbol's `competitors` list for that
+    specific genome — used by the executor's multi-genome competition path
+    so each (symbol, genome) pair gets its OWN gate evaluation.
+    Falls back to the primary `deployed_genome` if force_id not found.
+    """
+    try:
+        import json
+        from pathlib import Path
+        p = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{symbol}.json"
+        if not p.exists(): return None
+        cfg = json.loads(p.read_text(encoding="utf-8"))
+        if force_id:
+            for c in (cfg.get("competitors") or []):
+                if c.get("id") == force_id:
+                    return c
+            # fall through if not found
+        g = cfg.get("deployed_genome")
+        if not g or not g.get("id"): return None
+        return g
+    except Exception:
+        return None
+
+
+# ── Multi-Genome Ensemble ──────────────────────────────────────────────
+# Schema: in symbol_configs/<sym>.json add an optional `deployed_genomes`:
+#   "deployed_genomes": [
+#     {"id": "B99880", "weight": 1.0},
+#     {"id": "456FC5", "weight": 0.8}
+#   ]
+# Vote: each member returns BUY/SELL/NO; weighted sum decides direction.
+ENSEMBLE_VOTE_THRESHOLD = 0.5   # |sum| / total_weight must exceed this to fire
+
+
+def _load_deployed_ensemble(symbol: str) -> list[dict]:
+    """Resolve `deployed_genomes` (list) into a list of full genome dicts with
+    active_genes + params + weight. Returns [] if no ensemble configured.
+
+    Each member of the list is hydrated by looking up the matching entry in
+    `ga_strategies` (where the full active_genes + multipliers live).
+    """
+    try:
+        import json
+        from pathlib import Path
+        p = Path(r"C:\Users\Radhi\MT5\data\r_native\symbol_configs") / f"{symbol}.json"
+        if not p.exists(): return []
+        cfg = json.loads(p.read_text(encoding="utf-8"))
+        ensemble = cfg.get("deployed_genomes")
+        if not isinstance(ensemble, list) or len(ensemble) < 2: return []
+        strats = {s["id"]: s for s in cfg.get("ga_strategies", []) if s.get("id")}
+        out = []
+        for entry in ensemble:
+            gid    = entry.get("id")
+            weight = float(entry.get("weight") or 1.0)
+            if not gid: continue
+            full = strats.get(gid)
+            if not full: continue   # genome ID not found in vault → skip
+            out.append({
+                "id":            gid,
+                "weight":        weight,
+                "active_genes":  full.get("active_genes") or [],
+                "sl_atr_mult":   full.get("sl_atr_mult"),
+                "tp_atr_mult":   full.get("tp_atr_mult"),
+                "start_hour":    full.get("start_hour"),
+                "end_hour":      full.get("end_hour"),
+                "profit_factor": full.get("profit_factor"),
+            })
+        return out
+    except Exception:
+        return []
+
+
+def _ensemble_decide(members: list[dict], snapshot: dict) -> Optional[dict]:
+    """Run decide_entry() per member and return a merged genome_decision dict.
+
+    Returns dict with same shape as decide_entry but reflecting weighted vote.
+    Returns None if no member fired or the vote was inconclusive.
+    """
+    try:
+        from r_native.genome_signal import (decide_entry,
+                                             build_snapshot_from_trade_gate_snap)
+    except Exception:
+        return None
+    flat = build_snapshot_from_trade_gate_snap(snapshot)
+
+    per_member = []
+    for m in members:
+        flags = {g: True for g in (m.get("active_genes") or [])}
+        if not flags: continue
+        try:
+            d = decide_entry(flags, flat)
+        except Exception:
+            continue
+        per_member.append((m, d))
+
+    if not per_member:
+        return None
+
+    total_w   = sum(m["weight"] for m, _ in per_member) or 1.0
+    vote_sum  = 0.0
+    buy_conf, sell_conf = [], []
+    sigs_buy, sigs_sell = [], []
+    biases, filters_blk = [], []
+    member_votes = []
+
+    for m, d in per_member:
+        w = m["weight"]
+        biases.extend(d.get("biases_aligned") or [])
+        filters_blk.extend(d.get("filters_blocking") or [])
+        decision = d.get("decision")
+        conf     = int(d.get("confidence") or 0)
+        if decision == "BUY":
+            vote_sum += w
+            buy_conf.append(conf * w)
+            sigs_buy.extend(d.get("signals_fired") or [])
+        elif decision == "SELL":
+            vote_sum -= w
+            sell_conf.append(conf * w)
+            sigs_sell.extend(d.get("signals_fired") or [])
+        member_votes.append(f"{m['id']}={decision}({conf})×{w}")
+
+    vote_strength = abs(vote_sum) / total_w
+    if vote_strength < ENSEMBLE_VOTE_THRESHOLD:
+        return {
+            "decision":  "NO",
+            "confidence": 0,
+            "reasons":   [f"ensemble inconclusive vote_sum={vote_sum:+.2f}/"
+                          f"total={total_w:.2f} ({', '.join(member_votes)})"],
+            "signals_fired":   [],
+            "biases_aligned":  biases,
+            "filters_blocking": filters_blk,
+            "ensemble":  {"members": len(per_member),
+                           "vote_sum": round(vote_sum, 3),
+                           "total_weight": round(total_w, 3),
+                           "member_votes": member_votes},
+        }
+
+    if vote_sum > 0:
+        winning_conf = (sum(buy_conf) / sum(m["weight"] for m, d in per_member
+                                            if d.get("decision") == "BUY")
+                        if buy_conf else 0)
+        return {
+            "decision":  "BUY",
+            "confidence": int(round(winning_conf * vote_strength)),
+            "reasons":   [f"ensemble BUY ({vote_strength:.0%} agreement, "
+                          f"{', '.join(member_votes)})"],
+            "signals_fired":   sigs_buy,
+            "biases_aligned":  biases,
+            "filters_blocking": filters_blk,
+            "ensemble":  {"members": len(per_member),
+                           "vote_sum": round(vote_sum, 3),
+                           "total_weight": round(total_w, 3),
+                           "agreement": round(vote_strength, 3),
+                           "member_votes": member_votes},
+        }
+    else:
+        winning_conf = (sum(sell_conf) / sum(m["weight"] for m, d in per_member
+                                              if d.get("decision") == "SELL")
+                        if sell_conf else 0)
+        return {
+            "decision":  "SELL",
+            "confidence": int(round(winning_conf * vote_strength)),
+            "reasons":   [f"ensemble SELL ({vote_strength:.0%} agreement, "
+                          f"{', '.join(member_votes)})"],
+            "signals_fired":   sigs_sell,
+            "biases_aligned":  biases,
+            "filters_blocking": filters_blk,
+            "ensemble":  {"members": len(per_member),
+                           "vote_sum": round(vote_sum, 3),
+                           "total_weight": round(total_w, 3),
+                           "agreement": round(vote_strength, 3),
+                           "member_votes": member_votes},
+        }
+
+
+def evaluate_gate(snapshot: dict, news_events: list = None,
+                  bypass: dict = None) -> TradeVerdict:
+    """Apply ALL gates to the live snapshot and produce a structured verdict.
+
+    bypass: optional dict with keys session/weekend/friday → True to skip.
+    """
+    global _BYPASS_SESSION, _BYPASS_WEEKEND, _BYPASS_FRIDAY
+    if bypass:
+        _BYPASS_SESSION = bool(bypass.get("session", _BYPASS_SESSION_ENV))
+        _BYPASS_WEEKEND = bool(bypass.get("weekend", _BYPASS_WEEKEND_ENV))
+        _BYPASS_FRIDAY  = bool(bypass.get("friday",  _BYPASS_FRIDAY_ENV))
+    now = datetime.now(timezone.utc)
+
+    # ── H.7.5: Load deployed_genome — override SL/TP/session with R Native UI's choice ──
+    # If snapshot carries a specific genome_override, use that competitor;
+    # otherwise load the symbol's primary deployed_genome.
+    _gov = snapshot.get("_genome_override")
+    deployed_genome = _load_deployed_genome(snapshot.get("symbol", ""), force_id=_gov)
+    _dg_start_h = deployed_genome.get("start_hour") if deployed_genome else None
+    _dg_end_h   = deployed_genome.get("end_hour")   if deployed_genome else None
+    _dg_sl_mult = deployed_genome.get("sl_atr_mult") if deployed_genome else None
+    _dg_tp_mult = deployed_genome.get("tp_atr_mult") if deployed_genome else None
+    _dg_id      = deployed_genome.get("id") if deployed_genome else None
+
+    # ── H.12: Prop firm compliance checks (FTMO/MFF/etc.) ──
+    _pf_blockers = []
+    try:
+        from r_native.prop_firm import all_checks as _pf_checks, load_config as _pf_load
+        _pf_cfg = _pf_load()
+        if _pf_cfg.get("enabled"):
+            _pf_result = _pf_checks(
+                snapshot.get("symbol", ""),
+                (snapshot.get("account") or {}).get("account") or {},
+                open_positions = (snapshot.get("account") or {}).get("positions") or [],
+                now = now,
+            )
+            for _check_name, _check in _pf_result["checks"].items():
+                if _check.get("blocked"):
+                    _pf_blockers.append(f"{_check_name}: {_check.get('reason','')}")
+    except Exception as _e:
+        print(f"[trade_gate] prop_firm check err: {_e}", flush=True)
+    news_events = news_events or []
+    checks: list = []
+    hard_blockers, soft_warnings = [], []
+
+    # ── A: HARD SAFETY GATES ──
+    acc_block = (snapshot.get("account") or {})
+    a = acc_block.get("account") or {}
+    bal = float(a.get("balance") or 0)
+    open_pnl = float(acc_block.get("open_pnl") or 0)
+    pos_count = int(acc_block.get("positions_count") or 0)
+
+    def add(name, passed, detail, weight="HARD"):
+        c = GateCheck(name=name, passed=passed, detail=detail, weight=weight)
+        checks.append(c)
+        if not passed:
+            if weight == "HARD": hard_blockers.append(name)
+            else: soft_warnings.append(name)
+
+    add("balance_above_floor",
+        bal >= MIN_BALANCE_USD,
+        f"${bal:.2f} ≥ ${MIN_BALANCE_USD}" if bal >= MIN_BALANCE_USD
+        else f"${bal:.2f} < ${MIN_BALANCE_USD} floor")
+
+    add("positions_slot_open",
+        pos_count < MAX_CONCURRENT,
+        f"{pos_count}/{MAX_CONCURRENT} positions" if pos_count < MAX_CONCURRENT
+        else f"already {pos_count} open")
+
+    # Daily loss check — ONLY for R's own trades (magic 20260605)
+    # Other EAs' losses (QADER, FRIDAY Brain) are NOT R's responsibility
+    recent = acc_block.get("recent_deals") or []
+    R_MAGIC_OWN = 20260605
+    r_daily_pl = 0.0
+    if recent:
+        cutoff = (now - timedelta(hours=24)).timestamp()
+        for d in recent:
+            if (d.get("entry") == 1 and d.get("time", 0) >= cutoff
+                and int(d.get("magic", 0)) == R_MAGIC_OWN):
+                r_daily_pl += float(d.get("profit") or 0) + float(d.get("swap") or 0)
+    r_daily_loss = -min(0, r_daily_pl)
+    add("under_daily_loss_cap",
+        r_daily_loss < DAILY_LOSS_CAP_USD,
+        f"R own day PL ${r_daily_pl:.2f} vs cap ${DAILY_LOSS_CAP_USD}")
+
+    # Regime check — R is an H1 swing trader; the regime engine uses M5 (scalping).
+    # So we accept the regime IF either:
+    #   (a) regime engine says allow_trade, OR
+    #   (b) H1 ATR + spread/H1_ATR ratio are healthy (handled by next two checks)
+    # This makes the regime gate informational, not a hard blocker for H1 trading.
+    # Regime is SOFT for R because the engine is built for M5 scalping;
+    # R trades H1+ where the spread/ATR math is completely different.
+    rg = snapshot.get("regime") or {}
+    regime_ok = bool(rg.get("allow_trade")) or rg.get("regime") in ("TREND","RANGE","EVENT")
+    add("regime_advisory",
+        regime_ok,
+        f"regime={rg.get('regime')} (engine uses M5; R uses H1 — see h1 checks)",
+        weight="SOFT")
+
+    # H.7.5: deployed genome can override the default session window
+    # Crypto trades 24/7 — exempt from weekend/friday-close blockers
+    _sym = snapshot.get("symbol", "")
+    _is_crypto = any(k in _sym.upper() for k in ("BTC","ETH","XRP","LTC","SOL","DOGE","ADA","BNB","DOT","AVAX","LINK"))
+    _weekend_block = False if _is_crypto else _is_weekend(now)
+    if _dg_start_h is not None and _dg_end_h is not None:
+        in_dg_window = _dg_start_h <= now.hour < _dg_end_h
+        _suffix = " [crypto 24/7]" if _is_crypto else ""
+        add("session_window_open",
+            in_dg_window and not _weekend_block,
+            f"now {now:%H:%M} UTC, genome[{_dg_id}] window {_dg_start_h:02d}:00-{_dg_end_h:02d}:00{_suffix}")
+    else:
+        _suffix = " [crypto 24/7]" if _is_crypto else ""
+        add("session_window_open",
+            _in_session(now) and not _weekend_block,
+            f"now {now:%H:%M} UTC, default session {SESSION_START_HOUR_UTC:02d}:00-{SESSION_END_HOUR_UTC:02d}:00{_suffix}")
+
+    add("not_friday_close",
+        _is_crypto or not _in_friday_close_window(now),
+        f"Friday {now:%H:%M}" if now.weekday()==4 and not _is_crypto
+        else ("crypto — Friday close N/A" if _is_crypto else "not Friday"))
+
+    # H.12: Prop firm hard blockers
+    if _pf_blockers:
+        for b in _pf_blockers:
+            add(f"prop_firm_{b.split(':')[0]}", False, b, weight="HARD")
+
+    # News blackout
+    soonest_high = None
+    for ev in news_events:
+        try:
+            from friday_v3.core.news_straddle import parse_event_time
+            t = parse_event_time(ev)
+            if t and ev.get("impact") == "High":
+                mins = (t - now).total_seconds() / 60
+                if -NEWS_BLACKOUT_MIN <= mins <= NEWS_BLACKOUT_MIN:
+                    soonest_high = (mins, ev.get("title",""))
+                    break
+        except Exception: continue
+    add("not_in_news_blackout",
+        soonest_high is None,
+        f"clear" if soonest_high is None
+        else f"{soonest_high[1]} in {soonest_high[0]:.0f} min")
+
+    # ── B: ALGORY WISDOM GATES (symbol-aware) ──
+    chl  = (snapshot.get("chart") or {}).get("levels", {})
+    spread_pt = chl.get("spread_points") or 0
+    bid_price = chl.get("bid") or 0
+    mtf  = (snapshot.get("multi_tf") or {}).get("tfs", {})
+    h1   = mtf.get("H1") or {}
+    h1_atr = float(h1.get("atr") or 0)
+    # Both spread and ATR in PRICE units → ratio is dimensionless and symbol-agnostic
+    # spread_pt × point_size = spread in price; ATR is already in price.
+    # But we don't have point_size here — use spread_pt vs ATR_in_pips.
+    # Universal: spread_price / h1_atr (both in same price units after conversion)
+    # spread_pt is in BROKER POINTS — to convert: spread_price = spread_pt × (bid % 1 reflects digits)
+    # Safest: pull point from MT5 directly
+    point_size = 0
+    try:
+        import MetaTrader5 as _mt5
+        symbol_name = snapshot.get("symbol") or "XAUUSDm"
+        sym_info = _mt5.symbol_info(symbol_name)
+        if sym_info: point_size = sym_info.point
+    except Exception: pass
+    if point_size <= 0:
+        # Fallback: infer from bid (XAU=0.001, BTC=0.01, EUR=0.00001 etc)
+        point_size = 0.01 if bid_price > 100 else 0.00001 if bid_price < 5 else 0.001
+    spread_price = spread_pt * point_size
+    spread_atr_ratio = (spread_price / h1_atr) if h1_atr > 0 else 99
+
+    # ATR threshold: scale to 0.1% of price (universal across all symbols)
+    min_atr_threshold = max(0.0001, bid_price * 0.001) if bid_price else MIN_H1_ATR_PRICE
+    add("h1_atr_sufficient",
+        h1_atr >= min_atr_threshold,
+        f"H1 ATR={h1_atr:.4f} ≥ {min_atr_threshold:.4f} (0.1% of price)")
+
+    add("spread_below_atr_ratio",
+        spread_atr_ratio < MAX_SPREAD_ATR_RATIO,
+        f"spread/ATR={spread_atr_ratio:.3f} < {MAX_SPREAD_ATR_RATIO}")
+
+    # ── ADX H1 trend strength (refuse pure chop) ──
+    adx_h1 = _compute_adx_h1(snapshot.get("symbol") or "XAUUSDm")
+    if adx_h1 is not None:
+        add("adx_trend_strength",
+            adx_h1 >= ADX_MIN_H1,
+            f"H1 ADX={adx_h1:.1f} ≥ {ADX_MIN_H1} (trend)" if adx_h1 >= ADX_MIN_H1
+            else f"H1 ADX={adx_h1:.1f} < {ADX_MIN_H1} (chop — refuse)")
+    else:
+        add("adx_trend_strength",
+            True,
+            "H1 ADX unavailable (MT5 fetch failed) — soft pass",
+            weight="SOFT")
+
+    # ── C: TRIGGER — must have at least one signal fire ──
+    # NEW (2026-05-24): When a deployed_genome exists, its flags drive the
+    # decision. The genome's use_sig_* / use_bias_* / use_filt_* combo is
+    # evaluated against live market state and produces a direction + a
+    # 0-100 confidence score. This makes the GA-evolved genome actually
+    # control trading instead of being decorative.
+    #
+    # Algory's 4 hardcoded archetypes (BREAKOUT_HUNTER etc.) are kept as
+    # a FALLBACK for when no genome is deployed (initial state, or after
+    # all genomes have been killed by safety logic).
+    genome_decision = None  # filled when deployed_genome(s) present
+    # First try the Multi-Genome Ensemble (deployed_genomes list). When present
+    # with ≥2 members, weighted vote drives the decision. Otherwise fall back
+    # to the single deployed_genome path.
+    _ensemble_members = _load_deployed_ensemble(snapshot.get("symbol", ""))
+    _ensemble_used = False
+    if _ensemble_members:
+        try:
+            genome_decision = _ensemble_decide(_ensemble_members, snapshot)
+            _ensemble_used = genome_decision is not None
+        except Exception:
+            genome_decision = None
+
+    # Genome deployments may carry flags either as dict ({flag:bool}) OR as
+    # active_genes list. GA campaigns produce active_genes lists, manual
+    # deployments may produce flags dicts. Normalize both into a flags dict
+    # so decide_entry() always has something to evaluate.
+    _g_flags: dict = {}
+    if deployed_genome:
+        if isinstance(deployed_genome.get("flags"), dict):
+            _g_flags = deployed_genome.get("flags") or {}
+        if not _g_flags and isinstance(deployed_genome.get("active_genes"), list):
+            _g_flags = {gene: True for gene in deployed_genome["active_genes"]}
+    if not _ensemble_used and deployed_genome and _g_flags:
+        try:
+            from r_native.genome_signal import (decide_entry_with_council,
+                                                build_snapshot_from_trade_gate_snap)
+            flat = build_snapshot_from_trade_gate_snap(snapshot)
+            # COUNCIL: every cycle computes ALL 22 signals + 12 biases on
+            # the live snapshot. If they strongly disagree with the
+            # genome's decision → veto. If they agree → +15 confidence
+            # boost. Makes the gate consult every indicator before entry,
+            # not just the 7-of-22 the genome's training selected.
+            genome_decision = decide_entry_with_council(_g_flags, flat)
+        except Exception as _e:
+            genome_decision = None
+
+    archetype_picks = []
+    if genome_decision and genome_decision.get("decision") in ("BUY", "SELL"):
+        # Genome fired — use it as the trigger, skip Algory scan
+        gconf = int(genome_decision.get("confidence") or 0)
+        n_fired = len(genome_decision.get("signals_fired") or [])
+        add("archetype_match_found",
+            True,
+            f"genome {_dg_id} fires {genome_decision['decision']} "
+            f"({n_fired} signals, confidence {gconf}/100)",
+            weight="TRIGGER")
+        archetype_picks = [("GENOME", gconf)]
+    else:
+        # No deployed genome (or genome chose NO) → fall back to Algory presets
+        from friday_v3.algory.strategy_mirror import evaluate_setup
+        for arch in ("BREAKOUT_HUNTER","MEAN_REVERTER","MULTI_SIGNAL","PATTERN_SPOTTER"):
+            ev = evaluate_setup(snapshot, arch)
+            if ev.get("verdict") == "OK":
+                archetype_picks.append((arch, ev["score"]))
+        archetype_picks.sort(key=lambda x: -x[1])
+        if genome_decision:
+            # Genome said NO — show why for debugging
+            why = (genome_decision.get("reasons") or ["?"])[-1][:80]
+            detail = f"genome says NO ({why})"
+        elif archetype_picks:
+            detail = f"{len(archetype_picks)} archetype(s) OK"
+        else:
+            detail = "no archetype currently aligns"
+        add("archetype_match_found",
+            len(archetype_picks) > 0,
+            detail,
+            weight="TRIGGER")
+
+    # ── Final verdict ──
+    if hard_blockers:
+        verdict = "NO"
+    elif archetype_picks:
+        verdict = "GO"
+    else:
+        verdict = "WAIT"
+
+    # Compute entry levels if GO
+    arch_name = archetype_picks[0][0] if archetype_picks else None
+    side = entry = sl = near_tp = far_tp = risk_usd = None
+    risk_too_high = False
+    use_levels = False
+    level_proposal = None
+    direction = None
+    direction_reason = ""
+    if verdict == "GO" and arch_name:
+        # If genome made the decision, use ITS direction directly (no Algory
+        # multi-TF override). The genome's signal+bias logic is the authority.
+        genome_drove_decision = (arch_name == "GENOME" and genome_decision)
+
+        if genome_drove_decision:
+            tpl = {}
+            learned_sl_mult = learned_tp_mult = 1.0
+        else:
+            from friday_v3.algory.strategy_mirror import ARCHETYPE_TEMPLATES
+            tpl = ARCHETYPE_TEMPLATES.get(arch_name, {})
+            try:
+                from friday_v3.algory.r_learning import get_adjusted_multipliers
+                adj = get_adjusted_multipliers(arch_name)
+                learned_sl_mult = adj.get("sl_mult", 1.0)
+                learned_tp_mult = adj.get("tp_mult", 1.0)
+            except Exception:
+                learned_sl_mult = learned_tp_mult = 1.0
+        bid = chl.get("bid"); ask = chl.get("ask")
+        # Set defaults so genome path doesn't NameError downstream
+        h4 = mtf.get("H4", {}) or {}
+        m15 = mtf.get("M15", {}) or {}
+        h1_bias = h4_bias = m15_bias = "RANGE"
+        h1_rsi = h4_rsi = 50
+        direction = None; direction_reason = ""
+        level_proposal = None; use_levels = False
+        tpl_sl_dist = 0.0; tpl_tp_dist = 0.0
+        risk_budget = MAX_RISK_USD_HARD
+        max_sl_price_dist = MAX_RISK_USD_HARD
+        usd_per_unit = 1.0
+
+        if bid and ask and genome_drove_decision:
+            # ─── Genome path: trust its decision ───
+            direction = genome_decision["decision"]
+            direction_reason = (
+                f"genome {_dg_id} confidence {genome_decision['confidence']}/100 "
+                f"({len(genome_decision.get('signals_fired') or [])} signals)")
+        elif bid and ask:
+            # ─── Multi-TF direction consensus (FIXED bias logic) ───
+            h4 = mtf.get("H4", {}) or {}
+            m15 = mtf.get("M15", {}) or {}
+            h1_bias  = h1.get("bias", "RANGE")
+            h4_bias  = h4.get("bias", "RANGE")
+            m15_bias = m15.get("bias", "RANGE")
+            h1_rsi   = h1.get("rsi", 50)
+            h4_rsi   = h4.get("rsi", 50)
+
+            # HTF priority: H4 wins ties; require H4+H1 alignment otherwise WAIT
+            direction = None; direction_reason = ""
+            if h4_bias == "UP" and h1_bias in ("UP","RANGE"):
+                direction = "BUY";  direction_reason = "H4=UP + H1 aligned"
+            elif h4_bias == "DOWN" and h1_bias in ("DOWN","RANGE"):
+                direction = "SELL"; direction_reason = "H4=DOWN + H1 aligned"
+            elif h4_bias == "RANGE":
+                # H4 is mixed → use H1 + M15 consensus
+                if h1_bias == m15_bias and h1_bias != "RANGE":
+                    direction = "BUY" if h1_bias == "UP" else "SELL"
+                    direction_reason = f"H4=RANGE, H1+M15 agree on {h1_bias}"
+                else:
+                    direction = None; direction_reason = "no multi-TF consensus"
+            else:
+                direction = None
+                direction_reason = f"H4={h4_bias} vs H1={h1_bias} CONFLICT — wait"
+
+            # ═══════════════════════════════════════════════════════════════
+            # CYCLE-39 ROOT-CAUSE FIX 2026-05-27 — "RSI FLIP" was the #1 loss
+            # source. Old logic FLIPPED a multi-TF-aligned BUY into a SELL
+            # whenever H1 RSI > 75 — but in a strong uptrend RSI camps above
+            # 75 for HOURS. Fading that = catching a moving train.
+            #
+            # Evidence (last 7 days, magic 20260605):
+            #   XAUUSDm BUYS:  17 trades 76% WR  +$5.5  ← trend-aligned, WIN
+            #   XAUUSDm SELLS: 21 trades 57% WR -$43.7  ← FLIP-induced LOSS
+            #   XAGUSDm BUYS:   4 trades 100% WR +$12.7
+            #   XAGUSDm SELLS:  5 trades  40% WR  -$8.8
+            #   US30_x10m BUYS:30 trades  90% WR  +$3.4
+            # The pattern across every trending instrument is identical: the
+            # trend-following BUYs won, the FLIP-generated SELLs bled.
+            #
+            # NEW policy: trust the multi-TF consensus. On extreme RSI we
+            # WAIT (skip the entry), we NEVER flip blindly. A flip would
+            # require divergence + wick rejection — neither of which we can
+            # confirm here cheaply, so just don't trade those bars.
+            # ═══════════════════════════════════════════════════════════════
+            if direction == "BUY" and h1_rsi >= 80:
+                direction = None
+                direction_reason = (f"H1 RSI {h1_rsi} ≥ 80 — too stretched, wait "
+                                     f"for pullback (no blind flip)")
+            elif direction == "SELL" and h1_rsi <= 20:
+                direction = None
+                direction_reason = (f"H1 RSI {h1_rsi} ≤ 20 — too stretched, wait "
+                                     f"for bounce (no blind flip)")
+            elif direction == "BUY" and h1_rsi > 72:
+                # Mild overbought in a confirmed uptrend → still OK to take
+                # the trade but flag it. Old code WAITed here; that costs
+                # us trades when uptrend just keeps running.
+                direction_reason += f"  · note: H1 RSI {h1_rsi} elevated"
+            elif direction == "SELL" and h1_rsi < 28:
+                direction_reason += f"  · note: H1 RSI {h1_rsi} depressed"
+
+            if not direction:
+                verdict = "WAIT"
+                soft_warnings.append(f"direction: {direction_reason}")
+                arch_name = None    # skip entry computation below
+
+        # ─── SHARED SL/TP computation for BOTH genome and Algory paths ───
+        # Runs whenever direction was set (by either path).
+        if bid and ask and direction:
+            try:
+                from friday_v3.algory.r_levels import compute_all_levels, propose_trade_levels
+                levels = compute_all_levels(snapshot.get("symbol", "XAUUSDm"))
+                if levels.get("ok"):
+                    current_mid = (bid + ask) / 2
+                    level_proposal = propose_trade_levels(direction, current_mid, levels,
+                                                          min_rr=1.8, max_sl_dist=3.0)
+            except Exception as _le:
+                soft_warnings.append(f"levels_err:{_le}")
+
+            # H.7.5: deployed genome's mult overrides the archetype template default
+            base_sl_mult = _dg_sl_mult if _dg_sl_mult else tpl.get("sl_atr_mult", 2.0)
+            base_tp_mult = _dg_tp_mult if _dg_tp_mult else tpl.get("tp_atr_mult", 7.0)
+            tpl_sl_dist  = base_sl_mult * learned_sl_mult * h1_atr
+            tpl_tp_dist  = base_tp_mult * learned_tp_mult * h1_atr
+            if _dg_sl_mult or _dg_tp_mult:
+                soft_warnings.append(
+                    f"deployed_genome[{_dg_id}](sl×{base_sl_mult:.2f}, tp×{base_tp_mult:.2f})")
+            if abs(learned_sl_mult - 1) > 0.05 or abs(learned_tp_mult - 1) > 0.05:
+                soft_warnings.append(f"learned_adj(sl×{learned_sl_mult:.2f}, tp×{learned_tp_mult:.2f})")
+
+            # If levels gave us a good R:R proposal, prefer them over blind ATR
+            use_levels = level_proposal and level_proposal.get("ok_rr")
+            soft_warnings.append(f"side={direction} ({direction_reason})")
+
+            # RISK CAP — symbol-aware
+            risk_budget = min(MAX_RISK_USD_HARD, bal * MAX_RISK_PCT) if bal > 0 else MAX_RISK_USD_HARD
+            # USD per 1 price unit at 0.01 lot for this symbol
+            # gold:   0.01 × 100 contract = $1/price-unit
+            # BTC:    0.01 × 1   contract = $0.01/price-unit
+            # EUR:    0.01 × 100000 = $1000/price-unit (so price_unit = 1 pip)
+            usd_per_unit = 1.0   # default gold
+            try:
+                import MetaTrader5 as _mt5
+                symbol_name = snapshot.get("symbol") or "XAUUSDm"
+                sym_info = _mt5.symbol_info(symbol_name)
+                if sym_info:
+                    usd_per_unit = 0.01 * sym_info.trade_contract_size
+            except Exception: pass
+            # max SL distance (in price units) for budget
+            max_sl_price_dist = risk_budget / usd_per_unit if usd_per_unit > 0 else risk_budget
+
+        # ─── Choose entry/SL/TP: prefer real price LEVELS, fallback to ATR ───
+        if direction and bid and ask:
+            if direction == "BUY":
+                side = "BUY"; entry = ask
+            else:
+                side = "SELL"; entry = bid
+
+            # Min SL distance: at least 2× spread + symbol stops_level buffer
+            spread_price_local = chl.get("spread_points", 0) * (point_size if 'point_size' in dir() else 0.001)
+            min_sl_dist = max(spread_price_local * 2.5, h1_atr * 0.3)
+
+            if use_levels:
+                sl      = level_proposal["sl"]
+                near_tp = level_proposal["near_tp"]
+                far_tp  = level_proposal["far_tp"]
+                sl_dist = abs(entry - sl)
+                tp_dist_check = abs(far_tp - entry)
+                rr_check = tp_dist_check / sl_dist if sl_dist > 0 else 0
+                if sl_dist > max_sl_price_dist:
+                    use_levels = False
+                    soft_warnings.append(f"level SL dist {sl_dist:.4f} > budget {max_sl_price_dist:.4f} → using ATR")
+                elif rr_check < 1.5:
+                    use_levels = False
+                    soft_warnings.append(f"level R:R={rr_check:.2f} < 1.5 → using ATR template")
+                elif sl_dist < min_sl_dist:
+                    use_levels = False
+                    soft_warnings.append(f"level SL too tight ({sl_dist:.4f} < min {min_sl_dist:.4f}) → using ATR")
+
+            if not use_levels:
+                # ATR-based fallback (sl_dist in price units)
+                sl_dist = min(tpl_sl_dist, max_sl_price_dist)
+                # Enforce minimum SL distance vs spread (so order isn't rejected)
+                if sl_dist < min_sl_dist:
+                    sl_dist = min_sl_dist
+                rr = tpl_tp_dist / tpl_sl_dist if tpl_sl_dist > 0 else 4.0
+                tp_dist = sl_dist * rr
+                if direction == "BUY":
+                    sl      = entry - sl_dist
+                    near_tp = entry + sl_dist * 2.0
+                    far_tp  = entry + tp_dist
+                else:
+                    sl      = entry + sl_dist
+                    near_tp = entry - sl_dist * 2.0
+                    far_tp  = entry - tp_dist
+                if sl_dist < tpl_sl_dist - 0.01:
+                    soft_warnings.append("sl_clamped_to_budget")
+            else:
+                soft_warnings.append("using_real_levels")
+
+            # Risk in USD = price_distance × usd_per_unit (symbol-aware)
+            risk_usd = round(abs(entry - sl) * usd_per_unit, 2)
+
+    # Earliest re-evaluation
+    earliest = None
+    reason_ar = ""
+    if verdict == "NO":
+        # Find when the first hard blocker resolves
+        if "session_window_open" in hard_blockers or "not_friday_close" in hard_blockers:
+            nxt = _next_session_open(now)
+            earliest = nxt.isoformat()
+            reason_ar = f"⏰ خارج جلسة التداول. الفتح القادم: {nxt:%a %H:%M} UTC"
+        elif "regime_not_blocking_h1" in hard_blockers:
+            earliest = (now + timedelta(minutes=15)).isoformat()
+            reason_ar = f"🔻 Regime={rg.get('regime')}. ننتظر تحسّن السبريد/ATR (recheck في 15 دقيقة)"
+        elif "positions_slot_open" in hard_blockers:
+            reason_ar = f"📦 {pos_count} صفقات مفتوحة بالفعل (max {MAX_CONCURRENT})"
+        elif "balance_above_floor" in hard_blockers:
+            reason_ar = f"💸 الرصيد \${bal:.2f} تحت الحد الأدنى \${MIN_BALANCE_USD}"
+        elif "under_daily_loss_cap" in hard_blockers:
+            reason_ar = f"🚫 تجاوزنا حد الخسارة اليومية"
+        else:
+            reason_ar = f"❌ شروط أساسية مفقودة: {hard_blockers}"
+    elif verdict == "WAIT":
+        reason_ar = "🟡 الشروط الصلبة سليمة، لكن لا archetype يطابق السوق الآن. ننتظر إشارة دخول."
+    else:
+        rr = round(((far_tp-entry)/(entry-sl) if side=='BUY' and sl!=entry else 0),1)
+        dg_note = ""
+        if deployed_genome:
+            dg_note = (f"  ·  📦 deployed genome[{_dg_id}] PF={deployed_genome.get('profit_factor','?')}, "
+                       f"SL×{_dg_sl_mult or '–'}, TP×{_dg_tp_mult or '–'}")
+        reason_ar = (f"🟢 جميع الشروط متحققة! Archetype: {arch_name}, side: {side}, R:R 1:{rr}"
+                     + dg_note)
+
+    confidence = 0
+    if archetype_picks: confidence = archetype_picks[0][1]
+    # Subtract from confidence for any soft warnings
+    confidence -= len(soft_warnings) * 5
+
+    # ── H.7.6: Compatibility check between deployed genome and live archetype ──
+    dg_archetype = None
+    dg_compat    = "NONE"
+    if deployed_genome:
+        # Derive expected archetype from genome's active_genes (same logic as Inspector)
+        ag = set(deployed_genome.get("active_genes", []) or [])
+        rev_genes   = {"use_sig_bb", "use_sig_rsi", "use_sig_stoch", "use_sig_williams",
+                       "use_sig_wick_rejection", "use_sig_pin_bar"}
+        trend_genes = {"use_bias_ema", "use_bias_sma", "use_bias_chandelier",
+                       "use_bias_trailing", "use_sig_macd"}
+        brk_genes   = {"use_sig_breakout", "use_sig_inside_break", "use_sig_mom_break",
+                       "use_sig_engulfing"}
+        rev_n, trend_n, brk_n = len(ag & rev_genes), len(ag & trend_genes), len(ag & brk_genes)
+        if max(rev_n, trend_n, brk_n) == 0:
+            dg_archetype = "MIXED"
+        elif brk_n >= max(rev_n, trend_n):
+            dg_archetype = "BREAKOUT"
+        elif rev_n > trend_n:
+            dg_archetype = "REVERSION"
+        else:
+            dg_archetype = "TREND"
+        # Compare with live archetype
+        if arch_name:
+            live_lc = arch_name.upper()
+            if dg_archetype in live_lc or live_lc in dg_archetype:
+                dg_compat = "MATCH"
+                confidence += 8       # boost: live setup matches genome's expected style
+                soft_warnings.append(f"genome_archetype_match[{_dg_id}={dg_archetype}]")
+            elif dg_archetype == "MIXED":
+                dg_compat = "NEUTRAL"
+            else:
+                dg_compat = "DIVERGE"
+                confidence -= 10      # penalty: live setup contradicts genome's design
+                soft_warnings.append(
+                    f"genome_archetype_diverge[expected={dg_archetype}, live={arch_name}]")
+
+    return TradeVerdict(
+        verdict=verdict,
+        archetype=arch_name,
+        side=side,
+        entry=round(entry,3) if entry else None,
+        sl=round(sl,3) if sl else None,
+        near_tp=round(near_tp,3) if near_tp else None,
+        far_tp=round(far_tp,3) if far_tp else None,
+        risk_usd=risk_usd,
+        confidence=max(0, int(confidence)),
+        checks=[asdict(c) for c in checks],
+        hard_blockers=hard_blockers,
+        soft_warnings=soft_warnings,
+        earliest_open=earliest,
+        reason_ar=reason_ar,
+        deployed_genome_id        = _dg_id,
+        deployed_genome_pf        = deployed_genome.get("profit_factor") if deployed_genome else None,
+        deployed_genome_archetype = dg_archetype,
+        deployed_genome_compat    = dg_compat,
+        genome_signals_fired      = (genome_decision.get("signals_fired")    if genome_decision else []) or [],
+        genome_biases_aligned     = (genome_decision.get("biases_aligned")   if genome_decision else []) or [],
+        genome_filters_blocking   = (genome_decision.get("filters_blocking") if genome_decision else []) or [],
+    )
+
+
+if __name__ == "__main__":
+    import urllib.request
+    import json as _j
+    # Fetch snapshot from running brain_server
+    try:
+        with urllib.request.urlopen("http://localhost:5055/api/snapshot", timeout=10) as r:
+            snap = _j.loads(r.read().decode())
+        with urllib.request.urlopen("http://localhost:5055/api/algory", timeout=5) as r:
+            algory = _j.loads(r.read().decode())
+    except Exception as e:
+        print("Need brain_server running:", e); raise SystemExit(1)
+    # News events from local file
+    news_path = ROOT / "data" / "news_calendar.json"
+    news_events = []
+    if news_path.exists():
+        try: news_events = _j.loads(news_path.read_text(encoding="utf-8")).get("events", [])
+        except Exception: pass
+
+    verdict = evaluate_gate(snap, news_events)
+    print(json.dumps(verdict.to_dict(), ensure_ascii=False, indent=2))

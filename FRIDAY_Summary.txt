@@ -1,0 +1,13 @@
+FRIDAY System Summary:
+Balance: 959.43
+Equity: 950.46
+Executor Trades: 71
+Wins: 0, Losses: 0
+Open Positions: 0
+Active Symbols: NZDZARm
+
+Evolution Status:
+Generation: 0
+Population: 0
+Active Genome: None
+Fitness: 0.0000

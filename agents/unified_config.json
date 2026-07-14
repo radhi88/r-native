@@ -1,0 +1,62 @@
+{
+  "unified_brain": {
+    "min_confidence": 0.65,
+    "max_spread": 350,
+    "risk_per_trade": 0.02,
+    "cooldown_seconds": 0,
+    "consensus_threshold": 0.6,
+    "symbols": [
+      "XAUUSD"
+    ],
+    "source_weights": {
+      "smc": 0.3,
+      "ollama": 0.25,
+      "agents": 0.2,
+      "technical": 0.15,
+      "sentiment": 0.1
+    }
+  },
+  "endpoints": {
+    "monitor": "http://127.0.0.1:5173/monitor",
+    "dashboard": "http://localhost:5050",
+    "api": "http://localhost:7799",
+    "ollama": "http://localhost:11434",
+    "unified_dashboard": "http://localhost:8080"
+  },
+  "mt5": {
+    "mql5_path": "C:\\Users\\Radhi\\AppData\\Roaming\\MetaQuotes\\Terminal\\53785E099C927DB68A545C249CDBCE06\\MQL5",
+    "common_files": "C:\\Users\\Radhi\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files",
+    "agents_path": "C:\\Users\\Radhi\\MT5\\agents",
+    "brain_vault": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault"
+  },
+  "agents": {
+    "ollama": {
+      "enabled": true,
+      "model": "qwen2.5:3b"
+    },
+    "claude": {
+      "enabled": true,
+      "pid": 2804,
+      "bridge": "agents/brain_vault/vs_pid_bridge.json",
+      "inbox": "agents/brain_vault/inbox/vs-pid-2804.md"
+    },
+    "codex": {
+      "enabled": true,
+      "pid": 16616
+    },
+    "smc": {
+      "enabled": true
+    },
+    "mt5": {
+      "enabled": true
+    }
+  },
+  "risk_management": {
+    "max_daily_loss_percent": 5.0,
+    "max_positions": 1,
+    "max_lot_size": 0.01,
+    "use_trailing_stop": true,
+    "trailing_points": 100,
+    "hard_max_lot_note": "EA HARD GUARD caps every order at 0.01 lot regardless of this value"
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "generated": 1782832624.7126,
+  "clusters": {
+    "agentic_profiled_grid_tester_gold_dna_evolve": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5"
+    ],
+    "claude_brain_ea": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_BRAIN_EA_v1.mq5",
+      "active_ea\\CLAUDE_BRAIN_EA_v1.mq5"
+    ],
+    "claude_footprint": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+      ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+      ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v4.mq5",
+      "active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+      "active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+      "active_ea\\CLAUDE_FOOTPRINT_v4.mq5"
+    ],
+    "quantumshark_learner": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "active_ea\\QuantumShark_Learner_v8_3.mq5"
+    ],
+    "friday_gold_ea": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\FRIDAY_Gold_EA.mq5",
+      "ea\\FRIDAY_Gold_EA.mq5"
+    ],
+    "dna_evolve": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE.mq5",
+      "ea\\v7_2_DNA_EVOLVE.mq5"
+    ],
+    "dna_evolve_tester": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE_TESTER.mq5",
+      "ea\\v7_2_DNA_EVOLVE_TESTER.mq5"
+    ],
+    "agentic_profiled_grid_gold_live": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5"
+    ],
+    "stoch_reversion_m": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Stoch_Reversion_M3.mq5",
+      "live_ea\\Stoch_Reversion_M3.mq5",
+      "r-native-pipflow\\mql5_templates\\Stoch_Reversion_M3.mq5"
+    ],
+    "quantumshark_safe": [
+      ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "QuantumShark_Safe_v9.mq5"
+    ],
+    "r_strategy_template": [
+      "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "r_native\\mql5_templates\\r_strategy_template.mq5"
+    ]
+  },
+  "classified": {
+    "agentic_profiled_grid_tester_gold_dna_evolve": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+        "active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5"
+      ],
+      "kind": "identical",
+      "lost_in_newest": {}
+    },
+    "claude_brain_ea": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_BRAIN_EA_v1.mq5",
+        "active_ea\\CLAUDE_BRAIN_EA_v1.mq5"
+      ],
+      "kind": "identical",
+      "lost_in_newest": {}
+    },
+    "claude_footprint": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+        ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+        ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v4.mq5",
+        "active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+        "active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+        "active_ea\\CLAUDE_FOOTPRINT_v4.mq5"
+      ],
+      "kind": "intentional",
+      "why": "Three distinct chart tools, not versions: v1 = supply/demand zones + volume-profile, v3 = EMA/RSI + session frames, v4 = focused variant. Kept separate by design (user-confirmed 2026-06-09).",
+      "lost_in_newest": {}
+    },
+    "quantumshark_learner": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+        ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+        "active_ea\\QuantumShark_Learner_v8_2.mq5",
+        "active_ea\\QuantumShark_Learner_v8_3.mq5"
+      ],
+      "kind": "divergent",
+      "lost_in_newest": {
+        ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5": [
+          "Clamp",
+          "CloseAllOnce",
+          "CountPos",
+          "GetIndis",
+          "GetOpenPL",
+          "Init",
+          "IsCorrupt",
+          "LearnFromHistory",
+          "LoadDNA",
+          "LogToMemory",
+          "OpenBuy",
+          "OpenSell",
+          "PrintDNA",
+          "SaveDNA"
+        ],
+        "active_ea\\QuantumShark_Learner_v8_2.mq5": [
+          "Clamp",
+          "CloseAllOnce",
+          "CountPos",
+          "GetIndis",
+          "GetOpenPL",
+          "Init",
+          "IsCorrupt",
+          "LearnFromHistory",
+          "LoadDNA",
+          "LogToMemory",
+          "OpenBuy",
+          "OpenSell",
+          "PrintDNA",
+          "SaveDNA"
+        ]
+      }
+    },
+    "friday_gold_ea": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\FRIDAY_Gold_EA.mq5",
+        "ea\\FRIDAY_Gold_EA.mq5"
+      ],
+      "kind": "identical",
+      "lost_in_newest": {}
+    },
+    "dna_evolve": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE.mq5",
+        "ea\\v7_2_DNA_EVOLVE.mq5"
+      ],
+      "kind": "identical",
+      "lost_in_newest": {}
+    },
+    "dna_evolve_tester": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE_TESTER.mq5",
+        "ea\\v7_2_DNA_EVOLVE_TESTER.mq5"
+      ],
+      "kind": "identical",
+      "lost_in_newest": {}
+    },
+    "agentic_profiled_grid_gold_live": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+        "live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5"
+      ],
+      "kind": "identical",
+      "lost_in_newest": {}
+    },
+    "stoch_reversion_m": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Stoch_Reversion_M3.mq5",
+        "live_ea\\Stoch_Reversion_M3.mq5",
+        "r-native-pipflow\\mql5_templates\\Stoch_Reversion_M3.mq5"
+      ],
+      "kind": "intentional",
+      "why": "live_ea + r-native-pipflow copies are byte-identical but INTENTIONAL: pipflow/run_all_auto.py:64 deploys from its own mql5_templates copy, live_ea is the standalone deploy. Parallel self-contained subsystems.",
+      "lost_in_newest": {}
+    },
+    "quantumshark_safe": {
+      "files": [
+        ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+        "QuantumShark_Safe_v9.mq5"
+      ],
+      "kind": "identical",
+      "lost_in_newest": {}
+    },
+    "r_strategy_template": {
+      "files": [
+        "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+        "r_native\\mql5_templates\\r_strategy_template.mq5"
+      ],
+      "kind": "intentional",
+      "why": "R-Native generator templates duplicated across r_native + r-native-pipflow (each subsystem self-contained, see mql5_export.py). Differ only by line endings. Intentional.",
+      "lost_in_newest": {}
+    }
+  },
+  "actionable": 7
+}

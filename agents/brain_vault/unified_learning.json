@@ -1,0 +1,21 @@
+{
+  "weights": {
+    "external": 0.4307,
+    "smc": 0.0507,
+    "multi_tf": 0.0842,
+    "volume_profile": 0.0524,
+    "agents": 0.0507,
+    "unusual_whales": 0.3313
+  },
+  "samples": 6700,
+  "last_outcome": {
+    "time": "2026-05-21T19:40:21",
+    "equity_delta": -0.02,
+    "previous_signal": "SELL",
+    "agreed_sources": [
+      "smc",
+      "volume_profile",
+      "agents"
+    ]
+  }
+}

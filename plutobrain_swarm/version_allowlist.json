@@ -1,0 +1,6 @@
+{
+  "_note": "EA families whose multiple variants are INTENTIONAL (not version drift). The swarm's Version Clusterer (A-14) marks these 'intentional' and excludes them from the consolidation KPI. Each entry: family-stem -> why.",
+  "claude_footprint": "Three distinct chart tools, not versions: v1 = supply/demand zones + volume-profile, v3 = EMA/RSI + session frames, v4 = focused variant. Kept separate by design (user-confirmed 2026-06-09).",
+  "stoch_reversion_m": "live_ea + r-native-pipflow copies are byte-identical but INTENTIONAL: pipflow/run_all_auto.py:64 deploys from its own mql5_templates copy, live_ea is the standalone deploy. Parallel self-contained subsystems.",
+  "r_strategy_template": "R-Native generator templates duplicated across r_native + r-native-pipflow (each subsystem self-contained, see mql5_export.py). Differ only by line endings. Intentional."
+}

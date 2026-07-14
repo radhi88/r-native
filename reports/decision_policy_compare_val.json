@@ -1,0 +1,162 @@
+[
+  {
+    "policy": "context_score",
+    "strategy": "ict",
+    "trades": 53,
+    "wins": 24,
+    "win_rate": 0.4528301886792453,
+    "win_rate_wilson_95": [
+      0.3265736816014746,
+      0.585462573535608
+    ],
+    "net_points": -8.389308593750005,
+    "avg_points": -0.1582888413915098,
+    "profit_factor": 0.929832439841642,
+    "max_drawdown_points": -36.364656250001985,
+    "skipped_overlap": 814
+  },
+  {
+    "policy": "strict_and",
+    "strategy": "ict",
+    "trades": 0,
+    "wins": 0,
+    "win_rate": 0.0,
+    "win_rate_wilson_95": [
+      0.0,
+      0.0
+    ],
+    "net_points": 0.0,
+    "avg_points": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown_points": 0.0,
+    "skipped_overlap": 0
+  },
+  {
+    "policy": "context_score",
+    "strategy": "sb",
+    "trades": 138,
+    "wins": 70,
+    "win_rate": 0.5072463768115942,
+    "win_rate_wilson_95": [
+      0.4247728454305531,
+      0.5893273903253888
+    ],
+    "net_points": -27.703898437500015,
+    "avg_points": -0.2007528872282612,
+    "profit_factor": 0.9202302397841067,
+    "max_drawdown_points": -74.00146093750504,
+    "skipped_overlap": 2228
+  },
+  {
+    "policy": "strict_and",
+    "strategy": "sb",
+    "trades": 0,
+    "wins": 0,
+    "win_rate": 0.0,
+    "win_rate_wilson_95": [
+      0.0,
+      0.0
+    ],
+    "net_points": 0.0,
+    "avg_points": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown_points": 0.0,
+    "skipped_overlap": 0
+  },
+  {
+    "policy": "context_score",
+    "strategy": "scalping",
+    "trades": 131,
+    "wins": 66,
+    "win_rate": 0.5038167938931297,
+    "win_rate_wilson_95": [
+      0.4193159467511274,
+      0.5881001622241442
+    ],
+    "net_points": -46.140042968750016,
+    "avg_points": -0.35221406846374076,
+    "profit_factor": 0.8604315498626747,
+    "max_drawdown_points": -82.17151171875628,
+    "skipped_overlap": 2091
+  },
+  {
+    "policy": "strict_and",
+    "strategy": "scalping",
+    "trades": 0,
+    "wins": 0,
+    "win_rate": 0.0,
+    "win_rate_wilson_95": [
+      0.0,
+      0.0
+    ],
+    "net_points": 0.0,
+    "avg_points": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown_points": 0.0,
+    "skipped_overlap": 0
+  },
+  {
+    "policy": "context_score",
+    "strategy": "sk",
+    "trades": 185,
+    "wins": 87,
+    "win_rate": 0.4702702702702703,
+    "win_rate_wilson_95": [
+      0.39968426627871717,
+      0.5420658565755693
+    ],
+    "net_points": -130.93460937500004,
+    "avg_points": -0.7077546452702703,
+    "profit_factor": 0.740308453120124,
+    "max_drawdown_points": -166.44221484375896,
+    "skipped_overlap": 2976
+  },
+  {
+    "policy": "strict_and",
+    "strategy": "sk",
+    "trades": 0,
+    "wins": 0,
+    "win_rate": 0.0,
+    "win_rate_wilson_95": [
+      0.0,
+      0.0
+    ],
+    "net_points": 0.0,
+    "avg_points": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown_points": 0.0,
+    "skipped_overlap": 0
+  },
+  {
+    "policy": "context_score",
+    "strategy": "swing",
+    "trades": 141,
+    "wins": 70,
+    "win_rate": 0.49645390070921985,
+    "win_rate_wilson_95": [
+      0.41512088716989126,
+      0.5779750189786187
+    ],
+    "net_points": -51.83226953125002,
+    "avg_points": -0.3676047484485818,
+    "profit_factor": 0.8604508507400351,
+    "max_drawdown_points": -89.10201953125681,
+    "skipped_overlap": 2280
+  },
+  {
+    "policy": "strict_and",
+    "strategy": "swing",
+    "trades": 0,
+    "wins": 0,
+    "win_rate": 0.0,
+    "win_rate_wilson_95": [
+      0.0,
+      0.0
+    ],
+    "net_points": 0.0,
+    "avg_points": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown_points": 0.0,
+    "skipped_overlap": 0
+  }
+]

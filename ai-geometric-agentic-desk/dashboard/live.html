@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>مكتب الهندسة الجيومترية — لحظي</title>
+<style>
+  :root{
+    --bg:#070b14; --panel:#0e1626; --panel2:#0b1320; --line:#1b2940;
+    --txt:#e8eefb; --mut:#7e8aa3; --accent:#3ad7b0; --accent2:#5c7cfa;
+    --gold:#ffd35c; --red:#ff5d6c; --green:#2fd180; --purple:#b98cff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Tajawal","Segoe UI",Tahoma,sans-serif;
+    background:radial-gradient(1200px 700px at 70% -10%,#0d1830,var(--bg));
+    color:var(--txt);min-height:100vh}
+  header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:14px 20px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#0c1424,#0a0f1b)}
+  h1{font-size:18px;margin:0;font-weight:800;letter-spacing:.3px}
+  h1 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;
+    background:var(--green);box-shadow:0 0 10px var(--green);margin-inline-start:8px;
+    animation:beat 1.4s infinite}
+  @keyframes beat{50%{opacity:.35}}
+  .chip{font-size:12px;background:var(--panel);border:1px solid var(--line);
+    padding:5px 11px;border-radius:20px;color:var(--mut)}
+  .chip b{color:var(--txt)}
+  .chip.ok{color:var(--green);border-color:#1c5a44}
+  .chip.warn{color:var(--gold);border-color:#5a4d1c}
+  .spacer{flex:1}
+  .wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;padding:16px;
+    max-width:1500px;margin:0 auto}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);border-radius:16px;padding:14px 16px;
+    box-shadow:0 8px 30px rgba(0,0,0,.35)}
+  .card h2{font-size:13px;margin:0 0 10px;color:var(--mut);font-weight:700;
+    text-transform:uppercase;letter-spacing:1px}
+  .col{display:flex;flex-direction:column;gap:16px}
+  /* graph */
+  .node rect{transition:.4s}
+  .node text{fill:var(--txt);font-size:13px;font-weight:700}
+  .node .sub{fill:var(--mut);font-size:10px;font-weight:500}
+  .node.active rect{filter:drop-shadow(0 0 14px var(--accent))}
+  .edge{stroke:var(--line);stroke-width:2;fill:none}
+  .edge.flow{stroke:var(--accent);stroke-dasharray:7 9;
+    animation:dash 1s linear infinite;opacity:.85}
+  @keyframes dash{to{stroke-dashoffset:-32}}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600}
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  .bar{height:7px;border-radius:6px;background:#152033;overflow:hidden}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent))}
+  .feed{max-height:340px;overflow:auto;display:flex;flex-direction:column;gap:7px}
+  .ev{display:flex;gap:8px;align-items:baseline;font-size:12.5px;
+    border-inline-start:3px solid var(--accent2);padding:4px 9px;background:#0b1422;border-radius:8px}
+  .ev .tm{color:var(--mut);font-size:11px;font-variant-numeric:tabular-nums}
+  .ev.trade{border-color:var(--green)} .ev.exam{border-color:var(--gold)}
+  .ev.evo{border-color:var(--purple)} .ev.hr{border-color:var(--accent)}
+  .ev.system{border-color:var(--accent2)}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:12px;
+    background:#13203a;color:var(--mut);margin:2px}
+  .pill.deploy{background:#10402f;color:var(--green)}
+  .genes div{display:flex;justify-content:space-between;font-size:12px;
+    padding:5px 0;border-bottom:1px solid var(--line)}
+  canvas{width:100%;height:150px;display:block}
+  .mini{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut)}
+  .mini b{color:var(--txt);font-size:15px}
+  @media(max-width:1000px){.wrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🛰️ مكتب الهندسة الجيومترية الذكي <span class="dot"></span></h1>
+  <span class="chip" id="acct">— لا يوجد حساب —</span>
+  <span class="chip" id="eq">الحقوق: —</span>
+  <span class="chip" id="mode">—</span>
+  <span class="spacer"></span>
+  <span class="chip" id="clock"></span>
+</header>
+
+<div class="wrap">
+  <div class="col">
+    <div class="card">
+      <h2>سير العمل اللحظي — الوكلاء والتنسيق</h2>
+      <svg id="graph" viewBox="0 0 1000 430" style="width:100%;height:auto"></svg>
+    </div>
+    <div class="card">
+      <h2>منحنى الحقوق (لحظي)</h2>
+      <canvas id="equity" width="900" height="150"></canvas>
+      <div class="mini" id="stats" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card">
+      <h2>المراكز المفتوحة</h2>
+      <table><thead><tr><th>الرمز</th><th>الجهة</th><th>اللوت</th><th>ربح/خسارة</th></tr></thead>
+      <tbody id="positions"><tr><td colspan="4" style="color:var(--mut)">لا مراكز</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <h2>لوحة الاختبارات (HR) — تتطور</h2>
+      <div id="deploy" style="margin-bottom:8px"></div>
+      <table><thead><tr><th>الرمز</th><th>النتيجة</th><th>PF</th><th>إعادات</th></tr></thead>
+      <tbody id="exams"><tr><td colspan="4" style="color:var(--mut)">بانتظار التقييم…</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <h2>الجينات والمؤشرات (وكيل التطوّر)</h2>
+      <div id="indicators" style="margin-bottom:8px"></div>
+      <div class="genes" id="genes"></div>
+    </div>
+    <div class="card">
+      <h2>الدروس المتعلّمة لكل عملة 🧠</h2>
+      <div id="blocked" style="margin-bottom:8px"></div>
+      <table><thead><tr><th>الرمز</th><th>صافي</th><th>صفقات</th><th>الحكم</th></tr></thead>
+      <tbody id="lessons"><tr><td colspan="4" style="color:var(--mut)">يتعلّم من التاريخ…</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <h2>تغذية الأفكار الحيّة</h2>
+      <div class="feed" id="feed"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const NODES = {
+  market:{x:120,y:70,t:"بيانات السوق",s:"market data"},
+  analysis:{x:380,y:70,t:"التحليل",s:"SMC · Gann · Fractal · ML"},
+  risk:{x:640,y:70,t:"المخاطر",s:"Kelly · survival"},
+  exec:{x:880,y:70,t:"التنفيذ",s:"MT5 demo"},
+  bus:{x:480,y:210,t:"ناقل التنسيق",s:"blackboard"},
+  hr:{x:250,y:350,t:"المُقيّم HR",s:"exam loop"},
+  evo:{x:710,y:350,t:"التطوّر",s:"genes · indicators"},
+};
+const EDGES=[["market","analysis"],["analysis","risk"],["risk","exec"],
+  ["analysis","bus"],["risk","bus"],["exec","bus"],["market","bus"],
+  ["hr","bus"],["evo","bus"]];
+const W=140,H=58;
+function buildGraph(){
+  const svg=document.getElementById('graph');let s='';
+  for(const[a,b]of EDGES){const A=NODES[a],B=NODES[b];
+    s+=`<path id="e_${a}_${b}" class="edge" d="M${A.x+W/2} ${A.y+H} C ${A.x+W/2} ${A.y+150}, ${B.x+W/2} ${B.y-90}, ${B.x+W/2} ${B.y}"/>`;}
+  for(const k in NODES){const n=NODES[k];
+    s+=`<g class="node" id="n_${k}"><rect x="${n.x}" y="${n.y}" width="${W}" height="${H}" rx="13"
+      fill="#0c1830" stroke="#26406b"/>
+      <text x="${n.x+W/2}" y="${n.y+25}" text-anchor="middle">${n.t}</text>
+      <text class="sub" x="${n.x+W/2}" y="${n.y+43}" text-anchor="middle">${n.s}</text></g>`;}
+  svg.innerHTML=s;
+}
+buildGraph();
+
+function setActive(id,on){const g=document.getElementById('n_'+id);
+  if(g)g.classList.toggle('active',on);}
+function setFlow(a,b,on){const e=document.getElementById(`e_${a}_${b}`);
+  if(e)e.classList.toggle('flow',on);}
+
+function fmt(n){return (n>=0?'+':'')+Number(n).toFixed(2);}
+function drawEquity(curve){
+  const c=document.getElementById('equity'),x=c.getContext('2d');
+  const w=c.width,h=c.height;x.clearRect(0,0,w,h);
+  if(!curve||curve.length<2)return;
+  const ys=curve.map(p=>p[1]),mn=Math.min(...ys),mx=Math.max(...ys),rng=(mx-mn)||1;
+  x.strokeStyle="#2fd180";x.lineWidth=2;x.beginPath();
+  curve.forEach((p,i)=>{const px=i/(curve.length-1)*w,py=h-((p[1]-mn)/rng)*(h-20)-10;
+    i?x.lineTo(px,py):x.moveTo(px,py);});
+  x.stroke();
+  const grad=x.createLinearGradient(0,0,0,h);grad.addColorStop(0,"rgba(47,209,128,.25)");
+  grad.addColorStop(1,"rgba(47,209,128,0)");x.lineTo(w,h);x.lineTo(0,h);x.closePath();
+  x.fillStyle=grad;x.fill();
+  x.fillStyle="#7e8aa3";x.font="11px Tajawal";x.fillText(mx.toFixed(2),6,14);
+  x.fillText(mn.toFixed(2),6,h-6);
+}
+
+async function tick(){
+  let d;try{d=await(await fetch('/state',{cache:'no-store'})).json();}catch(e){return;}
+  document.getElementById('clock').textContent=new Date().toLocaleTimeString('ar');
+  const sl=d.slices||{},desk=sl.desk||{},hr=sl.hr||{},evo=sl.evo||{};
+  const a=d.account;
+  if(a){document.getElementById('acct').innerHTML=`الحساب <b>${a.login}</b> · ${a.server}`;
+    document.getElementById('eq').innerHTML=`الحقوق <b>${a.equity}</b> · هامش حر ${a.free_margin}`;
+    const m=document.getElementById('mode');
+    m.innerHTML= a.demo?'وضع تجريبي آمن':'⚠ حساب حقيقي';
+    m.className='chip '+(a.demo?'ok':'warn');}
+  // gates
+  const g=d.gates||{};
+  // activity → nodes
+  const deskAct=(desk._age!==undefined&&desk._age<45);
+  ['market','analysis','risk','exec'].forEach(k=>setActive(k,deskAct));
+  setActive('hr',hr._age!==undefined&&hr._age<340);
+  setActive('evo',evo._age!==undefined&&evo._age<160);
+  setActive('bus',deskAct||(hr._age<340)||(evo._age<160));
+  setFlow('market','analysis',deskAct);setFlow('analysis','risk',deskAct);
+  setFlow('risk','exec',deskAct);setFlow('analysis','bus',deskAct);
+  setFlow('risk','bus',deskAct);setFlow('exec','bus',deskAct);setFlow('market','bus',deskAct);
+  setFlow('hr','bus',hr._age<340);setFlow('evo','bus',evo._age<160);
+  // equity + stats
+  drawEquity(desk.equity_curve);
+  const st=desk.stats||{};
+  document.getElementById('stats').innerHTML=
+    `<span>الكون <b>${st.universe||0}</b></span><span>دورات <b>${st.cycles||0}</b></span>`+
+    `<span>صفقات منفّذة <b>${st.executed_total||0}</b></span><span>مفتوحة <b>${st.open||0}</b></span>`+
+    `<span>عتبة التوافق <b>${g.min_conf}</b></span><span>بوابة ML <b>${(g.ml_gate*100||0).toFixed(0)}%</b></span>`+
+    `<span>اختبار-إلزامي <b>${g.require_exam_pass?'نعم':'لا'}</b></span>`+
+    `<span>الدوران اللحظي <b style="color:${g.reversal?'var(--green)':'var(--mut)'}">${g.reversal?'مُفعّل 🔄':'مُطفأ'}</b></span>`;
+  // positions
+  const pos=desk.positions||[];
+  document.getElementById('positions').innerHTML= pos.length? pos.map(p=>
+    `<tr><td>${p.symbol}</td><td>${p.side}</td><td>${p.vol}</td>
+     <td class="${p.pnl>=0?'pos':'neg'}">${fmt(p.pnl)}</td></tr>`).join('')
+    :'<tr><td colspan="4" style="color:var(--mut)">لا مراكز</td></tr>';
+  // exams
+  const dep=hr.deployable||[];
+  document.getElementById('deploy').innerHTML= dep.length?
+    dep.map(s=>`<span class="pill deploy">${s} ✓ قابل للنشر</span>`).join('')
+    :'<span class="pill">لا يوجد رمز اجتاز البوابة بعد (≥95 و PF≥2.5)</span>';
+  const ex=hr.scores||[];
+  document.getElementById('exams').innerHTML= ex.length? ex.map(e=>
+    `<tr><td>${e.symbol}</td><td><div class="bar"><i style="width:${Math.min(100,e.score)}%"></i></div>
+     <small style="color:var(--mut)">${e.score}</small></td>
+     <td>${e.pf}</td><td>${e.retakes}</td></tr>`).join('')
+    :'<tr><td colspan="4" style="color:var(--mut)">بانتظار التقييم…</td></tr>';
+  // genes + indicators
+  const inds=evo.indicators||[];
+  document.getElementById('indicators').innerHTML=
+    inds.map(i=>`<span class="pill">${i}</span>`).join('')+
+    `<span class="pill" style="color:var(--purple)">الجيل ${evo.generation||0}</span>`;
+  const gn=evo.genes||[];
+  document.getElementById('genes').innerHTML= gn.map(x=>
+    `<div><span>${x.id} <small style="color:var(--mut)">EMA ${x.fast}/${x.slow}</small>
+     ${x.status==='hall_of_fame'?'<span class="pill deploy">نخبة</span>':''}</span>
+     <b class="${x.score>=0?'pos':'neg'}">${fmt(x.score)}R</b></div>`).join('');
+  // lessons learned per currency
+  const les=sl.lessons||{};
+  document.getElementById('blocked').innerHTML=(les.blocked||[]).length?
+    (les.blocked||[]).map(s=>`<span class="pill" style="background:#3a1620;color:var(--red)">${s} 🚫 موقوف</span>`).join('')
+    :'<span class="pill">لا رمز موقوف بعد — يتعلّم</span>';
+  const rows=[...(les.top_losers||[]),...(les.top_winners||[])];
+  document.getElementById('lessons').innerHTML= rows.length? rows.map(r=>
+    `<tr><td>${r.symbol}</td><td class="${r.net>=0?'pos':'neg'}">${fmt(r.net)}</td>
+     <td>${r.trades}</td><td>${r.verdict==='blocked'?'🚫 موقوف':r.net>=0?'✓ رابح':'⚠ مراقبة'}</td></tr>`).join('')
+    :'<tr><td colspan="4" style="color:var(--mut)">يتعلّم من التاريخ…</td></tr>';
+  // merged feed
+  let feed=[];
+  for(const s of [desk,hr,evo,sl.lessons||{}]) (s.insights||[]).forEach(it=>feed.push(it));
+  feed.sort((a,b)=>(b.t>a.t?1:-1));
+  document.getElementById('feed').innerHTML= feed.slice(0,30).map(it=>
+    `<div class="ev ${it.kind}"><span class="tm">${it.t}</span><span>${it.text}</span></div>`).join('')
+    ||'<div style="color:var(--mut)">— بانتظار النشاط —</div>';
+}
+buildGraph();tick();setInterval(tick,1000);
+</script>
+</body>
+</html>

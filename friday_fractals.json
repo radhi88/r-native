@@ -1,0 +1,201 @@
+{
+  "updated_at": "2026-05-22T01:13:35.646701+00:00",
+  "symbol": "XAUUSDm",
+  "bars_analyzed": 200,
+  "direction": "DOWN",
+  "fractal_count": 57,
+  "last_broken_up": {
+    "time": "2026-05-22T00:56:00+00:00",
+    "price": 4530.618,
+    "type": "UP",
+    "broken": true
+  },
+  "last_broken_down": {
+    "time": "2026-05-22T00:59:00+00:00",
+    "price": 4525.7,
+    "type": "DOWN",
+    "broken": true
+  },
+  "fractals": [
+    {
+      "time": "2026-05-21T23:31:00+00:00",
+      "price": 4536.825,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-21T23:36:00+00:00",
+      "price": 4535.519,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-21T23:38:00+00:00",
+      "price": 4537.945,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-21T23:41:00+00:00",
+      "price": 4537.935,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-21T23:45:00+00:00",
+      "price": 4532.679,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-21T23:49:00+00:00",
+      "price": 4536.051,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-21T23:50:00+00:00",
+      "price": 4533.171,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-21T23:53:00+00:00",
+      "price": 4536.397,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-21T23:54:00+00:00",
+      "price": 4532.411,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:00:00+00:00",
+      "price": 4537.109,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:00:00+00:00",
+      "price": 4530.83,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:06:00+00:00",
+      "price": 4534.351,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:07:00+00:00",
+      "price": 4531.322,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:09:00+00:00",
+      "price": 4533.853,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:16:00+00:00",
+      "price": 4530.086,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:17:00+00:00",
+      "price": 4534.046,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:21:00+00:00",
+      "price": 4537.46,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:22:00+00:00",
+      "price": 4531.773,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:26:00+00:00",
+      "price": 4532.788,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:35:00+00:00",
+      "price": 4536.09,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:38:00+00:00",
+      "price": 4541.148,
+      "type": "UP",
+      "broken": false
+    },
+    {
+      "time": "2026-05-22T00:47:00+00:00",
+      "price": 4533.719,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:50:00+00:00",
+      "price": 4536.097,
+      "type": "UP",
+      "broken": false
+    },
+    {
+      "time": "2026-05-22T00:52:00+00:00",
+      "price": 4527.369,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:56:00+00:00",
+      "price": 4530.618,
+      "type": "UP",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T00:59:00+00:00",
+      "price": 4525.7,
+      "type": "DOWN",
+      "broken": true
+    },
+    {
+      "time": "2026-05-22T01:01:00+00:00",
+      "price": 4536.445,
+      "type": "UP",
+      "broken": false
+    },
+    {
+      "time": "2026-05-22T01:05:00+00:00",
+      "price": 4523.526,
+      "type": "DOWN",
+      "broken": false
+    },
+    {
+      "time": "2026-05-22T01:07:00+00:00",
+      "price": 4530.793,
+      "type": "UP",
+      "broken": false
+    },
+    {
+      "time": "2026-05-22T01:09:00+00:00",
+      "price": 4523.521,
+      "type": "DOWN",
+      "broken": false
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "created": "2026-05-22",
+    "task_id": "018c5755",
+    "author": "RESEARCHER agent",
+    "target_symbol": "XAUUSDm",
+    "target_timeframe": "M1",
+    "spread_context_pt": 295,
+    "account_balance_usd": 58
+  },
+
+  "detection": {
+    "classic_5bar": {
+      "description": "Bill Williams standard fractal — 5-bar window",
+      "lookback_left": 2,
+      "lookback_right": 2,
+      "confirmation_bars": 2,
+      "up_fractal_rule": "high[i] > max(high[i-2:i]) AND high[i] > max(high[i+1:i+3])",
+      "down_fractal_rule": "low[i] < min(low[i-2:i]) AND low[i] < min(low[i+1:i+3])",
+      "note": "Fractal at bar[i] is confirmed only after bar[i+2] closes"
+    },
+    "adaptive": {
+      "description": "ATR-adjusted period — volatility-aware version",
+      "base_left": 2,
+      "base_right": 2,
+      "atr_short": 14,
+      "atr_long": 50,
+      "formula": "period = max(1, min(5, round(base * ATR(14) / ATR(50))))",
+      "regime_map": {
+        "atr_ratio_lte_0.8": {"period": 1, "label": "quiet_asian"},
+        "atr_ratio_0.8_to_1.2": {"period": 2, "label": "normal"},
+        "atr_ratio_1.2_to_1.8": {"period": 3, "label": "volatile_london_ny"},
+        "atr_ratio_gt_1.8": {"period": 4, "label": "extreme_event"}
+      },
+      "min_bars_required": 50,
+      "note": "Use adaptive when ATR(14)/ATR(50) > 1.5 — switches left/right from 2 to 3"
+    }
+  },
+
+  "fractal_labels": {
+    "UP_fractal": {
+      "mark_on": "high of bar[i]",
+      "symbol": "↑",
+      "column_name": "fractal_high",
+      "meaning": "potential resistance / stop-hunt high / liquidity above"
+    },
+    "DOWN_fractal": {
+      "mark_on": "low of bar[i]",
+      "symbol": "↓",
+      "column_name": "fractal_low",
+      "meaning": "potential support / stop-hunt low / liquidity below"
+    }
+  },
+
+  "direction_rule": {
+    "description": "Direction determined by the most recently BROKEN fractal",
+    "BULL": {
+      "condition": "close[current] > last_confirmed_fractal_high",
+      "meaning": "Price broke above the last fractal high — buyers in control",
+      "signal": "BUY bias"
+    },
+    "BEAR": {
+      "condition": "close[current] < last_confirmed_fractal_low",
+      "meaning": "Price broke below the last fractal low — sellers in control",
+      "signal": "SELL bias"
+    },
+    "NEUTRAL": {
+      "condition": "no fractal broken OR most recent breaks cancel each other",
+      "signal": "no trade"
+    },
+    "note": "Track both fractal_high and fractal_low breaks. The MORE RECENT break wins."
+  },
+
+  "invalidation_rules": [
+    {
+      "rule": "age_limit",
+      "condition": "fractal_age_bars > 20",
+      "action": "discard — fractal is stale on M1 (> 20 minutes old)",
+      "threshold_bars": 20,
+      "threshold_minutes_m1": 20
+    },
+    {
+      "rule": "opposite_fractal_formed",
+      "condition": "new fractal forms in opposite direction before price breaks the existing one",
+      "action": "old fractal loses active status — direction becomes contested"
+    },
+    {
+      "rule": "spread_filter",
+      "condition": "fractal_range_pt < spread_pt * 3",
+      "action": "skip — not enough room to profit after spread",
+      "spread_multiplier": 3,
+      "for_xauusdm_min_range_pt": 900
+    },
+    {
+      "rule": "signal_validity_window",
+      "condition": "bars_since_fractal_confirmed > 10",
+      "action": "entry order expired — cancel pending Stop Buy/Sell",
+      "validity_bars": 10,
+      "validity_minutes_m1": 10
+    },
+    {
+      "rule": "alligator_sleeping",
+      "condition": "max_distance_between_alligator_lines_pt < 5.0",
+      "action": "no trade — alligator is sleeping / market is ranging"
+    }
+  ],
+
+  "alligator_filter": {
+    "enabled": true,
+    "description": "Williams Alligator filter — fractals only valid outside Alligator lines",
+    "jaw": {"period": 13, "source": "mid_price", "offset_bars": 8},
+    "teeth": {"period": 8, "source": "mid_price", "offset_bars": 5},
+    "lips": {"period": 5, "source": "mid_price", "offset_bars": 2},
+    "mid_price_formula": "(high + low) / 2",
+    "validity_rules": {
+      "UP_fractal_valid": "fractal_high > teeth_at_fractal_bar",
+      "DOWN_fractal_valid": "fractal_low < teeth_at_fractal_bar",
+      "touch_or_cross_teeth": "INVALID — skip this fractal"
+    },
+    "expanding_definition": {
+      "bull_expanding": "lips > teeth > jaw AND all three increasing over last 3 bars",
+      "bear_expanding": "lips < teeth < jaw AND all three decreasing over last 3 bars"
+    },
+    "entry_rules": {
+      "BUY": "valid UP fractal + alligator bull expanding → Stop Buy at fractal_high + 1 tick",
+      "SELL": "valid DOWN fractal + alligator bear expanding → Stop Sell at fractal_low - 1 tick"
+    }
+  },
+
+  "htf_confluence": {
+    "enabled": true,
+    "description": "Multi-timeframe fractal alignment gate",
+    "timeframe_stack": {
+      "entry_tf": "M1",
+      "structure_tf": "M15",
+      "bias_tf": "H1"
+    },
+    "gate_rules": {
+      "BUY_allowed": "m15_structure_bias == bullish AND h1_fractal_bias == bullish",
+      "SELL_allowed": "m15_structure_bias == bearish AND h1_fractal_bias == bearish",
+      "conflict": "skip — do not trade against HTF structure"
+    },
+    "confluence_zone_pt": 20,
+    "confluence_zone_definition": "M15 fractal within 20pt of M1 fractal → strong zone, +10% confidence bonus",
+    "confidence_weights": {
+      "m1_signal": 0.30,
+      "m5_alignment": 0.25,
+      "m15_alignment": 0.30,
+      "h1_alignment": 0.15,
+      "confluence_zone_bonus": 0.10
+    }
+  },
+
+  "recommended_config": {
+    "description": "Best settings for XAUUSDm M1 scalping with 280-308pt spread",
+    "primary_detector": "adaptive",
+    "fallback_detector": "classic_5bar",
+    "adaptive_threshold_atr_ratio": 1.5,
+    "lookback_normal": {"left": 2, "right": 2},
+    "lookback_volatile": {"left": 3, "right": 3},
+    "alligator_filter": true,
+    "htf_confluence": true,
+    "min_confidence_to_trade": 0.55,
+    "spread_filter_multiplier": 3,
+    "age_limit_bars": 20,
+    "signal_validity_bars": 10,
+    "protected_window_bars": 20,
+    "atr_short": 14,
+    "atr_long": 50,
+    "alligator_sleeping_thresh_pt": 5.0,
+    "htf_confluence_zone_pt": 20,
+    "reasoning": [
+      "left=2/right=2 is fast enough for M1 scalping; switch to 3/3 when ATR spikes",
+      "Alligator filter eliminates fractals inside ranging/consolidated price — critical for M1 gold",
+      "HTF gate (M15) prevents fading the dominant structure — biggest single edge improvement",
+      "Spread filter 3x eliminates trades where the edge is eaten by spread before price moves",
+      "20-bar age limit prevents acting on stale structure from 20+ minutes ago"
+    ]
+  },
+
+  "python_integration": {
+    "existing_function": "detect_fractals(df, left=2, right=2) in fractal_smc_engine.py",
+    "output_columns": [
+      "fractal_high", "fractal_low",
+      "last_fractal_high", "last_fractal_low",
+      "fractal_high_age", "fractal_low_age",
+      "fractal_range", "fractal_density",
+      "protected_high", "protected_low"
+    ],
+    "direction_signal_column": "fractal_direction_bias",
+    "direction_values": ["bull", "bear", "neutral"],
+    "new_columns_to_add": [
+      "adaptive_period",
+      "alligator_jaw", "alligator_teeth", "alligator_lips",
+      "alligator_expanding",
+      "fractal_valid_up", "fractal_valid_down",
+      "fractal_direction_bias",
+      "fractal_signal_active",
+      "htf_m15_bias",
+      "fractal_confluence_score"
+    ]
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "last_updated": "03:01:26",
+  "session_id": "friday-live",
+  "total_score": 805,
+  "agents": [
+    {
+      "id": "gap_analyst",
+      "name": "📐 محلل الفجوة",
+      "group": "specialist",
+      "role": "تخفيض الفجوة → 104pt",
+      "status": "active",
+      "activity": 0.76,
+      "tasks_done": 513,
+      "current_task": "الفجوة 1425pt أكبر من ATR×0.85=128pt. يُفوّت حركات. خفّض إلى 104pt.",
+      "platform": "FRIDAY-Swarm",
+      "color": "#f59e0b",
+      "confidence": 76,
+      "decision": "تخفيض الفجوة → 104pt",
+      "params": {
+        "gap": 104
+      },
+      "last_update": "03:01:23"
+    },
+    {
+      "id": "market_reader",
+      "name": "📊 قارئ السوق",
+      "group": "specialist",
+      "role": "توقف — سبريد خطير",
+      "status": "active",
+      "activity": 0.93,
+      "tasks_done": 626,
+      "current_task": "⛔ سبريد 308pt — خطر! السبريد يأكل الأرباح. أُوصي بتوقف التداول حتى ينخفض تحت 60pt.",
+      "platform": "FRIDAY-Swarm",
+      "color": "#22d3ee",
+      "confidence": 93,
+      "decision": "توقف — سبريد خطير",
+      "params": {
+        "rsi": 50.0,
+        "atr": 150.0
+      },
+      "last_update": "03:01:14"
+    },
+    {
+      "id": "risk_guardian",
+      "name": "🛡️ حارس المخاطر",
+      "group": "specialist",
+      "role": "المخاطر متوازنة ✓",
+      "status": "active",
+      "activity": 0.74,
+      "tasks_done": 564,
+      "current_task": "المخاطر ضمن الحدود. PF=1.00 DD=0.0% SL/TP=5.3/2.0$ خسائر=1.",
+      "platform": "FRIDAY-Swarm",
+      "color": "#ef4444",
+      "confidence": 74,
+      "decision": "المخاطر متوازنة ✓",
+      "params": {},
+      "last_update": "03:01:20"
+    },
+    {
+      "id": "dna_developer",
+      "name": "🧬 مطور الجينات",
+      "group": "specialist",
+      "role": "ارجع لـ Gen4 — Fitness أعلى",
+      "status": "active",
+      "activity": 0.78,
+      "tasks_done": 322,
+      "current_task": "DNA الحالي (Fitness=1.00) أقل من الأفضل بـ 27.65. أُوصي بإعدادات Gen4: Gap=21 TP=3.94$.",
+      "platform": "FRIDAY-Swarm",
+      "color": "#a78bfa",
+      "confidence": 78,
+      "decision": "ارجع لـ Gen4 — Fitness أعلى",
+      "params": {
+        "fitness": 1.0,
+        "generations": 100,
+        "best_fitness": 1.0,
+        "best_combos": [
+          {
+            "gap": 1425.0,
+            "tp": 2.0,
+            "sl": 5.28,
+            "fitness": 1.0,
+            "pf": 1.0,
+            "t": "23:53:38"
+          }
+        ]
+      },
+      "last_update": "03:00:57"
+    },
+    {
+      "id": "strategy_inventor",
+      "name": "🔬 مبتكر الاستراتيجيات",
+      "group": "specialist",
+      "role": "مراقبة مستمرة",
+      "status": "active",
+      "activity": 0.58,
+      "tasks_done": 297,
+      "current_task": "PF=1.00 ATR=150pt. أراقب وأجمع بيانات. لديّ 37 ابتكار مسجّل.",
+      "platform": "FRIDAY-Swarm",
+      "color": "#34d399",
+      "confidence": 58,
+      "decision": "مراقبة مستمرة",
+      "params": {
+        "inventions_count": 37,
+        "latest_invention": {
+          "t": "03:00:30",
+          "name": "عكس الاتجاه المفاجئ",
+          "desc": "عند RSI>74 أو <26 → عكس اتجاه الدخول مؤقتاً",
+          "code_hint": "if rsi > 74: direction = -direction",
+          "trigger": "periodic"
+        }
+      },
+      "last_update": "03:01:08"
+    },
+    {
+      "id": "code_analyst",
+      "name": "💻 محلل الكود",
+      "group": "specialist",
+      "role": "كود Gen#1 — Fitness=28.65",
+      "status": "active",
+      "activity": 0.92,
+      "tasks_done": 251,
+      "current_task": "أُنتجت نسخة كود بـ Fitness=28.65 PF=1.00 Gap=21 TP=3.94$. 🏆 أفضل نسخة حتى الآن!",
+      "platform": "FRIDAY-Swarm",
+      "color": "#fb923c",
+      "confidence": 92,
+      "decision": "كود Gen#1 — Fitness=28.65",
+      "params": {
+        "fitness": 28.65,
+        "versions_count": 1,
+        "best_params": {
+          "gap": 20,
+          "tp": 3.94,
+          "sl": 0.35
+        },
+        "code_preview": "// ══════════════════════════════════════════════════════\n// FRIDAY GOLD EA — نسخة مُنتجة بالذكاء الجماعي للوكلاء\n// التاريخ: 2026-05-22 03:01  |  Fitness: 28.65  |  PF: 1.0\n// ══════════════════════════════════════════════════════\ninput int    ExtraTightGapPoints   = 20;      // نقاط الفجوة (مُحسَّ"
+      },
+      "last_update": "03:01:08"
+    },
+    {
+      "id": "coordinator",
+      "name": "🤖 المنسق الرئيسي",
+      "group": "primary",
+      "role": "تنبيه — 2 وكيل حرج",
+      "status": "active",
+      "activity": 0.84,
+      "tasks_done": 403,
+      "current_task": "تنبيه من 2 وكيل حرج: 📊 توقف — سبريد خطير | 💻 كود Gen#1 — Fitness=28.65. ثقة متوسطة 78%. مع",
+      "platform": "FRIDAY-Swarm",
+      "color": "#ffffff",
+      "confidence": 84,
+      "decision": "تنبيه — 2 وكيل حرج"
+    }
+  ],
+  "feed": [
+    {
+      "ts": "03:01:08",
+      "agent": "💻 محلل الكود",
+      "text": "كود Gen#1 — Fitness=28.65 (92%) — أُنتجت نسخة كود بـ Fitness=28.65 PF=1.00 Gap=21 TP=3.94$. 🏆 ",
+      "level": "alert",
+      "color": "#fb923c"
+    },
+    {
+      "ts": "03:01:08",
+      "agent": "🔬 مبتكر الاستراتيجيات",
+      "text": "مراقبة مستمرة (58%) — PF=1.00 ATR=150pt. أراقب وأجمع بيانات. لديّ 37 ابتكار مسجّل.",
+      "level": "info",
+      "color": "#34d399"
+    },
+    {
+      "ts": "03:00:57",
+      "agent": "🧬 مطور الجينات",
+      "text": "ارجع لـ Gen4 — Fitness أعلى (78%) — DNA الحالي (Fitness=1.00) أقل من الأفضل بـ 27.65. أُوصي بإعد",
+      "level": "info",
+      "color": "#a78bfa"
+    },
+    {
+      "ts": "03:01:20",
+      "agent": "🛡️ حارس المخاطر",
+      "text": "المخاطر متوازنة ✓ (74%) — المخاطر ضمن الحدود. PF=1.00 DD=0.0% SL/TP=5.3/2.0$ خسائر=1.",
+      "level": "info",
+      "color": "#ef4444"
+    },
+    {
+      "ts": "03:01:14",
+      "agent": "📊 قارئ السوق",
+      "text": "توقف — سبريد خطير (93%) — ⛔ سبريد 308pt — خطر! السبريد يأكل الأرباح. أُوصي بتوقف التدا",
+      "level": "alert",
+      "color": "#22d3ee"
+    },
+    {
+      "ts": "03:01:23",
+      "agent": "📐 محلل الفجوة",
+      "text": "تخفيض الفجوة → 104pt (76%) — الفجوة 1425pt أكبر من ATR×0.85=128pt. يُفوّت حركات. خفّض إلى",
+      "level": "info",
+      "color": "#f59e0b"
+    }
+  ],
+  "alerts": []
+}

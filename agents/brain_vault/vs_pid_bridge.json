@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-05-21T19:41:32+03:00",
+  "pid": 2804,
+  "role": "claude-vscode-terminal",
+  "alive": false,
+  "project_root": "C:\\Users\\Radhi\\MT5",
+  "brain_vault": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault",
+  "vendor_plutobrain": "C:\\Users\\Radhi\\MT5\\vendor\\plutobrain",
+  "message": "PlutoBrain is installed and linked to the MT5 project.",
+  "process": {}
+}

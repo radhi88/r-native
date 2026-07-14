@@ -1,0 +1,645 @@
+{
+  "mode": "safe_autopilot",
+  "started_at": "2026-05-10T03:57:39",
+  "updated_at": "2026-07-10T22:00:03",
+  "cycles": 9831,
+  "last_health": {
+    "gateway": {
+      "ok": true,
+      "sample": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FRIDAY Local Gateway\",\"version\":\"1.2.0\"},\"paths\":{\"/health\":{\"get\":{\"summary\":\"Health\",\"operationId\":\"health_health_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":true,\"type\":\"object\",\"t"
+    },
+    "chat": {
+      "ok": true,
+      "sample": "\n<!doctype html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n  <meta charset=\"utf-8\"/>\n  <title>FRIDAY Jarvis Chat</title>\n  <style>\n    body {\n      margin: 0;\n      font-family: Arial, sans-serif;\n      background: #0f1117;\n      color: #f5f5f5;\n    }\n\n    .wrap {\n      max-width: 1050px;\n      margin: auto"
+    },
+    "scalper_dashboard": {
+      "ok": true,
+      "sample": "{\"ok\":true,\"cached\":false,\"candles\":{\"symbol\":\"XAUUSDm\",\"timeframe\":\"M1\",\"candles\":[{\"time\":1783707060,\"open\":4104.212,\"high\":4104.612,\"low\":4103.59,\"close\":4104.123},{\"time\":1783707120,\"open\":4104.036,\"high\":4104.996,\"low\":4103.696,\"close\":4103.91},{\"time\":1783707180,\"open\":4103.975,\"high\":4104.536"
+    },
+    "agents_browser": {
+      "ok": true,
+      "sample": "{\"brain\":{\"version\":\"0.2\",\"generated_at\":\"2026-05-15T03:02:48.469185\",\"jobs_stored\":30,\"patches_stored\":51,\"agent_runs_stored\":100,\"latest_job\":{},\"patch_quality\":{\"good\":0,\"fair\":0,\"poor\":0},\"rules\":{\"no_live_trading\":true,\"no_file_delete\":true,\"patch_review_before_apply\":true,\"apply_requires_backu"
+    }
+  },
+  "last_actions": [
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 44,
+      "ok": false,
+      "output": "{\"detail\":\"Patch #44 is empty and cannot be approved\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 43,
+      "ok": false,
+      "output": "{\"detail\":\"Patch #43 is empty and cannot be approved\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 42,
+      "ok": false,
+      "output": "{\"detail\":\"Patch #42 is empty and cannot be approved\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 41,
+      "ok": false,
+      "output": "{\"detail\":\"Patch #41 is empty and cannot be approved\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 40,
+      "ok": false,
+      "output": "{\"detail\":\"Patch #40 is empty and cannot be approved\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 39,
+      "ok": false,
+      "output": "{\"detail\":\"Patch #39 is empty and cannot be approved\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 38,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":38,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 38,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 37,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":37,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 37,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/orchestrator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 36,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":36,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 36,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/coordinator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 35,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":35,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 35,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/agent_runner.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 34,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":34,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 34,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/mt5_gateway.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 33,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":33,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 33,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/friday_auto_trader.py\",\"diff_path_not_allowed:src/mt5_ai/friday_auto_trader.py\"],\"touched\":[\"src/mt5_ai/friday_auto_trader.py\"]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 32,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":32,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 32,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/entry_agent.py\",\"diff_path_not_allowed:src/mt5_ai/entry_agent.py\"],\"touched\":[\"src/mt5_ai/entry_agent.py\"]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 31,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":31,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 31,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_pivot_engine.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 30,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":30,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 30,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_send_real.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "approve_patch",
+      "patch_id": 29,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":29,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:01",
+      "type": "apply_patch",
+      "patch_id": 29,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_client.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 28,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":28,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 28,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:tests/test_send_real.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 27,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":27,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 27,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:tests/test_client.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 26,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":26,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 26,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 25,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":25,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 25,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 24,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":24,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 24,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 23,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":23,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 23,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 22,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":22,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 22,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 21,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":21,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 21,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 20,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":20,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 20,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_pipeline_features.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 19,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":19,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 19,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_staging.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 18,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":18,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 18,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 17,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":17,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 17,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 16,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":16,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 16,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/test_phase0.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 15,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":15,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 15,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/execution.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 14,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":14,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "apply_patch",
+      "patch_id": 14,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/agent_runner.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:02",
+      "type": "approve_patch",
+      "patch_id": 13,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":13,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 13,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/run_server.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 12,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":12,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 12,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/agents/orchestrator.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 11,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":11,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 11,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 10,
+      "ok": false,
+      "output": "{\"detail\":\"Patch #10 is empty and cannot be approved\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 9,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":9,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 9,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"diff_path_not_allowed:scripts/smc_backtest.py\"],\"touched\":[\"scripts/smc_backtest.py\"]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 8,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":8,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 8,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"diff_path_not_allowed:scripts/visual_backtest.py\"],\"touched\":[\"scripts/visual_backtest.py\"]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 7,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":7,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 7,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 6,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":6,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 6,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 5,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":5,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 5,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/config.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 4,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":4,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 4,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/smc_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 3,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":3,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 3,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:scripts/visual_backtest.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "approve_patch",
+      "patch_id": 1,
+      "ok": true,
+      "output": "{\"status\":\"approved\",\"patch_id\":1,\"note\":\"Patch approved only. It was not applied.\"}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "apply_patch",
+      "patch_id": 1,
+      "ok": false,
+      "output": "{\"detail\":{\"message\":\"Patch failed Apply Gate validation\",\"issues\":[\"target_not_allowed:selected_code/src/mt5_ai/mt5_gateway.py\",\"not_unified_diff\",\"diff_paths_not_found\"],\"touched\":[]}}"
+    },
+    {
+      "time": "2026-07-10T22:00:03",
+      "type": "dispatch_compile_repair",
+      "files": [
+        "friday_project_map.py",
+        "friday_evolution_memory.py"
+      ],
+      "ok": false,
+      "output": "dispatch_already_running"
+    }
+  ],
+  "auto_apply_enabled": true,
+  "safe_edit_allowlist": [
+    "friday_agents_browser.py",
+    "friday_brain.py",
+    "friday_chat_app.py",
+    "friday_evolution_memory.py",
+    "friday_genome_status_export.py",
+    "friday_local_gateway.py",
+    "friday_project_map.py",
+    "friday_scalper_live_dashboard.py",
+    "mnt/agents/output/app/scripts/agent-dispatch-v3.mjs"
+  ],
+  "blocked_auto_apply_keywords": [
+    "auto_trader",
+    "execution.py",
+    "live_paper_trader",
+    "mt5_gateway",
+    "order_send",
+    "send_demo_market_order",
+    "send_demo_pending_order",
+    "send_market_order"
+  ],
+  "last_compile": {
+    "friday_chat_app.py": {
+      "ok": true,
+      "output": ""
+    },
+    "friday_local_gateway.py": {
+      "ok": true,
+      "output": ""
+    },
+    "friday_brain.py": {
+      "ok": true,
+      "output": ""
+    },
+    "friday_project_map.py": {
+      "ok": false,
+      "output": "missing"
+    },
+    "friday_scalper_live_dashboard.py": {
+      "ok": true,
+      "output": ""
+    },
+    "friday_agents_browser.py": {
+      "ok": true,
+      "output": ""
+    },
+    "friday_evolution_memory.py": {
+      "ok": false,
+      "output": "missing"
+    },
+    "friday_genome_status_export.py": {
+      "ok": true,
+      "output": ""
+    }
+  }
+}

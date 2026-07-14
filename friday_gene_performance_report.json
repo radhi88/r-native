@@ -1,0 +1,2898 @@
+{
+  "total_genes": 48,
+  "total_trade_outcomes": 544,
+  "top_profitable": [
+    {
+      "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+      "count": 148,
+      "wins": 136,
+      "losses": 9,
+      "neutral": 3,
+      "win_rate": 0.9189,
+      "total_profit": 90.48,
+      "avg_profit": 0.6114,
+      "max_win": 2.02,
+      "max_loss": -0.85,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430427616",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.85,
+          "deal": {
+            "ticket": "1430427616",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 4610.08000]",
+            "profit": -0.85,
+            "entry": 1,
+            "type": 0,
+            "time": 1777852847
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430435305",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.68,
+          "deal": {
+            "ticket": "1430435305",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 4607.056]",
+            "profit": -0.68,
+            "entry": 1,
+            "type": 0,
+            "time": 1777852904
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430446239",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.04,
+          "deal": {
+            "ticket": "1430446239",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[tp 4608.13100]",
+            "profit": -0.04,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853004
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430497371",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.1,
+          "deal": {
+            "ticket": "1430497371",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[tp 4613.49500]",
+            "profit": 0.1,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853732
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430497413",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.66,
+          "deal": {
+            "ticket": "1430497413",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[tp 4613.09500]",
+            "profit": 0.66,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853732
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+      "count": 48,
+      "wins": 45,
+      "losses": 3,
+      "neutral": 0,
+      "win_rate": 0.9375,
+      "total_profit": 77.7,
+      "avg_profit": 1.6188,
+      "max_win": 8.05,
+      "max_loss": -5.35,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430671462",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5,
+          "deal": {
+            "ticket": "1430671462",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.38500]",
+            "profit": 1.5,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856611
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430671929",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5,
+          "deal": {
+            "ticket": "1430671929",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.41100]",
+            "profit": 1.5,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856617
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430680847",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.75,
+          "deal": {
+            "ticket": "1430680847",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.36800]",
+            "profit": 0.75,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856705
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430683431",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5,
+          "deal": {
+            "ticket": "1430683431",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.351]",
+            "profit": 1.5,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856716
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430690366",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5,
+          "deal": {
+            "ticket": "1430690366",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.316]",
+            "profit": 1.5,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856813
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+      "count": 75,
+      "wins": 61,
+      "losses": 12,
+      "neutral": 2,
+      "win_rate": 0.8133,
+      "total_profit": 40.6,
+      "avg_profit": 0.5413,
+      "max_win": 2.48,
+      "max_loss": -1.1,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430492276",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.28,
+          "deal": {
+            "ticket": "1430492276",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.954]",
+            "profit": 0.28,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853638
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430492296",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1430492296",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.96000]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853638
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430492300",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1430492300",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.960]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853638
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430499136",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1430499136",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.916]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853757
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430500605",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.28,
+          "deal": {
+            "ticket": "1430500605",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.91600]",
+            "profit": 0.28,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853790
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+      "count": 15,
+      "wins": 15,
+      "losses": 0,
+      "neutral": 0,
+      "win_rate": 1.0,
+      "total_profit": 21.21,
+      "avg_profit": 1.414,
+      "max_win": 2.23,
+      "max_loss": 0.0,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438499623",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.3,
+          "deal": {
+            "ticket": "1438499623",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 1.3,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438499626",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.6600000000000001,
+          "deal": {
+            "ticket": "1438499626",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 1.6600000000000001,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438499627",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.54,
+          "deal": {
+            "ticket": "1438499627",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 1.54,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438499629",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5699999999999998,
+          "deal": {
+            "ticket": "1438499629",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 1.5699999999999998,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438499630",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 2.23,
+          "deal": {
+            "ticket": "1438499630",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 2.23,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+      "count": 57,
+      "wins": 51,
+      "losses": 6,
+      "neutral": 0,
+      "win_rate": 0.8947,
+      "total_profit": 13.77,
+      "avg_profit": 0.2416,
+      "max_win": 1.4,
+      "max_loss": -4.38,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430469796",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.06,
+          "deal": {
+            "ticket": "1430469796",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[tp 4616.11800]",
+            "profit": 0.06,
+            "entry": 1,
+            "type": 1,
+            "time": 1777853289
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430477221",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.31,
+          "deal": {
+            "ticket": "1430477221",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[tp 4615.87100]",
+            "profit": 0.31,
+            "entry": 1,
+            "type": 1,
+            "time": 1777853388
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430650695",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.45,
+          "deal": {
+            "ticket": "1430650695",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 4613.097]",
+            "profit": 0.45,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856412
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430651371",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.73,
+          "deal": {
+            "ticket": "1430651371",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[tp 4613.51400]",
+            "profit": 0.73,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856421
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430651374",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.77,
+          "deal": {
+            "ticket": "1430651374",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[tp 4613.50600]",
+            "profit": 0.77,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856421
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+      "count": 25,
+      "wins": 18,
+      "losses": 7,
+      "neutral": 0,
+      "win_rate": 0.72,
+      "total_profit": 3.59,
+      "avg_profit": 0.1436,
+      "max_win": 0.69,
+      "max_loss": -0.22,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432218431",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.06,
+          "deal": {
+            "ticket": "1432218431",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.74600]",
+            "profit": -0.06,
+            "entry": 1,
+            "type": 1,
+            "time": 1777876912
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432218432",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.2,
+          "deal": {
+            "ticket": "1432218432",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.74600]",
+            "profit": -0.2,
+            "entry": 1,
+            "type": 1,
+            "time": 1777876912
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432218433",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.15,
+          "deal": {
+            "ticket": "1432218433",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.74600]",
+            "profit": -0.15,
+            "entry": 1,
+            "type": 1,
+            "time": 1777876912
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432232794",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.4,
+          "deal": {
+            "ticket": "1432232794",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.74600]",
+            "profit": 0.4,
+            "entry": 1,
+            "type": 1,
+            "time": 1777877065
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432263252",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.12,
+          "deal": {
+            "ticket": "1432263252",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.87100]",
+            "profit": 0.12,
+            "entry": 1,
+            "type": 1,
+            "time": 1777877342
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+      "count": 8,
+      "wins": 8,
+      "losses": 0,
+      "neutral": 0,
+      "win_rate": 1.0,
+      "total_profit": 3.39,
+      "avg_profit": 0.4238,
+      "max_win": 0.69,
+      "max_loss": 0.0,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438492968",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.34,
+          "deal": {
+            "ticket": "1438492968",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.92200]",
+            "profit": 0.34,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925370
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438492978",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.69,
+          "deal": {
+            "ticket": "1438492978",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.92200]",
+            "profit": 0.69,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925370
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438492982",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.44,
+          "deal": {
+            "ticket": "1438492982",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.92200]",
+            "profit": 0.44,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925370
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438496884",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.29,
+          "deal": {
+            "ticket": "1438496884",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.809]",
+            "profit": 0.29,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925453
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438496889",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.46,
+          "deal": {
+            "ticket": "1438496889",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.809]",
+            "profit": 0.46,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925453
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260507",
+      "count": 1,
+      "wins": 1,
+      "losses": 0,
+      "neutral": 0,
+      "win_rate": 1.0,
+      "total_profit": 0.41,
+      "avg_profit": 0.41,
+      "max_win": 0.41,
+      "max_loss": 0.0,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438785751",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260507",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.41,
+          "deal": {
+            "ticket": "1438785751",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260507,
+            "comment": "[tp 4520.00000]",
+            "profit": 0.41,
+            "entry": 1,
+            "type": 0,
+            "time": 1777937897
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260506",
+      "count": 1,
+      "wins": 1,
+      "losses": 0,
+      "neutral": 0,
+      "win_rate": 1.0,
+      "total_profit": 0.07,
+      "avg_profit": 0.07,
+      "max_win": 0.07,
+      "max_loss": 0.0,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438767956",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.07,
+          "deal": {
+            "ticket": "1438767956",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "[tp 4520.00000]",
+            "profit": 0.07,
+            "entry": 1,
+            "type": 1,
+            "time": 1777936804
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+      "count": 32,
+      "wins": 20,
+      "losses": 12,
+      "neutral": 0,
+      "win_rate": 0.625,
+      "total_profit": -0.67,
+      "avg_profit": -0.0209,
+      "max_win": 1.98,
+      "max_loss": -4.48,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438461580",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1438461580",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.51800]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924799
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438461607",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1438461607",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.518]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924799
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438462457",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1438462457",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.51100]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924804
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438588675",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.1,
+          "deal": {
+            "ticket": "1438588675",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.12700]",
+            "profit": -0.1,
+            "entry": 1,
+            "type": 1,
+            "time": 1777927649
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438588676",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.06,
+          "deal": {
+            "ticket": "1438588676",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.12300]",
+            "profit": -0.06,
+            "entry": 1,
+            "type": 1,
+            "time": 1777927649
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+      "count": 6,
+      "wins": 2,
+      "losses": 4,
+      "neutral": 0,
+      "win_rate": 0.3333,
+      "total_profit": -2.0,
+      "avg_profit": -0.3333,
+      "max_win": 0.83,
+      "max_loss": -0.98,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438770154",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "win",
+          "profit": 0.83,
+          "deal": {
+            "ticket": "1438770154",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": 0.83,
+            "entry": 1,
+            "type": 1,
+            "time": 1777936863
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438770168",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "win",
+          "profit": 0.77,
+          "deal": {
+            "ticket": "1438770168",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": 0.77,
+            "entry": 1,
+            "type": 1,
+            "time": 1777936864
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438777006",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.98,
+          "deal": {
+            "ticket": "1438777006",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.98,
+            "entry": 1,
+            "type": 1,
+            "time": 1777937287
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438777046",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.9,
+          "deal": {
+            "ticket": "1438777046",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.9,
+            "entry": 1,
+            "type": 1,
+            "time": 1777937289
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438783126",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.75,
+          "deal": {
+            "ticket": "1438783126",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.75,
+            "entry": 1,
+            "type": 1,
+            "time": 1777937747
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:governor:magic=20260507",
+      "count": 3,
+      "wins": 0,
+      "losses": 3,
+      "neutral": 0,
+      "win_rate": 0.0,
+      "total_profit": -2.69,
+      "avg_profit": -0.8967,
+      "max_win": 0.0,
+      "max_loss": -0.97,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438777128",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.83,
+          "deal": {
+            "ticket": "1438777128",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.83,
+            "entry": 1,
+            "type": 0,
+            "time": 1777937294
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438782414",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.89,
+          "deal": {
+            "ticket": "1438782414",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.89,
+            "entry": 1,
+            "type": 0,
+            "time": 1777937686
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438782685",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.97,
+          "deal": {
+            "ticket": "1438782685",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.97,
+            "entry": 1,
+            "type": 0,
+            "time": 1777937706
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+      "count": 16,
+      "wins": 10,
+      "losses": 6,
+      "neutral": 0,
+      "win_rate": 0.625,
+      "total_profit": -4.65,
+      "avg_profit": -0.2906,
+      "max_win": 6.0,
+      "max_loss": -6.45,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430655476",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -6.45,
+          "deal": {
+            "ticket": "1430655476",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -14.97%/-0.22/1.47]",
+            "profit": -6.45,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856462
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430655478",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -6.15,
+          "deal": {
+            "ticket": "1430655478",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -42.18%/-0.62/1.47]",
+            "profit": -6.15,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856462
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430655481",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -6.15,
+          "deal": {
+            "ticket": "1430655481",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -82.99%/-1.22/1.47]",
+            "profit": -6.15,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856462
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430663021",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -4.85,
+          "deal": {
+            "ticket": "1430663021",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -31.29%/-0.46/1.47]",
+            "profit": -4.85,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856552
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430663024",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -4.8,
+          "deal": {
+            "ticket": "1430663024",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -31.29%/-0.46/1.47]",
+            "profit": -4.8,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856552
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+      "count": 48,
+      "wins": 1,
+      "losses": 46,
+      "neutral": 1,
+      "win_rate": 0.0208,
+      "total_profit": -41.83,
+      "avg_profit": -0.8715,
+      "max_win": 0.54,
+      "max_loss": -4.55,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438600758",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.56,
+          "deal": {
+            "ticket": "1438600758",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.56,
+            "entry": 1,
+            "type": 0,
+            "time": 1777927989
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438600792",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.57,
+          "deal": {
+            "ticket": "1438600792",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.57,
+            "entry": 1,
+            "type": 0,
+            "time": 1777927992
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438600931",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.51,
+          "deal": {
+            "ticket": "1438600931",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.51,
+            "entry": 1,
+            "type": 0,
+            "time": 1777928003
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438607179",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.72,
+          "deal": {
+            "ticket": "1438607179",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.72,
+            "entry": 1,
+            "type": 0,
+            "time": 1777928225
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438607202",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.72,
+          "deal": {
+            "ticket": "1438607202",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.72,
+            "entry": 1,
+            "type": 0,
+            "time": 1777928227
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+      "count": 61,
+      "wins": 16,
+      "losses": 45,
+      "neutral": 0,
+      "win_rate": 0.2623,
+      "total_profit": -126.4,
+      "avg_profit": -2.0721,
+      "max_win": 5.22,
+      "max_loss": -46.99,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475139",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -46.4,
+          "deal": {
+            "ticket": "1438475139",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -46.4,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924938
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475263",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -46.99,
+          "deal": {
+            "ticket": "1438475263",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -46.99,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924940
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475400",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -45.77,
+          "deal": {
+            "ticket": "1438475400",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -45.77,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924942
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475465",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.72,
+          "deal": {
+            "ticket": "1438475465",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.72,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924944
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475551",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -3.62,
+          "deal": {
+            "ticket": "1438475551",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -3.62,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924947
+          }
+        }
+      ]
+    }
+  ],
+  "worst_genes": [
+    {
+      "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+      "count": 61,
+      "wins": 16,
+      "losses": 45,
+      "neutral": 0,
+      "win_rate": 0.2623,
+      "total_profit": -126.4,
+      "avg_profit": -2.0721,
+      "max_win": 5.22,
+      "max_loss": -46.99,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475139",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -46.4,
+          "deal": {
+            "ticket": "1438475139",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -46.4,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924938
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475263",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -46.99,
+          "deal": {
+            "ticket": "1438475263",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -46.99,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924940
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475400",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -45.77,
+          "deal": {
+            "ticket": "1438475400",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -45.77,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924942
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475465",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.72,
+          "deal": {
+            "ticket": "1438475465",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.72,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924944
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438475551",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -3.62,
+          "deal": {
+            "ticket": "1438475551",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -3.62,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924947
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+      "count": 48,
+      "wins": 1,
+      "losses": 46,
+      "neutral": 1,
+      "win_rate": 0.0208,
+      "total_profit": -41.83,
+      "avg_profit": -0.8715,
+      "max_win": 0.54,
+      "max_loss": -4.55,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438600758",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.56,
+          "deal": {
+            "ticket": "1438600758",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.56,
+            "entry": 1,
+            "type": 0,
+            "time": 1777927989
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438600792",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.57,
+          "deal": {
+            "ticket": "1438600792",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.57,
+            "entry": 1,
+            "type": 0,
+            "time": 1777927992
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438600931",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.51,
+          "deal": {
+            "ticket": "1438600931",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.51,
+            "entry": 1,
+            "type": 0,
+            "time": 1777928003
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438607179",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.72,
+          "deal": {
+            "ticket": "1438607179",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.72,
+            "entry": 1,
+            "type": 0,
+            "time": 1777928225
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438607202",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260506",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.72,
+          "deal": {
+            "ticket": "1438607202",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.72,
+            "entry": 1,
+            "type": 0,
+            "time": 1777928227
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+      "count": 16,
+      "wins": 10,
+      "losses": 6,
+      "neutral": 0,
+      "win_rate": 0.625,
+      "total_profit": -4.65,
+      "avg_profit": -0.2906,
+      "max_win": 6.0,
+      "max_loss": -6.45,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430655476",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -6.45,
+          "deal": {
+            "ticket": "1430655476",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -14.97%/-0.22/1.47]",
+            "profit": -6.45,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856462
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430655478",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -6.15,
+          "deal": {
+            "ticket": "1430655478",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -42.18%/-0.62/1.47]",
+            "profit": -6.15,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856462
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430655481",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -6.15,
+          "deal": {
+            "ticket": "1430655481",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -82.99%/-1.22/1.47]",
+            "profit": -6.15,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856462
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430663021",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -4.85,
+          "deal": {
+            "ticket": "1430663021",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -31.29%/-0.46/1.47]",
+            "profit": -4.85,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856552
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430663024",
+          "gene_id": "XAGUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -4.8,
+          "deal": {
+            "ticket": "1430663024",
+            "symbol": "XAGUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[so -31.29%/-0.46/1.47]",
+            "profit": -4.8,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856552
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:governor:magic=20260507",
+      "count": 3,
+      "wins": 0,
+      "losses": 3,
+      "neutral": 0,
+      "win_rate": 0.0,
+      "total_profit": -2.69,
+      "avg_profit": -0.8967,
+      "max_win": 0.0,
+      "max_loss": -0.97,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438777128",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.83,
+          "deal": {
+            "ticket": "1438777128",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.83,
+            "entry": 1,
+            "type": 0,
+            "time": 1777937294
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438782414",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.89,
+          "deal": {
+            "ticket": "1438782414",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.89,
+            "entry": 1,
+            "type": 0,
+            "time": 1777937686
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438782685",
+          "gene_id": "XAUUSDm:BUY:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.97,
+          "deal": {
+            "ticket": "1438782685",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.97,
+            "entry": 1,
+            "type": 0,
+            "time": 1777937706
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+      "count": 6,
+      "wins": 2,
+      "losses": 4,
+      "neutral": 0,
+      "win_rate": 0.3333,
+      "total_profit": -2.0,
+      "avg_profit": -0.3333,
+      "max_win": 0.83,
+      "max_loss": -0.98,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438770154",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "win",
+          "profit": 0.83,
+          "deal": {
+            "ticket": "1438770154",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": 0.83,
+            "entry": 1,
+            "type": 1,
+            "time": 1777936863
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438770168",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "win",
+          "profit": 0.77,
+          "deal": {
+            "ticket": "1438770168",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": 0.77,
+            "entry": 1,
+            "type": 1,
+            "time": 1777936864
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438777006",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.98,
+          "deal": {
+            "ticket": "1438777006",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.98,
+            "entry": 1,
+            "type": 1,
+            "time": 1777937287
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438777046",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.9,
+          "deal": {
+            "ticket": "1438777046",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.9,
+            "entry": 1,
+            "type": 1,
+            "time": 1777937289
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438783126",
+          "gene_id": "XAUUSDm:SELL:governor:magic=20260507",
+          "family": "governor_advisor",
+          "result": "loss",
+          "profit": -0.75,
+          "deal": {
+            "ticket": "1438783126",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260507,
+            "comment": "FRIDAY_GOV_CLOSE",
+            "profit": -0.75,
+            "entry": 1,
+            "type": 1,
+            "time": 1777937747
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+      "count": 32,
+      "wins": 20,
+      "losses": 12,
+      "neutral": 0,
+      "win_rate": 0.625,
+      "total_profit": -0.67,
+      "avg_profit": -0.0209,
+      "max_win": 1.98,
+      "max_loss": -4.48,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438461580",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1438461580",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.51800]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924799
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438461607",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1438461607",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.518]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924799
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438462457",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1438462457",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.51100]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 1,
+            "time": 1777924804
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438588675",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.1,
+          "deal": {
+            "ticket": "1438588675",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.12700]",
+            "profit": -0.1,
+            "entry": 1,
+            "type": 1,
+            "time": 1777927649
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438588676",
+          "gene_id": "USOILm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.06,
+          "deal": {
+            "ticket": "1438588676",
+            "symbol": "USOILm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 102.12300]",
+            "profit": -0.06,
+            "entry": 1,
+            "type": 1,
+            "time": 1777927649
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260506",
+      "count": 1,
+      "wins": 1,
+      "losses": 0,
+      "neutral": 0,
+      "win_rate": 1.0,
+      "total_profit": 0.07,
+      "avg_profit": 0.07,
+      "max_win": 0.07,
+      "max_loss": 0.0,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438767956",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.07,
+          "deal": {
+            "ticket": "1438767956",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260506,
+            "comment": "[tp 4520.00000]",
+            "profit": 0.07,
+            "entry": 1,
+            "type": 1,
+            "time": 1777936804
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260507",
+      "count": 1,
+      "wins": 1,
+      "losses": 0,
+      "neutral": 0,
+      "win_rate": 1.0,
+      "total_profit": 0.41,
+      "avg_profit": 0.41,
+      "max_win": 0.41,
+      "max_loss": 0.0,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438785751",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260507",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.41,
+          "deal": {
+            "ticket": "1438785751",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260507,
+            "comment": "[tp 4520.00000]",
+            "profit": 0.41,
+            "entry": 1,
+            "type": 0,
+            "time": 1777937897
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+      "count": 8,
+      "wins": 8,
+      "losses": 0,
+      "neutral": 0,
+      "win_rate": 1.0,
+      "total_profit": 3.39,
+      "avg_profit": 0.4238,
+      "max_win": 0.69,
+      "max_loss": 0.0,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438492968",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.34,
+          "deal": {
+            "ticket": "1438492968",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.92200]",
+            "profit": 0.34,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925370
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438492978",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.69,
+          "deal": {
+            "ticket": "1438492978",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.92200]",
+            "profit": 0.69,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925370
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438492982",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.44,
+          "deal": {
+            "ticket": "1438492982",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.92200]",
+            "profit": 0.44,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925370
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438496884",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.29,
+          "deal": {
+            "ticket": "1438496884",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.809]",
+            "profit": 0.29,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925453
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438496889",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.46,
+          "deal": {
+            "ticket": "1438496889",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260505,
+            "comment": "[sl 4513.809]",
+            "profit": 0.46,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925453
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+      "count": 25,
+      "wins": 18,
+      "losses": 7,
+      "neutral": 0,
+      "win_rate": 0.72,
+      "total_profit": 3.59,
+      "avg_profit": 0.1436,
+      "max_win": 0.69,
+      "max_loss": -0.22,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432218431",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.06,
+          "deal": {
+            "ticket": "1432218431",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.74600]",
+            "profit": -0.06,
+            "entry": 1,
+            "type": 1,
+            "time": 1777876912
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432218432",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.2,
+          "deal": {
+            "ticket": "1432218432",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.74600]",
+            "profit": -0.2,
+            "entry": 1,
+            "type": 1,
+            "time": 1777876912
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432218433",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.15,
+          "deal": {
+            "ticket": "1432218433",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.74600]",
+            "profit": -0.15,
+            "entry": 1,
+            "type": 1,
+            "time": 1777876912
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432232794",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.4,
+          "deal": {
+            "ticket": "1432232794",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.74600]",
+            "profit": 0.4,
+            "entry": 1,
+            "type": 1,
+            "time": 1777877065
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1432263252",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260505",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.12,
+          "deal": {
+            "ticket": "1432263252",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260505,
+            "comment": "[tp 4587.87100]",
+            "profit": 0.12,
+            "entry": 1,
+            "type": 1,
+            "time": 1777877342
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+      "count": 57,
+      "wins": 51,
+      "losses": 6,
+      "neutral": 0,
+      "win_rate": 0.8947,
+      "total_profit": 13.77,
+      "avg_profit": 0.2416,
+      "max_win": 1.4,
+      "max_loss": -4.38,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430469796",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.06,
+          "deal": {
+            "ticket": "1430469796",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[tp 4616.11800]",
+            "profit": 0.06,
+            "entry": 1,
+            "type": 1,
+            "time": 1777853289
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430477221",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.31,
+          "deal": {
+            "ticket": "1430477221",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[tp 4615.87100]",
+            "profit": 0.31,
+            "entry": 1,
+            "type": 1,
+            "time": 1777853388
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430650695",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.45,
+          "deal": {
+            "ticket": "1430650695",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[sl 4613.097]",
+            "profit": 0.45,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856412
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430651371",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.73,
+          "deal": {
+            "ticket": "1430651371",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[tp 4613.51400]",
+            "profit": 0.73,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856421
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430651374",
+          "gene_id": "XAUUSDm:SELL:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.77,
+          "deal": {
+            "ticket": "1430651374",
+            "symbol": "XAUUSDm",
+            "side": "SELL",
+            "magic": 20260504,
+            "comment": "[tp 4613.50600]",
+            "profit": 0.77,
+            "entry": 1,
+            "type": 1,
+            "time": 1777856421
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+      "count": 15,
+      "wins": 15,
+      "losses": 0,
+      "neutral": 0,
+      "win_rate": 1.0,
+      "total_profit": 21.21,
+      "avg_profit": 1.414,
+      "max_win": 2.23,
+      "max_loss": 0.0,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438499623",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.3,
+          "deal": {
+            "ticket": "1438499623",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 1.3,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438499626",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.6600000000000001,
+          "deal": {
+            "ticket": "1438499626",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 1.6600000000000001,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438499627",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.54,
+          "deal": {
+            "ticket": "1438499627",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 1.54,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1438499629",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5699999999999998,
+          "deal": {
+            "ticket": "1438499629",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 1.5699999999999998,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:17",
+          "ticket": "1438499630",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260506",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 2.23,
+          "deal": {
+            "ticket": "1438499630",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260506,
+            "comment": "[tp 4512.74300]",
+            "profit": 2.23,
+            "entry": 1,
+            "type": 0,
+            "time": 1777925468
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+      "count": 75,
+      "wins": 61,
+      "losses": 12,
+      "neutral": 2,
+      "win_rate": 0.8133,
+      "total_profit": 40.6,
+      "avg_profit": 0.5413,
+      "max_win": 2.48,
+      "max_loss": -1.1,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430492276",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.28,
+          "deal": {
+            "ticket": "1430492276",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.954]",
+            "profit": 0.28,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853638
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430492296",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1430492296",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.96000]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853638
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430492300",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1430492300",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.960]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853638
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430499136",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.3,
+          "deal": {
+            "ticket": "1430499136",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.916]",
+            "profit": 0.3,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853757
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430500605",
+          "gene_id": "USOILm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.28,
+          "deal": {
+            "ticket": "1430500605",
+            "symbol": "USOILm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 98.91600]",
+            "profit": 0.28,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853790
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+      "count": 48,
+      "wins": 45,
+      "losses": 3,
+      "neutral": 0,
+      "win_rate": 0.9375,
+      "total_profit": 77.7,
+      "avg_profit": 1.6188,
+      "max_win": 8.05,
+      "max_loss": -5.35,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430671462",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5,
+          "deal": {
+            "ticket": "1430671462",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.38500]",
+            "profit": 1.5,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856611
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430671929",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5,
+          "deal": {
+            "ticket": "1430671929",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.41100]",
+            "profit": 1.5,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856617
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430680847",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.75,
+          "deal": {
+            "ticket": "1430680847",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.36800]",
+            "profit": 0.75,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856705
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430683431",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5,
+          "deal": {
+            "ticket": "1430683431",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.351]",
+            "profit": 1.5,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856716
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430690366",
+          "gene_id": "XAGUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 1.5,
+          "deal": {
+            "ticket": "1430690366",
+            "symbol": "XAGUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 75.316]",
+            "profit": 1.5,
+            "entry": 1,
+            "type": 0,
+            "time": 1777856813
+          }
+        }
+      ]
+    },
+    {
+      "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+      "count": 148,
+      "wins": 136,
+      "losses": 9,
+      "neutral": 3,
+      "win_rate": 0.9189,
+      "total_profit": 90.48,
+      "avg_profit": 0.6114,
+      "max_win": 2.02,
+      "max_loss": -0.85,
+      "examples": [
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430427616",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.85,
+          "deal": {
+            "ticket": "1430427616",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 4610.08000]",
+            "profit": -0.85,
+            "entry": 1,
+            "type": 0,
+            "time": 1777852847
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430435305",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.68,
+          "deal": {
+            "ticket": "1430435305",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[sl 4607.056]",
+            "profit": -0.68,
+            "entry": 1,
+            "type": 0,
+            "time": 1777852904
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430446239",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "loss",
+          "profit": -0.04,
+          "deal": {
+            "ticket": "1430446239",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[tp 4608.13100]",
+            "profit": -0.04,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853004
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430497371",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.1,
+          "deal": {
+            "ticket": "1430497371",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[tp 4613.49500]",
+            "profit": 0.1,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853732
+          }
+        },
+        {
+          "time": "2026-05-05T02:43:16",
+          "ticket": "1430497413",
+          "gene_id": "XAUUSDm:BUY:unknown_execution:magic=20260504",
+          "family": "unknown_advisor",
+          "result": "win",
+          "profit": 0.66,
+          "deal": {
+            "ticket": "1430497413",
+            "symbol": "XAUUSDm",
+            "side": "BUY",
+            "magic": 20260504,
+            "comment": "[tp 4613.09500]",
+            "profit": 0.66,
+            "entry": 1,
+            "type": 0,
+            "time": 1777853732
+          }
+        }
+      ]
+    }
+  ]
+}

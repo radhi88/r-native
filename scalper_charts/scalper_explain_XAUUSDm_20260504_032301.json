@@ -1,0 +1,231 @@
+{
+  "symbol": "XAUUSDm",
+  "action": "SELL",
+  "close": 4604.063,
+  "bid": 4604.063,
+  "ask": 4604.371,
+  "spread_points": 308.0,
+  "buy_score": 3.535,
+  "sell_score": 10.45,
+  "diff": -6.915,
+  "confidence": 0.4945,
+  "threshold": 0.95,
+  "min_conf": 0.12,
+  "reason": "M1:bear_trend+M1:bear_fvg+M1:discount+M5:bear_trend+M5:BOS_SELL+M5:bear_fvg+M5:discount+M15:bull_trend+M15:BOS_SELL+M15:CHOCH_SELL+M15:discount+H1:bull_trend+H1:discount+H4:bear_trend+H4:discount+D1:bear_trend+D1:discount",
+  "tp_points": 873.0,
+  "tp_level": 4603.19,
+  "tp_candidates": [
+    {
+      "timeframe": "M1",
+      "level": 4602.512,
+      "distance_points": 1551.0000000003856
+    },
+    {
+      "timeframe": "M5",
+      "level": 4602.512,
+      "distance_points": 1551.0000000003856
+    },
+    {
+      "timeframe": "M5",
+      "level": 4602.503,
+      "distance_points": 1560.0000000004002
+    },
+    {
+      "timeframe": "M5",
+      "level": 4599.372,
+      "distance_points": 4690.999999999804
+    },
+    {
+      "timeframe": "M5",
+      "level": 4598.83,
+      "distance_points": 5233.000000000175
+    },
+    {
+      "timeframe": "M5",
+      "level": 4598.551,
+      "distance_points": 5511.999999999716
+    },
+    {
+      "timeframe": "M5",
+      "level": 4597.28,
+      "distance_points": 6783.0000000003565
+    },
+    {
+      "timeframe": "M5",
+      "level": 4596.353,
+      "distance_points": 7710.000000000036
+    },
+    {
+      "timeframe": "M5",
+      "level": 4595.652,
+      "distance_points": 8411.000000000058
+    },
+    {
+      "timeframe": "M15",
+      "level": 4602.796,
+      "distance_points": 1266.9999999998254
+    },
+    {
+      "timeframe": "M15",
+      "level": 4602.512,
+      "distance_points": 1551.0000000003856
+    },
+    {
+      "timeframe": "M15",
+      "level": 4600.985,
+      "distance_points": 3078.0000000004293
+    }
+  ],
+  "tf_rows": [
+    {
+      "timeframe": "M1",
+      "close": 4604.063,
+      "ema20": 4609.205027794095,
+      "ema50": 4611.941097904787,
+      "swing_high": 4617.071,
+      "swing_low": 4603.868,
+      "trend": "bearish",
+      "bos": "none",
+      "choch": "none",
+      "fvg": "bearish_fvg",
+      "liquidity_sweep": "none",
+      "zone": "discount",
+      "buy_score_raw": 0.35,
+      "sell_score_raw": 1.8,
+      "buy_score": 0.4725,
+      "sell_score": 2.43,
+      "weight": 1.35,
+      "atr": 2.5701428571427902,
+      "reasons": [
+        "bear_trend",
+        "bear_fvg",
+        "discount"
+      ]
+    },
+    {
+      "timeframe": "M5",
+      "close": 4604.063,
+      "ema20": 4613.791895996008,
+      "ema50": 4616.982932188078,
+      "swing_high": 4629.338,
+      "swing_low": 4604.488,
+      "trend": "bearish",
+      "bos": "BOS_SELL",
+      "choch": "none",
+      "fvg": "bearish_fvg",
+      "liquidity_sweep": "none",
+      "zone": "discount",
+      "buy_score_raw": 0.35,
+      "sell_score_raw": 3.4000000000000004,
+      "buy_score": 0.45499999999999996,
+      "sell_score": 4.420000000000001,
+      "weight": 1.3,
+      "atr": 5.306714285714277,
+      "reasons": [
+        "bear_trend",
+        "BOS_SELL",
+        "bear_fvg",
+        "discount"
+      ]
+    },
+    {
+      "timeframe": "M15",
+      "close": 4604.063,
+      "ema20": 4616.657653996616,
+      "ema50": 4615.591407271302,
+      "swing_high": 4649.948,
+      "swing_low": 4606.885,
+      "trend": "bullish",
+      "bos": "BOS_SELL",
+      "choch": "CHOCH_SELL",
+      "fvg": "none",
+      "liquidity_sweep": "none",
+      "zone": "discount",
+      "buy_score_raw": 1.35,
+      "sell_score_raw": 2.9000000000000004,
+      "buy_score": 1.35,
+      "sell_score": 2.9000000000000004,
+      "weight": 1.0,
+      "atr": 8.31628571428577,
+      "reasons": [
+        "bull_trend",
+        "BOS_SELL",
+        "CHOCH_SELL",
+        "discount"
+      ]
+    },
+    {
+      "timeframe": "H1",
+      "close": 4604.063,
+      "ema20": 4611.70940591942,
+      "ema50": 4607.1617479797,
+      "swing_high": 4660.156,
+      "swing_low": 4559.759,
+      "trend": "bullish",
+      "bos": "none",
+      "choch": "none",
+      "fvg": "none",
+      "liquidity_sweep": "none",
+      "zone": "discount",
+      "buy_score_raw": 1.35,
+      "sell_score_raw": 0.0,
+      "buy_score": 1.0125000000000002,
+      "sell_score": 0.0,
+      "weight": 0.75,
+      "atr": 20.686428571428483,
+      "reasons": [
+        "bull_trend",
+        "discount"
+      ]
+    },
+    {
+      "timeframe": "H4",
+      "close": 4604.063,
+      "ema20": 4611.110122971848,
+      "ema50": 4646.4324787491805,
+      "swing_high": 4730.097,
+      "swing_low": 4510.107,
+      "trend": "bearish",
+      "bos": "none",
+      "choch": "none",
+      "fvg": "none",
+      "liquidity_sweep": "none",
+      "zone": "discount",
+      "buy_score_raw": 0.35,
+      "sell_score_raw": 1.0,
+      "buy_score": 0.1575,
+      "sell_score": 0.45,
+      "weight": 0.45,
+      "atr": 34.6994285714286,
+      "reasons": [
+        "bear_trend",
+        "discount"
+      ]
+    },
+    {
+      "timeframe": "D1",
+      "close": 4604.063,
+      "ema20": 4674.9926985662905,
+      "ema50": 4735.929859858075,
+      "swing_high": 4889.662,
+      "swing_low": 4375.208,
+      "trend": "bearish",
+      "bos": "none",
+      "choch": "none",
+      "fvg": "none",
+      "liquidity_sweep": "none",
+      "zone": "discount",
+      "buy_score_raw": 0.35,
+      "sell_score_raw": 1.0,
+      "buy_score": 0.0875,
+      "sell_score": 0.25,
+      "weight": 0.25,
+      "atr": 82.14685714285712,
+      "reasons": [
+        "bear_trend",
+        "discount"
+      ]
+    }
+  ],
+  "time": "2026-05-04T03:23:01"
+}

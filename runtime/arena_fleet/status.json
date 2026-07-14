@@ -1,0 +1,55 @@
+{
+  "updated_at": "2026-05-17T21:43:31",
+  "mode": "safe_24_7_supervisor",
+  "services": {
+    "ea_monitor": {
+      "ok": true,
+      "url": "http://localhost:7799/data",
+      "pids": [
+        23380,
+        28088,
+        33948
+      ]
+    },
+    "arena": {
+      "ok": true,
+      "url": "http://127.0.0.1:5173/arena",
+      "pids": [
+        2156,
+        37848
+      ]
+    }
+  },
+  "files": {
+    "status": {
+      "path": "C:\\Users\\Radhi\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\ea_realtime_status.json",
+      "age_seconds": 356.82885551452637,
+      "bar": 184
+    },
+    "history": {
+      "path": "C:\\Users\\Radhi\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\ea_bar_history.json",
+      "age_seconds": 365.0226700305939
+    },
+    "dna": {
+      "path": "C:\\Users\\Radhi\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\gold_dna_memory.csv",
+      "age_seconds": 2190.795693397522
+    }
+  },
+  "health": {
+    "balance": 122.14,
+    "peak_balance": 129.79,
+    "drawdown_from_peak_pct": 5.89,
+    "bar": 184,
+    "indicator_snapshot": {},
+    "metrics": {
+      "win_rate": 50.0,
+      "profit_factor": 1.2533180778032036,
+      "max_drawdown_pct": 12.212034825487322,
+      "net_profit": 22.14
+    },
+    "history_bars": 184,
+    "actions": [
+      "CHOP_ALERT: low ADX and weak SIG; stop-reverse can churn here."
+    ]
+  }
+}

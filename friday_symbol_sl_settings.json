@@ -1,0 +1,463 @@
+{
+  "version": "0.1",
+  "updated_at": "2026-05-12T18:36:01",
+  "description": "Adaptive per-symbol profit SL settings learned by FRIDAY governor.",
+  "symbols": {
+    "XAGUSDm": {
+      "symbol": "XAGUSDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 17.0,
+      "profit_lock_points": 12.0,
+      "samples": 2,
+      "created_at": "2026-05-12T14:53:37",
+      "last_profit": 3.8,
+      "last_favorable_points": 38.0,
+      "learned_usd_per_point": 0.1,
+      "updated_at": "2026-05-12T14:53:43"
+    },
+    "USDCADm": {
+      "symbol": "USDCADm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 58.74,
+      "profit_lock_points": 25.7,
+      "samples": 33,
+      "created_at": "2026-05-12T14:53:37",
+      "last_profit": 0.55,
+      "last_favorable_points": 75.0,
+      "learned_usd_per_point": 0.00733333,
+      "updated_at": "2026-05-12T16:24:07"
+    },
+    "AUDUSDm": {
+      "symbol": "AUDUSDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 50.09,
+      "profit_lock_points": 21.92,
+      "samples": 46,
+      "created_at": "2026-05-12T14:53:37",
+      "last_profit": 0.5,
+      "last_favorable_points": 64.0,
+      "learned_usd_per_point": 0.0078125,
+      "updated_at": "2026-05-12T16:01:07"
+    },
+    "NZDUSDm": {
+      "symbol": "NZDUSDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 50.45,
+      "profit_lock_points": 22.08,
+      "samples": 79,
+      "created_at": "2026-05-12T14:53:37",
+      "last_profit": 0.51,
+      "last_favorable_points": 66.0,
+      "learned_usd_per_point": 0.00772727,
+      "updated_at": "2026-05-12T16:02:56"
+    },
+    "EURJPYm": {
+      "symbol": "EURJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 64.9,
+      "profit_lock_points": 28.39,
+      "samples": 5,
+      "created_at": "2026-05-12T14:53:37",
+      "last_profit": 0.51,
+      "last_favorable_points": 88.0,
+      "learned_usd_per_point": 0.00579545,
+      "updated_at": "2026-05-12T17:09:01"
+    },
+    "GBPJPYm": {
+      "symbol": "GBPJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 68.59,
+      "profit_lock_points": 30.01,
+      "samples": 63,
+      "created_at": "2026-05-12T14:53:37",
+      "last_profit": 0.51,
+      "last_favorable_points": 93.0,
+      "learned_usd_per_point": 0.00548387,
+      "updated_at": "2026-05-12T15:32:08"
+    },
+    "ETHUSDm": {
+      "symbol": "ETHUSDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:37"
+    },
+    "AUDJPYm": {
+      "symbol": "AUDJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 42.1,
+      "profit_lock_points": 18.42,
+      "samples": 134,
+      "created_at": "2026-05-12T14:53:37",
+      "last_profit": 0.58,
+      "last_favorable_points": 67.0,
+      "learned_usd_per_point": 0.00865672,
+      "updated_at": "2026-05-12T15:01:58"
+    },
+    "AUDNZDm": {
+      "symbol": "AUDNZDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "AUDSGDm": {
+      "symbol": "AUDSGDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "CADCHFm": {
+      "symbol": "CADCHFm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "CADJPYm": {
+      "symbol": "CADJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "DKKJPYm": {
+      "symbol": "DKKJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "DKKSGDm": {
+      "symbol": "DKKSGDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "EURCADm": {
+      "symbol": "EURCADm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "EURCHFm": {
+      "symbol": "EURCHFm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "EURGBPm": {
+      "symbol": "EURGBPm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:38"
+    },
+    "EURNZDm": {
+      "symbol": "EURNZDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 58.46,
+      "profit_lock_points": 25.58,
+      "samples": 573,
+      "created_at": "2026-05-12T14:53:38",
+      "last_profit": 0.94,
+      "last_favorable_points": 185.0,
+      "learned_usd_per_point": 0.00508108,
+      "updated_at": "2026-05-12T16:01:08"
+    },
+    "GBPAUDm": {
+      "symbol": "GBPAUDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 30.56,
+      "profit_lock_points": 13.37,
+      "samples": 19,
+      "created_at": "2026-05-12T14:53:38",
+      "last_profit": 0.61,
+      "last_favorable_points": 49.0,
+      "learned_usd_per_point": 0.01244898,
+      "updated_at": "2026-05-12T16:20:15"
+    },
+    "GBPCHFm": {
+      "symbol": "GBPCHFm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 43.05,
+      "profit_lock_points": 18.84,
+      "samples": 390,
+      "created_at": "2026-05-12T14:53:39",
+      "last_profit": 0.81,
+      "last_favorable_points": 89.0,
+      "learned_usd_per_point": 0.00910112,
+      "updated_at": "2026-05-12T15:26:56"
+    },
+    "GBPNZDm": {
+      "symbol": "GBPNZDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 40.45,
+      "profit_lock_points": 17.7,
+      "samples": 114,
+      "created_at": "2026-05-12T14:53:39",
+      "last_profit": 0.5,
+      "last_favorable_points": 42.0,
+      "learned_usd_per_point": 0.01190476,
+      "updated_at": "2026-05-12T15:32:21"
+    },
+    "GBPSGDm": {
+      "symbol": "GBPSGDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 69.38,
+      "profit_lock_points": 30.36,
+      "samples": 40,
+      "created_at": "2026-05-12T14:53:39",
+      "last_profit": 0.52,
+      "last_favorable_points": 95.0,
+      "learned_usd_per_point": 0.00547368,
+      "updated_at": "2026-05-12T15:32:21"
+    },
+    "MXNJPYm": {
+      "symbol": "MXNJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "NOKDKKm": {
+      "symbol": "NOKDKKm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "NOKJPYm": {
+      "symbol": "NOKJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "NZDCADm": {
+      "symbol": "NZDCADm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 37.97,
+      "profit_lock_points": 16.61,
+      "samples": 495,
+      "created_at": "2026-05-12T14:53:39",
+      "last_profit": 0.88,
+      "last_favorable_points": 83.0,
+      "learned_usd_per_point": 0.01060241,
+      "updated_at": "2026-05-12T16:00:47"
+    },
+    "NZDJPYm": {
+      "symbol": "NZDJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 87.33,
+      "profit_lock_points": 38.2,
+      "samples": 314,
+      "created_at": "2026-05-12T14:53:39",
+      "last_profit": 0.52,
+      "last_favorable_points": 115.0,
+      "learned_usd_per_point": 0.00452174,
+      "updated_at": "2026-05-12T16:02:44"
+    },
+    "NZDSGDm": {
+      "symbol": "NZDSGDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "SEKDKKm": {
+      "symbol": "SEKDKKm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "SEKJPYm": {
+      "symbol": "SEKJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "SGDJPYm": {
+      "symbol": "SGDJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "USDILSm": {
+      "symbol": "USDILSm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "ZARJPYm": {
+      "symbol": "ZARJPYm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:39"
+    },
+    "US30_x10m": {
+      "symbol": "US30_x10m",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 40.0,
+      "profit_lock_points": 17.5,
+      "samples": 1,
+      "created_at": "2026-05-12T14:53:39",
+      "last_profit": 3.91,
+      "last_favorable_points": 391.0,
+      "learned_usd_per_point": 0.01,
+      "updated_at": "2026-05-12T15:30:00"
+    },
+    "AUS200m": {
+      "symbol": "AUS200m",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 42,
+      "created_at": "2026-05-12T14:53:40",
+      "last_profit": 0.06,
+      "last_favorable_points": 490.0,
+      "learned_usd_per_point": 0.00012245,
+      "updated_at": "2026-05-12T14:56:25"
+    },
+    "DE30m": {
+      "symbol": "DE30m",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:40"
+    },
+    "FR40m": {
+      "symbol": "FR40m",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:40"
+    },
+    "STOXX50m": {
+      "symbol": "STOXX50m",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:40"
+    },
+    "UK100m": {
+      "symbol": "UK100m",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:40"
+    },
+    "US30m": {
+      "symbol": "US30m",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:53:40"
+    },
+    "XAUUSDm": {
+      "symbol": "XAUUSDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 175.86,
+      "profit_lock_points": 79.6,
+      "samples": 18,
+      "created_at": "2026-05-12T14:54:43",
+      "last_profit": 1.2,
+      "last_favorable_points": 1199.0,
+      "learned_usd_per_point": 0.00100083,
+      "updated_at": "2026-05-12T18:28:20"
+    },
+    "USDSGDm": {
+      "symbol": "USDSGDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T14:58:35"
+    },
+    "USOILm": {
+      "symbol": "USOILm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 20.0,
+      "profit_lock_points": 12.0,
+      "samples": 1,
+      "created_at": "2026-05-12T15:18:45",
+      "last_profit": 1.24,
+      "last_favorable_points": 62.0,
+      "learned_usd_per_point": 0.02,
+      "updated_at": "2026-05-12T15:18:57"
+    },
+    "XAGEURm": {
+      "symbol": "XAGEURm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T15:19:23"
+    },
+    "XAGAUDm": {
+      "symbol": "XAGAUDm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 17.0,
+      "profit_lock_points": 12.0,
+      "samples": 2,
+      "created_at": "2026-05-12T15:25:34",
+      "last_profit": 4.26,
+      "last_favorable_points": 118.0,
+      "learned_usd_per_point": 0.03610169,
+      "updated_at": "2026-05-12T15:32:04"
+    },
+    "XAGGBPm": {
+      "symbol": "XAGGBPm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 700.0,
+      "profit_lock_points": 250.0,
+      "samples": 0,
+      "created_at": "2026-05-12T15:27:15"
+    },
+    "NZDCHFm": {
+      "symbol": "NZDCHFm",
+      "profit_trail_start_usd": 0.5,
+      "profit_trail_points": 40.19,
+      "profit_lock_points": 17.58,
+      "samples": 73,
+      "created_at": "2026-05-12T15:30:13",
+      "last_profit": 0.54,
+      "last_favorable_points": 56.0,
+      "learned_usd_per_point": 0.00964286,
+      "updated_at": "2026-05-12T16:50:34"
+    }
+  }
+}

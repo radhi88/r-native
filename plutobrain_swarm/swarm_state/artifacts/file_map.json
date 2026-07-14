@@ -1,0 +1,236 @@
+{
+  "generated": 1782832742.9445002,
+  "files": [
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "ext": ".mq5",
+      "bytes": 63560,
+      "lines": 1534,
+      "mtime": 1782715532.1028318
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_BRAIN_EA_v1.mq5",
+      "ext": ".mq5",
+      "bytes": 44948,
+      "lines": 1148,
+      "mtime": 1782715532.1028318
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+      "ext": ".mq5",
+      "bytes": 60731,
+      "lines": 1436,
+      "mtime": 1782715532.107809
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+      "ext": ".mq5",
+      "bytes": 63703,
+      "lines": 1413,
+      "mtime": 1782715532.1083865
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v4.mq5",
+      "ext": ".mq5",
+      "bytes": 62890,
+      "lines": 1426,
+      "mtime": 1782715532.1083865
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "ext": ".mq5",
+      "bytes": 23777,
+      "lines": 703,
+      "mtime": 1782715532.1083865
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "ext": ".mq5",
+      "bytes": 32276,
+      "lines": 752,
+      "mtime": 1782715532.1126885
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\FRIDAY_Gold_EA.mq5",
+      "ext": ".mq5",
+      "bytes": 8004,
+      "lines": 313,
+      "mtime": 1782715728.1832302
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE.mq5",
+      "ext": ".mq5",
+      "bytes": 40049,
+      "lines": 1035,
+      "mtime": 1782715728.1842465
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE_TESTER.mq5",
+      "ext": ".mq5",
+      "bytes": 22958,
+      "lines": 586,
+      "mtime": 1782715728.1862416
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "ext": ".mq5",
+      "bytes": 124316,
+      "lines": 2792,
+      "mtime": 1782715750.974848
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Stoch_Reversion_M3.mq5",
+      "ext": ".mq5",
+      "bytes": 6628,
+      "lines": 176,
+      "mtime": 1782715750.9860494
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\mql5_shared\\GridDNA_Common.mqh",
+      "ext": ".mqh",
+      "bytes": 9774,
+      "lines": 265,
+      "mtime": 1782715751.2834883
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "ext": ".mq5",
+      "bytes": 17494,
+      "lines": 355,
+      "mtime": 1782715532.0626476
+    },
+    {
+      "path": "active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "ext": ".mq5",
+      "bytes": 63560,
+      "lines": 1534,
+      "mtime": 1781045875.02493
+    },
+    {
+      "path": "active_ea\\CLAUDE_BRAIN_EA_v1.mq5",
+      "ext": ".mq5",
+      "bytes": 44948,
+      "lines": 1148,
+      "mtime": 1779898136.5576854
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+      "ext": ".mq5",
+      "bytes": 60731,
+      "lines": 1436,
+      "mtime": 1779898320.6709638
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+      "ext": ".mq5",
+      "bytes": 63703,
+      "lines": 1413,
+      "mtime": 1779903054.6072853
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v4.mq5",
+      "ext": ".mq5",
+      "bytes": 62890,
+      "lines": 1426,
+      "mtime": 1779903582.5785637
+    },
+    {
+      "path": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "ext": ".mq5",
+      "bytes": 23777,
+      "lines": 703,
+      "mtime": 1781047726.2576382
+    },
+    {
+      "path": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "ext": ".mq5",
+      "bytes": 32276,
+      "lines": 752,
+      "mtime": 1781049324.3616078
+    },
+    {
+      "path": "ea\\FRIDAY_Gold_EA.mq5",
+      "ext": ".mq5",
+      "bytes": 8004,
+      "lines": 313,
+      "mtime": 1778648125.3726144
+    },
+    {
+      "path": "ea\\v7_2_DNA_EVOLVE.mq5",
+      "ext": ".mq5",
+      "bytes": 40049,
+      "lines": 1035,
+      "mtime": 1779175386.379491
+    },
+    {
+      "path": "ea\\v7_2_DNA_EVOLVE_TESTER.mq5",
+      "ext": ".mq5",
+      "bytes": 22958,
+      "lines": 586,
+      "mtime": 1779175475.4517617
+    },
+    {
+      "path": "live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "ext": ".mq5",
+      "bytes": 124316,
+      "lines": 2792,
+      "mtime": 1781046093.861634
+    },
+    {
+      "path": "live_ea\\Stoch_Reversion_M3.mq5",
+      "ext": ".mq5",
+      "bytes": 6628,
+      "lines": 176,
+      "mtime": 1780304976.8401232
+    },
+    {
+      "path": "mql5_shared\\GridDNA_Common.mqh",
+      "ext": ".mqh",
+      "bytes": 9774,
+      "lines": 265,
+      "mtime": 1781045522.80449
+    },
+    {
+      "path": "QuantumShark_Safe_v9.mq5",
+      "ext": ".mq5",
+      "bytes": 17494,
+      "lines": 355,
+      "mtime": 1781574161.0548148
+    },
+    {
+      "path": "r-native-pipflow\\mql5_templates\\DrawingRenderer.mqh",
+      "ext": ".mqh",
+      "bytes": 9318,
+      "lines": 261,
+      "mtime": 1780266907.2513728
+    },
+    {
+      "path": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "ext": ".mq5",
+      "bytes": 7971,
+      "lines": 217,
+      "mtime": 1780266907.251932
+    },
+    {
+      "path": "r-native-pipflow\\mql5_templates\\Stoch_Reversion_M3.mq5",
+      "ext": ".mq5",
+      "bytes": 6628,
+      "lines": 176,
+      "mtime": 1780304403.635196
+    },
+    {
+      "path": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "ext": ".mq5",
+      "bytes": 7755,
+      "lines": 217,
+      "mtime": 1779581049.2881994
+    },
+    {
+      "path": "r_native\\v2\\mql5_experts\\FRIDAY_Brain_Executor.mq5",
+      "ext": ".mq5",
+      "bytes": 34598,
+      "lines": 831,
+      "mtime": 1780601793.3643878
+    }
+  ]
+}

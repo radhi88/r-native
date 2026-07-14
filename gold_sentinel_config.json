@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "execute": true,
+  "min_exec_score": 2,
+  "max_positions": 2,
+  "stop_r": 0.5,
+  "target_r": 0.5,
+  "risk_cap": 0.03,
+  "exec_cooldown_min": 5,
+  "_note": "تنبيه دائم + تنفيذ محكوم على أقوى توافق (≥4/6) فقط: حجم ≤3% · وقف/هدف 0.5R · ديمو فقط · مركز واحد · تبريد 20د. ⚖️ لا حافّة مثبتة (تجربة صغيرة). للتنبيه فقط: execute=false."
+}

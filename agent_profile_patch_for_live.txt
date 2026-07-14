@@ -1,0 +1,73 @@
+# =============================================================================
+# PATCH FOR HotGridTrap_MT5_Agentic.py
+# =============================================================================
+# هذا Patch مختصر يخلي ملف التشغيل الحي يقرأ agent_profiles.json
+# ويستخدم إعدادات التدريب لكل Symbol.
+#
+# 1) أضف فوق مع imports:
+#
+# import json
+# from pathlib import Path
+#
+# 2) أضف بعد CONFIG:
+#
+PROFILE_FILE = "agent_profiles.json"
+AGENT_PROFILES = {}
+
+def load_agent_profiles():
+    global AGENT_PROFILES
+    p = Path(PROFILE_FILE)
+    if not p.exists():
+        AGENT_PROFILES = {}
+        print("[PROFILE] agent_profiles.json not found, using defaults.")
+        return
+    data = json.loads(p.read_text(encoding="utf-8"))
+    AGENT_PROFILES = data.get("profiles", {})
+    print(f"[PROFILE] Loaded {len(AGENT_PROFILES)} trained profiles.")
+
+def profile_for(symbol: str):
+    prof = AGENT_PROFILES.get(symbol)
+    if not prof or not prof.get("enabled", False):
+        return None
+    return prof
+
+def trained_param(symbol: str, key: str, default):
+    prof = profile_for(symbol)
+    if not prof:
+        return default
+    return prof.get("params", {}).get(key, default)
+
+# 3) داخل main بعد connect_mt5():
+#
+# load_agent_profiles()
+#
+# 4) داخل VolatilityAgent.grid_points:
+#
+# atr_mult = trained_param(spec.symbol, "atr_grid_multiplier", ATR_GRID_MULTIPLIER)
+# spread_mult = trained_param(spec.symbol, "spread_grid_multiplier", SPREAD_GRID_MULTIPLIER)
+#
+# ثم استبدل:
+# snap.atr_points * ATR_GRID_MULTIPLIER
+# بـ:
+# snap.atr_points * atr_mult
+#
+# واستبدل:
+# snap.spread_points * SPREAD_GRID_MULTIPLIER
+# بـ:
+# snap.spread_points * spread_mult
+#
+# 5) داخل trailing_points:
+#
+# atr_trail_mult = trained_param(spec.symbol, "atr_trailing_multiplier", ATR_TRAILING_MULTIPLIER)
+#
+# 6) داخل sl_points:
+#
+# sl_mult = trained_param(spec.symbol, "stop_loss_atr_multiplier", STOP_LOSS_ATR_MULTIPLIER)
+#
+# 7) داخل tp_points:
+#
+# tp_mult = trained_param(spec.symbol, "take_profit_atr_multiplier", TAKE_PROFIT_ATR_MULTIPLIER)
+#
+# 8) داخل SpreadAgent.decide:
+#
+# max_ratio = trained_param(snap.symbol, "max_spread_to_atr_ratio", MAX_SPREAD_TO_ATR_RATIO)

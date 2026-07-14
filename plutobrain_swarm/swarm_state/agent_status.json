@@ -1,0 +1,466 @@
+{
+  "generated": 1782832772.9344726,
+  "cycle": 17,
+  "agents": [
+    {
+      "id": "ORCH-00",
+      "role": "Orchestrator_Prime",
+      "cluster": "ORCH",
+      "pool": "cluster",
+      "worker": "orchestrate",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "A-01",
+      "role": "File Mapper",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "file_mapper",
+      "status": "ok",
+      "summary": "mapped 33 MQL files",
+      "last_run": 1782832742.9450316
+    },
+    {
+      "id": "A-02",
+      "role": "Code Archaeologist",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "code_archaeologist",
+      "status": "ok",
+      "summary": "profiled 30 EAs",
+      "last_run": 1782832743.0864832
+    },
+    {
+      "id": "A-03",
+      "role": "Dependency Tracker",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "dependency_tracker",
+      "status": "ok",
+      "summary": "33 files, 0 unresolved LOCAL includes (9 library includes ok)",
+      "last_run": 1782832743.1187403
+    },
+    {
+      "id": "A-04",
+      "role": "Conflict Detector",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "conflict_detector",
+      "status": "ok",
+      "summary": "6 bidirectional EAs flagged",
+      "last_run": 1782832682.9346733
+    },
+    {
+      "id": "A-05",
+      "role": "Duplicate Hunter",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "duplicate_hunter",
+      "status": "ok",
+      "summary": "341 byte-exact cross-file dup functions, 257 shared names",
+      "last_run": 1782832713.0735369
+    },
+    {
+      "id": "A-06",
+      "role": "Standardizer",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "standardizer",
+      "status": "ok",
+      "summary": "190 inputs lack PB_/Inp/g_ prefix",
+      "last_run": 1782832562.9884548
+    },
+    {
+      "id": "A-07",
+      "role": "Header Writer",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "header_auditor",
+      "status": "ok",
+      "summary": "2 files missing header block",
+      "last_run": 1782832562.999782
+    },
+    {
+      "id": "A-08",
+      "role": "Structure Designer",
+      "cluster": "ALPHA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "A-09",
+      "role": "Interface Builder",
+      "cluster": "ALPHA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "A-10",
+      "role": "Config Manager",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "config_extractor",
+      "status": "ok",
+      "summary": "1446 input params across 30 EAs",
+      "last_run": 1782832563.0331478
+    },
+    {
+      "id": "A-11",
+      "role": "Migration Planner",
+      "cluster": "ALPHA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "A-12",
+      "role": "Backup Guardian",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "backup_guardian",
+      "status": "ok",
+      "summary": "0 uncommitted MQL files",
+      "last_run": 1782832624.696727
+    },
+    {
+      "id": "A-13",
+      "role": "Path Optimizer",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "path_optimizer",
+      "status": "ok",
+      "summary": "EAs scattered across 11 dirs",
+      "last_run": 1782832624.698244
+    },
+    {
+      "id": "A-14",
+      "role": "Legacy Bridge",
+      "cluster": "ALPHA",
+      "pool": "active_pool",
+      "worker": "version_clusterer",
+      "status": "ok",
+      "summary": "11 families: 7 safe-to-consolidate, 1 divergent (need merge)",
+      "last_run": 1782832624.7141426
+    },
+    {
+      "id": "A-15",
+      "role": "Integration Tester",
+      "cluster": "ALPHA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-01",
+      "role": "Risk Engineer",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-02",
+      "role": "Multi-TF Analyst",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-03",
+      "role": "Regime Detector",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-04",
+      "role": "Correlation Guard",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-05",
+      "role": "Equity Guardian",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-06",
+      "role": "Session Master",
+      "cluster": "BETA",
+      "pool": "active_pool",
+      "worker": "session_auditor",
+      "status": "ok",
+      "summary": "3 EAs with NO time/session gating",
+      "last_run": 1782832563.068641
+    },
+    {
+      "id": "B-07",
+      "role": "News Filter",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-08",
+      "role": "ATR Engineer",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-09",
+      "role": "Partial Close",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-10",
+      "role": "Recovery Designer",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-11",
+      "role": "Slippage Guard",
+      "cluster": "BETA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "B-12",
+      "role": "Spread Monitor",
+      "cluster": "BETA",
+      "pool": "active_pool",
+      "worker": "spread_auditor",
+      "status": "ok",
+      "summary": "13 EAs with no spread filter",
+      "last_run": 1782832563.117346
+    },
+    {
+      "id": "B-13",
+      "role": "Magic Manager",
+      "cluster": "BETA",
+      "pool": "active_pool",
+      "worker": "magic_manager",
+      "status": "ok",
+      "summary": "8 magics, 6 COLLISIONS (1 intentional)",
+      "last_run": 1782832743.1594698
+    },
+    {
+      "id": "B-14",
+      "role": "Memory Watcher",
+      "cluster": "BETA",
+      "pool": "active_pool",
+      "worker": "process_watcher",
+      "status": "ok",
+      "summary": "py=141 mt5=2",
+      "last_run": 1782832744.7366538
+    },
+    {
+      "id": "B-15",
+      "role": "Performance Tuner",
+      "cluster": "BETA",
+      "pool": "active_pool",
+      "worker": "loc_profiler",
+      "status": "ok",
+      "summary": "largest EA: 2792 lines",
+      "last_run": 1782832624.7293875
+    },
+    {
+      "id": "G-01",
+      "role": "Stress Tester",
+      "cluster": "GAMMA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "G-02",
+      "role": "Gap Simulator",
+      "cluster": "GAMMA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "G-03",
+      "role": "Spread Spiker",
+      "cluster": "GAMMA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "G-04",
+      "role": "Disconnect Sim",
+      "cluster": "GAMMA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "G-05",
+      "role": "Conflict Tester",
+      "cluster": "GAMMA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "G-06",
+      "role": "Memory Auditor",
+      "cluster": "GAMMA",
+      "pool": "active_pool",
+      "worker": "process_watcher",
+      "status": "ok",
+      "summary": "py=141 mt5=2",
+      "last_run": 1782832746.3552544
+    },
+    {
+      "id": "G-07",
+      "role": "Hardcode Hunter",
+      "cluster": "GAMMA",
+      "pool": "active_pool",
+      "worker": "hardcode_hunter",
+      "status": "ok",
+      "summary": "16 hardcoded lots/prices",
+      "last_run": 1782832713.1187687
+    },
+    {
+      "id": "G-08",
+      "role": "Broker Validator",
+      "cluster": "GAMMA",
+      "pool": "active_pool",
+      "worker": "broker_assumptions",
+      "status": "ok",
+      "summary": "8 files with broker-specific assumptions",
+      "last_run": 1782832563.1770039
+    },
+    {
+      "id": "G-09",
+      "role": "Backtest Engine",
+      "cluster": "GAMMA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "G-10",
+      "role": "Forward Tester",
+      "cluster": "GAMMA",
+      "pool": "cluster",
+      "worker": "ESCALATE",
+      "status": "idle",
+      "summary": "",
+      "last_run": 0.0
+    },
+    {
+      "id": "G-11",
+      "role": "Compiler Guard",
+      "cluster": "GAMMA",
+      "pool": "active_pool",
+      "worker": "compiler_guard",
+      "status": "ok",
+      "summary": "0 files unbalanced in BOTH raw and stripped counts",
+      "last_run": 1782832713.2974746
+    },
+    {
+      "id": "G-12",
+      "role": "Documentation Bot",
+      "cluster": "GAMMA",
+      "pool": "active_pool",
+      "worker": "doc_auditor",
+      "status": "ok",
+      "summary": "2 EAs under-documented (<5%)",
+      "last_run": 1782832624.747221
+    },
+    {
+      "id": "G-13",
+      "role": "Changelog Keeper",
+      "cluster": "GAMMA",
+      "pool": "active_pool",
+      "worker": "changelog_keeper",
+      "status": "ok",
+      "summary": "0 MQL files changed since last cycle",
+      "last_run": 1782832624.752975
+    },
+    {
+      "id": "G-14",
+      "role": "Setup Guide",
+      "cluster": "GAMMA",
+      "pool": "active_pool",
+      "worker": "setup_auditor",
+      "status": "ok",
+      "summary": "4 launcher scripts found",
+      "last_run": 1782832624.7562444
+    },
+    {
+      "id": "G-15",
+      "role": "Health Monitor",
+      "cluster": "GAMMA",
+      "pool": "active_pool",
+      "worker": "health_monitor",
+      "status": "ok",
+      "summary": "33 MQL files, 24 artifacts live",
+      "last_run": 1782832746.3559105
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "time": "2026-05-21T03:33:54.522734",
+  "approved": false,
+  "swing_approved": false,
+  "scalp_approved": false,
+  "votes": 2,
+  "dir_agreement": 0,
+  "total": 8,
+  "scalp_required": 1,
+  "swing_required": 2,
+  "direction": "BLOCKED",
+  "swing_direction": "NONE",
+  "scalp_direction": "NONE",
+  "llm_score": 0,
+  "mode": "BLOCKED",
+  "agent_votes": {
+    "smc": {
+      "vote": 0,
+      "dir": "NEUTRAL"
+    },
+    "volume_profile": {
+      "vote": 0,
+      "dir": "NEUTRAL"
+    },
+    "risk": {
+      "vote": 0,
+      "dir": "NEUTRAL"
+    },
+    "guard": {
+      "vote": 0,
+      "dir": "NEUTRAL"
+    },
+    "llm": {
+      "vote": 0,
+      "dir": "NEUTRAL"
+    },
+    "experience": {
+      "vote": 1,
+      "dir": "EXP_OK"
+    },
+    "analyst": {
+      "vote": 1,
+      "dir": "PATTERN_OK"
+    },
+    "multi_tf": {
+      "vote": 0,
+      "dir": "NEUTRAL"
+    }
+  },
+  "smc": {},
+  "sr_analysis": {
+    "smc_confluence": "",
+    "sr_near": "",
+    "ob_bos_alert": false,
+    "choch_alert": false,
+    "mtf_sr_bonus": false,
+    "swing_high": 0,
+    "swing_low": 0,
+    "pdh": 0,
+    "pdl": 0
+  },
+  "approval_stats": {
+    "scalp": 0,
+    "swing": 0,
+    "rejected": 1
+  }
+}

@@ -1,0 +1,2 @@
+"""Qader PyQt GUI package."""
+

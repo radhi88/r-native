@@ -1,0 +1,52 @@
+{
+  "time": "2026-05-21T19:41:27.855",
+  "provider": "deterministic",
+  "llm": {
+    "anthropic": true,
+    "openai": false,
+    "gemini": true,
+    "ollama": true,
+    "provider": "gemini"
+  },
+  "bar": 125,
+  "connected": true,
+  "decision": {
+    "action": "AGENT_HOLD",
+    "confidence": 17,
+    "params": {
+      "gap": 724,
+      "tp": 0.62,
+      "sl": 1.12,
+      "lock_start": 0.5,
+      "lock_giveback": 0.19,
+      "secure_start": 0.15,
+      "secure_lock": 0.15,
+      "modify_step": 1,
+      "lot_factor": 0.31,
+      "grid_factor": 2.5,
+      "profit_factor": 0.0,
+      "drawdown_pct": 0.0,
+      "spread_points": 308.0
+    },
+    "reason": "fast_autopilot dir=NONE votes=5 vp=SELL_ZONE uw=NEUTRAL spread=308 unified=HOLD/HOLD 17% risk=EXTREME"
+  },
+  "confluence": {
+    "approved": true,
+    "votes": 5,
+    "direction": "SELL"
+  },
+  "unified": {
+    "final_signal": "HOLD",
+    "raw_unified_signal": "HOLD",
+    "confidence": 17.46,
+    "risk_level": "EXTREME",
+    "veto_reasons": [
+      "confidence 17.46<55"
+    ]
+  },
+  "paths": {
+    "control": "C:\\Users\\Radhi\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\claude_live_control.csv",
+    "dna": "C:\\Users\\Radhi\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\gold_dna_memory.csv",
+    "brain": "C:\\Users\\Radhi\\MT5\\agents\\brain_vault"
+  }
+}

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FRIDAY Local AI</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="terminal">
+      <header class="topbar">
+        <div class="brand">
+          <span class="mark">F</span>
+          <div>
+            <h1>FRIDAY</h1>
+            <p>Private local AI assistant</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <span id="statusDot" class="status-dot"></span>
+          <span id="statusLine">initializing local systems</span>
+          <button id="voiceToggle">WAKE WORD</button>
+          <button id="scanBtn">SCAN MARKETS</button>
+          <button id="autoPaperBtn">AUTO PAPER</button>
+          <button id="autoLiveBtn" class="blocked-btn" title="Live auto execution is blocked; demo/paper only">LIVE BLOCKED</button>
+          <button id="demoMt5Btn">DEMO MT5</button>
+          <button id="liveMt5Btn" title="MT5 data feed only; live trading is blocked">MT5 DATA</button>
+          <button id="agentsBtn">AGENTS OFF</button>
+          <button id="edexBtn">eDEX</button>
+          <button id="scannerBtn">SCANNER</button>
+          <button id="chartBtn">CHART</button>
+          <button id="analyzeBtn">ANALYZE</button>
+          <button id="tradeBtn">PAPER TRADE</button>
+        </div>
+      </header>
+
+      <!-- eDEX Live Panel -->
+      <section id="edexPanel" class="edex-panel hidden">
+        <div class="edex-block edex-price">
+          <div class="edex-label">BID</div><div id="edexBid" class="edex-val bid">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">ASK</div><div id="edexAsk" class="edex-val ask">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">SPREAD</div><div id="edexSpread" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">EQUITY</div><div id="edexEquity" class="edex-val cyan">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">SRC</div><div id="edexSrc" class="edex-val amber">—</div>
+        </div>
+        <div class="edex-block edex-flow">
+          <div class="edex-label">DELTA (1m)</div>
+          <div id="edexDeltaBar" class="edex-delta-bar">
+            <div id="edexDeltaFill" class="edex-delta-fill"></div>
+          </div>
+          <div id="edexDelta" class="edex-val">0</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">TICKS/s</div><div id="edexSpeed" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">PROB</div><div id="edexProb" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">SMC BUY</div><div id="edexSmc" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">ADX</div><div id="edexAdx" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">RSI</div><div id="edexRsi" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">OB</div><div id="edexOb" class="edex-val">—</div>
+        </div>
+        <div class="edex-block edex-sys" id="edexSysBar">
+          <div class="edex-label">MT5 PID</div><div id="sysPid" class="edex-val amber">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">CPU</div><div id="sysCpu" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">RAM</div><div id="sysRam" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">THREADS</div><div id="sysThreads" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">UPTIME</div><div id="sysUptime" class="edex-val">—</div>
+          <div class="edex-sep">|</div>
+          <div class="edex-label">CONNS</div><div id="sysConns" class="edex-val cyan">—</div>
+        </div>
+        <div class="edex-tape" id="edexTape"></div>
+        <div class="edex-log-head">
+          <span>MT5 TERMINAL LOG — DATA FEED</span>
+          <span id="edexLogFile" class="amber"></span>
+        </div>
+        <div id="edexLog" class="edex-log"></div>
+      </section>
+
+      <!-- Multi-Market Scanner Panel -->
+      <section id="scannerPanel" class="scanner-panel hidden">
+        <div class="scanner-col">
+          <div class="scanner-head"><span>▲ BUY SETUPS</span><span id="scanBuyCount">0</span></div>
+          <div id="scanBuys" class="scanner-list"></div>
+        </div>
+        <div class="scanner-col">
+          <div class="scanner-head"><span>▼ SELL SETUPS</span><span id="scanSellCount">0</span></div>
+          <div id="scanSells" class="scanner-list"></div>
+        </div>
+        <div class="scanner-col">
+          <div class="scanner-head"><span>POLYMARKET — BTC SENTIMENT</span><span id="polySignal" class="tp-badge">—</span></div>
+          <div id="polyBull" class="poly-sentiment"></div>
+          <div class="scanner-head secondary"><span>TOP PREDICTION MARKETS</span></div>
+          <div id="polyMarkets" class="poly-markets"></div>
+        </div>
+      </section>
+
+      <!-- Trading Panel (heatmap + bookmap + direct entry) -->
+      <section id="tradingPanel" class="trading-panel hidden">
+        <div class="tp-left">
+          <div class="tp-head">
+            <span>HEAT MAP — Volume Profile</span>
+            <span id="hmPrice" class="tp-price">—</span>
+          </div>
+          <canvas id="hmCanvas" class="hm-canvas"></canvas>
+        </div>
+        <div class="tp-mid">
+          <div class="tp-head">
+            <span>BOOK MAP — SMC Levels</span>
+            <span id="hmBias" class="tp-badge">—</span>
+          </div>
+          <canvas id="bmCanvas" class="hm-canvas"></canvas>
+        </div>
+        <div class="tp-right">
+          <div class="tp-head"><span>TRADE ENTRY</span><span>paper/demo</span></div>
+          <div class="te-form">
+            <div class="te-row">
+              <label class="te-label">TYPE
+                <select id="teType">
+                  <option value="MARKET">MARKET</option>
+                  <option value="LIMIT">LIMIT</option>
+                  <option value="STOP">STOP</option>
+                </select>
+              </label>
+              <label class="te-label">LOT
+                <input id="teLot" type="number" value="0.01" min="0.01" max="0.05" step="0.01" />
+              </label>
+            </div>
+            <div class="te-row" id="tePriceRow" style="display:none">
+              <label class="te-label" style="flex:1">PRICE
+                <input id="tePrice" type="number" step="0.01" placeholder="auto from click" />
+              </label>
+            </div>
+            <div class="te-row">
+              <label class="te-label">SL
+                <input id="teSL" type="number" step="0.01" placeholder="optional" />
+              </label>
+              <label class="te-label">TP
+                <input id="teTP" type="number" step="0.01" placeholder="optional" />
+              </label>
+            </div>
+            <div class="te-actions">
+              <button id="teBuy"  class="te-buy">▲ BUY</button>
+              <button id="teSell" class="te-sell">▼ SELL</button>
+            </div>
+            <div id="teResult" class="te-result"></div>
+          </div>
+          <div class="tp-head secondary"><span>open positions</span></div>
+          <div id="tpPositions" class="tp-positions"></div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="panel assistant-panel">
+          <div class="panel-head">
+            <span>next audio</span>
+            <span id="voiceStatus">offline voice standby</span>
+          </div>
+          <div class="assistant-stage">
+            <div id="pulseCore" class="pulse-core sleeping">
+              <i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div class="state-readout">
+              <strong id="coreState">نائم</strong>
+              <small id="coreSub">قل كلمة التنبيه بعد تشغيل الصوت المحلي</small>
+            </div>
+          </div>
+          <div class="quick-grid">
+            <button data-command="فرايدي حللي السوق الآن">حللي السوق</button>
+            <button data-command="فرايدي امسحي جميع الأسواق">كل الأسواق</button>
+            <button data-command="فرايدي اعرضي حالة النظام">حالة النظام</button>
+            <button data-command="فرايدي تذكري أنني أفضل صفقات قليلة عالية الجودة">احفظي تفضيل</button>
+          </div>
+        </section>
+
+        <section class="panel chat-panel">
+          <div class="panel-head">
+            <span>chat</span>
+            <span id="llmStatus">llama.cpp</span>
+          </div>
+          <div id="chat" class="chat"></div>
+          <form id="chatForm" class="composer">
+            <input id="textInput" autocomplete="off" placeholder="اكتب إذا لم تكن خدمة الصوت المحلية مثبتة..." />
+            <button type="submit">SEND</button>
+          </form>
+        </section>
+
+        <aside class="panel memory-panel">
+          <div class="panel-tabs">
+            <button class="tab-btn active" data-tab="memory">MEMORY</button>
+            <button class="tab-btn" data-tab="agents">AGENTS</button>
+          </div>
+
+          <!-- Memory tab -->
+          <div id="tab-memory" class="tab-content">
+            <div class="control-stack">
+              <label>
+                strategy
+                <select id="profileSelect">
+                  <option value="scalping">scalping</option>
+                  <option value="ict">ict</option>
+                  <option value="sk">sk</option>
+                  <option value="sb">sb</option>
+                  <option value="swing">swing</option>
+                </select>
+              </label>
+              <label>
+                source
+                <select id="sourceSelect">
+                  <option value="csv">csv</option>
+                  <option value="mt5">mt5 data</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="decision-card">
+              <span>decision</span>
+              <strong id="decisionPill">NO DATA</strong>
+            </div>
+            <pre id="decisionBox">{}</pre>
+
+            <div class="panel-head secondary">
+              <span>status</span>
+              <span>brokered</span>
+            </div>
+            <pre id="mindBox">{}</pre>
+          </div>
+
+          <!-- Agents tab -->
+          <div id="tab-agents" class="tab-content hidden">
+            <div class="agents-header">
+              <span id="agentsRunning" class="agents-badge off">OFFLINE</span>
+              <span id="agentsBarCount" class="agents-bar-count">bar 0</span>
+            </div>
+            <div id="agentCards" class="agent-cards"></div>
+            <div class="agents-log-head">
+              <span>recent events</span>
+            </div>
+            <div id="agentsLog" class="agents-log"></div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

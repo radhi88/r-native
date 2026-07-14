@@ -1,0 +1,184 @@
+[
+  {
+    "phase": "PHASE 1 - Repository Inventory",
+    "start": "2026-05-14T02:22:14+03:00",
+    "end": "2026-05-14T02:22:29+03:00",
+    "elapsed_seconds": 15.308,
+    "files_inspected": [
+      "<full project tree>",
+      "src/mt5_ai/runtime/main_loop.py"
+    ],
+    "files_modified": [
+      "reports/40_FILE_INVENTORY.csv"
+    ],
+    "commands_executed": [],
+    "result": "inventory complete: 88395 files, 1528 Python files, 33 active/support files, 1 parse warnings"
+  },
+  {
+    "phase": "PHASE 2 - Active Pipeline Mapping",
+    "start": "2026-05-14T02:22:29+03:00",
+    "end": "2026-05-14T02:22:29+03:00",
+    "elapsed_seconds": 0.0,
+    "files_inspected": [
+      "config/dry_run_simulation.yaml",
+      "config/trading_runtime.yaml",
+      "src/mt5_ai/core/conflict_guard.py",
+      "src/mt5_ai/core/decision_router.py",
+      "src/mt5_ai/core/execution_manager.py",
+      "src/mt5_ai/core/indicators.py",
+      "src/mt5_ai/core/position_manager.py",
+      "src/mt5_ai/core/risk_manager.py",
+      "src/mt5_ai/core/signal_arbiter.py",
+      "src/mt5_ai/mt5_gateway.py",
+      "src/mt5_ai/runtime/dry_run_simulation.py",
+      "src/mt5_ai/runtime/main_loop.py"
+    ],
+    "files_modified": [],
+    "commands_executed": [],
+    "result": "mapped active Agents -> SignalArbiter -> DecisionRouter -> ConflictGuard -> RiskManager -> ExecutionManager"
+  },
+  {
+    "phase": "PHASE 3 - Legacy and Duplicate Detection",
+    "start": "2026-05-14T02:22:29+03:00",
+    "end": "2026-05-14T02:22:29+03:00",
+    "elapsed_seconds": 0.036,
+    "files_inspected": [
+      "<all Python file names>",
+      "reports/claude_review/01_ARCHITECTURE_REVIEW.md",
+      "reports/claude_review/02_SAFETY_REVIEW.md",
+      "reports/claude_review/03_CODE_QUALITY_REVIEW.md",
+      "reports/claude_review/04_TEST_REVIEW.md",
+      "reports/claude_review/05_VERIFICATION.md",
+      "reports/claude_tasks/CODEX_ACTION_LIST.md"
+    ],
+    "files_modified": [],
+    "commands_executed": [],
+    "result": "legacy scan complete: 8 clear archive candidates"
+  },
+  {
+    "phase": "PHASE 4 - Safe Cleanup Plan and Implementation",
+    "start": "2026-05-14T02:22:29+03:00",
+    "end": "2026-05-14T02:22:29+03:00",
+    "elapsed_seconds": 0.002,
+    "files_inspected": [
+      "friday_demo_position_governor.py",
+      "friday_demo_position_governor_v2.py",
+      "friday_realtime_scalper_demo_executor.py",
+      "friday_risk_close.py",
+      "friday_touch_demo_executor.py",
+      "ict_sweep_trader.py",
+      "scripts/ict_sweep_trader.py",
+      "scripts/mt5_ollama_trader.py"
+    ],
+    "files_modified": [
+      "_archive/20260514_legacy_cleanup/README.md"
+    ],
+    "commands_executed": [],
+    "result": "archived 8 disabled legacy stubs"
+  },
+  {
+    "phase": "PHASE 5 - Merge Status Report",
+    "start": "2026-05-14T02:22:29+03:00",
+    "end": "2026-05-14T02:22:29+03:00",
+    "elapsed_seconds": 0.001,
+    "files_inspected": [
+      "reports/00_ACTIVE_RUNTIME_CLASSIFICATION.md",
+      "reports/01_TRUE_EXECUTION_OWNERSHIP.md",
+      "src/mt5_ai/agents",
+      "src/mt5_ai/core"
+    ],
+    "files_modified": [
+      "reports/40_MERGE_STATUS.csv"
+    ],
+    "commands_executed": [],
+    "result": "merge status complete for 12 legacy components"
+  },
+  {
+    "phase": "PHASE 6 - Safety Verification",
+    "start": "2026-05-14T02:22:29+03:00",
+    "end": "2026-05-14T02:22:29+03:00",
+    "elapsed_seconds": 0.182,
+    "files_inspected": [
+      "verify_mt5_lockdown.py"
+    ],
+    "files_modified": [],
+    "commands_executed": [
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe verify_mt5_lockdown.py"
+    ],
+    "result": "PASS: account clean, exit code 0"
+  },
+  {
+    "phase": "PHASE 7 - Static Safety Scan",
+    "start": "2026-05-14T02:22:29+03:00",
+    "end": "2026-05-14T02:22:30+03:00",
+    "elapsed_seconds": 0.567,
+    "files_inspected": [
+      "<whole project static safety terms>"
+    ],
+    "files_modified": [],
+    "commands_executed": [
+      "rg -n \"order_send|allow_live_trading|simulate_only|DRY_RUN|kill_switch|magic=0|magic\\s*=\\s*0|TRADE_ACTION|send_demo_|send_market_order|send_raw_order|cancel_pending_order\" -g \"!**/.venv/**\" -g \"!**/node_modules/**\" -g \"!**/__pycache__/**\" -g \"!tools/**\""
+    ],
+    "result": "static scan complete: 8 guarded order_send calls, 0 unguarded active order_send calls, live-enabled configs=0"
+  },
+  {
+    "phase": "PHASE 8 - Controlled Runtime Test",
+    "start": "2026-05-14T02:22:30+03:00",
+    "end": "2026-05-14T02:22:33+03:00",
+    "elapsed_seconds": 3.425,
+    "files_inspected": [
+      "config/dry_run_simulation.yaml",
+      "src/mt5_ai/runtime/main_loop.py"
+    ],
+    "files_modified": [],
+    "commands_executed": [
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe -c \nfrom __future__ import annotations\nimport json, sys\nfrom collections import Counter\nfrom pathlib import Path\nROOT = Path(r\"C:\\Users\\Radhi\\MT5\")\nSRC = ROOT / \"src\"\nfor p in (str(SRC), str(ROOT)):\n    if p not in sys.path:\n        sys.path.insert(0, p)\nimport mt5_ai.core.config_loader as _cl\n_cl.use_config(ROOT / \"config\" / \"dry_run_simulation.yaml\")\nimport MetaTrader5 as mt5\nfrom mt5_ai.runtime import main_loop\nfrom mt5_ai.core.decision_router import DecisionRouter\nfrom mt5_ai.core.conflict_guard import ConflictGuard\nfrom mt5_ai.core.risk_manager import RiskManager\nfrom mt5_ai.core.position_manager import PositionManager\nfrom mt5_ai.core.execution_manager import get_execution_manager\nfrom mt5_ai.agents import GovernorAgent, RiskCloseAgent\nfrom mt5_ai.agents.fractal_agent import FractalAgent\nfrom mt5_ai.agents.smc_agent import SmcAgent\nfrom mt5_ai.agents.ict_sweep_agent import IctSweepAgent\nfrom mt5_ai.core.signal_arbiter import SignalArbiter\ncounts = {\"agent_signals\": Counter(), \"smc\": Counter(), \"fractal\": Counter(), \"ict\": Counter(), \"arbiter\": Counter(), \"results\": Counter()}\nstats = Counter()\nerrors = []\norder_send_calls = {\"count\": 0}\norig_order_send = getattr(mt5, \"order_send\", None)\ndef blocked_order_send(*args, **kwargs):\n    order_send_calls[\"count\"] += 1\n    raise RuntimeError(\"order_send blocked by controlled dry-run harness\")\nif orig_order_send is not None:\n    mt5.order_send = blocked_order_send\norig_f = FractalAgent.analyse; orig_s = SmcAgent.analyse; orig_i = IctSweepAgent.analyse\norig_a = SignalArbiter.decide; orig_g = ConflictGuard.check; orig_r = RiskManager.validate\nexec_mgr = get_execution_manager(); orig_e = exec_mgr.execute\ndef wrap_agent(orig, bucket, self, df, symbol, timeframe, *args, **kwargs):\n    sig = orig(self, df, symbol, timeframe, *args, **kwargs)\n    direction = sig.direction.value if sig else \"NONE\"\n    counts[bucket][direction] += 1\n    if sig:\n        counts[\"agent_signals\"][f\"{sig.source}:{direction}\"] += 1\n    return sig\ndef f_wrap(self, df, symbol, timeframe, *args, **kwargs): return wrap_agent(orig_f, \"fractal\", self, df, symbol, timeframe, *args, **kwargs)\ndef s_wrap(self, df, symbol, timeframe, *args, **kwargs): return wrap_agent(orig_s, \"smc\", self, df, symbol, timeframe, *args, **kwargs)\ndef i_wrap(self, df, symbol, timeframe, *args, **kwargs): return wrap_agent(orig_i, \"ict\", self, df, symbol, timeframe, *args, **kwargs)\ndef a_wrap(self, signals, symbol, timeframe):\n    dec = orig_a(self, signals, symbol, timeframe); counts[\"arbiter\"][dec.final_direction.value] += 1; return dec\ndef g_wrap(self, decision, signals, open_positions):\n    allow, conflicts = orig_g(self, decision, signals, open_positions)\n    if not allow: stats[\"conflict_blocks\"] += 1\n    return allow, conflicts\ndef r_wrap(self, decision, symbol, *args, **kwargs):\n    rd = orig_r(self, decision, symbol, *args, **kwargs)\n    if not rd.approved: stats[\"risk_blocks\"] += 1\n    return rd\ndef e_wrap(req):\n    stats[\"execution_reached\"] += 1\n    res = orig_e(req)\n    if getattr(res, \"simulated\", False): stats[\"simulated_executions\"] += 1\n    return res\nFractalAgent.analyse = f_wrap; SmcAgent.analyse = s_wrap; IctSweepAgent.analyse = i_wrap\nSignalArbiter.decide = a_wrap; ConflictGuard.check = g_wrap; RiskManager.validate = r_wrap; exec_mgr.execute = e_wrap\nif not mt5.initialize():\n    print(json.dumps({\"skipped\": True, \"reason\": f\"mt5_initialize_failed:{mt5.last_error()}\", \"real_order_send_calls\": 0, \"errors\": 1}))\n    raise SystemExit(0)\ntry:\n    router = DecisionRouter(); guard = ConflictGuard(); risk_mgr = RiskManager(); pos_mgr = PositionManager()\n    governor = GovernorAgent(); risk_closer = RiskCloseAgent(); arbiter = SignalArbiter()\n    for _ in range(50):\n        try:\n            positions = list(mt5.positions_get() or [])\n            result = main_loop.run_cycle(\n                mt5, \"XAUUSDm\", \"M1\", router, guard, risk_mgr, pos_mgr,\n                exec_mgr, governor, risk_closer, positions, arbiter=arbiter,\n            )\n            counts[\"results\"][str(result.get(\"result\"))] += 1\n        except Exception as exc:\n            errors.append(str(exc))\n    print(json.dumps({\n        \"skipped\": False, \"symbol\": \"XAUUSDm\", \"timeframe\": \"M1\", \"cycles_completed\": 50,\n        \"agent_signal_counts\": dict(counts[\"agent_signals\"]),\n        \"smc_counts\": dict(counts[\"smc\"]), \"fractal_counts\": dict(counts[\"fractal\"]),\n        \"ict_counts\": dict(counts[\"ict\"]), \"arbiter_counts\": dict(counts[\"arbiter\"]),\n        \"result_counts\": dict(counts[\"results\"]), \"conflict_guard_blocks\": stats[\"conflict_blocks\"],\n        \"risk_blocks\": stats[\"risk_blocks\"], \"execution_manager_reached_count\": stats[\"execution_reached\"],\n        \"simulated_executions\": stats[\"simulated_executions\"],\n        \"real_order_send_calls\": order_send_calls[\"count\"], \"errors\": len(errors),\n        \"error_details\": errors[:10], \"config_mode\": _cl.load().get(\"runtime\", {}).get(\"mode\"),\n        \"is_dry_run\": _cl.is_dry_run(), \"is_live_allowed\": _cl.is_live_allowed(),\n    }, indent=2, default=str))\nfinally:\n    mt5.shutdown()\n    if orig_order_send is not None:\n        mt5.order_send = orig_order_send\n"
+    ],
+    "result": "runtime dry-run complete; real_order_send_calls=0; errors=0"
+  },
+  {
+    "phase": "PHASE 9 - Import and Test Validation",
+    "start": "2026-05-14T02:22:33+03:00",
+    "end": "2026-05-14T02:22:35+03:00",
+    "elapsed_seconds": 1.879,
+    "files_inspected": [
+      "src/mt5_ai/runtime/dry_run_simulation.py",
+      "test_100_cycles.py",
+      "tests/test_genome_quality_gate.py",
+      "tests/test_pivot_engine.py",
+      "tests/test_smart_algo.py"
+    ],
+    "files_modified": [],
+    "commands_executed": [
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe -m py_compile src/mt5_ai/runtime/main_loop.py src/mt5_ai/runtime/dry_run_simulation.py src/mt5_ai/core/config_loader.py src/mt5_ai/core/decision_router.py src/mt5_ai/core/indicators.py src/mt5_ai/core/kill_switch.py src/mt5_ai/core/magic_registry.py src/mt5_ai/core/signal_schema.py src/mt5_ai/core/position_manager.py src/mt5_ai/core/execution_manager.py src/mt5_ai/mt5_gateway.py src/mt5_ai/algory_runner.py",
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe -c import sys; sys.path.insert(0, 'src'); import mt5_ai.runtime.main_loop, mt5_ai.runtime.dry_run_simulation, mt5_ai.core.execution_manager, mt5_ai.core.signal_arbiter, mt5_ai.core.indicators, mt5_ai.core.kill_switch; print('IMPORT_OK')",
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe -c import sys, runpy; sys.path.insert(0, 'src'); runpy.run_module('mt5_ai.runtime.dry_run_simulation', run_name='__main__')",
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe tests/test_pivot_engine.py",
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe tests/test_smart_algo.py",
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe tests/test_genome_quality_gate.py",
+      "C:\\Users\\Radhi\\MT5\\.venv\\Scripts\\python.exe test_100_cycles.py"
+    ],
+    "result": "safe tests complete: 7/7 passed"
+  },
+  {
+    "phase": "PHASE 10 - Final Documentation",
+    "start": "2026-05-14T02:22:35+03:00",
+    "end": "2026-05-14T02:22:35+03:00",
+    "elapsed_seconds": 0.007,
+    "files_inspected": [
+      "reports/claude_review/01_ARCHITECTURE_REVIEW.md",
+      "reports/claude_review/02_SAFETY_REVIEW.md",
+      "reports/claude_review/03_CODE_QUALITY_REVIEW.md",
+      "reports/claude_review/04_TEST_REVIEW.md",
+      "reports/claude_review/05_VERIFICATION.md",
+      "reports/claude_tasks/CODEX_ACTION_LIST.md"
+    ],
+    "files_modified": [
+      "reports/40_ACTIVE_PIPELINE_MAP.md",
+      "reports/40_FULL_CODEBASE_CONSOLIDATION_AND_READINESS.md",
+      "reports/41_CODEX_APPLIED_CLAUDE_REVIEW_FIXES.md"
+    ],
+    "commands_executed": [],
+    "result": "wrote final reports: reports/40_FULL_CODEBASE_CONSOLIDATION_AND_READINESS.md, reports/40_ACTIVE_PIPELINE_MAP.md, reports/41_CODEX_APPLIED_CLAUDE_REVIEW_FIXES.md"
+  }
+]

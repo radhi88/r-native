@@ -1,0 +1,185 @@
+{
+  "generated": 1782832743.085942,
+  "eas": [
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 4
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_BRAIN_EA_v1.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 4
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\CLAUDE_FOOTPRINT_v4.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\FRIDAY_Gold_EA.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\ea\\v7_2_DNA_EVOLVE_TESTER.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 5
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea\\Stoch_Reversion_M3.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": ".claude\\worktrees\\trusting-shaw-3638c1\\QuantumShark_Safe_v9.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "active_ea\\Agentic_Profiled_Grid_Tester_GOLD_v7_2_DNA_EVOLVE.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 4
+    },
+    {
+      "path": "active_ea\\CLAUDE_BRAIN_EA_v1.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 4
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v1.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v3.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    },
+    {
+      "path": "active_ea\\CLAUDE_FOOTPRINT_v4.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    },
+    {
+      "path": "active_ea\\QuantumShark_Learner_v8_2.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "active_ea\\QuantumShark_Learner_v8_3.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "ea\\FRIDAY_Gold_EA.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    },
+    {
+      "path": "ea\\v7_2_DNA_EVOLVE.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "ea\\v7_2_DNA_EVOLVE_TESTER.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "live_ea\\Agentic_Profiled_Grid_GOLD_LIVE.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 5
+    },
+    {
+      "path": "live_ea\\Stoch_Reversion_M3.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "QuantumShark_Safe_v9.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "r-native-pipflow\\mql5_templates\\r_strategy_template.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "r-native-pipflow\\mql5_templates\\Stoch_Reversion_M3.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "r_native\\mql5_templates\\r_strategy_template.mq5",
+      "has_buy": true,
+      "has_sell": true,
+      "send_calls": 2
+    },
+    {
+      "path": "r_native\\v2\\mql5_experts\\FRIDAY_Brain_Executor.mq5",
+      "has_buy": false,
+      "has_sell": false,
+      "send_calls": 0
+    }
+  ]
+}

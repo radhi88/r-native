@@ -1,0 +1,14 @@
+{
+  "source": "kimi_user_snapshot",
+  "signal": "HOLD",
+  "unified_decision": "SELL",
+  "confidence": 32.0,
+  "consensus": "3/4",
+  "price": 0,
+  "sl": 0,
+  "tp": 0,
+  "volume": 0.14,
+  "risk": "EXTREME",
+  "mode": "LIMIT",
+  "reasoning": "Unified Decision: SELL; Confidence: 32%; Consensus: 3/4; Risk Level: EXTREME; SMC SELL 80%, agents/technical/sentiment HOLD 50%. Final signal is HOLD because confidence is low and risk is EXTREME."
+}

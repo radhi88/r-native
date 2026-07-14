@@ -1,0 +1,177 @@
+{
+  "summary": "Parallel agent research: proven trading strategies + open-source Python libs/GitHub tools that fit our MT5 system, synthesized into an actionable install/implement plan",
+  "agentCount": 7,
+  "logs": [],
+  "result": {
+    "synth": {
+      "install_now": [
+        {
+          "pip": "TA-Lib",
+          "why": "C-accelerated, 150+ indicators incl. ~100 you lack (CCI, MFI, KAMA/MAMA, Hilbert-Transform cycle indicators = genuinely new signal class) + 61 candlestick patterns. v0.6.x ships prebuilt Windows wheels (no compiler), verified compatible with your numpy 2.4.4 / Py3.13. Also cross-checks your hand-rolled RSI/MACD for calc bugs. Drop-in feature expansion for chart_read voting + GA fitness.",
+          "priority": "high"
+        },
+        {
+          "pip": "pandas-ta-classic",
+          "why": "Pure-Python MIT fork (252 indicators as df.ta.* one-liners) for rapid feature-bolting onto the genome grid: Supertrend, Vortex, TTM-Squeeze, Fisher, HMA/ALMA. CRITICAL: install the '-classic' fork, NOT 'pandas-ta' (original is being ARCHIVED ~July 2026). Pairs with TA-Lib for accel.",
+          "priority": "high"
+        },
+        {
+          "pip": "arch",
+          "why": "Industry-standard GARCH/EWMA conditional-vol with proper out-of-sample next-bar sigma forecast. Strictly better than ATR for vol-targeting position size AND for sizing SL/TP distance ahead of the next bar. Permissive license, deps you already have (statsmodels/numpy/scipy). This is the engine that makes volatility-targeting exact.",
+          "priority": "high"
+        },
+        {
+          "pip": "skfolio",
+          "why": "BSD-3 sklearn-native lib shipping CombinatorialPurgedCV + WalkForward splitters that PURGE+EMBARGO overlapping bars — the free, maintained replacement for paywalled mlfinlab. Your ml_trainer.py uses plain train_test_split = direct label leakage on overlapping M1/M5 bars. This makes OOS folds honest. Also gives HRP/risk-parity allocators for later basket sizing.",
+          "priority": "high"
+        },
+        {
+          "pip": "quantstats",
+          "why": "50+ vetted risk metrics (Sharpe, Sortino, Calmar, max DD, PF, expectancy, tail ratio) + one-call HTML tear sheets. Replaces hand-rolled Sharpe math (your XAU demo Sharpe -1.22 was hand-computed) with audited formulas. Feed it MT5 closed-trade returns for a shareable report per promoted genome/session. Apache-2.0, actively maintained.",
+          "priority": "high"
+        },
+        {
+          "pip": "empyrical-reloaded",
+          "why": "Pure-function risk primitives (sharpe, sortino, max_drawdown, calmar, VaR) for inline use in the live decision path (risk_sentinel/coordinator computing rolling Sharpe to gate sizing) where a full quantstats report is overkill. Use the '-reloaded' fork — original empyrical/pyfolio are dead.",
+          "priority": "high"
+        },
+        {
+          "pip": "hmmlearn",
+          "why": "BSD GaussianHMM regime detection: fit 2-3 states on (return, realized-vol, ATR) per symbol/TF for a principled, continuously-updated regime tag. Becomes a strong ML feature AND lets each genome's edge be measured PER REGIME (don't run a trend genome in chop). Fits in <1s. Use as context/filter, NOT a direction forecast.",
+          "priority": "high"
+        },
+        {
+          "pip": "lightgbm",
+          "why": "Near drop-in upgrade for the sklearn GradientBoostingClassifier in ml_trainer.py: faster, better on thin/imbalanced per-symbol trade sets, ONNX-exportable (already in your pipeline). Killer feature is monotone_constraints — hard-code domain priors ('wider spread => never higher win-prob') to regularize on thin data. MIT, mature.",
+          "priority": "high"
+        },
+        {
+          "pip": "hurst",
+          "why": "Tiny lib for the Hurst-exponent regime gate (H>0.5 trend / H<0.5 mean-revert) that routes between momentum vs VWAP-fade archetypes. This is the meta-layer that makes every strategy below honest. Cheap, deterministic, slots next to your Markov gate. (statsmodels variance-ratio is the fallback if the wheel misbehaves.)",
+          "priority": "high"
+        },
+        {
+          "pip": "ruptures",
+          "why": "BSD PELT change-point detection on vol/return series: (1) align OOS walk-forward folds to regime boundaries so you never train across a structural break, (2) live break-alarm to pause a genome right after a regime change. numpy/scipy only. Apply causally (trailing window) to avoid lookahead.",
+          "priority": "medium"
+        },
+        {
+          "pip": "vectorbt",
+          "why": "Numba-vectorized backtester to sweep thousands of genome combos in seconds with built-in walk-forward splitters + fees=/slippage= so you feed REAL per-bar spread directly. Accelerates the search, does NOT replace your no-lookahead gate. LICENSE: v1.0.0 is fair-code (free for personal/demo, no resale); pin vectorbt==0.26.2 for pure-Apache fallback. Heavy Numba dep.",
+          "priority": "medium"
+        },
+        {
+          "pip": "backtesting",
+          "why": "Lightweight event-driven (bar-by-bar) second-opinion verifier for a SINGLE promoted genome before live — its next() loop mirrors how live executors see data, catching look-ahead bugs vectorized engines hide. Set commission to spread/2. AGPL-3.0 (fine for internal/personal use). Not for the big grid.",
+          "priority": "medium"
+        },
+        {
+          "pip": "optuna",
+          "why": "MIT TPE Bayesian search + MedianPruner to replace brute-force genome grid-search: far fewer backtests, kills bad genomes early, SQLite-persisted studies resume across runs (fits 'rotating session trials forever'). MUST score trials with purged-CV/deflated-Sharpe, not raw in-sample PnL, or it just overfits faster.",
+          "priority": "medium"
+        },
+        {
+          "pip": "antropy",
+          "why": "BSD entropy/complexity features (permutation/spectral/sample entropy, DFA≈Hurst, Hjorth) — lightweight regime/predictability features to skip high-entropy chop. numpy-only, tiny surface area. Complements (doesn't duplicate) TA stack.",
+          "priority": "low"
+        },
+        {
+          "pip": "smartmoneyconcepts",
+          "why": "Canonical OSS lib (joshyattridge) giving swing H/L, liquidity pools, BOS/CHoCH, OB, FVG so you don't re-derive them for the liquidity-sweep-with-confirmation archetype. Only worth it if you commit to honestly OOS-testing the sweep+confirmation rule; high hindsight-bias hazard otherwise.",
+          "priority": "low"
+        }
+      ],
+      "implement": [
+        {
+          "name": "Volatility-targeting position sizing (arch/ATR) — fix the '~100 pts SL assumed' hack",
+          "sketch": "In src/mt5_ai/lot_sizer.py replace the line-99 hack with lots = (equity*target_risk_frac)/(SL_atr_mult*ATR_price*point_value); feed SL distance and lot size from ONE volatility number (arch next-bar sigma or ATR). Clamp to broker min/max + existing 0.3% ceiling.",
+          "priority": "high"
+        },
+        {
+          "name": "Hurst/variance-ratio regime gate (the meta-router)",
+          "sketch": "Add rolling Hurst (hurst lib) + Lo-MacKinlay variance ratio as a SOFT gate in chart_read alongside Markov/ADX; route H>0.5 to momentum/breakout archetypes, H<0.5 to VWAP-fade. Validate it actually lifts forward WR on real demo deals via the reflection engine before trusting.",
+          "priority": "high"
+        },
+        {
+          "name": "Deflated/Probabilistic Sharpe Ratio promotion gate",
+          "sketch": "Vendor ~40 LOC from github rubenbriones/Probabilistic-Sharpe-Ratio (scipy only; do NOT depend on paywalled mlfinlab). Feed genome returns + n_trials(=genomes tested). Add min DSR>0 (or PSR>0.95) as a hard gate in hall_of_fame/paper_prover before any promotion — your single best guard against grid-search selection bias.",
+          "priority": "high"
+        },
+        {
+          "name": "Purged+embargoed CV in ml_trainer.py",
+          "sketch": "Swap the plain train_test_split for skfolio CombinatorialPurgedCV (or vendor timeseriescv PurgedWalkForwardCV) so overlapping-bar labels don't leak train→test and inflate AUC; combinatorial paths also give edge-variance, not one lucky split.",
+          "priority": "high"
+        },
+        {
+          "name": "Opening Range Breakout (ORB) genome archetype",
+          "sketch": "New mechanical genome: at 2nd bar of session (NY/gold, London/FX, cash-open/indices) enter in the 1st-5min-bar direction, stop=0.1x14d-ATR, exit at session close, NO fixed TP; gate to days after an NR7/narrow-range day. Backtest per symbol/session with real spread — strongest peer-reviewed intraday edge, but index-specific; OOS-validate each instrument (don't expect the leveraged-ETF returns).",
+          "priority": "high"
+        },
+        {
+          "name": "Time-Series Momentum with inverse-vol sizing (swing)",
+          "sketch": "Swing genome on H1/D1: position = sign(trailing return), size inversely to arch/EWMA realized vol, rebalance periodically. The replicated edge is mostly in the vol-SCALING not the trend signal — so even bolting inverse-vol sizing onto existing swing entries via conviction_sizing is the highest-ROI low-risk change. Keep your Markov D1 gate as the whipsaw filter.",
+          "priority": "high"
+        },
+        {
+          "name": "Triple-barrier labeling + meta-labeling filter",
+          "sketch": "Self-code ~40 LOC: label each entry by which of {TP, SL, time-limit} hits first (=your realized trade outcome already). Train a LightGBM meta-model that only decides trade-vs-skip + size on top of the existing genome/SMC entry — raises precision and codifies the discipline edge without touching entry logic.",
+          "priority": "high"
+        },
+        {
+          "name": "Correlation-aware cluster risk scaling (replace R11 position-counting)",
+          "sketch": "In risk_manager.py R11, replace the hard-coded cluster COUNT (line 175) with real portfolio vol = sqrt(w@cov@w) from rolling returns.corr(); scale lots so total port vol<=target (inverse-vol weights, pure numpy — no cvxpy). Two 0.9-correlated gold+XAG trades = one 1.8x bet, not two.",
+          "priority": "high"
+        },
+        {
+          "name": "VWAP mean-reversion band fade (mean-revert archetype)",
+          "sketch": "~15 lines pandas: session-anchored VWAP +/-1/2SD; fade +2SD short / -2SD long toward VWAP, only first ~90min/last ~60min of NY on indices+gold. GATE strictly with the Hurst<0.5/low-ADX regime filter — fading a trend day is the classic blow-up. Treat ~55-60% WR as the realistic ceiling.",
+          "priority": "medium"
+        },
+        {
+          "name": "Fractional (half-Kelly) sizing ceiling",
+          "sketch": "In lot_sizer.py reuse existing _wilson_lower: f = W_lb-(1-W_lb)/R; final_frac=clamp(0.5*max(0,f),0,0.003); multiply the vol-target lots by final_frac/baseline. Use Wilson LOWER bound so a lucky streak never over-bets. A CEILING on size, never the target.",
+          "priority": "medium"
+        },
+        {
+          "name": "Equity-curve trading switch (per-genome drawdown state)",
+          "sketch": "Per magic: eq=(1+r).cumprod(); state = 1.0 if eq>=eq.rolling(20).mean() else 0.5 (or pause). Feed as a lot_mult into risk_manager — generalizes your 'pause after 2 SLs' to 'down-size when this genome's own curve rolls over'. Backtest per-genome first (can hurt mean-reverting bots).",
+          "priority": "medium"
+        },
+        {
+          "name": "Monte-Carlo risk-of-ruin to set DAILY_KILL_PCT empirically",
+          "sketch": "~30 LOC numpy: block-bootstrap resample real per-trade R-multiples, cumulate equity at given risk_frac, measure P(hit -15%/-25% / 50%-of-peak). Turns arbitrary DAILY_KILL_PCT=15 into an evidence-based number; use block (not i.i.d.) resampling for honesty on streaks.",
+          "priority": "medium"
+        },
+        {
+          "name": "TTM-Squeeze as a breakout TIMING filter (not a signal)",
+          "sketch": "pandas-ta-classic squeeze: feed squeeze-fired as a context vote that raises ORB/momentum entry quality; direction always from a separate momentum vote. NEVER trade standalone — the 88-92% WR claims are vendor marketing; alone it has ~no directional edge.",
+          "priority": "low"
+        },
+        {
+          "name": "Liquidity-sweep + confirmation (SMC done honestly)",
+          "sketch": "smartmoneyconcepts for levels; require sweep of prior-day/session H/L THEN close-back-inside + opposite displacement/FVG before fading; stop beyond wick. Backtest with strict no-lookahead (confirm bar must close before entry). Realistic edge ~52% and only WITH confirmation — test honestly or it becomes another myth.",
+          "priority": "low"
+        }
+      ],
+      "avoid": [
+        "pandas-ta (the ORIGINAL) — scheduled to be ARCHIVED ~July 2026; install pandas-ta-classic instead.",
+        "finta — inactive/discontinued (no release in 12+ months).",
+        "tulipy — explicitly [NOT ACTIVELY MAINTAINED].",
+        "bukosabino 'ta' — last release Nov 2023, classifiers only to Py3.7; risky on your Py3.13/NumPy2/pandas3 stack. Superseded by TA-Lib + pandas-ta-classic.",
+        "mlfinlab — now paywalled/closed (PyPI 404, Hudson & Thames subscription). Vendor the ~40-LOC PSR/DSR + triple-barrier yourself; use skfolio for purged CV.",
+        "pyfolio (original) + quantopian/empyrical — abandoned (~2019), break on modern pandas. Use quantstats + empyrical-reloaded.",
+        "TTM-Squeeze 88-92% win-rate claims — vendor marketing, not research. Squeeze alone has ~no directional edge; only valid as a filter on a directional signal.",
+        "Published SMC 60%+ win-rate / raw CHoCH-CISD edges — curve-fit/look-ahead. Your own testing already measured CHoCH/CISD ~50% (hindsight); only sweep+confirmation tips to ~52%.",
+        "Expecting ORB's headline returns (e.g. 1484%) — those came from 3x-leveraged ETFs you can't trade; the raw cash signal is real but far thinner.",
+        "Full Kelly sizing — famously over-bets into deep drawdowns; cap at <=0.5 Kelly with Wilson-LB win-rate.",
+        "pymt5adapter / jimtin bot as live deps — pymt5adapter is officially DEPRECATED; jimtin is tutorial-grade with no real risk controls. INSPECT-ONLY: borrow the always-shutdown context-manager + retcode-handling patterns into your own MT5 helper.",
+        "Cointegration/stat-arb at any real size — Do & Faff + 2024 ETF studies show net-of-cost profitability has eroded badly since ~2000; on retail demo spread most pairs are net-negative. Tiny carefully-cost-modeled allocation at most.",
+        "Fractal/analog as a direction forecast — you already MEASURED ~50% OOS; keep as context-only. STUMPY matrix profile is a more principled benchmark but similarity-of-shape rarely beats 50% OOS either.",
+        "Running optuna/vectorbt search that optimizes raw in-sample PnL — that just overfits faster; the search objective MUST be purged-CV + deflated Sharpe.",
+        "riskfolio-lib in the live path — pulls cvxpy/scs (Windows build friction); use the numpy inverse-vol/corr version live, keep riskfolio for offline only."
+      ],
+      "summary": "Verified against the live codebase (Py3.13, numpy 2.4.4/pandas 3.0.2; only numpy/pandas/scipy installed). The findings author clearly read this repo — lot_sizer.py line 99 literally has the '~100 pts SL assumed' hack, _wilson_lower exists, and risk_manager.py R11 (line 175) counts cluster positions instead of using a correlation matrix. So the highest-ROI work is fixing what's already there, not adding strategies. INSTALL NOW (all $0, Windows-friendly, vetted): TA-Lib, pandas-ta-classic (NOT pandas-ta), arch, skfolio, quantstats, empyrical-reloaded, hmmlearn, lightgbm, hurst. The single biggest honesty win is a Deflated-Sharpe promotion gate (vendor ~40 LOC, don't touch paywalled mlfinlab) + purged/embargoed CV in ml_trainer.py — your grid-search currently selection-biases its 'heroes' and your ML leaks overlapping-bar labels. Highest-ROI sizing change: volatility-targeting (replace the line-99 hack, feed SL distance and lot from one arch/ATR sigma) + correlation-aware cluster risk (replace R11 counting). Best NEW archetypes by evidence: ORB (strongest peer-reviewed intraday edge, but index-specific — OOS each symbol), TSMOM with inverse-vol sizing (edge is mostly the vol-scaling, which bolts onto existing swing entries cheaply), triple-barrier meta-labeling (filter trade/skip on top of existing entries = codifies your proven discipline edge without touching entry logic), and a Hurst regime gate to route momentum-vs-mean-reversion. Brutal-honesty flags: ORB headline returns came from leverage you can't trade; SMC 60%+/squeeze 88%+ WR are myths (your own data says CHoCH ~50%, sweep+confirm ~52%); stat-arb edge has decayed below cost on retail spread; full Kelly over-bets. Relevant files: C:/Users/Radhi/MT5/src/mt5_ai/lot_sizer.py (line 99 hack, _wilson_lower line 42), C:/Users/Radhi/MT5/risk_manager.py (R11 cluster count line 175), C:/Users/Radhi/MT5/chart_read.py (add regime gate + new entry-mode votes), C:/Users/Radhi/MT5/src/mt5_ai/ml_trainer.py (purged CV)."
+    },
+    "n_findings": 57
+  }
+}

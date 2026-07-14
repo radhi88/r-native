@@ -1,0 +1,132 @@
+{
+  "generated": 1782832772.9344726,
+  "note": "These roles need judgment. Run `python -m plutobrain_swarm.orchestrator --escalate ID` or ask Claude / friday_decision.py.",
+  "pending": [
+    {
+      "id": "A-08",
+      "role": "Structure Designer",
+      "cluster": "ALPHA",
+      "skills": "OOP design, inheritance"
+    },
+    {
+      "id": "A-09",
+      "role": "Interface Builder",
+      "cluster": "ALPHA",
+      "skills": "API design, abstraction"
+    },
+    {
+      "id": "A-11",
+      "role": "Migration Planner",
+      "cluster": "ALPHA",
+      "skills": "Change management, rollback"
+    },
+    {
+      "id": "A-15",
+      "role": "Integration Tester",
+      "cluster": "ALPHA",
+      "skills": "System testing, validation"
+    },
+    {
+      "id": "B-01",
+      "role": "Risk Engineer",
+      "cluster": "BETA",
+      "skills": "Kelly, Optimal F, Monte Carlo"
+    },
+    {
+      "id": "B-02",
+      "role": "Multi-TF Analyst",
+      "cluster": "BETA",
+      "skills": "Timeframe correlation"
+    },
+    {
+      "id": "B-03",
+      "role": "Regime Detector",
+      "cluster": "BETA",
+      "skills": "Market state, volatility clustering"
+    },
+    {
+      "id": "B-04",
+      "role": "Correlation Guard",
+      "cluster": "BETA",
+      "skills": "Signal overlap, redundancy"
+    },
+    {
+      "id": "B-05",
+      "role": "Equity Guardian",
+      "cluster": "BETA",
+      "skills": "Drawdown control, circuit breakers"
+    },
+    {
+      "id": "B-07",
+      "role": "News Filter",
+      "cluster": "BETA",
+      "skills": "Economic calendar, impact scoring"
+    },
+    {
+      "id": "B-08",
+      "role": "ATR Engineer",
+      "cluster": "BETA",
+      "skills": "Volatility adaptation, dynamic stops"
+    },
+    {
+      "id": "B-09",
+      "role": "Partial Close",
+      "cluster": "BETA",
+      "skills": "TP1/TP2/TP3 + breakeven"
+    },
+    {
+      "id": "B-10",
+      "role": "Recovery Designer",
+      "cluster": "BETA",
+      "skills": "Grid, hedge, martingale control"
+    },
+    {
+      "id": "B-11",
+      "role": "Slippage Guard",
+      "cluster": "BETA",
+      "skills": "Execution quality"
+    },
+    {
+      "id": "G-01",
+      "role": "Stress Tester",
+      "cluster": "GAMMA",
+      "skills": "Edge case simulation"
+    },
+    {
+      "id": "G-02",
+      "role": "Gap Simulator",
+      "cluster": "GAMMA",
+      "skills": "Weekend/news gaps, flash crashes"
+    },
+    {
+      "id": "G-03",
+      "role": "Spread Spiker",
+      "cluster": "GAMMA",
+      "skills": "Spread spike torture tests"
+    },
+    {
+      "id": "G-04",
+      "role": "Disconnect Sim",
+      "cluster": "GAMMA",
+      "skills": "Network/broker downtime"
+    },
+    {
+      "id": "G-05",
+      "role": "Conflict Tester",
+      "cluster": "GAMMA",
+      "skills": "Multi-strategy conflict"
+    },
+    {
+      "id": "G-09",
+      "role": "Backtest Engine",
+      "cluster": "GAMMA",
+      "skills": "Historical simulation"
+    },
+    {
+      "id": "G-10",
+      "role": "Forward Tester",
+      "cluster": "GAMMA",
+      "skills": "Paper trading, demo validation"
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+allow_live_trading: true
+close_on_emergency_stop: false
+comment: QADER_DEMO
+confidence:
+  fractal_block_threshold: 0.65
+  min_decision_confidence: 0.35
+  min_signal_confidence: 0.35
+continue_after_blocked_cycle: true
+continue_after_hold: true
+continue_after_order_send: true
+demo_calibration:
+  allow_structure_without_entry_confirmation: true
+  enabled: true
+  label: DEMO_CALIBRATION_NOT_LIVE
+  max_hold_cycles_before_logging: 30
+  min_directional_score_gap: 0.0
+  min_confidence: 0.35
+  structure_min_confidence: 0.45
+demo_only: true
+dry_run: false
+emergency_stop_enabled: true
+execution:
+  averaging_enabled: false
+  comment: QADER_DEMO
+  demo_only: true
+  deviation: 20
+  dry_run: false
+  grid_enabled: false
+  magic_number: 20260514
+  martingale_enabled: false
+  max_market_orders_per_run: 1
+  one_execution_path_only: true
+  order_filling: IOC
+  pending_orders_enabled: true
+  pyramiding_enabled: false
+  reentry_loop_enabled: false
+  require_conflict_guard: true
+  require_lockdown_check: true
+  require_manual_gui_confirmation: true
+  require_risk_approval: true
+  require_signal_arbiter: true
+  simulate_only: false
+  same_direction_entry_cooldown_seconds: 60
+  target_demo_trades: 3
+fixed_lot: 0.01
+heartbeat_interval_seconds: 5
+logging:
+  jsonl_enabled: true
+  log_dir: logs
+learning:
+  collect_every_cycle: true
+  apply_on_trade_opened: true
+  auto_apply_proposals: true
+  min_samples_for_auto_apply: 10
+  sample_window: 30
+  apply_cooldown_seconds: 60
+loop_interval_seconds: 1
+magic_number: 20260514
+manage_open_positions: true
+max_cycles: 0
+max_daily_loss_usd: 8
+max_data_failures_before_block: 300
+max_data_unavailable_seconds: 300
+max_lot: 0.01
+max_open_positions: 3
+max_pending_orders: 2
+max_runtime_minutes: 1440
+max_spread_points: 350
+max_trade_loss_usd: 2
+mode: REAL_CONTROLLED_MODE
+position_management:
+  breakeven_enabled: true
+  breakeven_lock_points: 30
+  breakeven_profit_usd: 0.2
+  enabled: true
+  max_loss_usd: -999.0
+  max_runtime_seconds: 86400
+  opposite_signal_exit_enabled: true
+  opposite_exit_min_confidence: 0.50
+  partial_tp_enabled: false
+  partial_tp_fraction: 0.5
+  partial_tp_profit_usd: 0.8
+  sl_lock_enabled: true
+  sl_lock_profit_usd: 0.15
+  trailing_distance_points: 120
+  trailing_enabled: true
+  trailing_start_profit_usd: 0.35
+realtime_loop_enabled: true
+require_sl: true
+require_tp_or_trailing: true
+risk:
+  allow_external_pending_orders: true
+  allow_grid: false
+  allow_hedge: false
+  allow_martingale: false
+  allow_news_trading: false
+  cooldown_after_loss_minutes: 5
+  fixed_lot: 0.01
+  max_daily_loss_percent: 20.0
+  max_daily_loss_usd: 8
+  max_lot: 0.01
+  max_open_positions: 3
+  max_pending_orders: 1
+  max_spread_points:
+    XAUUSDm: 350
+    default: 350
+  max_total_loss_percent: 30.0
+  max_trade_loss_usd: 2
+  max_trades_per_day: 6
+  min_rr: 1.5
+  require_sl: true
+  require_tp_or_trailing: true
+level_pending_orders:
+  cooldown_seconds: 180
+  duplicate_tolerance_points: 120
+  enabled: true
+  fallback_to_market_when_no_level: true
+  max_distance_points: 3500
+  min_confidence: 0.35
+  min_distance_points: 80
+  min_score_gap: 0.05
+  min_smc_confidence: 0.35
+  prefer_over_market: true
+  stale_cancel_minutes: 10
+runtime:
+  allow_live_trading: true
+  demo_only: true
+  kill_switch: false
+  max_cycles: 0
+  max_runtime_minutes: 1440
+  mode: REAL_CONTROLLED_MODE
+simulate_only: false
+stop_after_target_demo_trades: false
+symbol: XAUUSDm
+symbols:
+  active:
+  - XAUUSDm
+  timeframes:
+  - M1
+target_demo_trades: 3
+timeframe: M1

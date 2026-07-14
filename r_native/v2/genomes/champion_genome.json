@@ -1,0 +1,40 @@
+{
+  "champion_genome": {
+    "name": "GEN-CHILD-20260528023533",
+    "generation": 0,
+    "promoted_ts": "2026-05-28T02:35:33.536198+00:00",
+    "params": {
+      "name": "GEN-CHILD-20260528023533",
+      "rsi_max": 72,
+      "min_imb_count": 2,
+      "use_footprint": true,
+      "min_pressure_abs": 5,
+      "min_mtf_agreement": 2,
+      "lot": 0.02,
+      "sl_pts": 5.91,
+      "tp_pts": 14.78,
+      "regime_filter": [],
+      "session_filter": [
+        "NY_OVERLAP",
+        "ASIAN",
+        "NY_LATE"
+      ],
+      "side_bias": null
+    },
+    "parents": [
+      "algory_sniper",
+      "claude_simple",
+      "manual"
+    ],
+    "fitness_at_promotion": 0.0,
+    "notes": "manually promoted from CHILD distillation (n=169)"
+  },
+  "captured_ts": "2026-05-28T02:59:10.896943+00:00",
+  "account_balance_at_capture": 232.32,
+  "note": "GEN-CHILD distilled from manual(160)+claude_simple+algory wins. WR 100% first 3 trades (+$33).",
+  "lineage": [
+    "algory_sniper",
+    "claude_simple",
+    "manual"
+  ]
+}

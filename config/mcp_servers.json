@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "unusualwhales-remote": {
+      "type": "url",
+      "url": "https://api.unusualwhales.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${UW_API_KEY}"
+      }
+    },
+    "unusualwhales-local": {
+      "command": "npx",
+      "args": ["-y", "@unusualwhales/mcp"],
+      "env": {
+        "UW_API_KEY": "${UW_API_KEY}"
+      }
+    }
+  },
+  "gold_mapping": {
+    "broker_symbol": "XAUUSDm",
+    "unusual_whales_proxy_symbols": ["GLD", "GDX", "IAU", "SLV"],
+    "note": "Unusual Whales is US options/equity flow. XAUUSDm execution still uses MT5 tick data; UW is sentiment overlay only."
+  }
+}

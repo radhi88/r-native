@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Qader Unified Console</title>
+  <link rel="stylesheet" href="/qader_unified_console.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Qader Operations</p>
+      <h1>Unified Console</h1>
+    </div>
+    <nav class="nav-actions" aria-label="Console surfaces">
+      <button type="button" data-target="live">Live</button>
+      <button type="button" data-target="depth">Depth</button>
+      <button type="button" data-target="flow">Agents</button>
+      <button type="button" data-target="service8866">Service 8866</button>
+      <button type="button" data-target="service8833">Service 8833</button>
+    </nav>
+  </header>
+
+  <main class="console">
+    <section class="status-strip" aria-label="Runtime status">
+      <article class="status-card primary">
+        <span class="label">Loop</span>
+        <strong id="loopState">Loading</strong>
+        <small id="loopReason">Waiting for qader_live_state.json</small>
+      </article>
+      <article class="status-card">
+        <span class="label">Symbol</span>
+        <strong id="symbolValue">-</strong>
+        <small id="sessionValue">-</small>
+      </article>
+      <article class="status-card">
+        <span class="label">Decision</span>
+        <strong id="decisionValue">-</strong>
+        <small id="signalValue">-</small>
+      </article>
+      <article class="status-card">
+        <span class="label">Learning</span>
+        <strong id="learningValue">-</strong>
+        <small id="learningReason">-</small>
+      </article>
+      <article class="status-card">
+        <span class="label">Risk</span>
+        <strong id="riskValue">-</strong>
+        <small id="positionsValue">-</small>
+      </article>
+      <article class="status-card">
+        <span class="label">Market</span>
+        <strong id="priceValue">-</strong>
+        <small id="spreadValue">-</small>
+      </article>
+      <article class="status-card">
+        <span class="label">Refresh</span>
+        <strong id="refreshValue">-</strong>
+        <small id="timestampValue">-</small>
+      </article>
+    </section>
+
+    <section class="health-grid" aria-label="Service health">
+      <article class="health-card" data-health-card="live">
+        <div>
+          <span class="health-dot"></span>
+          <strong>Live Dashboard</strong>
+          <small>/qader_live_dashboard.html</small>
+        </div>
+        <a href="/qader_live_dashboard.html" target="_blank" rel="noopener">Open</a>
+      </article>
+      <article class="health-card" data-health-card="depth">
+        <div>
+          <span class="health-dot"></span>
+          <strong>Market Depth</strong>
+          <small>/market_depth.html</small>
+        </div>
+        <a href="/market_depth.html" target="_blank" rel="noopener">Open</a>
+      </article>
+      <article class="health-card" data-health-card="flow">
+        <div>
+          <span class="health-dot"></span>
+          <strong>Agent Flow</strong>
+          <small>/agent_flow_diagram.html</small>
+        </div>
+        <a href="/agent_flow_diagram.html" target="_blank" rel="noopener">Open</a>
+      </article>
+      <article class="health-card" data-health-card="service8866">
+        <div>
+          <span class="health-dot"></span>
+          <strong>Local Service 8866</strong>
+          <small>http://127.0.0.1:8866/</small>
+        </div>
+        <a href="http://127.0.0.1:8866/" target="_blank" rel="noopener">Open</a>
+      </article>
+      <article class="health-card" data-health-card="service8833">
+        <div>
+          <span class="health-dot"></span>
+          <strong>Local Service 8833</strong>
+          <small>http://127.0.0.1:8833/</small>
+        </div>
+        <a href="http://127.0.0.1:8833/" target="_blank" rel="noopener">Open</a>
+      </article>
+    </section>
+
+    <section class="workspace" aria-label="Embedded surfaces">
+      <aside class="surface-list">
+        <button type="button" class="surface-tab active" data-target="live">
+          <strong>Live Dashboard</strong>
+          <span>Execution, decisions, trades</span>
+        </button>
+        <button type="button" class="surface-tab" data-target="depth">
+          <strong>Market Depth</strong>
+          <span>Order flow and liquidity</span>
+        </button>
+        <button type="button" class="surface-tab" data-target="flow">
+          <strong>Agent Flow</strong>
+          <span>Decision mesh and routing</span>
+        </button>
+        <button type="button" class="surface-tab" data-target="service8866">
+          <strong>Service 8866</strong>
+          <span>External local surface</span>
+        </button>
+        <button type="button" class="surface-tab" data-target="service8833">
+          <strong>Service 8833</strong>
+          <span>External local surface</span>
+        </button>
+      </aside>
+
+      <div class="frame-area">
+        <div class="frame-toolbar">
+          <div>
+            <span id="activeSurfaceName">Live Dashboard</span>
+            <small id="activeSurfaceUrl">/qader_live_dashboard.html</small>
+          </div>
+          <a id="activeSurfaceLink" href="/qader_live_dashboard.html" target="_blank" rel="noopener">Launch</a>
+        </div>
+        <iframe id="surfaceFrame" title="Qader surface" src="/qader_live_dashboard.html"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <script src="/qader_unified_console.js" defer></script>
+</body>
+</html>

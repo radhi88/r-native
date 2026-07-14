@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNA EVOLVE v7.2 — Live Widget</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:      #05070f;
+  --bg2:     #080b1a;
+  --bg3:     #0a0d1f;
+  --border:  #12203a;
+  --text:    #cbd5e1;
+  --muted:   #475569;
+  --dim:     #1e293b;
+  --green:   #22c55e;
+  --red:     #ef4444;
+  --yellow:  #f59e0b;
+  --blue:    #22d3ee;
+  --violet:  #a78bfa;
+  --accent:  #60a5fa;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', 'Courier New', monospace;
+  font-size: 13px;
+  min-height: 100vh;
+  padding: 12px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.title { color: var(--blue); font-size: 14px; font-weight: 700; letter-spacing: .1em; }
+.dot {
+  display: inline-block;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: var(--red);
+}
+.dot.on { background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.grid { display: grid; gap: 8px; margin-bottom: 12px; }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.card .label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+.card .value { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1; }
+.green  { color: var(--green) !important; }
+.red    { color: var(--red) !important; }
+.yellow { color: var(--yellow) !important; }
+.blue   { color: var(--blue) !important; }
+.violet { color: var(--violet) !important; }
+
+/* P&L Chart */
+.chart-wrap {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+}
+.chart-label { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
+canvas { width: 100%; display: block; border-radius: 4px; }
+
+/* Suggestions */
+.suggestions {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.sugg-title { font-size: 10px; color: var(--muted); margin-bottom: 8px; }
+.sugg-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--dim);
+  margin-bottom: 5px;
+  transition: border .2s;
+}
+.sugg-row:first-child { border-color: var(--accent); }
+.sugg-row.HOLD    { border-left: 3px solid var(--green); }
+.sugg-row.TWEAK   { border-left: 3px solid var(--yellow); }
+.sugg-row.CRITICAL { border-left: 3px solid var(--red); }
+.action-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.HOLD    .action-badge { background: rgba(34,197,94,.15); color: var(--green); }
+.TWEAK   .action-badge { background: rgba(245,158,11,.15); color: var(--yellow); }
+.CRITICAL .action-badge { background: rgba(239,68,68,.15); color: var(--red); }
+.sugg-body { flex: 1; min-width: 0; }
+.sugg-msg { font-size: 11px; color: var(--text); line-height: 1.5; }
+.sugg-hint { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.sugg-meta { font-size: 9px; color: var(--dim); white-space: nowrap; }
+
+.status-bar {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+}
+.err { color: var(--red); }
+
+/* iframe-friendly reset */
+html { overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="title">◈ DNA EVOLVE v7.2</span>
+  <span id="conn-label"><span class="dot" id="conn-dot"></span><span id="conn-text">ينتظر...</span></span>
+</div>
+
+<!-- Row 1: main metrics -->
+<div class="grid grid-4" id="main-metrics">
+  <div class="card"><div class="label">الرصيد</div><div class="value" id="m-balance">—</div></div>
+  <div class="card"><div class="label">الجيل</div><div class="value violet" id="m-gen">—</div></div>
+  <div class="card"><div class="label">أفضل fitness</div><div class="value blue" id="m-fitness">—</div></div>
+  <div class="card"><div class="label">تطبيقات Claude</div><div class="value" id="m-applied">—</div></div>
+</div>
+
+<!-- Row 2: DNA params -->
+<div class="grid grid-3">
+  <div class="card"><div class="label">Gap (نقطة)</div><div class="value" id="d-gap">—</div></div>
+  <div class="card"><div class="label">Basket TP ($)</div><div class="value green" id="d-tp">—</div></div>
+  <div class="card"><div class="label">Basket SL ($)</div><div class="value red" id="d-sl">—</div></div>
+</div>
+
+<!-- P&L Chart -->
+<div class="chart-wrap">
+  <div class="chart-label">منحنى الرصيد — آخر 50 شمعة</div>
+  <canvas id="chart" height="70"></canvas>
+</div>
+
+<!-- Suggestions -->
+<div class="suggestions">
+  <div class="sugg-title">آخر اقتراحات Claude</div>
+  <div id="sugg-list">
+    <div style="color:var(--muted);font-size:11px;padding:10px 0">لا توجد اقتراحات بعد — شغّل ea_monitor.py</div>
+  </div>
+</div>
+
+<div class="status-bar">
+  <span id="status-url">http://localhost:7800/api/dna/state</span>
+  <span id="status-time">—</span>
+</div>
+
+<script>
+const BRIDGE = 'http://localhost:7800';
+const REFRESH_MS = 2000;
+
+let balHistory = [];
+
+function colorVal(v, greenThreshold = 0) {
+  if (!Number.isFinite(v)) return '';
+  return v >= greenThreshold ? 'green' : 'red';
+}
+
+function fmt(v, d = 2) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n.toFixed(d) : '—';
+}
+
+function setEl(id, text, cls) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  if (cls !== undefined) {
+    el.className = 'value ' + (cls || '');
+  }
+}
+
+function drawChart(balances) {
+  const canvas = document.getElementById('chart');
+  if (!canvas) return;
+  const W = canvas.parentElement.clientWidth - 20;
+  canvas.width  = W;
+  canvas.height = 70;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, 70);
+  ctx.fillStyle = '#050815';
+  ctx.fillRect(0, 0, W, 70);
+
+  if (balances.length < 2) {
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('waiting for bars...', W / 2, 38);
+    return;
+  }
+
+  const mn = Math.min(...balances);
+  const mx = Math.max(...balances);
+  const rng = mx - mn || 1;
+  const toX = (i) => 2 + (i / (balances.length - 1)) * (W - 4);
+  const toY = (b) => 66 - ((b - mn) / rng) * 62;
+
+  // fill gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, 70);
+  grad.addColorStop(0, 'rgba(34,211,238,.18)');
+  grad.addColorStop(1, 'rgba(34,211,238,0)');
+
+  ctx.beginPath();
+  balances.forEach((b, i) => {
+    i === 0 ? ctx.moveTo(toX(i), toY(b)) : ctx.lineTo(toX(i), toY(b));
+  });
+  ctx.strokeStyle = '#22d3ee';
+  ctx.lineWidth = 1.8;
+  ctx.stroke();
+
+  ctx.lineTo(toX(balances.length - 1), 70);
+  ctx.lineTo(2, 70);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // zero line
+  ctx.beginPath();
+  ctx.strokeStyle = '#12203a';
+  ctx.lineWidth = 0.5;
+  const midY = toY((mn + mx) / 2);
+  ctx.moveTo(0, midY); ctx.lineTo(W, midY);
+  ctx.stroke();
+}
+
+const ACTION_LABELS = { HOLD: 'HOLD', TWEAK: 'TWEAK', CRITICAL: 'CRITICAL' };
+
+function renderSuggestions(suggestions) {
+  const list = document.getElementById('sugg-list');
+  if (!list) return;
+  if (!suggestions || !suggestions.length) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:11px;padding:10px 0">لا توجد اقتراحات بعد</div>';
+    return;
+  }
+
+  list.innerHTML = suggestions.slice(0, 5).map((s, i) => {
+    const action  = s.action || 'HOLD';
+    const conf    = s.confidence != null ? `${s.confidence}%` : '';
+    const bar     = s.bar != null ? `Bar ${s.bar}` : '';
+    const time    = s.timestamp || '';
+    const params  = s.params_to_change ? Object.entries(s.params_to_change)
+      .filter(([, v]) => v != null)
+      .map(([k, v]) => `${k}=${v}`)
+      .join(' · ') : '';
+
+    return `<div class="sugg-row ${action}">
+      <span class="action-badge">${ACTION_LABELS[action] || action}</span>
+      <div class="sugg-body">
+        <div class="sugg-msg">${s.message || 'جاري المراقبة...'}</div>
+        ${s.suggestion ? `<div class="sugg-hint">${s.suggestion}</div>` : ''}
+        ${params       ? `<div class="sugg-hint" style="color:var(--blue)">${params}</div>` : ''}
+      </div>
+      <div class="sugg-meta">${[bar, conf, time].filter(Boolean).join(' · ')}</div>
+    </div>`;
+  }).join('');
+}
+
+async function refresh() {
+  try {
+    const [stateResp, suggResp] = await Promise.all([
+      fetch(`${BRIDGE}/api/dna/state`,       { cache: 'no-store' }),
+      fetch(`${BRIDGE}/api/dna/suggestions`, { cache: 'no-store' }),
+    ]);
+
+    if (!stateResp.ok) throw new Error(`state HTTP ${stateResp.status}`);
+    const state = await stateResp.json();
+    const suggData = suggResp.ok ? await suggResp.json() : {};
+
+    const cur = state.current || {};
+    const connected = Boolean(state.connected);
+
+    // connection indicator
+    const dot  = document.getElementById('conn-dot');
+    const txt  = document.getElementById('conn-text');
+    if (dot) dot.className = 'dot' + (connected ? ' on' : '');
+    if (txt) txt.textContent = connected ? 'متصل' : 'غير متصل';
+
+    // metrics
+    const bal = cur.balance ?? 0;
+    setEl('m-balance', `$${fmt(bal)}`, colorVal(bal - 100));
+    setEl('m-gen',     `#${cur.generation ?? cur.dna_gen ?? '—'}`, 'violet');
+    setEl('m-fitness', fmt(cur.best_fitness, 1), 'blue');
+    setEl('m-applied', String(state.total_applied ?? '—'));
+
+    // DNA params
+    setEl('d-gap', cur.dna_gap != null ? Math.round(cur.dna_gap) : '—');
+    setEl('d-tp',  fmt(cur.dna_tp), 'green');
+    setEl('d-sl',  fmt(cur.dna_sl), 'red');
+
+    // build balance history from history endpoint (fetch lazily)
+    if (cur.balance != null) {
+      balHistory.push(cur.balance);
+      if (balHistory.length > 50) balHistory = balHistory.slice(-50);
+    }
+
+    drawChart(balHistory);
+    renderSuggestions(suggData.suggestions || []);
+
+    document.getElementById('status-time').textContent =
+      state.last_update ? `عُدّل: ${state.last_update}` : '—';
+    document.getElementById('status-time').className = '';
+
+  } catch (err) {
+    const t = document.getElementById('status-time');
+    if (t) { t.textContent = err.message; t.className = 'err'; }
+    const dot = document.getElementById('conn-dot');
+    if (dot) dot.className = 'dot';
+  }
+}
+
+// Also load bar history on first render
+async function loadHistory() {
+  try {
+    const resp = await fetch(`${BRIDGE}/api/dna/history?limit=50`, { cache: 'no-store' });
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const hist = data.history || [];
+    if (Array.isArray(hist) && hist.length) {
+      balHistory = hist.map(b => Number(b.balance ?? b.Balance ?? 0)).filter(v => v > 0);
+    }
+  } catch (_) { /* best-effort */ }
+}
+
+loadHistory().then(() => {
+  refresh();
+  setInterval(refresh, REFRESH_MS);
+});
+</script>
+</body>
+</html>

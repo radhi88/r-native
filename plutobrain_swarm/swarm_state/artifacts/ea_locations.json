@@ -1,0 +1,16 @@
+{
+  "generated": 1782832624.6977732,
+  "ea_dirs": {
+    ".claude\\worktrees\\trusting-shaw-3638c1\\active_ea": 7,
+    ".claude\\worktrees\\trusting-shaw-3638c1\\ea": 3,
+    ".claude\\worktrees\\trusting-shaw-3638c1\\live_ea": 2,
+    ".claude\\worktrees\\trusting-shaw-3638c1": 1,
+    "active_ea": 7,
+    "ea": 3,
+    "live_ea": 2,
+    ".": 1,
+    "r-native-pipflow\\mql5_templates": 2,
+    "r_native\\mql5_templates": 1,
+    "r_native\\v2\\mql5_experts": 1
+  }
+}

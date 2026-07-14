@@ -1,0 +1,20 @@
+{
+  "time": "2026-05-21T19:41:26",
+  "enabled": false,
+  "source": "unusual_whales",
+  "reason": "missing_UW_API_KEY",
+  "symbol": "XAUUSDm",
+  "proxies": [
+    "GLD",
+    "GDX",
+    "IAU",
+    "SLV"
+  ],
+  "bias": "NEUTRAL",
+  "confidence": 0,
+  "mcp": {
+    "remote_url": "https://api.unusualwhales.com/api/mcp",
+    "local_package": "@unusualwhales/mcp",
+    "requires": "UW_API_KEY"
+  }
+}

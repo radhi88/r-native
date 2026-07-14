@@ -1,0 +1,6 @@
+sounddevice
+faster-whisper
+edge-tts
+pyttsx3
+webrtcvad-wheels
+soundfile

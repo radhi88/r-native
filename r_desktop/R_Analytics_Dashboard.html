@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R Factory — Analytics Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0" integrity="sha384-cVMg8E3QFwTvGCDuK+ET4PD341jF3W8nO1auiXfuZNQkzbUUiBGLsIQUE+b1mxws" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg-0: #060418; --bg-1: #0d0824; --bg-2: #14092e; --bg-3: #1c1142;
+  --gold-0: #fbbf24; --gold-1: #f59e0b;
+  --violet: #8b5cf6; --violet-soft: #4c1d95;
+  --green: #10b981; --red: #ef4444;
+  --text: #f1f5f9; --muted: #94a3b8; --border: #2d1b69;
+  --gap: 14px; --radius: 10px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: radial-gradient(circle at 20% 0%, rgba(139,92,246,0.10), transparent 50%),
+              radial-gradient(circle at 80% 100%, rgba(251,191,36,0.06), transparent 50%),
+              var(--bg-0);
+  color: var(--text); min-height: 100vh; line-height: 1.5;
+}
+.dashboard-container { max-width: 1500px; margin: 0 auto; padding: var(--gap); }
+.dashboard-header {
+  background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+  border: 1px solid var(--violet-soft); border-radius: var(--radius);
+  padding: 18px 24px; margin-bottom: var(--gap);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+}
+.dashboard-header h1 {
+  font-size: 24px; font-weight: 900; letter-spacing: 4px;
+  background: linear-gradient(135deg, var(--gold-0), #b45309);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.dashboard-header .sub { color: var(--muted); font-size: 11px; letter-spacing: 2px; }
+.live-pulse {
+  display: inline-block; width: 8px; height: 8px; background: var(--green);
+  border-radius: 50%; margin-left: 6px; animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.filter-group { display: flex; align-items: center; gap: 6px; }
+.filter-group label { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+.filter-group select, .filter-group input {
+  padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg-3); color: var(--text); font-size: 12px;
+}
+
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--gap); margin-bottom: var(--gap); }
+.kpi-card {
+  background: linear-gradient(180deg, var(--bg-1), rgba(13,8,36,0.6));
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 18px; position: relative; overflow: hidden;
+}
+.kpi-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold-0), transparent);
+}
+.kpi-label { font-size: 10px; color: var(--violet); letter-spacing: 2px; }
+.kpi-value { font-size: 26px; font-weight: 900; color: var(--text); margin-top: 4px; font-family: Consolas, monospace; }
+.kpi-change { font-size: 11px; font-weight: 500; margin-top: 2px; }
+.kpi-change.positive { color: var(--green); } .kpi-change.negative { color: var(--red); }
+
+.chart-row { display: grid; grid-template-columns: 2fr 1fr; gap: var(--gap); margin-bottom: var(--gap); }
+.chart-row-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: var(--gap); margin-bottom: var(--gap); }
+.chart-container {
+  background: linear-gradient(180deg, var(--bg-1), rgba(13,8,36,0.6));
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 20px;
+}
+.chart-container h3 {
+  font-size: 12px; font-weight: 700; color: var(--gold-0);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.chart-container canvas { max-height: 260px; }
+
+.table-section {
+  background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 20px; overflow-x: auto; margin-bottom: var(--gap);
+}
+.table-section h3 {
+  font-size: 12px; font-weight: 700; color: var(--gold-0);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+}
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table thead th {
+  text-align: right; padding: 8px 10px; border-bottom: 2px solid var(--violet-soft);
+  color: var(--violet); font-weight: 700; font-size: 10px; text-transform: uppercase;
+  letter-spacing: 1px; cursor: pointer; user-select: none;
+}
+.data-table thead th:hover { color: var(--gold-0); background: rgba(139,92,246,0.05); }
+.data-table tbody td {
+  padding: 8px 10px; border-bottom: 1px solid rgba(45,27,105,0.3); font-family: Consolas, monospace;
+}
+.data-table tbody tr:hover { background: rgba(139,92,246,0.05); }
+.status-badge { padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.badge-win { background: rgba(16,185,129,0.2); color: var(--green); }
+.badge-loss { background: rgba(239,68,68,0.2); color: var(--red); }
+.badge-be { background: rgba(251,191,36,0.2); color: var(--gold-0); }
+
+.equity-area {
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  border: 2px solid var(--gold-0); border-radius: var(--radius);
+  padding: 16px 20px; margin-bottom: var(--gap);
+}
+
+.dashboard-footer {
+  text-align: center; color: var(--muted); font-size: 11px;
+  padding: 14px; margin-top: var(--gap);
+}
+@media (max-width: 900px) {
+  .chart-row { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="dashboard-container">
+
+  <header class="dashboard-header">
+    <div>
+      <h1>R FACTORY — ANALYTICS</h1>
+      <div class="sub">📊 Comprehensive trading performance dashboard <span class="live-pulse"></span></div>
+    </div>
+    <div class="filters">
+      <div class="filter-group">
+        <label>Date Range</label>
+        <select id="filter-range" onchange="dashboard.applyFilters()">
+          <option value="1">Last 24h</option>
+          <option value="7" selected>Last 7 days</option>
+          <option value="14">Last 14 days</option>
+          <option value="30">Last 30 days</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Symbol</label>
+        <select id="filter-symbol" onchange="dashboard.applyFilters()"><option value="all">All</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Archetype</label>
+        <select id="filter-archetype" onchange="dashboard.applyFilters()"><option value="all">All</option></select>
+      </div>
+    </div>
+  </header>
+
+  <!-- HEADLINE KPIs -->
+  <section class="kpi-row">
+    <div class="kpi-card"><div class="kpi-label">NET P/L</div><div class="kpi-value" id="kpi-pl">—</div><div class="kpi-change" id="kpi-pl-pct">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">WIN RATE</div><div class="kpi-value" id="kpi-wr">—</div><div class="kpi-change" id="kpi-wr-detail">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">PROFIT FACTOR</div><div class="kpi-value" id="kpi-pf">—</div><div class="kpi-change" id="kpi-pf-detail">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">MAX DRAWDOWN</div><div class="kpi-value" id="kpi-dd">—</div><div class="kpi-change" id="kpi-dd-pct">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">TOTAL TRADES</div><div class="kpi-value" id="kpi-trades">—</div><div class="kpi-change" id="kpi-trades-detail">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">AVG R:R</div><div class="kpi-value" id="kpi-rr">—</div><div class="kpi-change" id="kpi-rr-detail">—</div></div>
+  </section>
+
+  <!-- EQUITY CURVE (full width) -->
+  <section class="equity-area">
+    <h3 style="font-size:13px; color:var(--gold-0); letter-spacing:2px; margin-bottom:12px;">📈 EQUITY CURVE — Account Balance Evolution</h3>
+    <canvas id="equity-chart" style="max-height:280px;"></canvas>
+  </section>
+
+  <!-- TWO MAIN CHARTS -->
+  <section class="chart-row">
+    <div class="chart-container">
+      <h3>📊 Daily P/L Distribution</h3>
+      <canvas id="daily-pl-chart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h3>🍩 Win vs Loss Composition</h3>
+      <canvas id="winloss-chart"></canvas>
+    </div>
+  </section>
+
+  <!-- THREE BREAKDOWN CHARTS -->
+  <section class="chart-row-3">
+    <div class="chart-container">
+      <h3>🌐 P/L by Symbol</h3>
+      <canvas id="symbol-pl-chart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h3>🧬 Archetype Performance</h3>
+      <canvas id="archetype-chart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h3>⏰ Trades by Hour (UTC)</h3>
+      <canvas id="hour-chart"></canvas>
+    </div>
+  </section>
+
+  <!-- TRADE LOG TABLE -->
+  <section class="table-section">
+    <h3>📋 Recent Trades Log</h3>
+    <div id="trades-table"></div>
+  </section>
+
+  <footer class="dashboard-footer">
+    R Factory Analytics • magic 20260605 • generated <span id="gen-date"></span> • Source: <code>data/r_learning/trades.jsonl</code>
+  </footer>
+
+</div>
+
+<script>
+// ─── EMBEDDED SAMPLE DATA ───────────────────────────────────────────
+// In production, this gets replaced by live R Factory trade data.
+// To regenerate: python r_desktop/generate_dashboard_data.py
+const COLORS = ['#fbbf24','#10b981','#8b5cf6','#ef4444','#06b6d4','#f97316','#84cc16','#ec4899'];
+
+// Sample trades (will be replaced by real data from data/r_learning/trades.jsonl)
+const SAMPLE_TRADES = [
+  {ts:'2026-05-22T22:10:00Z', ticket:1667695916, symbol:'XAUUSDm', archetype:'BREAKOUT_HUNTER', side:'SELL', profit:-1.50, duration_min:80.1, exit:'SL', hour_utc:22, day:'Fri'},
+  {ts:'2026-05-22T23:30:00Z', ticket:1667887642, symbol:'XAUUSDm', archetype:'PATTERN_SPOTTER', side:'SELL', profit:+1.96, duration_min:45.0, exit:'TRAIL_TP', hour_utc:23, day:'Fri'},
+  {ts:'2026-05-22T23:35:00Z', ticket:1667904714, symbol:'XAUUSDm', archetype:'BREAKOUT_HUNTER', side:'SELL', profit:+0.05, duration_min:7.3, exit:'TRAIL_SL', hour_utc:23, day:'Fri'},
+  {ts:'2026-05-23T01:15:00Z', ticket:1667949699, symbol:'XAUUSDm', archetype:'PATTERN_SPOTTER', side:'SELL', profit:+0.72, duration_min:120.0, exit:'TRAIL_TP', hour_utc:1, day:'Sat'},
+  {ts:'2026-05-23T02:30:00Z', ticket:1667960123, symbol:'BTCUSDm', archetype:'BREAKOUT_HUNTER', side:'BUY', profit:+2.30, duration_min:35.5, exit:'TP', hour_utc:2, day:'Sat'},
+  {ts:'2026-05-23T03:45:00Z', ticket:1667971456, symbol:'BTCUSDm', archetype:'MEAN_REVERTER', side:'SELL', profit:-0.80, duration_min:15.2, exit:'SL', hour_utc:3, day:'Sat'},
+  {ts:'2026-05-23T05:10:00Z', ticket:1667985789, symbol:'ETHUSDm', archetype:'MULTI_SIGNAL', side:'BUY', profit:+1.25, duration_min:55.0, exit:'TRAIL_TP', hour_utc:5, day:'Sat'},
+  {ts:'2026-05-23T06:00:00Z', ticket:1668001234, symbol:'XAUUSDm', archetype:'BREAKOUT_HUNTER', side:'BUY', profit:+3.10, duration_min:90.0, exit:'TP', hour_utc:6, day:'Sat'},
+];
+
+const STARTING_BALANCE = 92.85;
+
+class RDashboard {
+  constructor(trades) {
+    this.allTrades = trades.map(t => ({...t, ts: new Date(t.ts)}));
+    this.filtered = this.allTrades.slice();
+    this.charts = {};
+    this.init();
+  }
+  init() {
+    this.populateFilters();
+    this.applyFilters();
+    document.getElementById('gen-date').textContent = new Date().toLocaleString('en-GB');
+  }
+  populateFilters() {
+    const syms = [...new Set(this.allTrades.map(t => t.symbol))].sort();
+    const arcs = [...new Set(this.allTrades.map(t => t.archetype))].sort();
+    const symEl = document.getElementById('filter-symbol');
+    const arcEl = document.getElementById('filter-archetype');
+    syms.forEach(s => symEl.add(new Option(s, s)));
+    arcs.forEach(a => arcEl.add(new Option(a, a)));
+  }
+  applyFilters() {
+    const days = parseInt(document.getElementById('filter-range').value);
+    const sym = document.getElementById('filter-symbol').value;
+    const arc = document.getElementById('filter-archetype').value;
+    const cutoff = new Date(Date.now() - days * 86400000);
+    this.filtered = this.allTrades.filter(t => {
+      if (t.ts < cutoff) return false;
+      if (sym !== 'all' && t.symbol !== sym) return false;
+      if (arc !== 'all' && t.archetype !== arc) return false;
+      return true;
+    });
+    this.renderKPIs();
+    this.renderCharts();
+    this.renderTable();
+  }
+  renderKPIs() {
+    const t = this.filtered;
+    const wins = t.filter(x => x.profit > 0);
+    const losses = t.filter(x => x.profit < 0);
+    const totalPL = t.reduce((s, x) => s + x.profit, 0);
+    const grossWin = wins.reduce((s, x) => s + x.profit, 0);
+    const grossLoss = Math.abs(losses.reduce((s, x) => s + x.profit, 0));
+    const wr = t.length ? (wins.length / t.length * 100) : 0;
+    const pf = grossLoss > 0 ? (grossWin / grossLoss) : (wins.length ? 999 : 0);
+    // Drawdown
+    let peak = STARTING_BALANCE, maxDD = 0, bal = STARTING_BALANCE;
+    [...t].sort((a,b) => a.ts - b.ts).forEach(x => {
+      bal += x.profit;
+      if (bal > peak) peak = bal;
+      const dd = peak - bal;
+      if (dd > maxDD) maxDD = dd;
+    });
+    const avgWin = wins.length ? grossWin/wins.length : 0;
+    const avgLoss = losses.length ? grossLoss/losses.length : 0;
+    const rr = avgLoss > 0 ? (avgWin / avgLoss) : 0;
+
+    const fmt = (v, c='') => `${c}$${v.toFixed(2)}`;
+    document.getElementById('kpi-pl').textContent = fmt(totalPL, totalPL>=0?'+':'');
+    document.getElementById('kpi-pl').style.color = totalPL >= 0 ? 'var(--green)' : 'var(--red)';
+    const pctOfBal = STARTING_BALANCE > 0 ? (totalPL / STARTING_BALANCE * 100) : 0;
+    document.getElementById('kpi-pl-pct').textContent = `${pctOfBal>=0?'+':''}${pctOfBal.toFixed(2)}% of $${STARTING_BALANCE}`;
+    document.getElementById('kpi-pl-pct').className = 'kpi-change ' + (totalPL>=0?'positive':'negative');
+
+    document.getElementById('kpi-wr').textContent = `${wr.toFixed(1)}%`;
+    document.getElementById('kpi-wr').style.color = wr >= 50 ? 'var(--green)' : 'var(--gold-0)';
+    document.getElementById('kpi-wr-detail').textContent = `${wins.length}W / ${losses.length}L`;
+
+    document.getElementById('kpi-pf').textContent = pf >= 999 ? '∞' : pf.toFixed(2);
+    document.getElementById('kpi-pf').style.color = pf >= 1.5 ? 'var(--green)' : pf >= 1 ? 'var(--gold-0)' : 'var(--red)';
+    document.getElementById('kpi-pf-detail').textContent = `gross: +$${grossWin.toFixed(2)} / -$${grossLoss.toFixed(2)}`;
+
+    document.getElementById('kpi-dd').textContent = `$${maxDD.toFixed(2)}`;
+    document.getElementById('kpi-dd').style.color = 'var(--red)';
+    document.getElementById('kpi-dd-pct').textContent = `${(maxDD/STARTING_BALANCE*100).toFixed(1)}% of balance`;
+
+    document.getElementById('kpi-trades').textContent = t.length;
+    const avgDur = t.length ? t.reduce((s,x)=>s+x.duration_min,0)/t.length : 0;
+    document.getElementById('kpi-trades-detail').textContent = `avg ${avgDur.toFixed(0)}min/trade`;
+
+    document.getElementById('kpi-rr').textContent = `1:${rr.toFixed(2)}`;
+    document.getElementById('kpi-rr').style.color = rr >= 2 ? 'var(--green)' : rr >= 1 ? 'var(--gold-0)' : 'var(--red)';
+    document.getElementById('kpi-rr-detail').textContent = `avg win $${avgWin.toFixed(2)} / loss $${avgLoss.toFixed(2)}`;
+  }
+
+  renderCharts() {
+    Object.values(this.charts).forEach(c => c?.destroy?.());
+    const t = [...this.filtered].sort((a,b) => a.ts - b.ts);
+
+    // Equity curve
+    let bal = STARTING_BALANCE;
+    const equityLabels = ['start'];
+    const equityData = [bal];
+    t.forEach(x => {
+      bal += x.profit;
+      equityLabels.push(x.ts.toLocaleString('en-GB', {hour:'2-digit',minute:'2-digit', day:'2-digit',month:'short'}));
+      equityData.push(bal);
+    });
+    this.charts.equity = new Chart(document.getElementById('equity-chart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: equityLabels,
+        datasets: [{
+          label: 'Equity ($)',
+          data: equityData,
+          borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.15)',
+          borderWidth: 2, fill: true, tension: 0.3, pointRadius: 3, pointHoverRadius: 6,
+          pointBackgroundColor: ctx => {
+            const i = ctx.dataIndex;
+            if (i === 0 || i > t.length) return '#fbbf24';
+            return t[i-1].profit >= 0 ? '#10b981' : '#ef4444';
+          }
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: {labels: {color: '#94a3b8'}},
+          tooltip: {callbacks: {label: c => `Balance: $${c.parsed.y.toFixed(2)}`}}
+        },
+        scales: {
+          x: {ticks: {color: '#94a3b8', maxRotation: 45}, grid: {color: 'rgba(45,27,105,0.2)'}},
+          y: {ticks: {color: '#94a3b8', callback: v => '$' + v.toFixed(0)}, grid: {color: 'rgba(45,27,105,0.2)'}}
+        }
+      }
+    });
+
+    // Daily P/L bars
+    const byDay = {};
+    t.forEach(x => {
+      const d = x.ts.toISOString().substring(0, 10);
+      byDay[d] = (byDay[d] || 0) + x.profit;
+    });
+    this.charts.daily = new Chart(document.getElementById('daily-pl-chart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(byDay),
+        datasets: [{
+          data: Object.values(byDay),
+          backgroundColor: Object.values(byDay).map(v => v >= 0 ? 'rgba(16,185,129,0.7)' : 'rgba(239,68,68,0.7)'),
+          borderColor: Object.values(byDay).map(v => v >= 0 ? '#10b981' : '#ef4444'),
+          borderWidth: 1, borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => `P/L: $${c.parsed.y.toFixed(2)}`}}},
+        scales: {
+          x: {ticks: {color: '#94a3b8'}, grid: {display: false}},
+          y: {ticks: {color: '#94a3b8', callback: v => '$' + v.toFixed(0)}, grid: {color: 'rgba(45,27,105,0.2)'}}
+        }
+      }
+    });
+
+    // Win/Loss doughnut
+    const w = t.filter(x => x.profit > 0).length;
+    const l = t.filter(x => x.profit < 0).length;
+    const be = t.filter(x => x.profit === 0).length;
+    this.charts.winloss = new Chart(document.getElementById('winloss-chart').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Wins', 'Losses', 'Break-even'],
+        datasets: [{data: [w, l, be], backgroundColor: ['#10b981', '#ef4444', '#fbbf24'], borderColor: '#0d0824', borderWidth: 2}]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, cutout: '65%',
+        plugins: {legend: {position: 'bottom', labels: {color: '#94a3b8', padding: 12}}}
+      }
+    });
+
+    // P/L by symbol
+    const bySym = {};
+    t.forEach(x => { bySym[x.symbol] = (bySym[x.symbol] || 0) + x.profit; });
+    this.charts.symPl = new Chart(document.getElementById('symbol-pl-chart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(bySym),
+        datasets: [{
+          data: Object.values(bySym),
+          backgroundColor: Object.values(bySym).map(v => v >= 0 ? 'rgba(16,185,129,0.7)' : 'rgba(239,68,68,0.7)'),
+          borderColor: Object.values(bySym).map(v => v >= 0 ? '#10b981' : '#ef4444'),
+          borderWidth: 1, borderRadius: 4,
+        }]
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => `$${c.parsed.x.toFixed(2)}`}}},
+        scales: {
+          x: {ticks: {color: '#94a3b8', callback: v => '$' + v}, grid: {color: 'rgba(45,27,105,0.2)'}},
+          y: {ticks: {color: '#fbbf24'}, grid: {display: false}}
+        }
+      }
+    });
+
+    // Archetype performance
+    const byArc = {};
+    t.forEach(x => { byArc[x.archetype] = (byArc[x.archetype] || 0) + x.profit; });
+    this.charts.arc = new Chart(document.getElementById('archetype-chart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(byArc),
+        datasets: [{
+          data: Object.values(byArc),
+          backgroundColor: Object.values(byArc).map(v => v >= 0 ? 'rgba(139,92,246,0.7)' : 'rgba(239,68,68,0.7)'),
+          borderColor: Object.values(byArc).map(v => v >= 0 ? '#8b5cf6' : '#ef4444'),
+          borderWidth: 1, borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => `$${c.parsed.y.toFixed(2)}`}}},
+        scales: {
+          x: {ticks: {color: '#8b5cf6', font: {size: 10}}, grid: {display: false}},
+          y: {ticks: {color: '#94a3b8', callback: v => '$' + v}, grid: {color: 'rgba(45,27,105,0.2)'}}
+        }
+      }
+    });
+
+    // By hour
+    const byHour = Array(24).fill(0).map((_, h) => ({hour: h, count: 0, pl: 0}));
+    t.forEach(x => { byHour[x.hour_utc].count++; byHour[x.hour_utc].pl += x.profit; });
+    this.charts.hour = new Chart(document.getElementById('hour-chart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: byHour.map(h => h.hour + 'h'),
+        datasets: [{
+          label: 'P/L',
+          data: byHour.map(h => h.pl),
+          backgroundColor: byHour.map(h => h.pl >= 0 ? 'rgba(16,185,129,0.7)' : 'rgba(239,68,68,0.7)'),
+          borderColor: byHour.map(h => h.pl >= 0 ? '#10b981' : '#ef4444'),
+          borderWidth: 1, borderRadius: 3,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => `Hour ${c.label}: $${c.parsed.y.toFixed(2)} (${byHour[c.dataIndex].count} trades)`}}},
+        scales: {
+          x: {ticks: {color: '#94a3b8', font: {size: 9}}, grid: {display: false}},
+          y: {ticks: {color: '#94a3b8', callback: v => '$' + v}, grid: {color: 'rgba(45,27,105,0.2)'}}
+        }
+      }
+    });
+  }
+
+  renderTable() {
+    const t = [...this.filtered].sort((a, b) => b.ts - a.ts);
+    let html = `<table class="data-table">
+      <thead><tr>
+        <th>الوقت</th><th>Symbol</th><th>Archetype</th><th>Side</th>
+        <th>المدّة</th><th>Exit</th><th>P/L</th>
+      </tr></thead><tbody>`;
+    t.forEach(x => {
+      const cls = x.profit > 0 ? 'badge-win' : x.profit < 0 ? 'badge-loss' : 'badge-be';
+      const sign = x.profit >= 0 ? '+' : '';
+      const sideColor = x.side === 'BUY' ? 'var(--green)' : 'var(--red)';
+      html += `<tr>
+        <td style="color:var(--muted);">${x.ts.toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</td>
+        <td style="color:var(--gold-0); font-weight:700;">${x.symbol}</td>
+        <td style="color:var(--violet);">${x.archetype}</td>
+        <td style="color:${sideColor}; font-weight:700;">${x.side}</td>
+        <td>${x.duration_min} min</td>
+        <td><span class="status-badge ${cls}">${x.exit}</span></td>
+        <td style="color:${x.profit>=0?'var(--green)':'var(--red)'}; font-weight:700;">${sign}$${x.profit.toFixed(2)}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('trades-table').innerHTML = html;
+  }
+}
+
+// Auto-load real data if available
+async function loadRealData() {
+  try {
+    const r = await fetch('/api/r/full');
+    if (!r.ok) throw new Error('no api');
+    const d = await r.json();
+    return (d.recent_trades || []).map(t => ({
+      ts: t.close_ts || t.open_ts,
+      ticket: t.position_id,
+      symbol: 'XAUUSDm',
+      archetype: t.archetype || 'UNKNOWN',
+      side: t.side,
+      profit: t.profit,
+      duration_min: t.duration_min,
+      exit: t.exit_reason || 'CLOSE',
+      hour_utc: new Date(t.open_ts).getUTCHours(),
+      day: new Date(t.open_ts).toLocaleDateString('en', {weekday: 'short'}),
+    }));
+  } catch (e) {
+    console.log('using sample data — start brain_server for live data');
+    return SAMPLE_TRADES;
+  }
+}
+
+(async () => {
+  const data = await loadRealData();
+  window.dashboard = new RDashboard(data.length ? data : SAMPLE_TRADES);
+})();
+</script>
+</body>
+</html>

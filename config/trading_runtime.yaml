@@ -1,0 +1,57 @@
+# FRIDAY Trading Runtime Config
+# Edit this file to control all trading behaviour.
+# ExecutionManager reads this on every cycle — no restart required.
+
+runtime:
+  mode: DRY_RUN           # DRY_RUN | DEMO | LIVE | LIVE_DISABLED
+  allow_live_trading: false
+  kill_switch: true       # SAFE DEFAULT — set false only after explicit verification
+  log_level: INFO
+
+symbols:
+  active:
+    - EURUSDm
+    - GBPUSDm
+    - USDJPYm
+    - AUDUSDm
+    - USDCADm
+    - NZDUSDm
+    - USDCHFm
+    - XAUUSDm
+  timeframes: [M1, M5, M15, H1, H4]
+
+risk:
+  max_lot: 0.10
+  max_open_positions: 3
+  max_trades_per_day: 10
+  max_daily_loss_percent: 2.0
+  max_total_loss_percent: 5.0
+  cooldown_after_loss_minutes: 15
+  max_spread_points:
+    default: 30
+    XAUUSDm: 80
+  allow_grid: false
+  allow_hedge: false
+  allow_martingale: false
+  allow_news_trading: false
+  min_rr: 1.5
+
+execution:
+  deviation: 20
+  order_filling: IOC        # IOC | FOK | RETURN
+  one_execution_path_only: true
+  require_risk_approval: true
+  require_conflict_guard: true
+  magic_number: 20260600    # must match magic_registry.ALGORY_MAGIC
+
+confidence:
+  min_signal_confidence: 0.35
+  min_decision_confidence: 0.45
+  fractal_block_threshold: 0.65
+  smc_boost: 0.20
+  fractal_boost_factor: 0.15
+
+logging:
+  jsonl_enabled: true
+  verbose_decision_logs: false
+  log_dir: "logs"

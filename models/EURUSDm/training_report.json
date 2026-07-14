@@ -1,0 +1,66 @@
+{
+  "model_architecture": "conv1d_mha_gru_v2",
+  "features_count": 32,
+  "seq_len": 200,
+  "training_samples": 60252,
+  "val_samples": 12911,
+  "test_samples": 12912,
+  "best_val_auc": 0.5220656394958496,
+  "best_epoch": 0,
+  "best_train_auc": 0.5461751222610474,
+  "train_val_gap": 0.024109482765197754,
+  "incremental": false,
+  "train_end": 60252,
+  "val_end": 73163,
+  "history": {
+    "accuracy": [
+      0.5336918234825134
+    ],
+    "auc": [
+      0.5461751222610474
+    ],
+    "loss": [
+      1.8841280937194824
+    ],
+    "precision": [
+      0.5233712792396545
+    ],
+    "recall": [
+      0.511887788772583
+    ],
+    "val_accuracy": [
+      0.4989543855190277
+    ],
+    "val_auc": [
+      0.5220656394958496
+    ],
+    "val_loss": [
+      0.7572008967399597
+    ],
+    "val_precision": [
+      0.5347740650177002
+    ],
+    "val_recall": [
+      0.2047848403453827
+    ],
+    "learning_rate": [
+      0.0003000000142492354
+    ]
+  },
+  "test_metrics": {
+    "loss": 0.7338864207267761,
+    "compile_metrics": 0.5092162489891052
+  },
+  "thresholds": {
+    "score": 0.5379276152702033,
+    "buy_threshold": 0.7500000000000002,
+    "sell_threshold": 0.24999999999999978,
+    "coverage": 0.15622337541631168,
+    "direction_accuracy": 0.5379276152702033,
+    "precision": 0.5379276152702033,
+    "recall": 0.17315671879987232,
+    "f1": 0.2619823731677318,
+    "expected_value": 0.3448190381755082
+  },
+  "sample_weights_used": true
+}

@@ -1,0 +1,47 @@
+{
+  "spread-sentinel": {
+    "id": "spread-sentinel",
+    "name": "حارس السبريد",
+    "role": "يراقب صدمة السبريد ويقترح gap/SL distance",
+    "reason": "spread above live threshold",
+    "status": "proposed",
+    "allowed_actions": [
+      "observe",
+      "write_report",
+      "suggest_task"
+    ],
+    "created": "2026-05-21T06:30:33",
+    "last_seen": "2026-05-21T19:41:32",
+    "seen_count": 776
+  },
+  "conflict-arbiter": {
+    "id": "conflict-arbiter",
+    "name": "حَكَم التعارض",
+    "role": "يوفق بين SMC وVolume Profile وConfluence",
+    "reason": "SMC bias conflicts with confluence",
+    "status": "proposed",
+    "allowed_actions": [
+      "observe",
+      "write_report",
+      "suggest_task"
+    ],
+    "created": "2026-05-21T06:30:54",
+    "last_seen": "2026-05-21T19:39:06",
+    "seen_count": 40
+  },
+  "entry-gate-doctor": {
+    "id": "entry-gate-doctor",
+    "name": "طبيب بوابة الدخول",
+    "role": "يشخص سبب الحظر المتكرر ويقترح تخفيفاً واحداً",
+    "reason": "top blocked reason is weak_candle",
+    "status": "proposed",
+    "allowed_actions": [
+      "observe",
+      "write_report",
+      "suggest_task"
+    ],
+    "created": "2026-05-21T18:15:02",
+    "last_seen": "2026-05-21T19:41:32",
+    "seen_count": 457
+  }
+}

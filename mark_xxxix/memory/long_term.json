@@ -1,0 +1,46 @@
+{
+  "identity": {
+    "alternative_name": {
+      "value": "El Shazly",
+      "updated": "2026-05-09"
+    },
+    "Alternative Name": {
+      "value": "Qader",
+      "updated": "2026-05-10"
+    }
+  },
+  "preferences": {
+    "default_browser": {
+      "value": "chrome",
+      "updated": "2026-05-08"
+    }
+  },
+  "projects": {
+    "ai_deployment_status": {
+      "value": "Successfully developed phased migration plan for permanent AI deployment and continuous agent operation on device.",
+      "updated": "2026-05-09"
+    },
+    "ai_deployment_phases_agreement": {
+      "value": "Phased migration plan for permanent AI deployment and continuous agent operation. Details of stages to be defined and agreed upon.",
+      "updated": "2026-05-09"
+    },
+    "live_trading_dashboard_url": {
+      "value": "http://127.0.0.1:8822/",
+      "updated": "2026-05-09"
+    }
+  },
+  "relationships": {
+    "wife_name": {
+      "value": "Ghalia",
+      "updated": "2026-05-08"
+    }
+  },
+  "wishes": {},
+  "notes": {},
+  "User Preferences": {
+    "Control Instruction": {
+      "value": "لا تسوي شيء الا اذا طلبت مني",
+      "updated": "2026-05-12"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "_comment": "Per-market technical parameters. Edited freely; loaded by config.load_market_overrides(). Mirrors config.PROFILES defaults and may override them.",
+  "gold": {
+    "symbols": ["XAUUSDm", "XAGUSDm"],
+    "atr_sl_mult": 2.0,
+    "sessions_utc": [[7, 16], [12, 21]],
+    "lot_scale": 2.0,
+    "sq9_key_degree": 360,
+    "r_multiple": 1.5,
+    "tags": ["smc", "ob", "fvg", "sq9"]
+  },
+  "forex": {
+    "symbols": ["EURUSDm", "GBPUSDm", "USDJPYm", "AUDUSDm", "USDCADm", "USDCHFm"],
+    "atr_sl_mult": 1.6,
+    "sessions_utc": [[0, 23]],
+    "lot_scale": 1.0,
+    "sq9_key_degree": 90,
+    "r_multiple": 1.5,
+    "tags": ["smc", "ob", "fvg", "sq9"]
+  },
+  "indices": {
+    "symbols": ["US30m", "US500m", "USTECm", "JP225m"],
+    "atr_sl_mult": 1.8,
+    "sessions_utc": [[13, 20]],
+    "lot_scale": 1.2,
+    "sq9_key_degree": 180,
+    "r_multiple": 2.0,
+    "tags": ["bos", "choch", "vwap", "gann1x1"]
+  },
+  "crypto": {
+    "symbols": ["BTCUSDm", "ETHUSDm"],
+    "atr_sl_mult": 1.8,
+    "sessions_utc": [[0, 23]],
+    "lot_scale": 1.0,
+    "sq9_key_degree": 180,
+    "r_multiple": 1.5,
+    "tags": ["vp", "footprint", "fractal"]
+  },
+  "stocks": {
+    "symbols": [],
+    "atr_sl_mult": 1.5,
+    "sessions_utc": [[14, 20]],
+    "lot_scale": 1.0,
+    "sq9_key_degree": 90,
+    "r_multiple": 1.5,
+    "tags": ["ob", "daily_fvg"]
+  }
+}

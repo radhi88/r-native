@@ -1,0 +1,93 @@
+{
+  "generated": "2026-05-15T00:13:03.110032+00:00",
+  "symbols": [
+    "XAUUSDm"
+  ],
+  "timeframes": [
+    "M5",
+    "M15"
+  ],
+  "total_bars_scanned": 514819,
+  "total_signals_found": 39734,
+  "genes_built": 3,
+  "top_gene": {
+    "gene_id": "XAUUSDm_M5_SELL_ny_low",
+    "version": "backtest_v1",
+    "created_at": "2026-05-15T00:13:03.107056+00:00",
+    "group": {
+      "symbol": "XAUUSDm",
+      "timeframe": "M5",
+      "direction": "SELL",
+      "session": "ny",
+      "atr_regime": "low"
+    },
+    "stats": {
+      "n": 437,
+      "win_rate": 0.3867,
+      "avg_win_r": 2.0,
+      "avg_loss_r": -1.0,
+      "total_r": 70.0,
+      "profit_factor": 1.2612,
+      "max_drawdown_r": -22.0,
+      "sharpe": 1.7405,
+      "max_consec_losses": 12,
+      "expectancy_r": 0.1602
+    },
+    "thresholds": {
+      "min_confidence": 0.613,
+      "sl_atr_mult": 1.5,
+      "tp_atr_mult": 2.0,
+      "lot_scale": 0.63,
+      "min_confluence": 1
+    },
+    "validation": {
+      "monte_carlo": {
+        "passed": true,
+        "p5_max_dd_r": -28.0,
+        "mean_max_dd_r": -18.208,
+        "n_simulations": 1000,
+        "threshold_r": -44.35,
+        "base_threshold": -15.0
+      },
+      "walk_forward": {
+        "passed": true,
+        "is_win_rate": 0.3868,
+        "oos_win_rate": 0.3864,
+        "degradation": -0.0005,
+        "is_trades": 349,
+        "oos_trades": 88
+      }
+    },
+    "live_performance": {
+      "trades": 0,
+      "wins": 0,
+      "win_rate": null,
+      "bayesian_prior": 0.3867,
+      "bayesian_posterior": 0.3867
+    },
+    "active": true
+  },
+  "gene_summary": [
+    {
+      "gene_id": "XAUUSDm_M5_SELL_ny_low",
+      "win_rate": 0.3867,
+      "profit_factor": 1.2612,
+      "sharpe": 1.7405,
+      "n_trades": 437
+    },
+    {
+      "gene_id": "XAUUSDm_M5_BUY_london_low",
+      "win_rate": 0.3673,
+      "profit_factor": 1.1611,
+      "sharpe": 1.1188,
+      "n_trades": 1658
+    },
+    {
+      "gene_id": "XAUUSDm_M15_BUY_london_low",
+      "win_rate": 0.3665,
+      "profit_factor": 1.157,
+      "sharpe": 1.092,
+      "n_trades": 1599
+    }
+  ]
+}

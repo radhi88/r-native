@@ -1,0 +1,14 @@
+{
+  "generated": 1782832772.9344726,
+  "alerts": [
+    {
+      "ts": 1782832743.1594746,
+      "agent": "B-13",
+      "role": "Magic Manager",
+      "severity": "high",
+      "summary": "8 magics, 6 COLLISIONS (1 intentional)",
+      "artifact": "magic_map.json",
+      "since_cycle": 16
+    }
+  ]
+}

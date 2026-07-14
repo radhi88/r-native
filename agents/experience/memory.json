@@ -1,0 +1,70 @@
+{
+  "agent": "محرك الخبرة",
+  "name": "Khabir",
+  "role": "Experience Engine",
+  "runs": 781,
+  "patterns_learned": 12,
+  "bad_patterns_flagged": 488,
+  "pattern_db": {
+    "dir=NONE_ob=0_fvg=0_bias=SELL_rsi=MID": {
+      "count": 16094,
+      "entry_count": 0,
+      "last_seen": "2026.05.21 16:40"
+    },
+    "dir=NONE_ob=0_fvg=0_bias=BUY_rsi=MID": {
+      "count": 14183,
+      "entry_count": 0,
+      "last_seen": "2026.05.21 15:33"
+    },
+    "dir=NONE_ob=0_fvg=0_bias=BUY_rsi=HIGH": {
+      "count": 18720,
+      "entry_count": 0,
+      "last_seen": "2026.05.21 01:32"
+    },
+    "dir=BUY_ob=0_fvg=0_bias=BUY_rsi=MID": {
+      "count": 36736,
+      "entry_count": 3874,
+      "last_seen": "2026.05.21 16:38"
+    },
+    "dir=BUY_ob=0_fvg=0_bias=SELL_rsi=MID": {
+      "count": 1052,
+      "entry_count": 0,
+      "last_seen": "2026.05.21 16:39"
+    },
+    "dir=NONE_ob=0_fvg=0_bias=SELL_rsi=LOW": {
+      "count": 35100,
+      "entry_count": 0,
+      "last_seen": "2026.05.21 02:35"
+    },
+    "dir=SELL_ob=0_fvg=0_bias=SELL_rsi=MID": {
+      "count": 37803,
+      "entry_count": 6516,
+      "last_seen": "2026.05.21 15:31"
+    },
+    "dir=SELL_ob=0_fvg=0_bias=SELL_rsi=LOW": {
+      "count": 9679,
+      "entry_count": 3105,
+      "last_seen": "2026.05.21 15:30"
+    },
+    "dir=SELL_ob=0_fvg=0_bias=BUY_rsi=MID": {
+      "count": 10163,
+      "entry_count": 4454,
+      "last_seen": "2026.05.21 15:13"
+    },
+    "dir=SELL_ob=0_fvg=0_bias=BUY_rsi=HIGH": {
+      "count": 1211,
+      "entry_count": 1211,
+      "last_seen": "2026.05.21 06:07"
+    },
+    "dir=BUY_ob=0_fvg=0_bias=SELL_rsi=LOW": {
+      "count": 600,
+      "entry_count": 600,
+      "last_seen": "2026.05.21 14:49"
+    },
+    "dir=BUY_ob=0_fvg=0_bias=BUY_rsi=HIGH": {
+      "count": 5116,
+      "entry_count": 1008,
+      "last_seen": "2026.05.21 16:36"
+    }
+  }
+}

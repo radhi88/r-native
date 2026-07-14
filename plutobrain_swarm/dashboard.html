@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>PlutoBrain Swarm — Live</title>
+<style>
+  :root{--bg:#0b0e14;--card:#141a24;--ln:#1f2735;--fg:#c9d4e3;--mut:#6b7787;
+        --ok:#3ad29f;--err:#ff5d6c;--warn:#ffb454;--run:#5ab0ff;--esc:#a684ff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+  header{padding:14px 20px;border-bottom:1px solid var(--ln);display:flex;
+         align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:5}
+  h1{font-size:16px;margin:0;letter-spacing:.5px}
+  .pill{padding:2px 9px;border-radius:20px;border:1px solid var(--ln);color:var(--mut)}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto}
+  .stat b{color:#fff}
+  main{padding:18px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1500px}
+  .col h2{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--mut);
+          border-bottom:1px solid var(--ln);padding-bottom:6px;margin:0 0 10px}
+  .ALPHA h2{color:#5ab0ff}.BETA h2{color:#3ad29f}.GAMMA h2{color:#ffb454}
+  .agent{background:var(--card);border:1px solid var(--ln);border-left:3px solid var(--ln);
+         border-radius:7px;padding:8px 11px;margin-bottom:7px}
+  .agent.ok{border-left-color:var(--ok)}.agent.error{border-left-color:var(--err)}
+  .agent.running{border-left-color:var(--run)}.agent.escalated,.agent.idle{border-left-color:var(--esc)}
+  .agent .top{display:flex;justify-content:space-between;gap:8px}
+  .agent .id{color:var(--mut);font-size:11px}
+  .agent .role{font-weight:600}
+  .agent .sum{color:var(--mut);font-size:11px;margin-top:3px}
+  .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
+  .ok .dot{background:var(--ok)}.error .dot{background:var(--err)}
+  .running .dot{background:var(--run)}.escalated .dot,.idle .dot{background:var(--esc)}
+  .alerts{margin:0 20px 20px;background:#1a1216;border:1px solid #3a1f26;border-radius:8px;padding:12px}
+  .alerts h2{color:var(--err);font-size:12px;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px}
+  .alerts div{font-size:12px;margin:3px 0}
+  .badge{font-size:10px;padding:1px 6px;border-radius:4px;background:#222b3a;color:var(--mut)}
+  .badge.pool{background:#15301f;color:var(--ok)}
+  footer{color:var(--mut);padding:8px 20px;font-size:11px;border-top:1px solid var(--ln)}
+  a{color:var(--run)}
+</style>
+</head>
+<body>
+<header>
+  <h1>◈ PLUTOBRAIN SWARM</h1>
+  <span class="pill" id="status">connecting…</span>
+  <div class="stats">
+    <span class="stat pill">cycle <b id="cycle">–</b></span>
+    <span class="stat pill">active pool <b id="pool">–</b></span>
+    <span class="stat pill">escalate <b id="esc">–</b></span>
+    <span class="stat pill">findings <b id="find">–</b></span>
+    <span class="stat pill">uptime <b id="up">–</b></span>
+  </div>
+</header>
+<div class="alerts" id="alertbox" style="display:none"><h2>⚠ Alerts</h2><div id="alerts"></div></div>
+<main id="board"></main>
+<footer>Reads swarm_state/*.json · auto-refresh 5s · serve with <code>python -m http.server</code> from this folder, or open directly.</footer>
+
+<script>
+const CL = ["ALPHA","BETA","GAMMA"];
+async function j(p){try{const r=await fetch(p+"?t="+Date.now());return await r.json()}catch(e){return null}}
+function fmtUp(s){if(!s)return"–";const m=Math.floor(s/60),h=Math.floor(m/60);return h?`${h}h${m%60}m`:`${m}m`}
+async function tick(){
+  const st=await j("swarm_state/agent_status.json");
+  const log=await j("swarm_state/orchestrator_log.json");
+  const al=await j("swarm_state/alerts.json");
+  const sb=document.getElementById("status");
+  if(!st){sb.textContent="offline — run the orchestrator";sb.style.color="var(--err)";return}
+  sb.textContent="● live";sb.style.color="var(--ok)";
+  document.getElementById("cycle").textContent=st.cycle??"–";
+  const pool=st.agents.filter(a=>a.pool==="active_pool").length;
+  const esc=st.agents.filter(a=>a.worker==="ESCALATE").length;
+  document.getElementById("pool").textContent=pool;
+  document.getElementById("esc").textContent=esc;
+  const last=log&&log.cycles&&log.cycles.length?log.cycles[log.cycles.length-1]:null;
+  document.getElementById("find").textContent=last?last.findings:"–";
+  document.getElementById("up").textContent=last?fmtUp(last.uptime_s):"–";
+
+  const board=document.getElementById("board");board.innerHTML="";
+  for(const c of CL){
+    const col=document.createElement("div");col.className="col "+c;
+    col.innerHTML=`<h2>Cluster ${c}</h2>`;
+    st.agents.filter(a=>a.cluster===c).forEach(a=>{
+      const cls=a.worker==="ESCALATE"?"escalated":a.status;
+      const poolBadge=a.pool==="active_pool"?'<span class="badge pool">pool</span>':'';
+      const escBadge=a.worker==="ESCALATE"?'<span class="badge">escalate</span>':'';
+      col.innerHTML+=`<div class="agent ${cls}">
+        <div class="top"><span><span class="dot"></span><span class="role">${a.role}</span></span>
+        <span class="id">${a.id} ${poolBadge}${escBadge}</span></div>
+        <div class="sum">${a.summary||(a.worker==="ESCALATE"?"awaiting judgment →":"idle")}</div></div>`;
+    });
+    board.appendChild(col);
+  }
+  const ab=document.getElementById("alertbox"),ad=document.getElementById("alerts");
+  if(al&&al.alerts&&al.alerts.length){ab.style.display="block";ad.innerHTML="";
+    al.alerts.slice(-8).reverse().forEach(x=>ad.innerHTML+=
+      `<div>[${x.agent}] <b>${x.role}</b> — ${x.summary} <span class="badge">${x.artifact||""}</span></div>`);
+  }else ab.style.display="none";
+}
+tick();setInterval(tick,5000);
+</script>
+</body>
+</html>
