@@ -38,6 +38,9 @@ ENGINES = {
     # "r_native.brain_server":      (["-u", "-m", "r_native.brain_server"], MT5),
     "runtime.unified_trader":     (["-m", "runtime.unified_trader"], V2),
     "brain_server.py":            (["brain_server.py"], MT5),   # 🧠 العقل 5055 (كان يعمل بلا حارس!)
+    # 🎯 المنفّذ الموحّد الوحيد (20260605) تحت الوصيّ — LIVE على الديمو (توحيد #1 Step 3). حواجز:
+    # لوت 0.01، سقف يوميّ $10، حظر ليليّ، master_floor، kill_switch. للإيقاف: علّق السطر أو أنشئ kill_switch.txt.
+    "friday_v3.algory.r_executor": (["-u", "-m", "friday_v3.algory.r_executor", "--live", "--no-brain-json", "--interval", "8"], MT5),
     # ✅ multi_trader أُعيد (طلب المستخدم 2026-07-02 «رجّع المشروع على جميع العملات») — تحت lot_guard + حوكمة المايسترو.
     "multi_trader.py":            (["multi_trader.py", "--loop"], MT5),
     # btc_live.py مُطفأ 2026-06-15: تدقيق 30 يوم = بلا حافة (net −$56، WR 34%، PF 0.89) ويعاكس
@@ -264,6 +267,8 @@ _FOCUS_KEEP = {"master_floor.py", "peak_watch.py",
                "learning_pulse.py", "r_native.auto_ga_daemon",           # 🎓🧬 المُرقّي + حملات الجينات
                "runtime.unified_trader",                                 # 🧠 الموحّد 99782 (رابحنا المتعدّد!) — كان خارج التركيز فلا يُحيا (علّة 2026-07-14)
                "brain_server.py",                                        # 🧠 العقل الوحيد 5055 (r_native.brain_server أُزيل — توحيد #1)
+               "friday_v3.algory.r_executor",                            # 🎯 المنفّذ الموحّد (20260605) — تحت الحراسة حتى في وضع التركيز
+
                "real_lock.py",                                            # 🔒 قفل الحقيقيّ
                "order_janitor.py", "ollama_council.py", "council_executor.py",  # 🧹 البوّاب + 🏛️ المجلس + ⚖️ منفّذه
                "system_graph/server.py",                                 # 🕸️ خريطة المنظومة الحيّة :8012
