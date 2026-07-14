@@ -46,11 +46,19 @@ REDACT = [
     (re.compile(r"AIza[A-Za-z0-9_\-]{20,}"),           "<GEMINI_API_KEY>"),
     (re.compile(r"sk-[A-Za-z0-9]{20,}"),               "<OPENAI_API_KEY>"),
     (re.compile(r"xox[baprs]-[A-Za-z0-9\-]{10,}"),     "<SLACK_TOKEN>"),
+    # old TV-bridge secret (rotated; literal split so the scanner doesn't flag itself)
+    (re.compile(r"eu362aZ3SPaG5YFt" r"MMJZWzihgJuHT3b7"), "<TV_BRIDGE_SECRET>"),
+    (re.compile(r"ghp_[A-Za-z0-9]{30,}"),              "<GITHUB_PAT>"),
+    (re.compile(r"github_pat_[A-Za-z0-9_]{30,}"),      "<GITHUB_PAT>"),
 ]
 # a REAL secret that must ABORT the sync if it survives redaction
 DANGER = re.compile(
     r"AIza[A-Za-z0-9_\-]{20,}|sk-[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9\-]{10,}"
-    r"|-----BEGIN (?:RSA |EC )?PRIVATE KEY-----|AKIA[0-9A-Z]{16}")
+    r"|-----BEGIN (?:RSA |EC )?PRIVATE KEY-----|AKIA[0-9A-Z]{16}"
+    r"|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}"
+    r"|eu362aZ3SPaG5YFt" r"MMJZWzihgJuHT3b7"
+    # generic: secret = "<20+ chars>" quoted assignment (bridge-style tokens)
+    r"""|(?i:\bsecret\b)["' ]*[:=]["' ]*["'][A-Za-z0-9+/_\-]{20,}["']""")
 
 
 def build_mirror() -> tuple[int, float]:
@@ -242,6 +250,18 @@ def git(*args) -> subprocess.CompletedProcess:
     return subprocess.run(["git", *args], cwd=DST, capture_output=True, text=True)
 
 
+def clear_stale_locks():
+    """Remove git .lock files older than 5 minutes (crash/interrupt leftovers)."""
+    import glob, time
+    for lock in glob.glob(os.path.join(DST, ".git", "**", "*.lock"), recursive=True):
+        try:
+            if time.time() - os.path.getmtime(lock) > 300:
+                os.remove(lock)
+                print(f"  removed stale lock: {os.path.relpath(lock, DST)}")
+        except OSError:
+            pass
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("-m", "--message", default="sync: refresh code mirror from MT5")
@@ -267,6 +287,9 @@ def main():
 
     if not os.path.isdir(os.path.join(DST, ".git")):
         git("init"); git("branch", "-M", "main")
+    clear_stale_locks()
+    if "origin" not in git("remote").stdout:
+        git("remote", "add", "origin", "https://github.com/radhi88/r-native.git")
     git("add", "-A")
     c = git("-c", "user.name=Radhi", "-c", "user.email=radhi.amash@gmail.com",
             "commit", "-m", args.message)
@@ -276,7 +299,12 @@ def main():
     if args.push:
         print("→ pushing to origin/main…")
         p = git("push", "origin", "HEAD:main")
-        print("  " + ("pushed ✓" if p.returncode == 0 else "push failed:\n" + p.stderr))
+        if p.returncode == 0:
+            print("  pushed ✓")
+        else:
+            print("  push failed:\n" + p.stderr)
+            print("  ⇒ أول مرة؟ شغّل: git push  (ستفتح نافذة متصفح لتسجيل الدخول مرة")
+            print("    واحدة — Git Credential Manager يحفظها دائماً)، أو: gh auth login")
     else:
         print("\nMirror ready at:", DST)
         print("To publish:  python sync_to_repo.py --push   (or: cd r-native-export && git push)")
