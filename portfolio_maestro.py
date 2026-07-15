@@ -195,8 +195,9 @@ def _fleet_mind(gov):
         ftmp.replace(FLEET_OUT)
     except Exception as e:
         _log(f"fleet_mind: تعذّر كتابة اللقطة ({type(e).__name__})")
-    _log(f"🧠 fleet_mind: {fleet_state} budget {budget} fleet_daily {fleet_daily:.2f} | "
-         f"{', '.join(f'{n}={fleet_mults.get(str(m), '?')}' for m, n in FLEET_MAGICS.items())}")
+    # 🩺 2026-07-15: فُكّ f-string المتداخل (كان يكسر الترجمة على Python ≤3.11 ⇒ المايسترو لا يقلع)
+    _fmults = ", ".join(f"{n}={fleet_mults.get(str(m), '?')}" for m, n in FLEET_MAGICS.items())
+    _log(f"🧠 fleet_mind: {fleet_state} budget {budget} fleet_daily {fleet_daily:.2f} | {_fmults}")
     return gov
 
 
