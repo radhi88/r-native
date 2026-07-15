@@ -1,0 +1,9 @@
+.env
+__pycache__/
+.venv/
+venv/
+.DS_Store
+data/portfolio.json
+.streamlit/secrets.toml
+assets/logos/*
+!assets/logos/.gitkeep
