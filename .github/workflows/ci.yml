@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.11" ]   # الوقت التشغيليّ الفعليّ للأسطول (3.7/3.8 منتهيان)
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0   # نحتاج التاريخ الكامل لحساب الملفّات المتغيّرة
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    # لا نُنصّب requirements.txt: فيه MetaTrader5 (Windows فقط) — لا يُنصَّب على Linux.
+    # py_compile لا يحتاج تبعيّات؛ يتحقّق من صحّة البنية النحويّة فقط.
+    - name: Byte-compile changed Python files
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          BASE="${{ github.event.pull_request.base.sha }}"
+        else
+          BASE="${{ github.event.before }}"
+        fi
+        # احتياط: لو الأساس غير صالح (أوّل دفعة / all-zeros) قارن بآخر commit
+        if ! git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
+          BASE="$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)"
+        fi
+        echo "Comparing $BASE...HEAD"
+        git config core.quotePath false   # لا نهرّب أحرف الإيموجي في أسماء الصفحات
+        # قراءة null-delimited: تتحمّل المسافات/الإيموجي/الأحرف الخاصّة في أسماء الملفّات
+        count=0
+        while IFS= read -r -d '' f; do
+          echo "  compiling: $f"
+          python -m py_compile "$f"
+          count=$((count + 1))
+        done < <(git diff -z --name-only --diff-filter=ACM "$BASE"...HEAD -- '*.py')
+        if [ "$count" -eq 0 ]; then
+          echo "No changed Python files — nothing to compile."
+        else
+          echo "✅ $count changed Python file(s) compile cleanly on Python ${{ matrix.python-version }}."
+        fi
