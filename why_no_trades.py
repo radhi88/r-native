@@ -39,21 +39,74 @@ def _age_min(path):
 
 # ═══ 1) القواطع العامّة ═══════════════════════════════════════════════════
 
+# هوية كاتب مفتاح القتل من محتواه — وهل يُمسح تلقائياً أم لاصق يحتاج يدك
+_KILL_WRITERS = [
+    ("drawdown_recovery", "🚨 لاصق! لا يوجد أيّ كود يمسحه — احذفه يدوياً بعد فهم السحب (DD≥18% من القمة). "
+                           "وتحقّق من peak_equity.json: قمّة قديمة = انطلاق دائم."),
+    ("real_lock(cage)", "يُعاد كتابته كل 10ث ما دام خرق القفص قائماً (خسارة اليوم ≥$5 أو لوت زائد) — عالج السبب لا الملف."),
+    ("real_lock", "يُعاد كتابته كل 10ث! حذفه بلا فائدة — السبب: اسم الخادم بلا Trial/Demo. "
+                   "لو حسابك ديمو فعلاً فالخادم أعيدت تسميته ⇒ حدّث كشف الديمو."),
+    ("master_floor", "يُمسح تلقائياً عند التعافي (حقوق > الأرضية×1.25) — لكن انظر فخّ القمة البائتة أدناه."),
+    ("Telegram", "قتل يدويّ عن بُعد — أزِله من تيليغرام أو احذف الملف."),
+    ("voice", "قتل بأمر صوتيّ — احذف الملف للاستئناف."),
+]
+
+
 def check_kill():
+    found = False
     for p, label in ((RN / "kill_switch.txt", "data/r_native/kill_switch.txt"),
                      (MT5DIR / "kill_switch.txt", "kill_switch.txt (الجذر)")):
         if p.exists():
+            found = True
             body = ""
             try:
-                body = p.read_text(encoding="utf-8", errors="replace")[:120].strip()
+                body = p.read_text(encoding="utf-8", errors="replace")[:150].strip()
             except Exception:
                 pass
+            hint = next((h for k, h in _KILL_WRITERS if k in body),
+                        "كاتب غير معروف — اقرأ أول كلمة في المحتوى.")
             _add(0, f"مفتاح القتل موجود: {label}",
-                 f"كل المنفّذين متجمّدون. المحتوى: {body or '—'} · "
-                 f"عمره {int(_age_min(p) or 0)} دقيقة. من كتبه غالباً: real_lock "
-                 f"(حساب غير ديمو) أو master_floor (هامش ≤130% أو حقوق ≤12% من القمة).")
-            return
-    _add(3, "لا مفتاح قتل", "kill_switch.txt غير موجود في الموقعين.")
+                 f"المحتوى: «{body or '—'}» · عمره {int(_age_min(p) or 0)}د. {hint} "
+                 "(ملاحظة: بعض المحرّكات تقرأ الجذر فقط وبعضها r_native فقط — الملفّان معاً = صمتٌ تامّ.)")
+    if not found:
+        _add(3, "لا مفتاح قتل", "kill_switch.txt غير موجود في الموقعين.")
+
+
+def check_peak_traps():
+    """🪤 فخّا القمة البائتة: master_floor (12% من القمة) وdrawdown_recovery (سحب 18%) —
+    ملفّا القمة لا يتصفّران مع تغيير/تصفير الحساب ⇒ انطلاق دائم لا يشفى."""
+    mfs = _j(RN / "master_floor_state.json") or {}
+    peak_mf = float(mfs.get("peak", 0) or 0)
+    pe = _j(RN / "peak_equity.json") or {}
+    peak_dd = float(pe.get("peak", pe.get("peak_equity", 0)) or 0)
+    eq = None
+    try:
+        import MetaTrader5 as m
+        if m.initialize():
+            a = m.account_info()
+            eq = float(a.equity) if a else None
+            m.shutdown()
+    except Exception:
+        pass
+    if peak_mf:
+        floor = 0.12 * peak_mf
+        if eq is not None and eq <= floor * 1.25:
+            _add(0, f"🪤 فخّ القمة البائتة (master_floor): قمّة مسجّلة {peak_mf:.0f}$ ⇒ "
+                    f"أرضيّة {floor:.0f}$ والحقوق {eq:.0f}$",
+                 "كسرٌ دائم: يصفّي ويكتب kill كل 4ث ولا يُشفى أبداً (التعافي يتطلّب حقوق > "
+                 "الأرضية×1.25). العلاج: احذف master_floor_state.json (أو حدّث peak) بعد التأكد "
+                 "أن القمة تعود لحسابٍ/رصيدٍ قديم.")
+        else:
+            _add(3, f"قمّة master_floor مسجّلة {peak_mf:.0f}$ — لا كسر حاليّاً", "")
+    if peak_dd and eq is not None:
+        dd = (1 - eq / peak_dd) * 100 if peak_dd > 0 else 0
+        if dd >= 18:
+            _add(0, f"🚨 سحب {dd:.0f}% من قمّة peak_equity.json ({peak_dd:.0f}$→{eq:.0f}$) "
+                    "≥ عتبة drawdown_recovery (18%)",
+                 "هذا الوكيل يكتب kill_switch «لاصقاً» لا يمسحه أيّ كود. لو القمّة من حسابٍ "
+                 "قديم: احذف/حدّث peak_equity.json ثم احذف مفتاح القتل.")
+        else:
+            _add(3, f"السحب من القمّة {dd:.0f}% — تحت عتبة الـ18%", "")
 
 
 def check_watchdog():
@@ -291,7 +344,12 @@ def check_mt5():
             _add(3 if (ml == 0 or ml > 200) else 1,
                  f"رصيد {a.balance:.2f}$ · حقوق {a.equity:.2f}$ · هامش {ml:.0f}%",
                  "هامش ≤130% ⇒ master_floor يصفّي ويقفل. رصيد صغير قد يمنع فتح 0.01 "
-                 "على المؤشرات (retcode 10019 لا مال).")
+                 "على المؤشرات (retcode 10019 لا مال) — وmulti_trader يتخطّى صامتاً أيّ رمزٍ "
+                 "أدنى لوته يخاطر >2% من الحقوق.")
+            if a.balance > 0 and a.equity < 0.70 * a.balance:
+                _add(1, f"حقوق ({a.equity:.0f}$) < 70% من الرصيد ({a.balance:.0f}$) — "
+                        "RiskSentinel يكتم الموحّد 99782 على كل الرموز",
+                     "عائم سالب كبير — أغلق/قلّص الخاسر العائم أو انتظر التعافي.")
         # عيّنة سبريد وجلسة
         now = datetime.now(timezone.utc)
         for sym in ("XAUUSDm", "EURUSDm", "USTECm"):
@@ -353,7 +411,7 @@ def check_engine_configs():
 def main():
     print(f"\n🩺 why_no_trades — {datetime.now(timezone.utc).isoformat(timespec='seconds')}")
     print(f"   الجذر: {MT5DIR}\n" + "═" * 74)
-    check_kill(); check_watchdog(); check_focus(); check_governance()
+    check_kill(); check_peak_traps(); check_watchdog(); check_focus(); check_governance()
     check_edge_governor(); check_risk_register()
     check_reflection_night(); check_dd_recovery(); check_unified_trader()
     check_circuit_breaker(); check_r_executor(); check_conviction_feeds()
