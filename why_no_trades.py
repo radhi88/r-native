@@ -291,6 +291,30 @@ def check_multi_trader_session():
              "يدخل فقط في LONDON/NY_OVERLAP (~07:00–16:00 UTC) — صمته الليليّ طبيعيّ.")
 
 
+def check_tv_bridge():
+    """🌉 جسر TradingView: النفق المجاني يغيّر رابطه — التنبيهات تبقى على الميّت."""
+    tt = _j(RN / "tv_tunnel.json") or _j(MT5DIR / "tv_tunnel.json")
+    if tt and tt.get("url"):
+        age = _age_min(RN / "tv_tunnel.json") or _age_min(MT5DIR / "tv_tunnel.json") or 0
+        _add(2, f"رابط نفق TradingView الحيّ: {tt['url']}",
+             f"عمر الملف {int(age)}د. النفق المجاني يتغيّر مع كل إعادة تشغيل — "
+             "تأكّد أن تنبيهات TradingView محدَّثة عليه، وإلا لا تصل أي إشارة.")
+    st = _j(RN / "tradingview_bridge_status.json")
+    if st:
+        last = st.get("last_signal_ts") or st.get("last_signal") or 0
+        try:
+            silent_h = (time.time() - float(last)) / 3600 if last else None
+        except Exception:
+            silent_h = None
+        if silent_h is not None and silent_h > 12:
+            _add(1, f"جسر TradingView صامت منذ {silent_h:.0f} ساعة",
+                 "الجسر حيّ لكن لا إشارات تصله — الرابط في التنبيهات ميّت غالباً، حدّثه.")
+        rej = st.get("rejects") or st.get("bad_secret") or 0
+        if rej:
+            _add(1, f"جسر TradingView يرفض إشارات: bad_secret ×{rej}",
+                 "السرّ في تنبيه TradingView لا يطابق سرّ الجسر — صحّح حقل secret في الـJSON.")
+
+
 def check_zombie_locks():
     st = _j(RN / "watchdog_status.json") or {}
     hot = {k: v for k, v in (st.get("restarts") or {}).items() if int(v) >= 20}
@@ -415,7 +439,7 @@ def main():
     check_edge_governor(); check_risk_register()
     check_reflection_night(); check_dd_recovery(); check_unified_trader()
     check_circuit_breaker(); check_r_executor(); check_conviction_feeds()
-    check_multi_trader_session(); check_zombie_locks()
+    check_multi_trader_session(); check_tv_bridge(); check_zombie_locks()
     check_mt5(); check_engine_configs()
     icons = {0: "🔴", 1: "🟠", 2: "🟡", 3: "🟢"}
     R.sort(key=lambda r: r[0])

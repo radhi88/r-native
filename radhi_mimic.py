@@ -163,9 +163,15 @@ def _pnl_today():
     try:
         # ⏰ درس 2026-07-03: history_deals_get بنطاق datetime ينزاح بفارق توقيت الخادم (3س) فيُدخل
         # صفقات أمس في «اليوم» ويجمّد ظلماً ⇒ نسحب نافذة أوسع ونصفّي بالحقبة (d.time UTC دقيق).
-        for d in (mt5.history_deals_get(day0 - timedelta(hours=12),
-                                        datetime.now() + timedelta(hours=12)) or []):
-            if d.magic == MAGIC and float(getattr(d, "time", 0)) >= day0_ep:
+        _deals = mt5.history_deals_get(day0 - timedelta(hours=12),
+                                       datetime.now() + timedelta(hours=12)) or []
+        # 🩺 2026-07-15: عملية رصيد اليوم (تصفير/إيداع، type 2/3) = خطُّ أساسٍ جديد —
+        # تصفيةُ التصفير لا تُحسب خسارة يومٍ تجمّدنا حتى منتصف الليل.
+        _base = max((float(d.time) for d in _deals
+                     if getattr(d, "type", -1) in (2, 3) and float(getattr(d, "time", 0)) >= day0_ep),
+                    default=day0_ep)
+        for d in _deals:
+            if d.magic == MAGIC and float(getattr(d, "time", 0)) >= _base:
                 realized += float(d.profit) + float(d.commission) + float(d.swap)
     except Exception:
         pass

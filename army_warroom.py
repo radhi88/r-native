@@ -524,9 +524,12 @@ def main():
         if execute and acct and acct.equity > 0:
             try:
                 _ds = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+                _tdy = mt5.history_deals_get(int(_ds), int(time.time())) or []
+                # 🩺 2026-07-15: عملية رصيد اليوم (type 2/3) = خطُّ أساس جديد — التصفير ليس خسارة تداول
+                _rst = max((int(x.time) for x in _tdy if getattr(x, "type", -1) in (2, 3)), default=int(_ds))
                 _daynet = sum(x.profit + x.commission + x.swap
-                              for x in (mt5.history_deals_get(int(_ds), int(time.time())) or [])
-                              if x.magic == EXEC_MAGIC and x.entry == 1)
+                              for x in _tdy
+                              if x.magic == EXEC_MAGIC and x.entry == 1 and int(x.time) >= _rst)
                 if _daynet < -DAILY_HALT_PCT / 100.0 * acct.equity:
                     halt = True
                     halt_reason = halt_reason or f"خسارة يومية ${_daynet:.0f} (>{DAILY_HALT_PCT:.0f}%)"

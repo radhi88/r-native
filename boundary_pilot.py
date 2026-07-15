@@ -108,8 +108,11 @@ def _news_fire():
 
 def _daily(sym=None):
     day0 = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    deals = [d for d in (mt5.history_deals_get(day0, datetime.now()) or [])
-             if d.magic == MAGIC]
+    _all = mt5.history_deals_get(day0, datetime.now()) or []
+    # 🩺 2026-07-15: عملية رصيد اليوم (type 2/3 تصفير/إيداع) = خطُّ أساس جديد —
+    # تصفيةُ التصفير لا تُحسب خسارةَ يومٍ توقف الدخول.
+    _rst = max((float(d.time) for d in _all if getattr(d, "type", -1) in (2, 3)), default=0.0)
+    deals = [d for d in _all if d.magic == MAGIC and float(getattr(d, "time", 0)) >= _rst]
     net = sum(d.profit + d.commission + d.swap for d in deals if d.entry == 1)
     n_entries = sum(1 for d in deals if d.entry == 0)
     return net, n_entries
