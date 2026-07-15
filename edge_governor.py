@@ -62,6 +62,7 @@ DEFAULT_GOVERNED = {
     "20260706": os.path.join("data", "r_native", "brain_trader_config.json"),    # R Core (brain_trader)
     "20260714": os.path.join("data", "r_native", "boundary_pilot_config.json"),  # هجوم اللحظات (boundary_pilot)
     "20260709": "level_sentinel_multi_config.json",                              # حارس العملات (جذر MT5)
+    "20260716": os.path.join("data", "r_native", "fabio_orb_config.json"),       # نموذج Fabio ORB (fabio_orb)
 }
 
 DEFAULTS = {
