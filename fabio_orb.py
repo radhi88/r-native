@@ -39,7 +39,7 @@ KILL1 = RN / "kill_switch.txt"
 KILL2 = MT5DIR / "kill_switch.txt"
 MAGIC = 20260716
 COMMENT = "fabio-orb"
-POLL_S = 15
+POLL_S = 5     # ⚡ 15→5ث (أمر «أسرع» 2026-07-15) — لقط الاختراق أبكر داخل الشمعة
 
 for p in (str(MT5DIR), str(MT5DIR / "r_native_v2")):
     if p not in sys.path:

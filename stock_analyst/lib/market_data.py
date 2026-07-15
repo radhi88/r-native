@@ -213,8 +213,15 @@ def get_etf_details(ticker: str) -> dict:
         t = yf.Ticker(ticker)
         info = t.info or {}
         out["name"] = info.get("shortName") or info.get("longName") or ticker
-        # yfinance surfaces these on some ETFs via .info
-        out["expense_ratio"] = info.get("netExpenseRatio") or info.get("annualReportExpenseRatio")
+        # Normalize expense ratio to FRACTION form at the boundary:
+        # Yahoo's netExpenseRatio is percent-form (SPY -> 0.0945 meaning 0.0945%),
+        # annualReportExpenseRatio is fraction-form (0.000945). Field decides.
+        ner = info.get("netExpenseRatio")
+        arer = info.get("annualReportExpenseRatio")
+        if ner is not None:
+            out["expense_ratio"] = float(ner) / 100.0
+        elif arer is not None:
+            out["expense_ratio"] = float(arer)
         out["yield"] = info.get("yield") or info.get("dividendYield")
         out["ytd_return"] = info.get("ytdReturn")
         out["three_year_avg_return"] = info.get("threeYearAverageReturn")

@@ -26,7 +26,7 @@ if not os.path.exists(PYW):
     PYW = "pythonw"
 FLAGS = 0x00000008 | 0x00000200          # DETACHED | NEW_PROCESS_GROUP
 STATUS = Path(MT5) / "data" / "r_native" / "watchdog_status.json"
-CHECK_S = 60
+CHECK_S = 30      # ⚡ 2026-07-15 (أمر «أسرع بكثير»): إحياء الساقط خلال نصف دقيقة بدل دقيقة
 
 # needle (cmdline match) -> (args, cwd)
 ENGINES = {
@@ -40,7 +40,7 @@ ENGINES = {
     "brain_server.py":            (["brain_server.py"], MT5),   # 🧠 العقل 5055 (كان يعمل بلا حارس!)
     # 🎯 المنفّذ الموحّد الوحيد (20260605) تحت الوصيّ — LIVE على الديمو (توحيد #1 Step 3). حواجز:
     # لوت 0.01، سقف يوميّ $10، حظر ليليّ، master_floor، kill_switch. للإيقاف: علّق السطر أو أنشئ kill_switch.txt.
-    "friday_v3.algory.r_executor": (["-u", "-m", "friday_v3.algory.r_executor", "--live", "--no-brain-json", "--interval", "8"], MT5),
+    "friday_v3.algory.r_executor": (["-u", "-m", "friday_v3.algory.r_executor", "--live", "--no-brain-json", "--interval", "5"], MT5),  # ⚡ 8→5ث (أمر «أسرع»)
     # 🔬 مُثبِت NR7 الأماميّ (magic 111111): الحافّة الوحيدة التي نجت من المسح العميق —
     # USTECm M15، إثبات ورقيّ ديمو، مركز واحد. يُغذّي /api/r/proof_gate?magic=111111.
     "nr7_prover.py":              (["nr7_prover.py"], MT5),
@@ -152,9 +152,9 @@ ENGINES = {
     # 🔬 راصد القمّة + مُشرّح الانهيار (قراءة-فقط): يتتبّع أعلى رصيد، وعند الهبوط ≥4% يلتقط مَن نزف
     # (مُحقَّق لكل magic + عائم لكل مصدر) → peak_watch_crashes.jsonl. يجيب «كل ما نوصل 80% يهجّ معه».
     "peak_watch.py":              (["peak_watch.py"], MT5),
-    # ⛔ momentum_harvester (TSM) مُوقَف بطلب المستخدم: ينزف — والتشخيص: النزيف كلّه من المعادن (الفضّة −$27.75)
-    # بينما فوركس TSM موجب (~+$5). أُوقف حتى نُعيده فوركس-فقط بلا معادن إن أردنا. magic 20260630.
-    # "momentum_harvester.py":      (["momentum_harvester.py"], MT5),
+    # 🩺 momentum_harvester (TSM) عاد فوركس-فقط 2026-07-15 (أمر «كل العملات — ما نقتل نعالج»):
+    # المعادن استُئصلت من GOLD_FOCUS (مصدر النزيف المُثبت)، وفوركس TSM كان موجباً. magic 20260630.
+    "momentum_harvester.py":      (["momentum_harvester.py"], MT5),
     # 🧠 حلقة تعلّم الزخم (قراءة-فقط): تقيس أيّ الاتجاهات/الجلسات تدفع → momentum_edge.json؛ المحرّك يقرؤها ويتكيّف.
     "momentum_learn.py":          (["momentum_learn.py"], MT5),
     # 📈 لوحة الشارت الحيّ (:8016، قراءة-فقط): شموع + كل المستويات الهندسيّة (فيبو/جان/نجمة داوود/فراكتل/VWAP/POC) + مناطق الالتقاء، تحديث لحظيّ.
@@ -268,7 +268,15 @@ _FOCUS_KEEP = {"master_floor.py", "peak_watch.py",
                "edge_scanner.py",                                        # 🔬 ماسح الحافّة لكل رمز/فريم
                "trade_autopsy.py",                                       # 🔎 مشرّح الصفقات (دخول أم خروج)
                "market_pulse.py", "gold_level_sentinel.py",              # 🫀 النبض + الحارس (تنبيهات)
-               # "level_sentinel_multi.py",  # 🚫 عُطّل 2026-07-10 (قرار المستخدم — نازف −$25)                                # 🌍 حارس المستويات متعدد العملات
+               # 🌍 كتيبة كل العملات — أُعيدت 2026-07-15 (أمر المستخدم «ندخل جميع العملات دون استثناء
+               # — ما نقتل نعالج»): النازف يعالجه edge_governor باستراحة مؤقتة، لا يُقصى من الحراسة.
+               "level_sentinel_multi.py",                                # 🌍 حارس المستويات متعدد العملات (20260709)
+               "multi_trader.py",                                        # 🌍 المشروع على جميع العملات
+               "army_warroom.py --exec",                                 # ⚔️ غرفة الحرب — 35 رمزاً (20260618)
+               "orb_trader.py",                                          # 🎯 اختراق الافتتاح — مؤشرات/ذهب (20260616)
+               "pipflow_core.py",                                        # 🌊 PipFlow متعدد الفريمات (20260629)
+               "gold_scalper.py",                                        # 🥇 سكالب الذهب (20260628)
+               "momentum_harvester.py",                                  # 🩺 TSM فوركس-فقط بعد العلاج (20260630)
                "desk_scoreboard.py",                                     # 🏁 سبّورة الديسك لكل ماجيك (قراءة فقط)
                "quant_desk.py", "llm_chart_analyst.py",                  # 🧮 المكتب + 🤖 محلّل Fable
                "news_alarm.py", "news_straddle.py",                      # ⏰ الإنذار + 🎯 القوسان (تجربة مُقاسة)

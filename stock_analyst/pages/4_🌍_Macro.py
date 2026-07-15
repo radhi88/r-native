@@ -56,7 +56,11 @@ with cL:
     st.subheader("CPI — year over year")
     s = macro.cpi_yoy_series()
     if s is not None and not s.empty:
-        s = s.last("20Y") if hasattr(s, "last") else s
+        import pandas as pd
+        try:  # 20-year window (Series.last is removed in pandas 3.x)
+            s = s[s.index >= s.index.max() - pd.DateOffset(years=20)]
+        except Exception:
+            pass
         fig = go.Figure(go.Scatter(x=list(s.index), y=list(s.values), mode="lines",
                                    line=dict(color="#38bdf8", width=2)))
         fig.add_hline(y=2.0, line_dash="dot", line_color="rgba(148,163,184,.6)",

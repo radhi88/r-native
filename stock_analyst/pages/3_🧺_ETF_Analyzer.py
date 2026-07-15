@@ -135,7 +135,6 @@ if peers:
     dfp["Expense ratio"] = dfp["Expense ratio"].map(
         lambda v: _pct(v) if v is not None else "—")
     st.table(dfp.set_index("Ticker"))
-    cur = next((r["Expense ratio"] for r in rows if r["Ticker"] == ticker), None)
     cur_er = next((float(d) for t, d in
                    [(r["Ticker"], r["Expense ratio"]) for r in rows]
                    if t == ticker and d is not None), None)

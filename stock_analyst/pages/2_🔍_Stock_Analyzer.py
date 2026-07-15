@@ -139,7 +139,11 @@ groups = [
                  ("Avg volume", f"{info.get('averageVolume'):,}" if info.get("averageVolume") else "—")]),
     ("Income", [("EPS (ttm)", _fmt(info.get("trailingEps"))),
                 ("EPS (fwd)", _fmt(info.get("forwardEps"))),
-                ("Dividend yield", _fmt(info.get("dividendYield"), pct=True)),
+                # yfinance >=0.2.54 returns dividendYield percent-form (0.41 = 0.41%);
+                # older versions fraction-form — disambiguate by magnitude (yields >20% unreal)
+                ("Dividend yield",
+                 (f"{info['dividendYield']:.2f}%" if info.get("dividendYield") and float(info["dividendYield"]) > 0.2
+                  else _fmt(info.get("dividendYield"), pct=True))),
                 ("Payout ratio", _fmt(info.get("payoutRatio"), pct=True)),
                 ("Revenue growth", _fmt(info.get("revenueGrowth"), pct=True))]),
     ("Analyst (informational)", [("Consensus estimate", _fmt(info.get("recommendationMean"))),

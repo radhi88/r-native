@@ -101,14 +101,152 @@ def check_governance():
 
 
 def check_edge_governor():
-    led = _j(RN / "edge_governor_retired.json")
+    led = _j(RN / "edge_governor_ledger.json") or _j(RN / "edge_governor_retired.json")
     if led:
-        last = led[-3:]
-        _add(1, f"حاكم الحافّة قاعَدَ {len(led)} محرّكاً (enabled=false)",
-             "آخرها: " + "; ".join(f"{e.get('name')}({e.get('magic')}) net_3d={e.get('net_3d')}"
-                                    for e in last))
+        rests = [e for e in led if e.get("action", "rest") == "rest"][-3:]
+        _add(2 if rests else 3, f"مُعالِج الحافّة: {len(led)} حدث علاج/إفاقة",
+             "آخر استراحات: " + "; ".join(
+                 f"{e.get('name')}({e.get('magic')}) حتى {e.get('revive_at', '?')[:16]}"
+                 for e in rests) if rests else "")
     else:
-        _add(3, "حاكم الحافّة لم يُقاعد أحداً بعد", "")
+        _add(3, "مُعالِج الحافّة لم يعالج أحداً بعد", "")
+
+
+# ═══ 1ب) بوّابات المنفّذين الرئيسيّين (تدقيق 2026-07-15) ═══════════════════
+
+V2DATA = MT5DIR / "r_native_v2" / "data"
+
+
+def check_unified_trader():
+    """المنفّذ المتعدّد 99782 — أكبر مغطٍّ للعملات؛ يموت صامتاً بلا live_genome."""
+    lg = _j(V2DATA / "live_genome.json")
+    if not lg or not lg.get("params"):
+        _add(1, "الموحّد 99782: live_genome.json مفقود/فارغ ⇒ مسح الدخول كلّه مُعطّل صامتاً",
+             f"{V2DATA / 'live_genome.json'} — العملية تبدو حيّة (تدير المراكز) لكنها لا تدخل أبداً.")
+    else:
+        _add(3, "الموحّد 99782: جينوم حيّ موجود", "")
+    age = _age_min(V2DATA / "son_status.json")
+    if age is not None and age > 15:
+        _add(1, f"الموحّد 99782: نبضه بائت منذ {int(age)} دقيقة (son_status.json)",
+             "معلّق — الوصيّ يقتله ويعيده فوق 15د، لكن تحقّق يدوياً.")
+    gp = _j(V2DATA / "genome_paused.json")
+    if gp and gp.get("paused"):
+        _add(1, "الموحّد 99782: موقوف عبر genome_paused.json",
+             f"السبب: {gp.get('reason', '—')} — كل رموزه الـ12 بلا دخول.")
+
+
+def check_dd_recovery():
+    d = _j(RN / "dd_recovery_state.json")
+    if d and d.get("blocks_new_entries"):
+        _add(0, "وضع التعافي من السحب يمنع كل الدخول الجديد (dd_recovery_state)",
+             f"drawdown={d.get('drawdown_pct')}% · severity={d.get('severity_level')} — "
+             "يخرس الموحّد 99782 + المنفّذ 20260605 معاً على كل الرموز.")
+    else:
+        _add(3, "لا حظر تعافٍ من السحب", "")
+
+
+def check_reflection_night():
+    s = _j(MT5DIR / "reflection" / "strategy.json")
+    try:
+        nb = (s or {}).get("night_trade_block") or {}
+        if nb.get("enabled"):
+            off = int((s or {}).get("server_utc_offset_hours", 3))
+            sh, eh = int(nb.get("start_hour", 22)), int(nb.get("end_hour", 8))
+            srv_h = (datetime.now(timezone.utc).hour + off) % 24
+            inside = (srv_h >= sh or srv_h < eh) if sh > eh else (sh <= srv_h < eh)
+            if inside:
+                _add(0, f"⏰ الحظر الليليّ المجدول فعّال الآن (reflection/strategy.json)",
+                     f"ساعة الخادم {srv_h}:00 داخل [{sh}:00→{eh}:00] ⇒ الموحّد 99782 + "
+                     f"المنفّذ 20260605 مكتومان على كل الرموز إلا BTCUSDm حتى {eh}:00 "
+                     f"بتوقيت الخادم ({(eh - off) % 24}:00 UTC). هذا يفسّر صمت الليل كاملاً.")
+            else:
+                _add(3, f"الحظر الليليّ المجدول غير فعّال الآن (ساعة الخادم {srv_h}:00)",
+                     f"نافذته [{sh}:00→{eh}:00] بتوقيت الخادم — 10 ساعات كتمٍ يوميّاً للمنفّذين الرئيسيّين.")
+    except Exception as e:
+        _add(2, "تعذّر قراءة حظر الليل reflection/strategy.json", str(e))
+
+
+def check_circuit_breaker():
+    cb = _j(V2DATA / "circuit_breaker_state.json")
+    if not cb:
+        _add(3, "لا تجميدات قاطع دائرة", "")
+        return
+    now = time.time()
+    frozen = []
+    for key, st in (cb.items() if isinstance(cb, dict) else []):
+        try:
+            until = float((st or {}).get("freeze_until_ts", 0))
+            if until > now:
+                frozen.append(f"{key} ({int((until - now) / 60)}د متبقّية: "
+                              f"{(st or {}).get('freeze_reason', '—')})")
+        except Exception:
+            pass
+    if frozen:
+        _add(1, f"قاطع الدائرة مجمّد {len(frozen)} (ماجيك:رمز) — يصمد بعد إعادة التشغيل",
+             " · ".join(frozen[:5]))
+    else:
+        _add(3, "لا تجميدات قاطع دائرة فعّالة", "")
+
+
+def check_r_executor():
+    st = _j(MT5DIR / "friday_v3" / "data" / "r_executor_state.json")
+    if st:
+        if st.get("mode") and st["mode"] != "LIVE":
+            _add(1, f"المنفّذ 20260605 بوضع {st['mode']} — يسجّل ولا يرسل أوامر",
+                 "الوصيّ يمرّر --live؛ لو الحالة PAPER فالعملية الحيّة أقلعت بلا العلم.")
+        if st.get("armed") is False:
+            _add(1, "المنفّذ 20260605: armed=false — الدخول معطّل", "")
+        if st.get("frozen_until"):
+            _add(1, f"المنفّذ 20260605 مجمّد حتى {st['frozen_until']}",
+                 f"السبب: {st.get('frozen_reason', '—')}")
+        la = str(st.get("last_action", ""))
+        if "gate_error" in la or "FROZEN" in la:
+            _add(2, f"المنفّذ 20260605: آخر فعل = {la[:60]}", "")
+    # بوّابة العقل 5055 — fail-closed: سقوطها = صمت المنفّذ 20260605 كليّاً
+    try:
+        import urllib.request
+        with urllib.request.urlopen("http://localhost:5055/api/r/trade_gate",
+                                    timeout=5) as r:
+            g = json.loads(r.read().decode("utf-8", "replace"))
+        _add(3, f"بوّابة العقل 5055 حيّة — الحكم: {g.get('verdict', '?')}",
+             str(g.get("reasons", g.get("reason", "")))[:100])
+    except Exception:
+        _add(1, "بوّابة العقل :5055 لا تستجيب — المنفّذ 20260605 fail-closed ⇒ صامت",
+             "شغّل brain_server.py (الوصيّ يحرسه) وتأكّد ألّا نزاع منفذ.")
+
+
+def check_conviction_feeds():
+    age = _age_min(RN / "unified_brain.json")
+    if age is None or age > 0.6:
+        _add(1, "تغذية المخّ الواحد بائتة (unified_brain.json أقدم من 30ث)",
+             "brain_trader يرى قناعاتٍ ميّتة ⇒ صفر رموز ⇒ صفر دخول رغم أنه مفعّل.")
+    else:
+        _add(3, "تغذية المخّ الواحد طازجة", "")
+    if not (V2DATA / "brain_live__XAUUSDm.json").exists():
+        _add(2, "لقطات brain_live__<SYM>.json مفقودة",
+             "الموحّد 99782 صامت على أي رمز بلا لقطته (جسر chart_signal_writer).")
+
+
+def check_multi_trader_session():
+    h = datetime.now(timezone.utc).hour
+    in_london = 7 <= h < 16
+    in_ny_overlap = 12 <= h < 16
+    if in_london or in_ny_overlap:
+        _add(3, "نافذة جلسات multi_trader مفتوحة الآن (LONDON/NY_OVERLAP)", "")
+    else:
+        _add(2, f"multi_trader خارج نافذته الآن (الساعة {h}:00 UTC)",
+             "يدخل فقط في LONDON/NY_OVERLAP (~07:00–16:00 UTC) — صمته الليليّ طبيعيّ.")
+
+
+def check_zombie_locks():
+    st = _j(RN / "watchdog_status.json") or {}
+    hot = {k: v for k, v in (st.get("restarts") or {}).items() if int(v) >= 20}
+    if hot:
+        _add(1, f"محرّكات تُعاد بلا توقّف ({len(hot)}) — اشتباه قفل زومبي (engine_lock)",
+             "عمليّة معلّقة تمسك منفذ القفل فكلّ إعادة تموت فوراً بصمت. "
+             f"الأعلى: {sorted(hot.items(), key=lambda x: -x[1])[:5]} — اقتل الـPID العالق يدوياً.")
+    else:
+        _add(3, "لا اشتباه أقفال زومبي", "")
 
 
 def check_risk_register():
@@ -216,7 +354,11 @@ def main():
     print(f"\n🩺 why_no_trades — {datetime.now(timezone.utc).isoformat(timespec='seconds')}")
     print(f"   الجذر: {MT5DIR}\n" + "═" * 74)
     check_kill(); check_watchdog(); check_focus(); check_governance()
-    check_edge_governor(); check_risk_register(); check_mt5(); check_engine_configs()
+    check_edge_governor(); check_risk_register()
+    check_reflection_night(); check_dd_recovery(); check_unified_trader()
+    check_circuit_breaker(); check_r_executor(); check_conviction_feeds()
+    check_multi_trader_session(); check_zombie_locks()
+    check_mt5(); check_engine_configs()
     icons = {0: "🔴", 1: "🟠", 2: "🟡", 3: "🟢"}
     R.sort(key=lambda r: r[0])
     for sev, title, detail in R:
