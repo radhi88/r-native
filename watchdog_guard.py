@@ -26,7 +26,7 @@ if not os.path.exists(PYW):
     PYW = "pythonw"
 FLAGS = 0x00000008 | 0x00000200          # DETACHED | NEW_PROCESS_GROUP
 STATUS = Path(MT5) / "data" / "r_native" / "watchdog_status.json"
-CHECK_S = 60
+CHECK_S = 30      # ⚡ 2026-07-15 (أمر «أسرع بكثير»): إحياء الساقط خلال نصف دقيقة بدل دقيقة
 
 # needle (cmdline match) -> (args, cwd)
 ENGINES = {
@@ -40,10 +40,17 @@ ENGINES = {
     "brain_server.py":            (["brain_server.py"], MT5),   # 🧠 العقل 5055 (كان يعمل بلا حارس!)
     # 🎯 المنفّذ الموحّد الوحيد (20260605) تحت الوصيّ — LIVE على الديمو (توحيد #1 Step 3). حواجز:
     # لوت 0.01، سقف يوميّ $10، حظر ليليّ، master_floor، kill_switch. للإيقاف: علّق السطر أو أنشئ kill_switch.txt.
-    "friday_v3.algory.r_executor": (["-u", "-m", "friday_v3.algory.r_executor", "--live", "--no-brain-json", "--interval", "8"], MT5),
+    "friday_v3.algory.r_executor": (["-u", "-m", "friday_v3.algory.r_executor", "--live", "--no-brain-json", "--interval", "5"], MT5),  # ⚡ 8→5ث (أمر «أسرع»)
     # 🔬 مُثبِت NR7 الأماميّ (magic 111111): الحافّة الوحيدة التي نجت من المسح العميق —
     # USTECm M15، إثبات ورقيّ ديمو، مركز واحد. يُغذّي /api/r/proof_gate?magic=111111.
     "nr7_prover.py":              (["nr7_prover.py"], MT5),
+    # 🚦 حاكم الحافّة (2026-07-15، لا ماجيك — لا يتاجر): الإصلاح المنظوميّ للنزيف. يقرأ صافي كل ماجيك
+    # من desk_scoreboard.json ويقلب enabled=false تلقائياً لأيّ محرّك دخولٍ يتجاوز أرضيّة الخسارة —
+    # المحرّكات تخمد بنفسها. تقاعدٌ أحاديّ، يحترم gov_override + kill_switch. قراءة/كتابة ملفّات فقط.
+    "edge_governor.py":           (["edge_governor.py"], MT5),
+    # 🎯 نموذج Fabio ORB (2026-07-15، magic 20260716): اختراق نطاق افتتاح نيويورك على USTECm (نظير NQ)،
+    # طويلٌ فقط، هدف 1R، دلتا اختياريّ. ديمو + execute=false افتراضياً (إشارةٌ حتى تفعّله). يُحكَم بالحاكم.
+    "fabio_orb.py":               (["fabio_orb.py"], MT5),
     # ✅ multi_trader أُعيد (طلب المستخدم 2026-07-02 «رجّع المشروع على جميع العملات») — تحت lot_guard + حوكمة المايسترو.
     "multi_trader.py":            (["multi_trader.py", "--loop"], MT5),
     # btc_live.py مُطفأ 2026-06-15: تدقيق 30 يوم = بلا حافة (net −$56، WR 34%، PF 0.89) ويعاكس
@@ -145,9 +152,9 @@ ENGINES = {
     # 🔬 راصد القمّة + مُشرّح الانهيار (قراءة-فقط): يتتبّع أعلى رصيد، وعند الهبوط ≥4% يلتقط مَن نزف
     # (مُحقَّق لكل magic + عائم لكل مصدر) → peak_watch_crashes.jsonl. يجيب «كل ما نوصل 80% يهجّ معه».
     "peak_watch.py":              (["peak_watch.py"], MT5),
-    # ⛔ momentum_harvester (TSM) مُوقَف بطلب المستخدم: ينزف — والتشخيص: النزيف كلّه من المعادن (الفضّة −$27.75)
-    # بينما فوركس TSM موجب (~+$5). أُوقف حتى نُعيده فوركس-فقط بلا معادن إن أردنا. magic 20260630.
-    # "momentum_harvester.py":      (["momentum_harvester.py"], MT5),
+    # 🩺 momentum_harvester (TSM) عاد فوركس-فقط 2026-07-15 (أمر «كل العملات — ما نقتل نعالج»):
+    # المعادن استُئصلت من GOLD_FOCUS (مصدر النزيف المُثبت)، وفوركس TSM كان موجباً. magic 20260630.
+    "momentum_harvester.py":      (["momentum_harvester.py"], MT5),
     # 🧠 حلقة تعلّم الزخم (قراءة-فقط): تقيس أيّ الاتجاهات/الجلسات تدفع → momentum_edge.json؛ المحرّك يقرؤها ويتكيّف.
     "momentum_learn.py":          (["momentum_learn.py"], MT5),
     # 📈 لوحة الشارت الحيّ (:8016، قراءة-فقط): شموع + كل المستويات الهندسيّة (فيبو/جان/نجمة داوود/فراكتل/VWAP/POC) + مناطق الالتقاء، تحديث لحظيّ.
@@ -261,7 +268,15 @@ _FOCUS_KEEP = {"master_floor.py", "peak_watch.py",
                "edge_scanner.py",                                        # 🔬 ماسح الحافّة لكل رمز/فريم
                "trade_autopsy.py",                                       # 🔎 مشرّح الصفقات (دخول أم خروج)
                "market_pulse.py", "gold_level_sentinel.py",              # 🫀 النبض + الحارس (تنبيهات)
-               # "level_sentinel_multi.py",  # 🚫 عُطّل 2026-07-10 (قرار المستخدم — نازف −$25)                                # 🌍 حارس المستويات متعدد العملات
+               # 🌍 كتيبة كل العملات — أُعيدت 2026-07-15 (أمر المستخدم «ندخل جميع العملات دون استثناء
+               # — ما نقتل نعالج»): النازف يعالجه edge_governor باستراحة مؤقتة، لا يُقصى من الحراسة.
+               "level_sentinel_multi.py",                                # 🌍 حارس المستويات متعدد العملات (20260709)
+               "multi_trader.py",                                        # 🌍 المشروع على جميع العملات
+               "army_warroom.py --exec",                                 # ⚔️ غرفة الحرب — 35 رمزاً (20260618)
+               "orb_trader.py",                                          # 🎯 اختراق الافتتاح — مؤشرات/ذهب (20260616)
+               "pipflow_core.py",                                        # 🌊 PipFlow متعدد الفريمات (20260629)
+               "gold_scalper.py",                                        # 🥇 سكالب الذهب (20260628)
+               "momentum_harvester.py",                                  # 🩺 TSM فوركس-فقط بعد العلاج (20260630)
                "desk_scoreboard.py",                                     # 🏁 سبّورة الديسك لكل ماجيك (قراءة فقط)
                "quant_desk.py", "llm_chart_analyst.py",                  # 🧮 المكتب + 🤖 محلّل Fable
                "news_alarm.py", "news_straddle.py",                      # ⏰ الإنذار + 🎯 القوسان (تجربة مُقاسة)
@@ -272,6 +287,8 @@ _FOCUS_KEEP = {"master_floor.py", "peak_watch.py",
                "brain_server.py",                                        # 🧠 العقل الوحيد 5055 (r_native.brain_server أُزيل — توحيد #1)
                "friday_v3.algory.r_executor",                            # 🎯 المنفّذ الموحّد (20260605) — تحت الحراسة حتى في وضع التركيز
                "nr7_prover.py",                                          # 🔬 مُثبِت NR7 الأماميّ (111111) — الحافّة الناجية
+               "edge_governor.py",                                       # 🚦 حاكم الحافّة — يُقاعد النازف تلقائياً (لا يتاجر)
+               "fabio_orb.py",                                           # 🎯 نموذج Fabio ORB (20260716) — USTECm، ديمو، execute=false افتراضياً
 
                "real_lock.py",                                            # 🔒 قفل الحقيقيّ
                "order_janitor.py", "ollama_council.py", "council_executor.py",  # 🧹 البوّاب + 🏛️ المجلس + ⚖️ منفّذه
@@ -344,6 +361,8 @@ HEARTBEAT = {
     "knowledge_grower.py":  ("knowledge_grower_status.json", 900),  # 🌱 منمّي المعرفة (حلقة 10د، عتبة سخيّة)
     "edge_scanner.py":      ("edge_scanner_status.json", 2100),     # 🔬 ماسح الحافّة (حلقة 30د، عتبة سخيّة)
     "trade_autopsy.py":     ("autopsy_summary.json", 120),          # 🔎 مشرّح الصفقات (حلقة 30ث)
+    "edge_governor.py":     ("edge_governor_status.json", 300),      # 🚦 حاكم الحافّة (حلقة 120ث، عتبة سخيّة)
+    "fabio_orb.py":         ("fabio_orb_status.json", 120),          # 🎯 نموذج Fabio ORB (حلقة 15ث)
 }
 
 

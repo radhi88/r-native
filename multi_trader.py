@@ -26,7 +26,7 @@ MAX_TOTAL_POS = 6              # تشديد (طلب المستخدم): تعرّ�
 _BLEED_SYMS = {"JP225m", "USDJPYm", "BTCUSDTm", "GBPCHFm", "EURNZDm", "GBPNZDm"}
 DAILY_KILL_PCT = 15.0
 POLL = 1                       # ⚡ السوق سريع: ردّ فعل خلال ~1.6ث (القرار نفسه 567ms فقط — كان 3ث)
-COOLDOWN_S = 90                # تشديد: تهدئة أطول بين الدخولات الجديدة (تداول أندر). الحماية: سقف
+COOLDOWN_S = 45                # ⚡ 2026-07-15: 90→45ث — إيقاع أعلى داخل النافذة الرابحة (لندن) فقط؛ الحماية: سقف
                                # الخسارة 2%/صفقة + mode-evolution يوقف ما يتشرذم لخسارة + بوّابة الثقة
 MIN_CONF_BUFFER = 0.02         # توازن (تنفيذ الآن): فوق بوّابة الجين بهامش صغير = دخول أكثر على رموز منخفضة التكلفة
 LOT_PER_1K = 1.0               # lot-cap growth: ~1 lot per $1000 equity (compounding headroom)
@@ -640,7 +640,11 @@ def cycle(mt5, cr):
     # daily kill
     import datetime
     start = datetime.datetime.now(datetime.timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
-    dl = [d for d in (mt5.history_deals_get(int(start), int(time.time())) or []) if d.magic in (MAGIC, HYB_MAGIC) and d.entry == 1]
+    _today = mt5.history_deals_get(int(start), int(time.time())) or []
+    # 🩺 2026-07-15: تصفير/إيداع الحساب اليوم (deal.type=2 رصيد /3 ائتمان) = خطُّ أساسٍ جديد —
+    # تصفيةُ التصفير كانت تُحسب «خسارة يوم» (−$1858 = 375% من الحقوق!) فتقتل الدخول ظلماً يوماً كاملاً.
+    _reset_ts = max((int(d.time) for d in _today if getattr(d, "type", -1) in (2, 3)), default=int(start))
+    dl = [d for d in _today if d.magic in (MAGIC, HYB_MAGIC) and d.entry == 1 and int(d.time) >= _reset_ts]
     if sum(d.profit + d.commission + d.swap for d in dl) <= -DAILY_KILL_PCT / 100.0 * acct.equity:
         return f"DAILY KILL · holding {len(allpos)}"
     opened = []

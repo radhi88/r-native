@@ -29,7 +29,7 @@ TP_R        = 3.0
 SL_ATR_MULT = 1.0
 LOT         = 0.01
 MAX_SPREAD_PTS = 9        # index points; auto-veto above this
-POLL_S      = 6           # watch the forming bar for a breakout
+POLL_S      = 3           # watch the forming bar for a breakout (⚡ 6→3s, 2026-07-15 «أسرع»)
 STATE_FILE  = Path(r"C:\Users\Radhi\MT5\data\r_native\nr7_prover_status.json")
 COMMENT     = "NR7-fwd-paper"
 

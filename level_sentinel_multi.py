@@ -72,9 +72,9 @@ MAGIC = 20260709
 DEFAULT_SYMBOLS = ["XAGUSDm", "EURUSDm", "GBPUSDm", "USDJPYm", "AUDUSDm", "USDCADm", "USDCHFm",
                    "EURJPYm", "GBPJPYm", "BTCUSDm", "ETHUSDm", "US30m", "US500m", "USTECm", "USOILm"]
 DEFAULT_CFG = {
-    "enabled": True, "execute": True, "min_exec_score": 2, "max_positions": 3,
+    "enabled": True, "execute": True, "min_exec_score": 2, "max_positions": 5,  # ⚡ 3→5 (2026-07-15)
     "per_symbol_max": 1, "stop_r": 0.5, "target_r": 0.5, "risk_cap": 0.03,
-    "exec_cooldown_min": 10, "stop_cooldown_min": 30, "exec_night_block": True,
+    "exec_cooldown_min": 5, "stop_cooldown_min": 30, "exec_night_block": True,  # ⚡ تبريد 10→5د (2026-07-15)
     # 👁️🎯 التكيّف الناعم (adaptive_sense): يُعدّل داخل الحدود الآمنة فقط — لا يرفع فيتو ولا يتجاوز
     # risk_cap ولا حارس 2.5% ولا أرضيّة السبريد. adaptive_mode=false ⇒ السلوك القديم بالحرف.
     "adaptive_mode": True, "conf_lo": 0.5, "conf_hi": 1.3, "sense_max_age_s": 120,
