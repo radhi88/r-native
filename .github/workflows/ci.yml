@@ -21,33 +21,37 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    # لا نُنصّب requirements.txt: فيه MetaTrader5 (Windows فقط) — لا يُنصَّب على Linux.
-    # py_compile لا يحتاج تبعيّات؛ يتحقّق من صحّة البنية النحويّة فقط. حتميّ (بلا git-diff)
-    # كي لا يتأثّر بسياق دمج الـPR؛ null-safe لأسماء الصفحات ذات الإيموجي.
+    # فحص نحويّ خالص بـPython — بلا قشرة bash (تفادياً لتفاعلات -e / الإيموجي في المسارات)،
+    # وبلا تنصيب requirements.txt (فيه MetaTrader5 Windows-only لا يُنصَّب على Linux؛
+    # py_compile لا يحتاج تبعيّات). حتميّ: غلوب stock_analyst + قائمة أدوات/محرّكات الجذر.
     - name: Byte-compile this project's Python files
-      shell: bash
       run: |
-        set -uo pipefail
-        fail=0
-        compile_one() {
-          if python -m py_compile "$1"; then
-            echo "  ✓ $1"
-          else
-            echo "  ✗ FAIL: $1"; fail=1
-          fi
-        }
-        # 1) لوحة stock_analyst كاملة (مكتفية ذاتيّاً، تشمل صفحات الإيموجي)
-        while IFS= read -r -d '' f; do compile_one "$f"; done \
-          < <(find stock_analyst -name '*.py' -print0)
-        # 2) محرّكات/أدوات الجذر التي يضيفها/يعدّلها هذا المسار
-        for f in \
-          edge_governor.py fabio_orb.py why_no_trades.py \
-          watchdog_guard.py momentum_harvester.py nr7_prover.py orb_trader.py \
-          multi_trader.py radhi_mimic.py army_warroom.py boundary_pilot.py \
-          level_sentinel_multi.py profit_harvester.py ; do
-          [ -f "$f" ] && compile_one "$f"
-        done
-        if [ "$fail" -ne 0 ]; then
-          echo "❌ One or more files failed to compile."; exit 1
-        fi
-        echo "✅ All project Python files compile cleanly on Python ${{ matrix.python-version }}."
+        python - <<'PY'
+        import glob, os, py_compile, sys
+
+        files = sorted(glob.glob("stock_analyst/**/*.py", recursive=True))
+        files += [f for f in (
+            "edge_governor.py", "fabio_orb.py", "why_no_trades.py",
+            "watchdog_guard.py", "momentum_harvester.py", "nr7_prover.py",
+            "orb_trader.py", "multi_trader.py", "radhi_mimic.py",
+            "army_warroom.py", "boundary_pilot.py", "level_sentinel_multi.py",
+            "profit_harvester.py",
+        ) if os.path.isfile(f)]
+
+        print(f"Python {sys.version.split()[0]} — checking {len(files)} file(s)")
+        failed = []
+        for f in files:
+            try:
+                py_compile.compile(f, doraise=True)
+                print(f"  OK  {f}")
+            except py_compile.PyCompileError as e:
+                print(f"  ERR {f}\n{e}")
+                failed.append(f)
+
+        if failed:
+            print(f"\n{len(failed)} file(s) failed to compile:")
+            for f in failed:
+                print(f"  - {f}")
+            sys.exit(1)
+        print(f"\nAll {len(files)} files compile cleanly.")
+        PY
