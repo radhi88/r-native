@@ -486,6 +486,15 @@ def manage_trailing(state: dict, mode: str):
 def _send_order(symbol: str, side: str, lot: float, sl: float, tp: float,
                 comment: str) -> tuple[bool, dict]:
     """Send a market order on ANY symbol. Returns (ok, raw_result_dict)."""
+    # 🔌 2026-10-25 (Radhi: «انفذ صفقات عن طريق نظامي نفسه»): entries go to the
+    # employee inbox, and the employee's trainee + central gateway decide and
+    # execute (paper unless the rn_* playbook is armed). R_ROUTE=direct_demo
+    # keeps the old direct demo send for debugging only.
+    if _os.environ.get("R_ROUTE", "employee") != "direct_demo":
+        from r_native.employee_link import submit as _emp_submit
+        _t = mt5.symbol_info_tick(symbol)
+        _px = (_t.ask if side == "BUY" else _t.bid) if _t else None
+        return _emp_submit(symbol, side, lot, sl, tp, comment, price=_px)
     # 🛡 DEMO-GUARD (توحيد #1 hardening): the project is DEMO-only. Refuse REAL
     # orders unless the account is confirmed demo (server name Trial/Demo). FAIL-
     # CLOSED: if the account can't be verified, skip the order (safer than risking
@@ -1402,8 +1411,15 @@ def _try_enter_one_symbol(state: dict, mode: str, force_sym: str):
     except Exception as _cg_e:
         _log(state, f"  [curated-guard err: {_cg_e}]")
 
-    if mode == "LIVE":
+    if mode == "LIVE" or _os.environ.get("R_ROUTE", "employee") == "employee":
+        # employee route: PAPER and LIVE both hand the signal to the employee,
+        # which is paper by default and trades demo only for armed playbooks.
         ok, res = _send_order(trade_symbol, side, effective_lot, sl, far_tp, comment)
+        if ok and res.get("queued"):
+            # The employee owns the trade from here (its magic, its trailing).
+            state["last_action"] = f"queued_employee {res.get('strategy')}"
+            _log(state, f"📨 → employee [{trade_symbol}] {side} SL={sl} TP={far_tp} as {res.get('strategy')} id={res.get('queued')}")
+            return
         if ok:
             state["last_ticket"] = res.get("order")
             state.setdefault("ticket_symbols", {})[str(res.get("order"))] = trade_symbol
