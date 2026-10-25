@@ -1569,6 +1569,14 @@ def api_r_force_trade():
         except Exception:
             pass  # fail-open if bridge unavailable
 
+        # 🔌 2026-10-25: same as r_executor — the employee trainee + central gateway execute.
+        import os as _os
+        if _os.environ.get("R_ROUTE", "employee") != "direct_demo":
+            from r_native.employee_link import submit as _emp_submit
+            ok, res = _emp_submit(symbol, "BUY" if order_type == mt5.ORDER_TYPE_BUY else "SELL",
+                                  lot, sl, tp, comment, price=price)
+            return jsonify({"ok": ok, "routed": "employee", **res})
+
         req = {
             "action":       mt5.TRADE_ACTION_DEAL,
             "symbol":       symbol,
