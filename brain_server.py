@@ -27,6 +27,11 @@ from flask import Flask, Response, jsonify, redirect, request, send_from_directo
 
 try:
     import MetaTrader5 as mt5
+    try:   # 2026-10-25: every agent in this process goes through the employee
+        from r_native.order_guard import install as _guard_install
+        _guard_install()
+    except Exception as _ge:
+        print(f"[guard] order_guard failed: {_ge}")
     HAS_MT5 = True
     if not mt5.initialize():
         print(f"[warn] MT5 init failed: {mt5.last_error()}")
@@ -3875,4 +3880,4 @@ if __name__ == "__main__":
     # while dropping the 200-OK access spam. Does NOT touch trading/safety logic.
     import logging as _logging
     _logging.getLogger("werkzeug").setLevel(_logging.WARNING)
-    app.run(host="0.0.0.0", port=5055, debug=False, threaded=True)
+    app.run(host=_os.environ.get("R_BRAIN_HOST", "127.0.0.1"), port=5055, debug=False, threaded=True)

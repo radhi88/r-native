@@ -86,3 +86,39 @@ def test_executor_send_order_routes_to_employee(tmp_path, monkeypatch):
         pytest.skip(f"r_executor import needs more: {e}")
     ok, res = r_executor._send_order("XAUUSDm", "BUY", 0.01, 4100, 4130, "R gate")
     assert ok and res["queued"] and res["price"] == 4110.5
+
+
+def _fake_mt5(monkeypatch):
+    import sys
+    import types
+    fake = types.ModuleType("MetaTrader5")
+    fake.TRADE_ACTION_DEAL, fake.TRADE_ACTION_PENDING, fake.TRADE_ACTION_SLTP = 1, 5, 6
+    fake.sent = []
+    fake.order_send = lambda req: fake.sent.append(req)
+    monkeypatch.setitem(sys.modules, "MetaTrader5", fake)
+    return fake
+
+
+def test_order_guard_queues_agent_entries_and_refuses_management(tmp_path, monkeypatch):
+    from r_native import order_guard
+    fake = _fake_mt5(monkeypatch)
+    monkeypatch.setenv("R_EMPLOYEE_INBOX", str(tmp_path))
+    monkeypatch.delenv("R_ROUTE", raising=False)
+    monkeypatch.setattr(order_guard, "_ORIG", None)
+    assert order_guard.install()
+    r = fake.order_send({"action": 5, "type": 4, "symbol": "XAUUSDm", "volume": 0.01,
+                         "price": 4120.0, "sl": 4110.0, "tp": 4140.0, "comment": "vol_hunter"})
+    assert r.retcode == order_guard.REJECT and "queued" in r.comment
+    r2 = fake.order_send({"action": 6, "position": 123, "sl": 4115.0, "tp": 4140.0})
+    assert r2.retcode == order_guard.REJECT and "employee owns" in r2.comment
+    assert fake.sent == []          # nothing reached the real order_send
+    rows = (tmp_path / "signals.jsonl").read_text(encoding="utf-8").splitlines()
+    assert len(rows) == 1 and json.loads(rows[0])["side"] == "BUY"
+
+
+def test_order_guard_off_for_direct_demo(monkeypatch):
+    from r_native import order_guard
+    _fake_mt5(monkeypatch)
+    monkeypatch.setenv("R_ROUTE", "direct_demo")
+    monkeypatch.setattr(order_guard, "_ORIG", None)
+    assert order_guard.install() is False
